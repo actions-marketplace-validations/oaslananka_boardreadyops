@@ -17,7 +17,7 @@ describe("CLI integration", () => {
 
     const version = captureStreams();
     expect(await runCli(["--version"], version)).toBe(0);
-    expect(version.stdoutText().trim()).toBe("1.0.0");
+    expect(version.stdoutText().trim()).toBe("1.0.2");
   });
 
   it("runs the default command and writes reports", async () => {
