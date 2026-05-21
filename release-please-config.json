@@ -1,0 +1,64 @@
+{
+  "$schema": "https://googleapis.github.io/release-please/schema/config.json",
+  "release-type": "node",
+  "bump-minor-pre-major": true,
+  "bump-patch-for-minor-pre-major": true,
+  "prerelease": true,
+  "prerelease-type": "rc",
+  "include-v-in-tag": true,
+  "tag-separator": "",
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "package-name": "boardreadyops",
+      "extra-files": [
+        {
+          "type": "generic",
+          "path": "src/generated/version.ts"
+        }
+      ],
+      "changelog-sections": [
+        {
+          "type": "feat",
+          "section": "Features"
+        },
+        {
+          "type": "fix",
+          "section": "Bug Fixes"
+        },
+        {
+          "type": "perf",
+          "section": "Performance"
+        },
+        {
+          "type": "revert",
+          "section": "Reverts"
+        },
+        {
+          "type": "docs",
+          "section": "Documentation"
+        },
+        {
+          "type": "style",
+          "section": "Styles"
+        },
+        {
+          "type": "refactor",
+          "section": "Code Refactoring"
+        },
+        {
+          "type": "test",
+          "section": "Tests"
+        },
+        {
+          "type": "build",
+          "section": "Build System"
+        },
+        {
+          "type": "ci",
+          "section": "CI"
+        }
+      ]
+    }
+  }
+}

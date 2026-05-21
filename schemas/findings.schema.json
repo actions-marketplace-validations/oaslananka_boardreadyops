@@ -1,0 +1,389 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/oaslananka/boardreadyops/schemas/findings-v1.json",
+  "title": "BoardReadyOps findings report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "tool", "summary", "findings"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "tool": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": {
+          "const": "boardreadyops"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "summary": {
+      "type": "object"
+    },
+    "projects": {
+      "type": "array"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    },
+    "generatedAt": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ruleId", "severity", "message", "resource", "fingerprint"],
+      "properties": {
+        "ruleId": {
+          "$ref": "#/$defs/ruleId"
+        },
+        "severity": {
+          "enum": ["critical", "high", "medium", "low", "info"]
+        },
+        "message": {
+          "type": "string"
+        },
+        "resource": {
+          "type": "object",
+          "required": ["path", "kind"],
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "kind": {
+              "enum": ["project", "schematic", "pcb", "bom", "pinmap", "manifest"]
+            }
+          }
+        },
+        "location": {
+          "type": "object"
+        },
+        "details": {
+          "type": "object"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "fingerprint": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "ruleId": {
+                "const": "bom.missing-mpn"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "details": {
+                "$ref": "#/$defs/bomMissingMpnDetails"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "ruleId": {
+                "const": "bom.single-source"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "details": {
+                "$ref": "#/$defs/bomSingleSourceDetails"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "ruleId": {
+                "const": "bom.eol-detection"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "details": {
+                "$ref": "#/$defs/bomEolDetails"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "ruleId": {
+                "const": "bom.footprint-mismatch"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "details": {
+                "$ref": "#/$defs/bomFootprintMismatchDetails"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "ruleId": {
+                "const": "bom.dnp-consistency"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "details": {
+                "$ref": "#/$defs/bomDnpConsistencyDetails"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "ruleId": {
+                "type": "string",
+                "pattern": "^pinmap\\."
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "details": {
+                "$ref": "#/$defs/pinmapDetails"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "ruleId": {
+                "const": "manufacturing.outputs-present"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "details": {
+                "$ref": "#/$defs/manufacturingOutputDetails"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "ruleId": {
+                "const": "manufacturing.drill-coverage"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "details": {
+                "$ref": "#/$defs/drillCoverageDetails"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "ruleId": {
+                "type": "string",
+                "pattern": "^release\\."
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "details": {
+                "$ref": "#/$defs/releaseDetails"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ruleId": {
+      "oneOf": [
+        {
+          "enum": [
+            "config.invalid",
+            "manifest.project-discovery",
+            "bom.missing-mpn",
+            "bom.single-source",
+            "bom.eol-detection",
+            "bom.lifecycle",
+            "bom.footprint-mismatch",
+            "bom.dnp-consistency",
+            "bom.variant-consistency",
+            "design.copper-balance",
+            "design.board-outline",
+            "pinmap.verify",
+            "pinmap.unmapped-pin",
+            "pinmap.collision",
+            "pinmap.net-label",
+            "manufacturing.outputs-present",
+            "manufacturing.jobset-outputs",
+            "manufacturing.panel-sanity",
+            "manufacturing.fab-notes",
+            "manufacturing.drill-coverage",
+            "manufacturing.layer-stackup",
+            "release.revision-set",
+            "release.changelog-present",
+            "release.tag-matches-revision",
+            "release.version-format"
+          ]
+        },
+        {
+          "type": "string",
+          "pattern": "^(drc|erc)\\.[A-Za-z0-9_.-]+$"
+        }
+      ]
+    },
+    "bomMissingMpnDetails": {
+      "type": "object",
+      "required": ["reference"],
+      "properties": {
+        "reference": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "bomSingleSourceDetails": {
+      "type": "object",
+      "required": ["mpn", "supplier"],
+      "properties": {
+        "mpn": {
+          "type": "string"
+        },
+        "supplier": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "bomEolDetails": {
+      "type": "object",
+      "properties": {
+        "lifecycle": {
+          "type": "string"
+        },
+        "mpn": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "bomFootprintMismatchDetails": {
+      "type": "object",
+      "required": ["bom", "pcb"],
+      "properties": {
+        "bom": {
+          "type": "string"
+        },
+        "pcb": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "bomDnpConsistencyDetails": {
+      "type": "object",
+      "required": ["bomDnp", "pcbDnp"],
+      "properties": {
+        "bomDnp": {
+          "type": "boolean"
+        },
+        "pcbDnp": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "pinmapDetails": {
+      "type": "object",
+      "properties": {
+        "entry": {
+          "type": "object"
+        },
+        "designator": {
+          "type": "string"
+        },
+        "pin": {
+          "type": "string"
+        },
+        "net": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "manufacturingOutputDetails": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "drillCoverageDetails": {
+      "type": "object",
+      "properties": {
+        "drillSize": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "releaseDetails": {
+      "type": "object",
+      "properties": {
+        "revision": {
+          "type": ["string", "null"]
+        },
+        "tag": {
+          "type": "string"
+        },
+        "tagPattern": {
+          "type": "string"
+        },
+        "missingRevisions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

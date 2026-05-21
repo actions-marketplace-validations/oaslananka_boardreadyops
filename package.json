@@ -1,0 +1,104 @@
+{
+  "name": "boardreadyops",
+  "version": "1.0.0",
+  "description": "BoardReadyOps checks KiCad hardware repositories for production readiness before fabrication.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Osman Aslan",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oaslananka/boardreadyops.git"
+  },
+  "bugs": {
+    "url": "https://github.com/oaslananka/boardreadyops/issues"
+  },
+  "homepage": "https://github.com/oaslananka/boardreadyops#readme",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "packageManager": "pnpm@11.1.3+sha512.c85357fe17ca12dd23dd7071822666dfd7e3cb76fe214e3370b5ea2fb34f2a231185509b63e717f3cd0acb38dd3f8d82bcd5e8172400ae678b70ea4fbed0896d",
+  "bin": {
+    "boardreadyops": "./dist/cli/index.cjs"
+  },
+  "files": [
+    "dist",
+    "schemas",
+    "docs",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md",
+    "action.yml"
+  ],
+  "scripts": {
+    "prepare": "node scripts/prepare.mjs",
+    "fmt": "biome format --write .",
+    "format": "biome format --write .",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "test:unit": "vitest run tests/unit",
+    "test:int": "vitest run tests/integration",
+    "test:action": "pnpm run build && vitest run tests/action",
+    "test:property": "vitest run tests/property",
+    "test:snapshot": "vitest run tests/snapshot",
+    "test:bench": "vitest bench",
+    "coverage": "pnpm run build && vitest run --coverage tests/unit tests/action tests/property tests/snapshot",
+    "benchmark": "vitest bench --run",
+    "mutation": "stryker run",
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/watch.mjs",
+    "verify:dist": "node scripts/verify-dist.mjs",
+    "verify:version": "node scripts/verify-version.mjs",
+    "verify:clean-tree": "node scripts/verify-clean-tree.mjs",
+    "verify:structure": "node scripts/verify-structure.mjs",
+    "gc": "node scripts/gc.mjs",
+    "docs": "node scripts/generate-rule-docs.mjs && node scripts/update-action-inputs-docs.mjs && node scripts/docs-build.mjs",
+    "docs:serve": "mkdocs serve",
+    "knip": "knip",
+    "sbom": "node scripts/generate-sbom.mjs",
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run build && pnpm run verify:dist && pnpm run verify:version && pnpm run test:unit && pnpm run test:property && pnpm run test:snapshot && pnpm run test:action && pnpm run coverage && pnpm run verify:structure && pnpm run gc && pnpm run docs && pnpm audit --audit-level moderate",
+    "security": "pnpm audit --audit-level moderate"
+  },
+  "lint-staged": {
+    "{src,scripts,tests}/**/*.{ts,tsx,js,mjs,cjs}": [
+      "biome check --write --no-errors-on-unmatched"
+    ],
+    "{commitlint,vitest,stryker}.config.{js,mjs,cjs,ts}": [
+      "biome check --write --no-errors-on-unmatched"
+    ],
+    "*.{json,jsonc,md,yaml,yml}": [
+      "biome format --write --no-errors-on-unmatched"
+    ]
+  },
+  "devDependencies": {
+    "@actions/artifact": "^6.2.1",
+    "@actions/core": "^3.0.1",
+    "@actions/github": "^9.1.1",
+    "@biomejs/biome": "^2.0.0",
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
+    "@stryker-mutator/core": "9.6.1",
+    "@stryker-mutator/vitest-runner": "9.6.1",
+    "@types/js-yaml": "^4.0.9",
+    "@types/mustache": "^4.2.6",
+    "@types/node": "^24.0.0",
+    "@vitest/coverage-v8": "^4.1.6",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "commander": "^14.0.3",
+    "cosmiconfig": "^9.0.0",
+    "esbuild": "0.28.0",
+    "fast-check": "4.8.0",
+    "fast-glob": "^3.3.3",
+    "husky": "^9.1.7",
+    "js-yaml": "^4.1.0",
+    "knip": "6.14.1",
+    "lint-staged": "^17.0.5",
+    "mustache": "^4.2.0",
+    "picocolors": "^1.1.1",
+    "typescript": "6.0.3",
+    "vitest": "^4.1.6",
+    "zod": "^4.4.3"
+  }
+}

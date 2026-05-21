@@ -1,0 +1,87 @@
+site_name: BoardReadyOps
+site_url: https://oaslananka.github.io/boardreadyops/
+repo_url: https://github.com/oaslananka/boardreadyops
+repo_name: oaslananka/boardreadyops
+edit_uri: edit/main/docs/
+strict: true
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mike:
+      alias_type: symlink
+      canonical_version: latest
+
+extra:
+  version:
+    provider: mike
+
+nav:
+  - Home: index.md
+  - Quickstart: quickstart.md
+  - Installation: install.md
+  - Configuration: configuration.md
+  - CLI: cli.md
+  - GitHub Action: action.md
+  - Rules:
+      - Overview: rules/index.md
+      - BOM: rules/bom.md
+      - Design: rules/design.md
+      - DRC: rules/drc.md
+      - ERC: rules/erc.md
+      - Manufacturing: rules/manufacturing.md
+      - Pinmap: rules/pinmap.md
+      - Release: rules/release.md
+  - Reports:
+      - JSON: reports/json.md
+      - SARIF: reports/sarif.md
+      - Markdown: reports/markdown.md
+      - JUnit: reports/junit.md
+      - Annotations: reports/annotations.md
+  - Integrations:
+      - GitHub Code Scanning: integrations/github-code-scanning.md
+      - KiCad IPC API: integrations/kicad-ipc.md
+      - BoardReadyOps MCP: integrations/boardreadyops-mcp.md
+      - BoardReadyOps Studio: integrations/boardreadyops-studio.md
+  - Development:
+      - Setup: development/setup.md
+      - Testing: development/testing.md
+      - Writing Rules: development/writing-rules.md
+      - Tooling: development/tooling.md
+      - Debugging: development/debugging.md
+  - Architecture:
+      - Overview: architecture/overview.md
+      - Pipeline: architecture/pipeline.md
+      - Rule Engine: architecture/rule-engine.md
+      - ADR:
+          - "0002: Bundled Dist": architecture/adr/0002-bundled-dist-strategy.md
+          - "0003: Rule ID Namespace": architecture/adr/0003-rule-id-namespace.md
+          - "0004: KiCad 10 Variants": architecture/adr/0004-kicad10-variant-support.md
+          - "0005: KiCad IPC API": architecture/adr/0005-kicad-ipc-api.md
+  - Release:
+      - Process: release/process.md

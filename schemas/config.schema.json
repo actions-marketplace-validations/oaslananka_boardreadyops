@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/oaslananka/boardreadyops/schemas/config-v1.json",
+  "title": "BoardReadyOps configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version"],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "mode": {
+      "enum": ["warn", "enforce"]
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pinmap": {
+            "type": "string"
+          },
+          "bom": {
+            "type": "string"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["name"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "bom": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "rules": {
+      "type": "object",
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "enabled": {
+                "type": "boolean"
+              },
+              "severity": {
+                "enum": ["critical", "high", "medium", "low", "info"]
+              },
+              "severity-overrides": {
+                "type": "object",
+                "additionalProperties": {
+                  "enum": ["critical", "high", "medium", "low", "info"]
+                }
+              },
+              "ignore-refs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "required": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "fail-on": {
+      "enum": ["critical", "high", "medium", "low", "never"]
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "sarif": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "const": false
+            }
+          ]
+        },
+        "json": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "const": false
+            }
+          ]
+        },
+        "markdown": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "const": false
+            }
+          ]
+        }
+      }
+    }
+  }
+}

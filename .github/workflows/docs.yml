@@ -1,0 +1,216 @@
+name: docs
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/docs.yml
+      - docs/**
+      - mkdocs.yml
+      - package.json
+      - pnpm-lock.yaml
+      - scripts/generate-rule-docs.mjs
+      - scripts/update-action-inputs-docs.mjs
+      - scripts/docs-build.mjs
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  UV_VERSION: "0.9.14"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      artifact-id: ${{ steps.upload-pages.outputs.artifact_id }}
+
+    permissions:
+      contents: read
+      pages: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d
+
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install package manager
+        run: corepack install
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: true
+          cache-dependency-glob: .github/workflows/docs.yml
+
+      - name: Install Python docs dependencies
+        run: |
+          docs_venv="${RUNNER_TEMP}/boardreadyops-docs-venv"
+          uv venv "${docs_venv}"
+          uv pip install --python "${docs_venv}/bin/python" mkdocs==1.6.1 mkdocs-material==9.7.6 mike==2.2.0
+          echo "${docs_venv}/bin" >> "${GITHUB_PATH}"
+
+      - name: Install Node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate docs
+        run: pnpm run docs
+        env:
+          NO_MKDOCS_2_WARNING: "1"
+
+      - name: Build MkDocs site
+        run: python -m mkdocs build --strict --site-dir site
+        env:
+          NO_MKDOCS_2_WARNING: "1"
+
+      - name: Upload GitHub Pages artifact
+        id: upload-pages
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9
+        with:
+          path: site
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    timeout-minutes: 10
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        env:
+          ARTIFACT_ID: ${{ needs.build.outputs.artifact-id }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${ARTIFACT_ID}" ]; then
+            echo "Pages artifact id is missing." >&2
+            exit 1
+          fi
+
+          oidc_response="$(curl -fsSL \
+            -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}")"
+          oidc_token="$(jq -er '.value' <<<"${oidc_response}")"
+          echo "::add-mask::${oidc_token}"
+
+          deployment="$(gh api \
+            -X POST \
+            "repos/${GITHUB_REPOSITORY}/pages/deployments" \
+            -F "artifact_id=${ARTIFACT_ID}" \
+            -f "environment=github-pages" \
+            -f "pages_build_version=${GITHUB_SHA}" \
+            -f "oidc_token=${oidc_token}")"
+          deployment_id="$(jq -er '.id' <<<"${deployment}")"
+          page_url="$(jq -r '.page_url // empty' <<<"${deployment}")"
+          echo "Created Pages deployment ${deployment_id}."
+
+          status_error_log="${RUNNER_TEMP}/pages-status-error.log"
+          cancel_response_log="${RUNNER_TEMP}/pages-cancel-response.json"
+          cancel_error_log="${RUNNER_TEMP}/pages-cancel-error.log"
+          status_errors=0
+          temporary_status_errors=0
+          max_status_errors=10
+
+          cancel_deployment() {
+            local reason="${1}"
+            echo "Cancelling Pages deployment ${deployment_id}: ${reason}." >&2
+            if gh api \
+              -X POST \
+              "repos/${GITHUB_REPOSITORY}/pages/deployments/${deployment_id}/cancel" \
+              >"${cancel_response_log}" \
+              2>"${cancel_error_log}"; then
+              echo "Pages deployment cancel request accepted." >&2
+              if [ -s "${cancel_response_log}" ]; then
+                cat "${cancel_response_log}" >&2
+              fi
+            else
+              echo "Pages deployment cancel request failed." >&2
+              cat "${cancel_error_log}" >&2 || true
+            fi
+          }
+
+          for _ in $(seq 1 60); do
+            if ! status_payload="$(gh api \
+              "repos/${GITHUB_REPOSITORY}/pages/deployments/${deployment_id}" \
+              2>"${status_error_log}")"; then
+              status_errors=$((status_errors + 1))
+              echo "Pages deployment status read failed (${status_errors}/${max_status_errors})." >&2
+              cat "${status_error_log}" >&2 || true
+              if [ "${status_errors}" -ge "${max_status_errors}" ]; then
+                cancel_deployment "status polling failed repeatedly"
+                exit 1
+              fi
+              sleep 10
+              continue
+            fi
+
+            status_errors=0
+            status="$(jq -r '.status // empty' <<<"${status_payload}")"
+            latest_page_url="$(jq -r '.page_url // empty' <<<"${status_payload}")"
+            if [ -n "${latest_page_url}" ]; then
+              page_url="${latest_page_url}"
+            fi
+
+            case "${status}" in
+              succeed)
+                if [ -n "${page_url}" ] && [[ "${page_url}" != http* ]]; then
+                  page_url="https://${page_url}"
+                fi
+                echo "page_url=${page_url}" >> "${GITHUB_OUTPUT}"
+                exit 0
+                ;;
+              deployment_failed|deployment_content_failed|deployment_cancelled|deployment_lost)
+                jq -c . <<<"${status_payload}" >&2
+                exit 1
+                ;;
+              deployment_attempt_error|not_found|unknown_status)
+                temporary_status_errors=$((temporary_status_errors + 1))
+                echo "Pages deployment reported ${status} (${temporary_status_errors}/${max_status_errors})." >&2
+                if [ "${temporary_status_errors}" -ge "${max_status_errors}" ]; then
+                  cancel_deployment "deployment status remained ${status}"
+                  exit 1
+                fi
+                ;;
+              *)
+                temporary_status_errors=0
+                ;;
+            esac
+
+            echo "Current Pages deployment status: ${status:-pending}"
+            sleep 10
+          done
+
+          cancel_deployment "timed out waiting for success"
+          echo "Timed out waiting for Pages deployment ${deployment_id}." >&2
+          exit 1

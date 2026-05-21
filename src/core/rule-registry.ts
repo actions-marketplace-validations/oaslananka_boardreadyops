@@ -1,0 +1,32 @@
+import type { RuleContext } from "./context.js";
+import type { Finding, Severity } from "./findings.js";
+
+export interface RuleMetadata {
+  id: string;
+  title: string;
+  defaultSeverity: Severity;
+  appliesTo: string[];
+  configKeys: string[];
+}
+
+export interface Rule {
+  meta: RuleMetadata;
+  run(context: RuleContext): Promise<Finding[]>;
+}
+
+const registry = new Map<string, Rule>();
+
+export function registerRule(rule: Rule): void {
+  if (registry.has(rule.meta.id)) {
+    throw new Error(`Duplicate rule id: ${rule.meta.id}`);
+  }
+  registry.set(rule.meta.id, rule);
+}
+
+export function listRules(): Rule[] {
+  return [...registry.values()].sort((a, b) => a.meta.id.localeCompare(b.meta.id));
+}
+
+export function clearRulesForTests(): void {
+  registry.clear();
+}

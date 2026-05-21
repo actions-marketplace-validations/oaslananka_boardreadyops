@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: BoardReadyOps
+message: Cite BoardReadyOps when publishing hardware CI workflows that rely on it.
+authors:
+  - family-names: Aslan
+    given-names: Osman
+version: 1.0.0
+license: MIT
+repository-code: https://github.com/oaslananka/boardreadyops

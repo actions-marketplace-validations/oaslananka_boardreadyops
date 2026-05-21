@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/oaslananka/boardreadyops/schemas/pinmap-v1.json",
+  "title": "BoardReadyOps pinmap",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "pins"],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "pins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["designator", "pin", "net"],
+        "properties": {
+          "designator": {
+            "type": "string"
+          },
+          "pin": {
+            "type": "string"
+          },
+          "net": {
+            "type": "string"
+          },
+          "firmware": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

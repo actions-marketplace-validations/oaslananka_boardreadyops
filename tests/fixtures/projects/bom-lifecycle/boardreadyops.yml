@@ -1,0 +1,5 @@
+version: 1
+projects:
+  - path: .
+    bom: bom.csv
+fail-on: never

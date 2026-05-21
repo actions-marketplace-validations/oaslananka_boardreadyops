@@ -1,0 +1,41 @@
+import type { BoardReadyOpsConfig } from "./config.js";
+import type { FailOn } from "./findings.js";
+import type { Logger } from "./logger.js";
+
+type RunMode = "warn" | "enforce";
+
+export interface ProjectContext {
+  projectFile: string;
+  root: string;
+  schematicFiles: string[];
+  boardFiles: string[];
+  jobsetFiles: string[];
+}
+
+export interface PipelineOptions {
+  cwd: string;
+  path: string;
+  project: string | undefined;
+  config: string | undefined;
+  mode: RunMode;
+  requireKicad: boolean;
+  kicadCli: string | undefined;
+  bom: string | undefined;
+  pinmap: string | undefined;
+  variant: string | undefined;
+  failOn: FailOn;
+  rules: string[];
+  skips: string[];
+  annotations: boolean;
+  quiet: boolean;
+  verbose: boolean;
+  color: "auto" | "always" | "never";
+}
+
+export interface RuleContext {
+  root: string;
+  projects: ProjectContext[];
+  config: BoardReadyOpsConfig;
+  options: PipelineOptions;
+  logger: Logger;
+}

@@ -1,0 +1,96 @@
+name: publish-npm
+
+on:
+  release:
+    types:
+      - published
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  UV_VERSION: "0.9.14"
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 24
+          package-manager-cache: false
+          registry-url: https://registry.npmjs.org
+      - run: corepack enable
+      - run: corepack install
+      - name: Setup uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - name: Install Python docs dependencies
+        run: |
+          docs_venv="${RUNNER_TEMP}/boardreadyops-docs-venv"
+          uv venv "${docs_venv}"
+          uv pip install --python "${docs_venv}/bin/python" mkdocs==1.6.1 mkdocs-material==9.7.6 mike==2.2.0
+          echo "${docs_venv}/bin" >> "${GITHUB_PATH}"
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run verify
+        env:
+          ALLOW_MAJOR_RELEASE: "true"
+          NO_MKDOCS_2_WARNING: "1"
+      - run: pnpm run sbom
+      - name: Attest provenance
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32
+        with:
+          subject-path: dist/**
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: sbom
+          path: sbom.cyclonedx.json
+      - name: Verify release commit
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin main
+          release_commit="$(git rev-parse "${GITHUB_REF_NAME}^{commit}")"
+          main_commit="$(git rev-parse "origin/main^{commit}")"
+          if [ "${release_commit}" != "${main_commit}" ]; then
+            echo "::error::Release tag ${GITHUB_REF_NAME} must point at origin/main HEAD before publishing."
+            exit 1
+          fi
+      - name: Publish npm package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          RELEASE_IS_PRERELEASE: ${{ github.event.release.prerelease }}
+        run: |
+          set -euo pipefail
+          if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
+            echo "::error::NPM_TOKEN secret must be configured before npm publishing."
+            exit 1
+          fi
+          if [ "${RELEASE_IS_PRERELEASE}" = "true" ]; then
+            npm publish --provenance --access public --tag next
+          else
+            npm publish --provenance --access public
+          fi
+      - name: Update floating release tags
+        if: github.event.release.prerelease == false
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          bash scripts/update-floating-tags.sh "${GITHUB_REF_NAME}"

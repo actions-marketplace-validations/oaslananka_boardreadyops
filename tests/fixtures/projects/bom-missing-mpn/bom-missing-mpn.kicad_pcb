@@ -1,0 +1,5 @@
+(kicad_pcb
+  (version 20250114)
+  (title_block (title "bom-missing-mpn") (rev "1.0.0"))
+  (footprint "Resistor_SMD:R_0603" (property "Reference" "R1"))
+)

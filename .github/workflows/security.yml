@@ -1,0 +1,168 @@
+name: security
+
+on:
+  pull_request:
+    paths-ignore:
+      - docs/**
+      - '*.md'
+      - mkdocs.yml
+      - .coderabbit.yaml
+  push:
+    branches: [main]
+    paths-ignore:
+      - docs/**
+      - '*.md'
+      - mkdocs.yml
+      - .coderabbit.yaml
+  schedule:
+    - cron: '31 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: security-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  NODE_VERSION: '24'
+  PNPM_VERSION: '11.1.3'
+
+jobs:
+  dependency-review:
+    name: security / dependency-review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: never
+
+  codeql:
+    name: security / codeql
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: github/codeql-action/init@9e0d7b8d25671d64c341c19c0152d693099fb5ba
+        with:
+          languages: javascript-typescript
+          build-mode: none
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - uses: github/codeql-action/analyze@9e0d7b8d25671d64c341c19c0152d693099fb5ba
+
+  osv:
+    name: security / osv
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: google/osv-scanner-action/osv-scanner-action@9a498708959aeaef5ef730655706c5a1df1edbc2
+        with:
+          scan-args: |-
+            --recursive
+            .
+
+  gitleaks:
+    name: security / gitleaks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install Gitleaks
+        env:
+          GITLEAKS_VERSION: 8.30.1
+        run: |
+          set -euo pipefail
+          workdir="${RUNNER_TEMP}/gitleaks-install"
+          mkdir -p "${workdir}"
+          cd "${workdir}"
+          archive="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          checksum_file="gitleaks_${GITLEAKS_VERSION}_checksums.txt"
+          curl -sSfLO "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${archive}"
+          curl -sSfLO "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${checksum_file}"
+          grep " ${archive}$" "${checksum_file}" | sha256sum -c -
+          tar -xzf "${archive}" gitleaks
+          sudo install -m 0755 gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+      - name: Run Gitleaks
+        run: gitleaks detect --source . --redact --verbose
+
+  sbom:
+    name: security / sbom
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run sbom
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: sbom
+          path: sbom.cyclonedx.json
+
+  scorecard:
+    name: security / scorecard advisory
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      security-events: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - name: Run scorecard advisory scan
+        uses: ossf/scorecard-action@4eaacf0543bb3f2c246792bd56e8cdeffafb205a
+        continue-on-error: true
+        with:
+          results_format: sarif
+          results_file: scorecard.sarif
+          publish_results: true
+      - name: Upload scorecard SARIF
+        if: always() && hashFiles('scorecard.sarif') != ''
+        uses: github/codeql-action/upload-sarif@9e0d7b8d25671d64c341c19c0152d693099fb5ba
+        continue-on-error: true
+        with:
+          sarif_file: scorecard.sarif

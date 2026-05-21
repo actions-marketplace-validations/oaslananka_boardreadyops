@@ -1,0 +1,9 @@
+name: Feature request
+description: Request a scoped BoardReadyOps feature.
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+    validations:
+      required: true

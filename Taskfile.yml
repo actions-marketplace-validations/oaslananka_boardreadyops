@@ -1,0 +1,103 @@
+version: "3"
+
+tasks:
+  setup:
+    cmds:
+      - corepack pnpm install --frozen-lockfile
+  lint:
+    cmds:
+      - corepack pnpm run lint
+  typecheck:
+    cmds:
+      - corepack pnpm run typecheck
+  fmt:
+    cmds:
+      - corepack pnpm run fmt
+  test:
+    cmds:
+      - corepack pnpm run coverage
+  coverage:
+    cmds:
+      - corepack pnpm run coverage
+  test:int:
+    cmds:
+      - corepack pnpm run test:int
+  test:action:
+    cmds:
+      - corepack pnpm run test:action
+  test:property:
+    cmds:
+      - corepack pnpm run test:property
+  test:snapshot:
+    cmds:
+      - corepack pnpm run test:snapshot
+  build:
+    cmds:
+      - corepack pnpm run build
+  benchmark:
+    cmds:
+      - corepack pnpm run benchmark
+  mutation:
+    cmds:
+      - corepack pnpm run mutation
+  sbom:
+    cmds:
+      - corepack pnpm run sbom
+  knip:
+    cmds:
+      - corepack pnpm run knip
+  watch:
+    cmds:
+      - corepack pnpm run watch
+  verify:dist:
+    cmds:
+      - corepack pnpm run verify:dist
+  verify:version:
+    cmds:
+      - corepack pnpm run verify:version
+  verify:structure:
+    cmds:
+      - corepack pnpm run verify:structure
+  gc:
+    cmds:
+      - corepack pnpm run gc
+  verify:
+    cmds:
+      - corepack pnpm run lint
+      - corepack pnpm run typecheck
+      - corepack pnpm run knip
+      - corepack pnpm run build
+      - corepack pnpm run verify:dist
+      - corepack pnpm run verify:version
+      - corepack pnpm run test:unit
+      - corepack pnpm run test:property
+      - corepack pnpm run test:snapshot
+      - corepack pnpm run test:action
+      - corepack pnpm run coverage
+      - corepack pnpm run gc
+      - corepack pnpm run verify:structure
+      - corepack pnpm run docs
+      - corepack pnpm audit --audit-level moderate
+  verify:all:
+    cmds:
+      - task: lint
+      - task: typecheck
+      - task: test
+      - task: test:int
+      - task: test:property
+      - task: mutation
+      - task: knip
+      - task: gc
+      - task: verify:structure
+      - task: verify:dist
+      - task: verify:version
+      - task: sbom
+  docs:
+    cmds:
+      - corepack pnpm run docs
+  docs:serve:
+    cmds:
+      - corepack pnpm run docs
+  clean:
+    cmds:
+      - corepack pnpm exec node -e "for (const p of ['coverage','.tsbuild','.cache']) require('node:fs').rmSync(p,{recursive:true,force:true})"

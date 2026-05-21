@@ -1,0 +1,1 @@
+(kicad_pcb (version 20250114) (title_block (rev "v1.0")) (gr_rect (start 0 0) (end 10 10) (layer "Edge.Cuts")) (zone (net 1) (layer "F.Cu") (filled_polygon (pts (xy 0 0) (xy 1 0) (xy 1 1) (xy 0 1)))))

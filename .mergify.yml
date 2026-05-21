@@ -1,0 +1,55 @@
+pull_request_rules:
+  - name: auto-merge Renovate patch and minor updates
+    conditions:
+      - author = renovate[bot]
+      - label = dependencies
+      - check-success = ci / lint
+      - check-success = ci / test-unit (ubuntu-latest)
+      - check-success = ci / test-unit (windows-2025)
+      - check-success = ci / test-unit (macos-latest)
+      - check-success = ci / build
+      - check-success = ci / verify-dist
+      - check-success = CodeQL
+      - check-success = ci / security
+      - -draft
+    actions:
+      merge:
+        method: squash
+  - name: auto-merge release-please PRs
+    conditions:
+      - author = release-please[bot]
+      - check-success = ci / lint
+      - check-success = ci / test-unit (ubuntu-latest)
+      - check-success = ci / test-int
+      - check-success = ci / test-action
+      - check-success = ci / build
+      - check-success = ci / verify-dist
+      - check-success = ci / coverage-gate
+      - check-success = ci / mutation
+      - check-success = CodeQL
+      - -draft
+    actions:
+      merge:
+        method: squash
+  - name: auto-merge feature PRs after checks and review
+    conditions:
+      - check-success = ci / lint
+      - check-success = ci / typecheck
+      - check-success = ci / test-unit (ubuntu-latest)
+      - check-success = ci / test-unit (windows-2025)
+      - check-success = ci / test-unit (macos-latest)
+      - check-success = ci / test-int
+      - check-success = ci / test-action
+      - check-success = ci / build
+      - check-success = ci / verify-dist
+      - check-success = ci / coverage-gate
+      - check-success = ci / mutation
+      - check-success = CodeQL
+      - check-success = ci / security
+      - "#approved-reviews-by >= 1"
+      - "#changes-requested-reviews-by = 0"
+      - -draft
+      - -label = do-not-merge
+    actions:
+      merge:
+        method: squash

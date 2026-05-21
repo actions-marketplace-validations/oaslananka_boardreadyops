@@ -1,0 +1,30 @@
+name: release-please
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  release-please:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Run release-please
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7
+        continue-on-error: true
+      - name: Explain non-blocking release automation
+        run: |
+          cat <<'EOF'
+          release-please is advisory because repository Actions policy currently blocks GitHub Actions from creating pull requests.
+          Enable Settings > Actions > General > Workflow permissions > Allow GitHub Actions to create and approve pull requests to make this blocking again.
+          EOF

@@ -1,0 +1,1 @@
+(kicad_pcb (version 20250114) (title_block (rev "v1.0")) (gr_rect (start 0 0) (end 10 10) (layer "Edge.Cuts")) (layers (0 "F.Cu" signal) (31 "B.Cu" signal)) (stackup (layer "F.Cu") (layer "In1.Cu") (layer "In2.Cu") (layer "B.Cu")))

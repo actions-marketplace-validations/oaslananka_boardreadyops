@@ -1,0 +1,5 @@
+version: 1
+projects:
+  - path: .
+    pinmap: pins.yml
+fail-on: never

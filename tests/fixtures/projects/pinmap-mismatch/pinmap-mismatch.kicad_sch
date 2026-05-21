@@ -1,0 +1,12 @@
+(kicad_sch
+  (version 20250114)
+  (symbol
+    (lib_id "MCU")
+    (property "Reference" "U1")
+    (property "Value" "MCU")
+    (property "Footprint" "Package_QFP:LQFP-48")
+    (property "Manufacturer" "ST")
+    (property "MPN" "STM32F000")
+  )
+  (label "MCU_PA0")
+)

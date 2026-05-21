@@ -1,0 +1,35 @@
+name: zizmor
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/**
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  UV_VERSION: "0.9.14"
+
+jobs:
+  zizmor:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - name: Setup uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - name: Run zizmor advisory scan
+        run: uvx --from zizmor==1.25.2 zizmor .github/workflows --min-severity medium
+        continue-on-error: true

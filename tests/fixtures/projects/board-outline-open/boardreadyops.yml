@@ -1,0 +1,5 @@
+version: 1
+rules:
+  design.board-outline:
+    enabled: true
+fail-on: never

@@ -1,0 +1,9 @@
+name: Bug report
+description: Report a reproducible BoardReadyOps bug.
+body:
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+    validations:
+      required: true

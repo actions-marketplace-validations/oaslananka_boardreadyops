@@ -1,0 +1,12 @@
+title = "BoardReadyOps gitleaks configuration"
+
+[[allowlists]]
+description = "Bundled GitHub Actions artifact client contains Azure connection string parser literals, not credentials."
+paths = ["dist/(action|cli)/index.cjs"]
+regexes = ['''AccountKey=''']
+
+[[rules]]
+id = "kicad-private-key"
+description = "KiCad private key material must not be committed."
+regex = '''-----BEGIN KICAD PRIVATE KEY-----[\s\S]*?-----END KICAD PRIVATE KEY-----'''
+keywords = ["KICAD PRIVATE KEY"]

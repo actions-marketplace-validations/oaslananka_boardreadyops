@@ -1,0 +1,133 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`report snapshots > formats stable JSON 1`] = `
+{
+  "findings": [
+    {
+      "details": {
+        "reference": "R1",
+      },
+      "fingerprint": "6b8bae8b505e9461a9c3b8df7fb0e0f7daa70750a14eb6fd1c74144431e31b8f",
+      "location": {
+        "column": 1,
+        "line": 2,
+      },
+      "message": "R1 is missing an MPN.",
+      "resource": {
+        "kind": "bom",
+        "path": "bom.csv",
+      },
+      "ruleId": "bom.missing-mpn",
+      "severity": "high",
+    },
+  ],
+  "generatedAt": "2026-05-18T00:00:00.000Z",
+  "projects": [],
+  "schemaVersion": 1,
+  "summary": {
+    "critical": 0,
+    "failed": true,
+    "high": 1,
+    "info": 0,
+    "low": 0,
+    "maxSeverity": "high",
+    "medium": 0,
+    "total": 1,
+  },
+  "tool": {
+    "name": "boardreadyops",
+    "version": "0.9.0",
+  },
+}
+`;
+
+exports[`report snapshots > formats stable JUnit 1`] = `
+"<?xml version="1.0" encoding="UTF-8"?><testsuite name="boardreadyops" tests="1" failures="1"><testcase classname="bom.missing-mpn" name="bom.csv"><failure message="R1 is missing an MPN.">{&quot;reference&quot;:&quot;R1&quot;}</failure></testcase></testsuite>
+"
+`;
+
+exports[`report snapshots > formats stable Markdown 1`] = `
+"<!-- boardreadyops:sticky:v1 -->
+# BoardReadyOps Report
+
+| Metric | Count |
+| --- | ---: |
+| Total | 1 |
+| Critical | 0 |
+| High | 1 |
+| Medium | 0 |
+| Low | 0 |
+| Info | 0 |
+
+## Top Findings
+
+- **high** \`bom.missing-mpn\` in \`bom.csv\`: R1 is missing an MPN.
+
+"
+`;
+
+exports[`report snapshots > formats stable SARIF 1`] = `
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "level": "error",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "bom.csv",
+                },
+                "region": {
+                  "startColumn": 1,
+                  "startLine": 2,
+                },
+              },
+            },
+          ],
+          "message": {
+            "text": "R1 is missing an MPN.",
+          },
+          "partialFingerprints": {
+            "primaryLocationLineHash": "6b8bae8b505e9461a9c3b8df7fb0e0f7daa70750a14eb6fd1c74144431e31b8f",
+          },
+          "properties": {
+            "details": {
+              "reference": "R1",
+            },
+            "resourceKind": "bom",
+            "severity": "high",
+          },
+          "ruleId": "bom.missing-mpn",
+        },
+      ],
+      "tool": {
+        "driver": {
+          "informationUri": "https://github.com/oaslananka/boardreadyops",
+          "name": "BoardReadyOps",
+          "rules": [
+            {
+              "defaultConfiguration": {
+                "level": "error",
+              },
+              "fullDescription": {
+                "text": "R1 is missing an MPN.",
+              },
+              "helpUri": "https://github.com/oaslananka/boardreadyops/tree/main/docs/rules",
+              "id": "bom.missing-mpn",
+              "name": "bom.missing-mpn",
+              "shortDescription": {
+                "text": "bom.missing-mpn",
+              },
+            },
+          ],
+          "version": "0.9.0",
+        },
+      },
+    },
+  ],
+  "version": "2.1.0",
+}
+`;

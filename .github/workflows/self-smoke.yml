@@ -1,0 +1,49 @@
+name: self-smoke
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  self-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - id: safe
+        uses: ./
+        with:
+          path: tests/fixtures/projects/safe-basic
+          config: tests/fixtures/projects/safe-basic/boardreadyops.yml
+          require-kicad: "false"
+          upload-sarif: "false"
+          upload-artifacts: "false"
+          comment-pr: "false"
+          annotations: "false"
+          fail-on: never
+      - run: test "$SAFE_FINDINGS" = "0"
+        env:
+          SAFE_FINDINGS: ${{ steps.safe.outputs.findings }}
+      - id: pinmap
+        uses: ./
+        with:
+          path: tests/fixtures/projects/pinmap-mismatch
+          config: tests/fixtures/projects/pinmap-mismatch/boardreadyops.yml
+          require-kicad: "false"
+          upload-sarif: "false"
+          upload-artifacts: "false"
+          comment-pr: "false"
+          annotations: "false"
+          fail-on: never
+      - run: test "$PINMAP_FINDINGS" = "1"
+        env:
+          PINMAP_FINDINGS: ${{ steps.pinmap.outputs.findings }}

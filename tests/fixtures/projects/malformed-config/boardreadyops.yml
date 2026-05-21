@@ -1,0 +1,4 @@
+version: nope
+rules:
+  bom.missing-mpn:
+    enabled: yes

@@ -1,0 +1,15 @@
+name: Rule proposal
+description: Propose a new rule.
+body:
+  - type: input
+    id: rule-id
+    attributes:
+      label: Rule ID
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Behavior
+    validations:
+      required: true

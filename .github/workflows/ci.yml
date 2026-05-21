@@ -1,0 +1,261 @@
+name: ci
+
+on:
+  pull_request:
+    paths-ignore:
+      - docs/**
+      - "*.md"
+      - mkdocs.yml
+      - .coderabbit.yaml
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - docs/**
+      - "*.md"
+      - mkdocs.yml
+      - .coderabbit.yaml
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "24"
+  PNPM_VERSION: "11.1.3"
+  UV_VERSION: "0.9.14"
+
+jobs:
+  lint:
+    name: ci / lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run lint
+      - run: pnpm run verify:structure
+      - run: pnpm run gc
+      - run: pnpm run knip
+      - name: Setup uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - name: Run zizmor advisory scan
+        run: uvx --from zizmor==1.25.2 zizmor .github/workflows --min-severity medium
+        continue-on-error: true
+
+  typecheck:
+    name: ci / typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run typecheck
+
+  test-unit:
+    name: ci / test-unit (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-2025-vs2026
+          - macos-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run test:unit
+
+  test-int:
+    name: ci / test-int
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - name: Install KiCad 10.x
+        run: |
+          sudo add-apt-repository --yes ppa:kicad/kicad-10.0-releases
+          sudo apt-get update -qq
+          sudo apt-get install --yes kicad
+          kicad-cli version
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run test:int
+
+  test-action:
+    name: ci / test-action
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run test:action
+
+  build:
+    name: ci / build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+
+  verify-dist:
+    name: ci / verify-dist
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: build
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run verify:dist
+
+  coverage-gate:
+    name: ci / coverage-gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2
+        with:
+          files: coverage/lcov.info
+          fail_ci_if_error: false
+          flags: unit
+
+  mutation:
+    name: ci / mutation
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    if: github.event_name == 'push' || github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run mutation
+      - name: Upload mutation report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: mutation-report
+          path: reports/mutation/
+
+  security:
+    name: ci / security
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm audit --audit-level moderate
+
+  sbom:
+    name: ci / sbom
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run sbom
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: sbom
+          path: sbom.cyclonedx.json

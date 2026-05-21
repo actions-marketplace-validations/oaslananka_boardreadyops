@@ -1,0 +1,21 @@
+<!-- boardreadyops:sticky:v1 -->
+{{> summary}}
+
+{{#hasFindings}}
+## Top Findings
+
+{{#topFindings}}
+- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}
+{{/topFindings}}
+{{/hasFindings}}
+{{^hasFindings}}
+No findings.
+{{/hasFindings}}
+
+{{#hasArtifacts}}
+## Artifacts
+
+{{#artifacts}}
+- [{{label}}]({{{url}}})
+{{/artifacts}}
+{{/hasArtifacts}}
