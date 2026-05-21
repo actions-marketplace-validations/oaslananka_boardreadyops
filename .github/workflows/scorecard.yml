@@ -1,71 +1,36 @@
-name: Scorecard
+name: OpenSSF Scorecard
 
 on:
   push:
     branches: [main]
   schedule:
-    - cron: '33 5 * * 1'
+    - cron: "23 3 * * 1"
   workflow_dispatch:
 
-permissions:
-  contents: read
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+permissions: read-all
 
 jobs:
   scorecard:
-    name: Scorecard / scan
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-
+    name: openssf-scorecard
+    runs-on: ubuntu-latest
     permissions:
       contents: read
-      issues: read
-      pull-requests: read
-      checks: read
-
-    env:
-      SCORECARD_VERSION: v5.5.0
-
+      security-events: write
+      id-token: write
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           persist-credentials: false
 
-      - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c  # v6.4.0
+      - name: Run OpenSSF Scorecard
+        uses: ossf/scorecard-action@4eaacf0543bb3f2c246792bd56e8cdeffafb205a
         with:
-          go-version: '1.26.3'
-          cache: false
+          results_file: scorecard.sarif
+          results_format: sarif
+          publish_results: true
 
-      - name: Install scorecard
-        run: go install "github.com/ossf/scorecard/v5@${SCORECARD_VERSION}"
-
-      - name: Run scorecard
-        env:
-          GITHUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          scorecard \
-            --repo=github.com/${{ github.repository }} \
-            --format=json \
-            --checks=Binary-Artifacts,Dangerous-Workflow,Dependency-Update-Tool,Fuzzing,License,Pinned-Dependencies,SAST,Security-Policy,Token-Permissions,Vulnerabilities \
-            > scorecard.json
-
-          node <<'NODE'
-          const fs = require("node:fs");
-
-          const result = JSON.parse(fs.readFileSync("scorecard.json", "utf8"));
-          const threshold = 9.0;
-          const score = Number(result.score);
-
-          if (!Number.isFinite(score)) {
-            throw new Error("Scorecard did not produce a numeric aggregate score");
-          }
-
-          console.log(`OpenSSF Scorecard baseline score: ${score}`);
-
-          if (score < threshold) {
-            throw new Error(`OpenSSF Scorecard baseline score ${score} is below ${threshold}`);
-          }
-          NODE
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@04f31e6309fa4041a4e363fe5b871cbed4a7f4c9
+        with:
+          sarif_file: scorecard.sarif
