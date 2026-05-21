@@ -6,7 +6,7 @@ BoardReadyOps checks KiCad hardware repositories for production readiness before
 
 [![CI](https://github.com/oaslananka/boardreadyops/actions/workflows/ci.yml/badge.svg)](https://github.com/oaslananka/boardreadyops/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/boardreadyops)](https://www.npmjs.com/package/boardreadyops)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/oaslananka/boardreadyops/badge)](https://securityscorecards.dev/viewer/?uri=github.com/oaslananka/boardreadyops)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/oaslananka/boardreadyops/badge)](https://scorecard.dev/viewer/?uri=github.com/oaslananka/boardreadyops)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## Installation
