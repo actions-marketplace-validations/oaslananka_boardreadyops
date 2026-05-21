@@ -233222,7 +233222,7 @@ var {
 } = import_index.default;
 
 // src/generated/version.ts
-var boardReadyVersion = "1.0.0";
+var boardReadyVersion = "1.0.2";
 
 // src/cli/commands/run.ts
 var import_node_path28 = __toESM(require("node:path"), 1);

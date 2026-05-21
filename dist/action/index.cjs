@@ -288141,7 +288141,7 @@ var import_promises6 = __toESM(require("node:fs/promises"), 1);
 var import_node_path26 = __toESM(require("node:path"), 1);
 
 // src/generated/version.ts
-var boardReadyVersion = "1.0.0";
+var boardReadyVersion = "1.0.2";
 
 // src/core/rule-registry.ts
 var registry = /* @__PURE__ */ new Map();
