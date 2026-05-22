@@ -14,7 +14,7 @@ Use `boardreadyops run --gate release` to select a configured gate from `boardre
 
 ## Doctor
 
-`boardreadyops doctor` diagnoses the current environment and repository before a full pipeline run. Its checks cover the Node and npm runtime, KiCad CLI availability, configured adapter credentials, repository discovery and manufacturing outputs, suppression state, and the conventional `.github/workflows/boardreadyops.yml` or `.github/workflows/boardreadyops.yaml` workflow.
+`boardreadyops doctor` diagnoses the current environment and repository before a full pipeline run. Its checks cover the Node and npm runtime, KiCad CLI availability, configured adapter credentials, repository discovery and manufacturing outputs, suppression state, and the conventional `.github/workflows/boardreadyops.yml` or `.github/workflows/boardreadyops.yaml` workflow. Runtime support follows the [support matrix](support-matrix.md).
 
 ```sh
 boardreadyops doctor

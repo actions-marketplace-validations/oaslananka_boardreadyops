@@ -254933,6 +254933,7 @@ function isPathLike(value) {
 // src/cli/commands/doctor.ts
 var import_node_path33 = __toESM(require("node:path"), 1);
 var doctorChecks = ["runtime", "kicad", "adapters", "repository", "suppressions", "action"];
+var supportedNodeMajors = /* @__PURE__ */ new Set([22, 24]);
 async function doctorCommand(options, streams) {
   const format = parseDoctorFormat(options.format);
   const report = await createDoctorReport(options.check);
@@ -254983,8 +254984,8 @@ async function runtimeCheck() {
   });
   const supportedNode = supportsDoctorNodeVersion(process.versions.node);
   return [
-    item(supportedNode ? "pass" : "fail", `Node: ${process.version} (required: >=24 <25)`, {
-      recommendation: supportedNode ? void 0 : "Install a supported Node.js 24 runtime."
+    item(supportedNode ? "pass" : "fail", `Node: ${process.version} (supported majors: 22, 24)`, {
+      recommendation: supportedNode ? void 0 : "Install a supported Node.js 22 or 24 runtime."
     }),
     item("pass", `boardreadyops: v${boardReadyVersion}`),
     npmVersion.code === 0 ? item("pass", `npm: v${npmVersion.stdout.trim()}`) : item("warn", "npm not found.", { recommendation: "Install npm for package-based BoardReadyOps workflows." })
@@ -255090,7 +255091,7 @@ function checkoutPinnedItem(workflow) {
 }
 function supportsDoctorNodeVersion(version2) {
   const major = Number(version2.replace(/^v/, "").split(".")[0]);
-  return Number.isInteger(major) && major >= 24 && major < 25;
+  return Number.isInteger(major) && supportedNodeMajors.has(major);
 }
 function parseDoctorFormat(format) {
   const candidate = format ?? "text";

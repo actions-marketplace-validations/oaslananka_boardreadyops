@@ -50,6 +50,8 @@ describe("container action release surfaces", () => {
     expect(dockerfile).toContain("FROM ubuntu:24.04@sha256:");
     expect(dockerfile).toContain("ARG NODE_VERSION=22.");
     expect(dockerfile).toContain("ARG NPM_VERSION=11.15.0");
+    expect(dockerfile).toContain("ARG KICAD_PPA_SERIES=10.0");
+    expect(dockerfile).toContain(`ppa:kicad/kicad-\${KICAD_PPA_SERIES}-releases`);
     expect(dockerfile).toContain(`npm install --global "npm@\${NPM_VERSION}"`);
     expect(dockerfile).toContain(`npm install --global "boardreadyops@\${BOARDREADYOPS_VERSION}"`);
     expect(dockerfile).toContain("useradd --create-home --shell /bin/bash --uid 10001 boardreadyops");
@@ -67,12 +69,39 @@ describe("container action release surfaces", () => {
     const dockerNodeMajor = Number(requireMatch(dockerfile, /^ARG NODE_VERSION=(\d+)\./m));
     const workflowNodeMajor = Number(requireMatch(workflow, /^\s+NODE_VERSION: "(\d+)\./m));
     const engineRange = packageJson.engines?.node ?? "";
-    const minimumMajor = Number(requireMatch(engineRange, />=(\d+)/));
-    const exclusiveMaximumMajor = Number(requireMatch(engineRange, /<(\d+)/));
 
+    expect(engineRange).toBe("^22.0.0 || ^24.0.0");
     expect(workflowNodeMajor).toBe(dockerNodeMajor);
-    expect(dockerNodeMajor).toBeGreaterThanOrEqual(minimumMajor);
-    expect(dockerNodeMajor).toBeLessThan(exclusiveMaximumMajor);
+    expect(engineAllowsMajor(engineRange, dockerNodeMajor)).toBe(true);
+    expect(engineAllowsMajor(engineRange, 24)).toBe(true);
+    expect(engineAllowsMajor(engineRange, 26)).toBe(false);
+  });
+
+  it("smoke tests container images across the compatibility matrix", async () => {
+    const workflow = (await loadActionMetadata(".github/workflows/container-build.yml")) as {
+      jobs?: {
+        smoke?: {
+          strategy?: {
+            matrix?: {
+              include?: Array<Record<string, string>>;
+            };
+          };
+        };
+      };
+    };
+
+    expect(workflow.jobs?.smoke?.strategy?.matrix?.include).toEqual([
+      {
+        "kicad-version": "9.0",
+        "kicad-ppa-series": "9.0",
+        "node-version": "22.22.3",
+      },
+      {
+        "kicad-version": "10.0",
+        "kicad-ppa-series": "10.0",
+        "node-version": "24.16.0",
+      },
+    ]);
   });
 
   it("publishes signed multi-arch GHCR images with scan and SBOM coverage", async () => {
@@ -135,6 +164,10 @@ function requireMatch(value: string, pattern: RegExp): string {
   const match = value.match(pattern);
   expect(match).not.toBeNull();
   return match?.[1] ?? "";
+}
+
+function engineAllowsMajor(range: string, major: number): boolean {
+  return new RegExp(`\\^${major}\\.0\\.0(?:\\s|$)`).test(range);
 }
 
 function inputExpression(input: string): string {

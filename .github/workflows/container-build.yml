@@ -26,12 +26,23 @@ permissions:
 env:
   IMAGE_NAME: ghcr.io/oaslananka/boardreadyops-full
   NODE_VERSION: "22.22.3"
+  KICAD_PPA_SERIES: "10.0"
 
 jobs:
   smoke:
-    name: container-build / smoke
+    name: container-build / smoke (KiCad ${{ matrix.kicad-version }}, Node ${{ matrix.node-version }})
     runs-on: ubuntu-24.04
     timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - kicad-version: "9.0"
+            kicad-ppa-series: "9.0"
+            node-version: "22.22.3"
+          - kicad-version: "10.0"
+            kicad-ppa-series: "10.0"
+            node-version: "24.16.0"
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
@@ -81,23 +92,24 @@ jobs:
           file: apps/container/Dockerfile
           load: true
           push: false
-          tags: boardreadyops-full:smoke
+          tags: boardreadyops-full:smoke-kicad-${{ matrix.kicad-version }}-node-${{ matrix.node-version }}
           build-args: |
             BOARDREADYOPS_VERSION=${{ steps.package.outputs.version }}
-            NODE_VERSION=${{ env.NODE_VERSION }}
+            NODE_VERSION=${{ matrix.node-version }}
+            KICAD_PPA_SERIES=${{ matrix.kicad-ppa-series }}
       - name: Smoke container CLI
-        run: docker run --rm boardreadyops-full:smoke --help
+        run: docker run --rm boardreadyops-full:smoke-kicad-${{ matrix.kicad-version }}-node-${{ matrix.node-version }} --help
       - name: Smoke fixture project
         run: |
           docker run --rm \
             --volume "${PWD}/tests/fixtures/projects/safe-basic:/workspace" \
             --workdir /workspace \
-            boardreadyops-full:smoke \
+            boardreadyops-full:smoke-kicad-${{ matrix.kicad-version }}-node-${{ matrix.node-version }} \
             check .
       - name: Scan smoke image
         uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25
         with:
-          image-ref: boardreadyops-full:smoke
+          image-ref: boardreadyops-full:smoke-kicad-${{ matrix.kicad-version }}-node-${{ matrix.node-version }}
           scan-type: image
           severity: HIGH,CRITICAL
           exit-code: "1"
@@ -176,6 +188,7 @@ jobs:
           build-args: |
             BOARDREADYOPS_VERSION=${{ steps.package.outputs.version }}
             NODE_VERSION=${{ env.NODE_VERSION }}
+            KICAD_PPA_SERIES=${{ env.KICAD_PPA_SERIES }}
       - name: Install cosign
         uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6
       - name: Sign image digest

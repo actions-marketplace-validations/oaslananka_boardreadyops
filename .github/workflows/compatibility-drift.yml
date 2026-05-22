@@ -1,0 +1,50 @@
+name: compatibility-drift
+
+on:
+  schedule:
+    - cron: "23 5 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-drift:
+    name: compatibility-drift / check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - id: drift
+        run: |
+          pnpm run compatibility:drift -- \
+            --markdown-output compatibility-drift.md \
+            --json-output compatibility-drift.json \
+            --github-output "${GITHUB_OUTPUT}"
+      - name: Open compatibility drift issue
+        if: steps.drift.outputs.drift == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_TITLE: ${{ steps.drift.outputs.issue_title }}
+        run: |
+          set -euo pipefail
+          existing="$(gh issue list --state open --search "${ISSUE_TITLE} in:title" --json number --jq '.[0].number // empty')"
+          if [ -n "${existing}" ]; then
+            echo "Compatibility drift issue already open: #${existing}"
+            exit 0
+          fi
+          gh issue create --title "${ISSUE_TITLE}" --body-file compatibility-drift.md

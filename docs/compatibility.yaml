@@ -1,0 +1,17 @@
+kicad:
+  minimum: "9.0"
+  recommended: "10.x"
+  tested:
+    - "9.0"
+    - "9.1"
+    - "10.0"
+    - "10.1"
+  notes:
+    "9.0": "Variants are partially supported."
+    "10.x": "Full variant + native IPC API support."
+node:
+  minimum: "22"
+  supported: ["22", "24"]
+  tested:
+    "22": "22.22.3"
+    "24": "24.16.0"

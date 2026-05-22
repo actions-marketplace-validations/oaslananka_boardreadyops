@@ -100,25 +100,41 @@ jobs:
       - run: pnpm run test:unit
 
   test-int:
-    name: ci / test-int
-    runs-on: ubuntu-latest
+    name: ci / test-int (KiCad ${{ matrix.kicad-version }}, Node ${{ matrix.node-version }})
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - kicad-version: "9.0"
+            kicad-ppa-series: "9.0"
+            node-version: 22
+          - kicad-version: "10.0"
+            kicad-ppa-series: "10.0"
+            node-version: 24
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           persist-credentials: false
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ matrix.node-version }}
           package-manager-cache: false
       - run: corepack enable
       - run: corepack install
-      - name: Install KiCad 10.x
+      - name: Install KiCad ${{ matrix.kicad-version }}
         run: |
-          sudo add-apt-repository --yes ppa:kicad/kicad-10.0-releases
+          set -euo pipefail
+          sudo add-apt-repository --yes "ppa:kicad/kicad-${{ matrix.kicad-ppa-series }}-releases"
           sudo apt-get update -qq
           sudo apt-get install --yes kicad
-          kicad-cli version
+          version="$(kicad-cli version)"
+          echo "kicad-cli ${version}"
+          if [[ "${version}" != "${{ matrix.kicad-version }}".* ]]; then
+            echo "::error::Expected KiCad ${{ matrix.kicad-version }}.*, got ${version}"
+            exit 1
+          fi
       - run: pnpm install --frozen-lockfile
       - run: pnpm run test:int
 

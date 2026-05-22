@@ -6,10 +6,13 @@ on:
     branches: [main]
     paths:
       - .github/workflows/docs.yml
+      - docs/compatibility.yaml
+      - docs/support-matrix.md
       - docs/**
       - mkdocs.yml
       - package.json
       - pnpm-lock.yaml
+      - scripts/compatibility.mjs
       - scripts/generate-rule-docs.mjs
       - scripts/update-action-inputs-docs.mjs
       - scripts/docs-build.mjs

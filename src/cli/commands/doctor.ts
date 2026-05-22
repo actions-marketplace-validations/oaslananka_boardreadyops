@@ -10,6 +10,7 @@ import { globFiles } from "../../util/glob.js";
 import { runProcess } from "../../util/process.js";
 
 const doctorChecks = ["runtime", "kicad", "adapters", "repository", "suppressions", "action"] as const;
+const supportedNodeMajors = new Set([22, 24]);
 
 type DoctorCheckName = (typeof doctorChecks)[number];
 type DoctorSeverity = "pass" | "warn" | "fail" | "info";
@@ -98,8 +99,8 @@ async function runtimeCheck(): Promise<DoctorItem[]> {
   });
   const supportedNode = supportsDoctorNodeVersion(process.versions.node);
   return [
-    item(supportedNode ? "pass" : "fail", `Node: ${process.version} (required: >=24 <25)`, {
-      recommendation: supportedNode ? undefined : "Install a supported Node.js 24 runtime.",
+    item(supportedNode ? "pass" : "fail", `Node: ${process.version} (supported majors: 22, 24)`, {
+      recommendation: supportedNode ? undefined : "Install a supported Node.js 22 or 24 runtime.",
     }),
     item("pass", `boardreadyops: v${boardReadyVersion}`),
     npmVersion.code === 0
@@ -223,7 +224,7 @@ function checkoutPinnedItem(workflow: unknown): DoctorItem {
 
 export function supportsDoctorNodeVersion(version: string): boolean {
   const major = Number(version.replace(/^v/, "").split(".")[0]);
-  return Number.isInteger(major) && major >= 24 && major < 25;
+  return Number.isInteger(major) && supportedNodeMajors.has(major);
 }
 
 function parseDoctorFormat(format: string | undefined): "text" | "json" {

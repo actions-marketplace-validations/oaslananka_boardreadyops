@@ -45,6 +45,7 @@ nav:
   - Home: index.md
   - Quickstart: quickstart.md
   - Installation: install.md
+  - Support Matrix: support-matrix.md
   - Configuration: configuration.md
   - Multi-project Workspaces: multi-project.md
   - CLI: cli.md

@@ -116,8 +116,10 @@ gates:
     expect(await runCli(["doctor", "--format", "jsno"], invalidFormat)).toBe(2);
     expect(invalidFormat.stderrText()).toContain("Unknown doctor format: jsno");
 
+    expect(supportsDoctorNodeVersion("22.0.0")).toBe(true);
     expect(supportsDoctorNodeVersion("24.0.0")).toBe(true);
     expect(supportsDoctorNodeVersion("25.0.0")).toBe(false);
+    expect(supportsDoctorNodeVersion("26.0.0")).toBe(false);
   });
 
   it("runs every doctor check by default", async () => {
@@ -580,14 +582,18 @@ rules:
     }
   });
 
-  it("runs KiCad-backed DRC/ERC against a KiCad 10.x installation", async (context) => {
+  it("runs KiCad-backed DRC/ERC against a supported KiCad installation", async (context) => {
     const kicad = await detectKicadCli();
+    const supportedKicad = /^(9|10)\./;
     if (!process.env.CI) {
       context.skip(!kicad.found, "kicad-cli is not installed in this environment");
-      context.skip(!/^10\./.test(kicad.version ?? ""), "kicad-cli 10.x is not installed in this environment");
+      context.skip(
+        !supportedKicad.test(kicad.version ?? ""),
+        "kicad-cli 9.x or 10.x is not installed in this environment",
+      );
     }
     expect(kicad.found).toBe(true);
-    expect(kicad.version).toMatch(/^10\./);
+    expect(kicad.version).toMatch(supportedKicad);
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-real-kicad-"));
     await fs.rm(temp, { recursive: true, force: true });
     await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, { recursive: true });

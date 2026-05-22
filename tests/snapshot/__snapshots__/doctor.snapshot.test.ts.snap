@@ -107,7 +107,7 @@ exports[`doctor snapshots > formats stable JSON for every check 1`] = `
       {
         "items": [
           {
-            "message": "Node: <version> (required: >=24 <25)",
+            "message": "Node: <version> (supported majors: 22, 24)",
             "severity": "<node-runtime>",
           },
           {

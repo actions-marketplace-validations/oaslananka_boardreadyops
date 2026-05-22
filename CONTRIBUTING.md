@@ -1,6 +1,7 @@
 # Contributing
 
-Use Node.js 24 and the pnpm version pinned by `packageManager`.
+Use a Node.js runtime listed in the [support matrix](docs/support-matrix.md) and the pnpm version pinned by
+`packageManager`.
 
 ```bash
 corepack pnpm install --frozen-lockfile
