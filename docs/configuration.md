@@ -17,6 +17,24 @@ rules:
 fail-on: high
 ```
 
+`projects` entries add project-local settings for a discovered KiCad project. They do not narrow discovery: BoardReadyOps checks every `.kicad_pro` under the workspace unless the CLI receives `--project`.
+
+Project entries may override `mode`, rule settings, BOMs, pinmaps, and variants for the matching project directory or `.kicad_pro` file.
+
+```yaml
+version: 1
+projects:
+  - path: hardware/mainboard
+    rules:
+      manufacturing.outputs-present:
+        severity: critical
+  - path: hardware/prototype
+    mode: warn
+    bom: hardware/prototype/bom.csv
+```
+
+See [Multi-project Workspaces](multi-project.md) for filtering, concurrency, and report attribution examples.
+
 Use `gates` when event-specific enforcement needs stricter requirements than the repository default:
 
 ```yaml

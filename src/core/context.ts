@@ -23,6 +23,7 @@ export interface PipelineOptions {
   bom: string | undefined;
   pinmap: string | undefined;
   variant: string | undefined;
+  concurrency: number;
   failOn: FailOn;
   gate: string | undefined;
   gateAutoDetected?: boolean;

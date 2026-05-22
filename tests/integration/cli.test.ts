@@ -340,6 +340,59 @@ jobs:
     }
   });
 
+  it("filters run and check to one project with explicit concurrency", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-cli-multi-project-"));
+    await writeProject(root, "hardware/main", "main");
+    await writeProject(root, "hardware/prototype", "prototype");
+
+    const run = captureStreams();
+    expect(
+      await runCli(
+        [
+          "run",
+          root,
+          "--project",
+          "hardware/main",
+          "--rule",
+          "release.revision-set",
+          "--concurrency",
+          "1",
+          "--json",
+          "-",
+          "--no-annotations",
+          "--fail-on",
+          "never",
+        ],
+        run,
+      ),
+    ).toBe(0);
+    expect(JSON.parse(run.stdoutText()).findings.map((finding: { project?: string }) => finding.project)).toEqual([
+      "hardware/main/main.kicad_pro",
+    ]);
+
+    const check = captureStreams();
+    expect(
+      await runCli(
+        [
+          "check",
+          "release.revision-set",
+          root,
+          "--project",
+          "hardware/prototype",
+          "--json",
+          "-",
+          "--no-annotations",
+          "--fail-on",
+          "never",
+        ],
+        check,
+      ),
+    ).toBe(0);
+    expect(JSON.parse(check.stdoutText()).findings.map((finding: { project?: string }) => finding.project)).toEqual([
+      "hardware/prototype/prototype.kicad_pro",
+    ]);
+  });
+
   it("captures, shows, diffs, prunes, and clears a baseline from the CLI", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-baseline-cli-"));
     await fs.writeFile(path.join(temp, "sample.kicad_pro"), "{}");
@@ -593,6 +646,14 @@ function captureStreams() {
     stdoutText(): string;
     stderrText(): string;
   };
+}
+
+async function writeProject(root: string, directory: string, name: string): Promise<void> {
+  const projectRoot = path.join(root, directory);
+  await fs.mkdir(projectRoot, { recursive: true });
+  await fs.writeFile(path.join(projectRoot, `${name}.kicad_pro`), "{}", "utf8");
+  await fs.writeFile(path.join(projectRoot, `${name}.kicad_sch`), "(kicad_sch)", "utf8");
+  await fs.writeFile(path.join(projectRoot, `${name}.kicad_pcb`), '(kicad_pcb (title_block (rev "")))', "utf8");
 }
 
 function doctorItem(

@@ -53,6 +53,7 @@ export function formatSarif(result: RunResult): string {
           },
           properties: {
             severity: finding.severity,
+            project: finding.project,
             resourceKind: finding.resource.kind,
             ...(finding.details ? { details: finding.details } : {}),
             ...(finding.fix ? { fix: finding.fix } : {}),

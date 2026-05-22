@@ -87,7 +87,7 @@ export function createFinding(input: FindingInput): Finding {
 export function fingerprintFor(input: Omit<Finding, "fingerprint">): string {
   const stable = stableStringify({
     ruleId: input.ruleId,
-    ...(input.project ? { project: input.project } : {}),
+    ...(input.project === undefined ? {} : { project: input.project }),
     path: input.resource.path,
     kind: input.resource.kind,
     message: input.message,
@@ -133,6 +133,7 @@ export function sortFindings(findings: Finding[]): Finding[] {
     (a, b) =>
       compareSeverity(a.severity, b.severity) ||
       a.ruleId.localeCompare(b.ruleId) ||
+      (a.project ?? "").localeCompare(b.project ?? "") ||
       a.resource.path.localeCompare(b.resource.path) ||
       a.message.localeCompare(b.message),
   );

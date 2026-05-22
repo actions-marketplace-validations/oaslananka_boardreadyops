@@ -52,6 +52,7 @@ export async function explainCommand(
       bom: undefined,
       pinmap: undefined,
       variant: undefined,
+      concurrency: 1,
       failOn: "never",
       gate: undefined,
       rules: [ruleId],

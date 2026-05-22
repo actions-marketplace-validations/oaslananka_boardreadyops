@@ -290814,11 +290814,54 @@ var config_schema_default = {
             type: "string",
             minLength: 1
           },
+          mode: {
+            enum: ["warn", "enforce"]
+          },
           pinmap: {
             type: "string"
           },
           bom: {
             type: "string"
+          },
+          rules: {
+            type: "object",
+            additionalProperties: {
+              oneOf: [
+                {
+                  type: "boolean"
+                },
+                {
+                  type: "object",
+                  additionalProperties: true,
+                  properties: {
+                    enabled: {
+                      type: "boolean"
+                    },
+                    severity: {
+                      enum: ["critical", "high", "medium", "low", "info"]
+                    },
+                    "severity-overrides": {
+                      type: "object",
+                      additionalProperties: {
+                        enum: ["critical", "high", "medium", "low", "info"]
+                      }
+                    },
+                    "ignore-refs": {
+                      type: "array",
+                      items: {
+                        type: "string"
+                      }
+                    },
+                    required: {
+                      type: "array",
+                      items: {
+                        type: "string"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
           },
           variants: {
             type: "array",
@@ -291095,7 +291138,7 @@ function createFinding(input) {
 function fingerprintFor(input) {
   const stable = stableStringify({
     ruleId: input.ruleId,
-    ...input.project ? { project: input.project } : {},
+    ...input.project === void 0 ? {} : { project: input.project },
     path: input.resource.path,
     kind: input.resource.kind,
     message: input.message,
@@ -291135,7 +291178,7 @@ function shouldFail(findings, failOn) {
 }
 function sortFindings(findings) {
   return [...findings].sort(
-    (a, b) => compareSeverity(a.severity, b.severity) || a.ruleId.localeCompare(b.ruleId) || a.resource.path.localeCompare(b.resource.path) || a.message.localeCompare(b.message)
+    (a, b) => compareSeverity(a.severity, b.severity) || a.ruleId.localeCompare(b.ruleId) || (a.project ?? "").localeCompare(b.project ?? "") || a.resource.path.localeCompare(b.resource.path) || a.message.localeCompare(b.message)
   );
 }
 
@@ -308611,7 +308654,7 @@ async function runPipeline(input = {}, logger7) {
   const config2 = gate ? applyGateRequirements(loadedConfig, gate) : loadedConfig;
   const options = normalizeOptions(cwd, root, config2, input, gate, missingExplicitGate ? "critical" : void 0);
   const activeLogger = logger7 ?? createLogger(options.quiet ? "silent" : options.verbose ? "debug" : "info");
-  const projects = await discoverConfiguredProjects(root, options, config2);
+  const projects = await discoverConfiguredProjects(root, options);
   const findings = [];
   findings.push(...configFindings(root, loaded, missingExplicitGate ? /* @__PURE__ */ new Set([missingExplicitGate]) : void 0));
   findings.push(...projectShapeFindings(projects));
@@ -308624,8 +308667,22 @@ async function runPipeline(input = {}, logger7) {
     }
     return true;
   });
-  const projectFindings = await mapLimit(projects, defaultConcurrency(), async (project) => {
-    const context5 = { root, projects: [project], config: config2, options, logger: activeLogger };
+  const projectFindings = await mapLimit(projects, options.concurrency, async (project) => {
+    const projectConfig = configForProject(root, config2, project);
+    const override = projectConfig.projects?.[0];
+    const variantMatch = override?.variants?.find((variant) => variant.name === options.variant);
+    const context5 = {
+      root,
+      projects: [project],
+      config: projectConfig,
+      options: {
+        ...options,
+        mode: projectConfig.mode ?? options.mode,
+        bom: variantMatch?.bom ?? override?.bom ?? options.bom,
+        pinmap: override?.pinmap ?? options.pinmap
+      },
+      logger: activeLogger
+    };
     const output = [];
     for (const rule2 of activeRules) {
       output.push(...await rule2.run(context5));
@@ -308686,6 +308743,7 @@ function normalizeOptions(cwd, root, config2, input, gate, forceFailOn) {
     bom: input.bom,
     pinmap: input.pinmap,
     variant: input.variant,
+    concurrency: input.concurrency ?? defaultConcurrency(),
     failOn: forceFailOn ?? gate?.["fail-on"] ?? input.failOn ?? config2["fail-on"] ?? "high",
     gate: input.gate,
     gateAutoDetected: input.gateAutoDetected ?? false,
@@ -308697,6 +308755,12 @@ function normalizeOptions(cwd, root, config2, input, gate, forceFailOn) {
     verbose: input.verbose ?? false,
     color: input.color ?? "auto"
   };
+}
+async function discoverConfiguredProjects(root, options) {
+  if (options.project) {
+    return discoverProjects(root, options.project);
+  }
+  return discoverProjects(root);
 }
 function applyGateRequirements(config2, gate) {
   const requiredRules = requiredGateRules(gate.require ?? []);
@@ -308731,15 +308795,42 @@ function enableRule(ruleConfig2) {
 function ruleObjectConfig(ruleConfig2) {
   return typeof ruleConfig2 === "object" && ruleConfig2 !== null ? ruleConfig2 : {};
 }
-async function discoverConfiguredProjects(root, options, config2) {
-  if (options.project) {
-    return discoverProjects(root, options.project);
+function configForProject(root, config2, project) {
+  const override = config2.projects?.find((candidate) => {
+    const target = import_node_path29.default.resolve(root, candidate.path);
+    return target === import_node_path29.default.resolve(root, project.root) || target === import_node_path29.default.resolve(root, project.projectFile);
+  });
+  if (!override) {
+    return {
+      ...config2,
+      projects: []
+    };
   }
-  if (config2.projects && config2.projects.length > 0) {
-    const nested = await Promise.all(config2.projects.map((project) => discoverProjects(root, project.path)));
-    return nested.flat();
+  const projectConfig = {
+    ...config2,
+    projects: [override]
+  };
+  if (override.mode) {
+    projectConfig.mode = override.mode;
   }
-  return discoverProjects(root);
+  if (override.rules) {
+    projectConfig.rules = mergeRules(config2.rules, override.rules);
+  }
+  return projectConfig;
+}
+function mergeRules(rules, overrides) {
+  const merged = { ...rules ?? {} };
+  for (const [id, override] of Object.entries(overrides)) {
+    const current = merged[id];
+    merged[id] = isRuleConfig(current) && isRuleConfig(override) ? {
+      ...current,
+      ...override
+    } : override;
+  }
+  return merged;
+}
+function isRuleConfig(value) {
+  return typeof value === "object" && value !== null;
 }
 function configFindings(root, loaded, criticalErrors = /* @__PURE__ */ new Set()) {
   return loaded.errors.map(
@@ -309420,6 +309511,7 @@ function formatSarif(result) {
           },
           properties: {
             severity: finding2.severity,
+            project: finding2.project,
             resourceKind: finding2.resource.kind,
             ...finding2.details ? { details: finding2.details } : {},
             ...finding2.fix ? { fix: finding2.fix } : {},

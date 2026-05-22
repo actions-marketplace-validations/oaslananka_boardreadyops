@@ -13,7 +13,7 @@ import {
   loadConfig,
   type RuleConfig,
 } from "./config.js";
-import type { PipelineOptions, RuleContext } from "./context.js";
+import type { PipelineOptions, ProjectContext, RuleContext } from "./context.js";
 import { discoverProjects } from "./discovery.js";
 import { createFinding, type FailOn, type Finding, sortFindings, summarizeFindings } from "./findings.js";
 import { gateRequirementFindings, requiredGateRules, requiredManufacturingOutputs } from "./gates/requirements.js";
@@ -42,7 +42,7 @@ export async function runPipeline(
   const config = gate ? applyGateRequirements(loadedConfig, gate) : loadedConfig;
   const options = normalizeOptions(cwd, root, config, input, gate, missingExplicitGate ? "critical" : undefined);
   const activeLogger = logger ?? createLogger(options.quiet ? "silent" : options.verbose ? "debug" : "info");
-  const projects = await discoverConfiguredProjects(root, options, config);
+  const projects = await discoverConfiguredProjects(root, options);
   const findings: Finding[] = [];
   findings.push(...configFindings(root, loaded, missingExplicitGate ? new Set([missingExplicitGate]) : undefined));
   findings.push(...projectShapeFindings(projects));
@@ -55,8 +55,22 @@ export async function runPipeline(
     }
     return true;
   });
-  const projectFindings = await mapLimit(projects, defaultConcurrency(), async (project) => {
-    const context: RuleContext = { root, projects: [project], config, options, logger: activeLogger };
+  const projectFindings = await mapLimit(projects, options.concurrency, async (project) => {
+    const projectConfig = configForProject(root, config, project);
+    const override = projectConfig.projects?.[0];
+    const variantMatch = override?.variants?.find((variant) => variant.name === options.variant);
+    const context: RuleContext = {
+      root,
+      projects: [project],
+      config: projectConfig,
+      options: {
+        ...options,
+        mode: projectConfig.mode ?? options.mode,
+        bom: variantMatch?.bom ?? override?.bom ?? options.bom,
+        pinmap: override?.pinmap ?? options.pinmap,
+      },
+      logger: activeLogger,
+    };
     const output: Finding[] = [];
     for (const rule of activeRules) {
       output.push(...(await rule.run(context)));
@@ -133,6 +147,7 @@ function normalizeOptions(
     bom: input.bom,
     pinmap: input.pinmap,
     variant: input.variant,
+    concurrency: input.concurrency ?? defaultConcurrency(),
     failOn: forceFailOn ?? gate?.["fail-on"] ?? input.failOn ?? config["fail-on"] ?? "high",
     gate: input.gate,
     gateAutoDetected: input.gateAutoDetected ?? false,
@@ -144,6 +159,13 @@ function normalizeOptions(
     verbose: input.verbose ?? false,
     color: input.color ?? "auto",
   };
+}
+
+async function discoverConfiguredProjects(root: string, options: PipelineOptions) {
+  if (options.project) {
+    return discoverProjects(root, options.project);
+  }
+  return discoverProjects(root);
 }
 
 function applyGateRequirements(config: BoardReadyOpsConfig, gate: GateConfig): BoardReadyOpsConfig {
@@ -184,15 +206,50 @@ function ruleObjectConfig(ruleConfig: RuleConfig | boolean | undefined): RuleCon
   return typeof ruleConfig === "object" && ruleConfig !== null ? ruleConfig : {};
 }
 
-async function discoverConfiguredProjects(root: string, options: PipelineOptions, config: BoardReadyOpsConfig) {
-  if (options.project) {
-    return discoverProjects(root, options.project);
+function configForProject(root: string, config: BoardReadyOpsConfig, project: ProjectContext): BoardReadyOpsConfig {
+  const override = config.projects?.find((candidate) => {
+    const target = path.resolve(root, candidate.path);
+    return target === path.resolve(root, project.root) || target === path.resolve(root, project.projectFile);
+  });
+  if (!override) {
+    return {
+      ...config,
+      projects: [],
+    };
   }
-  if (config.projects && config.projects.length > 0) {
-    const nested = await Promise.all(config.projects.map((project) => discoverProjects(root, project.path)));
-    return nested.flat();
+  const projectConfig: BoardReadyOpsConfig = {
+    ...config,
+    projects: [override],
+  };
+  if (override.mode) {
+    projectConfig.mode = override.mode;
   }
-  return discoverProjects(root);
+  if (override.rules) {
+    projectConfig.rules = mergeRules(config.rules, override.rules);
+  }
+  return projectConfig;
+}
+
+function mergeRules(
+  rules: BoardReadyOpsConfig["rules"],
+  overrides: NonNullable<NonNullable<BoardReadyOpsConfig["projects"]>[number]["rules"]>,
+): NonNullable<BoardReadyOpsConfig["rules"]> {
+  const merged = { ...(rules ?? {}) };
+  for (const [id, override] of Object.entries(overrides)) {
+    const current = merged[id];
+    merged[id] =
+      isRuleConfig(current) && isRuleConfig(override)
+        ? {
+            ...current,
+            ...override,
+          }
+        : override;
+  }
+  return merged;
+}
+
+function isRuleConfig(value: RuleConfig | boolean | undefined): value is RuleConfig {
+  return typeof value === "object" && value !== null;
 }
 
 function configFindings(root: string, loaded: LoadedConfig, criticalErrors = new Set<string>()): Finding[] {

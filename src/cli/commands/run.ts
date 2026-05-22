@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { Command } from "commander";
+import { type Command, InvalidArgumentError } from "commander";
 import { loadConfig } from "../../core/config.js";
 import type { FailOn } from "../../core/findings.js";
 import { canonicalRoot, runPipeline } from "../../core/pipeline.js";
@@ -17,6 +17,7 @@ export interface CommonCliOptions {
   bom?: string;
   pinmap?: string;
   variant?: string;
+  concurrency?: number;
   gate?: string;
   sarif?: string | boolean;
   json?: string | boolean;
@@ -61,6 +62,7 @@ export async function runCommand(
     bom: options.bom,
     pinmap: options.pinmap,
     variant: options.variant,
+    ...(options.concurrency ? { concurrency: options.concurrency } : {}),
     gate: options.gate,
     failOn: options.failOn ?? "high",
     rules: options.rule ?? [],
@@ -90,6 +92,7 @@ export function addCommonOptions(command: Command): Command {
     .option("--bom <path>", "BOM source path or auto")
     .option("--pinmap <path>", "pinmap file path")
     .option("--variant <name>", "KiCad variant name")
+    .option("--concurrency <count>", "max projects to check in parallel", positiveInteger)
     .option("--gate <name>", "gate from boardreadyops.yml")
     .option("--sarif [path]", "write SARIF report")
     .option("--json [path]", "write JSON report")
@@ -105,6 +108,13 @@ export function addCommonOptions(command: Command): Command {
 
 function collect(value: string, previous: string[]): string[] {
   return [...previous, value];
+}
+
+function positiveInteger(value: string): number {
+  if (!/^[1-9]\d*$/.test(value)) {
+    throw new InvalidArgumentError("concurrency must be a positive integer");
+  }
+  return Number.parseInt(value, 10);
 }
 
 function outputOptions(options: CommonCliOptions): OutputOptions {

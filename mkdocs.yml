@@ -46,6 +46,7 @@ nav:
   - Quickstart: quickstart.md
   - Installation: install.md
   - Configuration: configuration.md
+  - Multi-project Workspaces: multi-project.md
   - CLI: cli.md
   - GitHub Action:
       - Node Action: action.md

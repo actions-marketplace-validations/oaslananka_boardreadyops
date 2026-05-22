@@ -2,6 +2,14 @@
 
 `boardreadyops run [path]` runs the full pipeline. `boardreadyops check [path]` is the concise preflight form for local and CI use. `boardreadyops check <rule-id> [path]` runs one rule. `boardreadyops explain <rule-id> [path]` prints rule-specific diagnostics when that rule exposes an explainer. `doctor`, `schema`, and `init` support setup and automation.
 
+Use `--project <path>` with `run` or `check` to restrict a workspace scan to one project directory or `.kicad_pro` file. Use `--concurrency <count>` to cap concurrent project execution when a workspace contains multiple boards.
+
+```bash
+boardreadyops run . --project hardware/mainboard
+boardreadyops check manufacturing.outputs-present . --project hardware/mainboard
+boardreadyops run . --concurrency 2
+```
+
 Use `boardreadyops run --gate release` to select a configured gate from `boardreadyops.yml`. A selected gate enforces its configured threshold and named requirements for local release checks; GitHub Action runs auto-detect `pull_request`, `main`, or `release` when the Action `gate` input is empty.
 
 ## Doctor

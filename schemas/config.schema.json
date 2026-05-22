@@ -23,11 +23,54 @@
             "type": "string",
             "minLength": 1
           },
+          "mode": {
+            "enum": ["warn", "enforce"]
+          },
           "pinmap": {
             "type": "string"
           },
           "bom": {
             "type": "string"
+          },
+          "rules": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "severity": {
+                      "enum": ["critical", "high", "medium", "low", "info"]
+                    },
+                    "severity-overrides": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "enum": ["critical", "high", "medium", "low", "info"]
+                      }
+                    },
+                    "ignore-refs": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "required": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
           },
           "variants": {
             "type": "array",

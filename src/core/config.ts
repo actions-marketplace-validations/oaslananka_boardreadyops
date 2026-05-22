@@ -19,8 +19,10 @@ export interface RuleConfig {
 
 interface ProjectConfig {
   path: string;
+  mode?: "warn" | "enforce";
   pinmap?: string;
   bom?: string;
+  rules?: Record<string, RuleConfig | boolean>;
   variants?: Array<{
     name: string;
     bom?: string;
