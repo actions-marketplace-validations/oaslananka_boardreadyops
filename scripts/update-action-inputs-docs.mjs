@@ -8,6 +8,23 @@ const rows = Object.entries(action.inputs ?? {})
 const outputs = Object.entries(action.outputs ?? {})
   .map(([name, output]) => `| \`${name}\` | ${output.description ?? ""} |`)
   .join("\n");
+
+const ACTION_EXAMPLE_STEPS = [
+  {
+    action: "actions/checkout",
+    sha: "de0fac2e4500dabe0009e67214ff5f5447ce83dd",
+    version: "v6.0.2",
+  },
+  {
+    action: "oaslananka/boardreadyops",
+    sha: "9210bcaea20bdc99f8cd26c6c4b62cbf4ad7983e",
+    version: "v1.0.2",
+  },
+];
+const pinnedActionExample = ACTION_EXAMPLE_STEPS.map(
+  ({ action, sha, version }) => `      - uses: ${action}@${sha} # ${version}`,
+).join("\n");
+
 const content = `# GitHub Action
 
 \`\`\`yaml
@@ -22,8 +39,7 @@ jobs:
   boardreadyops:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: oaslananka/boardreadyops@v1
+${pinnedActionExample}
         with:
           config: boardreadyops.yml
 \`\`\`

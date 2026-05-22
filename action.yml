@@ -2,7 +2,7 @@ name: BoardReadyOps
 description: BoardReadyOps checks KiCad hardware repositories for production readiness before fabrication.
 author: Osman Aslan
 branding:
-  icon: shield
+  icon: check-circle
   color: blue
 runs:
   using: node24

@@ -3,16 +3,12 @@ name: ci
 on:
   pull_request:
     paths-ignore:
-      - docs/**
-      - "*.md"
       - mkdocs.yml
       - .coderabbit.yaml
   push:
     branches:
       - main
     paths-ignore:
-      - docs/**
-      - "*.md"
       - mkdocs.yml
       - .coderabbit.yaml
   workflow_dispatch:
@@ -46,6 +42,7 @@ jobs:
       - run: corepack install
       - run: pnpm install --frozen-lockfile
       - run: pnpm run lint
+      - run: node scripts/check-action-pins.mjs
       - run: pnpm run verify:structure
       - run: pnpm run gc
       - run: pnpm run knip
