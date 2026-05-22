@@ -1,0 +1,161 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`doctor snapshots > formats stable JSON for every check 1`] = `
+{
+  "action": {
+    "checks": [
+      {
+        "items": [
+          {
+            "message": "No .github/workflows/boardreadyops.yml workflow found.",
+            "recommendation": "Add the BoardReadyOps GitHub Action workflow for pull request preflight.",
+            "severity": "warn",
+          },
+        ],
+        "name": "action",
+        "title": "Action / Workflow",
+      },
+    ],
+    "recommendations": [
+      "Add the BoardReadyOps GitHub Action workflow for pull request preflight.",
+    ],
+    "schemaVersion": 1,
+    "tool": {
+      "name": "boardreadyops",
+      "version": "<version>",
+    },
+  },
+  "adapters": {
+    "checks": [
+      {
+        "items": [
+          {
+            "message": "Nexar credentials not present.",
+            "recommendation": "Set NEXAR_CLIENT_ID and NEXAR_CLIENT_SECRET for Nexar-backed lifecycle checks.",
+            "severity": "warn",
+          },
+        ],
+        "name": "adapters",
+        "title": "Adapters",
+      },
+    ],
+    "recommendations": [
+      "Set NEXAR_CLIENT_ID and NEXAR_CLIENT_SECRET for Nexar-backed lifecycle checks.",
+    ],
+    "schemaVersion": 1,
+    "tool": {
+      "name": "boardreadyops",
+      "version": "<version>",
+    },
+  },
+  "kicad": {
+    "checks": [
+      {
+        "items": [
+          {
+            "message": "kicad-cli not found.",
+            "recommendation": "Install KiCad CLI to run DRC and ERC checks.",
+            "severity": "warn",
+          },
+        ],
+        "name": "kicad",
+        "title": "KiCad",
+      },
+    ],
+    "recommendations": [
+      "Install KiCad CLI to run DRC and ERC checks.",
+    ],
+    "schemaVersion": 1,
+    "tool": {
+      "name": "boardreadyops",
+      "version": "<version>",
+    },
+  },
+  "repository": {
+    "checks": [
+      {
+        "items": [
+          {
+            "message": "boardreadyops.yml found and valid.",
+            "severity": "pass",
+          },
+          {
+            "message": "1 KiCad project discovered.",
+            "severity": "pass",
+          },
+          {
+            "message": "No Gerber outputs found.",
+            "recommendation": "Generate Gerber outputs from KiCad before CI.",
+            "severity": "fail",
+          },
+        ],
+        "name": "repository",
+        "title": "Repository",
+      },
+    ],
+    "recommendations": [
+      "Generate Gerber outputs from KiCad before CI.",
+    ],
+    "schemaVersion": 1,
+    "tool": {
+      "name": "boardreadyops",
+      "version": "<version>",
+    },
+  },
+  "runtime": {
+    "checks": [
+      {
+        "items": [
+          {
+            "message": "Node: <version> (required: >=24 <25)",
+            "severity": "<node-runtime>",
+          },
+          {
+            "message": "boardreadyops: v<version>",
+            "severity": "pass",
+          },
+          {
+            "message": "npm not found.",
+            "recommendation": "Install npm for package-based BoardReadyOps workflows.",
+            "severity": "warn",
+          },
+        ],
+        "name": "runtime",
+        "title": "Runtime",
+      },
+    ],
+    "recommendations": [
+      "Install npm for package-based BoardReadyOps workflows.",
+    ],
+    "schemaVersion": 1,
+    "tool": {
+      "name": "boardreadyops",
+      "version": "<version>",
+    },
+  },
+  "suppressions": {
+    "checks": [
+      {
+        "items": [
+          {
+            "message": "No suppressions file found.",
+            "severity": "pass",
+          },
+          {
+            "message": "No baseline captured.",
+            "severity": "info",
+          },
+        ],
+        "name": "suppressions",
+        "title": "Suppressions",
+      },
+    ],
+    "recommendations": [],
+    "schemaVersion": 1,
+    "tool": {
+      "name": "boardreadyops",
+      "version": "<version>",
+    },
+  },
+}
+`;

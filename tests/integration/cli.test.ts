@@ -1,7 +1,10 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
+import { Ajv2020 } from "ajv/dist/2020.js";
 import { describe, expect, it } from "vitest";
+import doctorSchema from "../../schemas/doctor.schema.json" with { type: "json" };
+import { supportsDoctorNodeVersion } from "../../src/cli/commands/doctor.js";
 import { runCli } from "../../src/cli/index.js";
 import { runPipeline } from "../../src/core/pipeline.js";
 import { detectKicadCli } from "../../src/kicad/cli.js";
@@ -87,9 +90,202 @@ gates:
     const pinmap = captureStreams();
     expect(await runCli(["schema", "pinmap"], pinmap)).toBe(0);
     expect(pinmap.stdoutText()).toContain("BoardReadyOps pinmap");
+    const doctorSchema = captureStreams();
+    expect(await runCli(["schema", "doctor"], doctorSchema)).toBe(0);
+    expect(doctorSchema.stdoutText()).toContain("BoardReadyOps doctor report");
     const doctor = captureStreams();
     expect(await runCli(["doctor"], doctor)).toBe(0);
     expect(doctor.stdoutText()).toContain("Node:");
+  });
+
+  it("prints a JSON doctor report for one selected check", async () => {
+    const doctor = captureStreams();
+    expect(await runCli(["doctor", "--check", "runtime", "--format", "json"], doctor)).toBe(0);
+
+    const report = JSON.parse(doctor.stdoutText());
+    expect(report.tool).toMatchObject({ name: "boardreadyops" });
+    expect(report.checks.map((check: { name: string }) => check.name)).toEqual(["runtime"]);
+  });
+
+  it("rejects unsupported doctor options and Node engine majors", async () => {
+    const invalidCheck = captureStreams();
+    expect(await runCli(["doctor", "--check", "typo"], invalidCheck)).toBe(2);
+    expect(invalidCheck.stderrText()).toContain("Unknown doctor check: typo");
+
+    const invalidFormat = captureStreams();
+    expect(await runCli(["doctor", "--format", "jsno"], invalidFormat)).toBe(2);
+    expect(invalidFormat.stderrText()).toContain("Unknown doctor format: jsno");
+
+    expect(supportsDoctorNodeVersion("24.0.0")).toBe(true);
+    expect(supportsDoctorNodeVersion("25.0.0")).toBe(false);
+  });
+
+  it("runs every doctor check by default", async () => {
+    const doctor = captureStreams();
+    expect(await runCli(["doctor", "--format", "json"], doctor)).toBe(0);
+
+    const report = JSON.parse(doctor.stdoutText());
+    expect(report.checks.map((check: { name: string }) => check.name)).toEqual([
+      "runtime",
+      "kicad",
+      "adapters",
+      "repository",
+      "suppressions",
+      "action",
+    ]);
+    const validate = new Ajv2020({ allErrors: true }).compile(doctorSchema);
+    expect(validate(report), JSON.stringify(validate.errors)).toBe(true);
+  });
+
+  it("diagnoses repository, adapter, KiCad, and workflow gaps", async () => {
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-doctor-"));
+    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, { recursive: true });
+    const previousCwd = process.cwd();
+    const previousPath = process.env.PATH;
+    const previousNexarClientId = process.env.NEXAR_CLIENT_ID;
+    const previousNexarClientSecret = process.env.NEXAR_CLIENT_SECRET;
+    process.chdir(temp);
+    process.env.PATH = "";
+    delete process.env.NEXAR_CLIENT_ID;
+    delete process.env.NEXAR_CLIENT_SECRET;
+    try {
+      const doctor = captureStreams();
+      expect(await runCli(["doctor", "--format", "json"], doctor)).toBe(0);
+
+      const report = JSON.parse(doctor.stdoutText());
+      expect(report.recommendations).toContain("Generate Gerber outputs from KiCad before CI.");
+      expect(doctorItem(report, "kicad", "kicad-cli not found.")).toMatchObject({
+        severity: "warn",
+      });
+      expect(doctorItem(report, "adapters", "Nexar credentials not present.")).toMatchObject({
+        severity: "warn",
+      });
+      expect(doctorItem(report, "repository", "No Gerber outputs found.")).toMatchObject({
+        severity: "fail",
+        recommendation: "Generate Gerber outputs from KiCad before CI.",
+      });
+      expect(doctorItem(report, "action", "No .github/workflows/boardreadyops.yml workflow found.")).toMatchObject({
+        severity: "warn",
+      });
+    } finally {
+      process.chdir(previousCwd);
+      restoreEnv("PATH", previousPath);
+      restoreEnv("NEXAR_CLIENT_ID", previousNexarClientId);
+      restoreEnv("NEXAR_CLIENT_SECRET", previousNexarClientSecret);
+    }
+  });
+
+  it("reads YAML workflow structure for action diagnostics", async () => {
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-doctor-action-"));
+    const sha = "d".repeat(40);
+    await fs.mkdir(path.join(temp, ".github", "workflows"), { recursive: true });
+    await fs.writeFile(
+      path.join(temp, ".github", "workflows", "boardreadyops.yaml"),
+      `name: boardreadyops
+permissions:
+  contents: read
+jobs:
+  doctor:
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@${sha}
+      - uses: oaslananka/boardreadyops@${sha}
+`,
+      "utf8",
+    );
+
+    const previousCwd = process.cwd();
+    process.chdir(temp);
+    try {
+      const doctor = captureStreams();
+      expect(await runCli(["doctor", "--check", "action", "--format", "json"], doctor)).toBe(0);
+
+      const report = JSON.parse(doctor.stdoutText());
+      expect(doctorItem(report, "action", ".github/workflows/boardreadyops.yaml found.")).toMatchObject({
+        severity: "pass",
+      });
+      expect(doctorItem(report, "action", "actions/checkout is SHA-pinned.")).toMatchObject({ severity: "pass" });
+      expect(doctorItem(report, "action", "permissions: pull-requests or issues write configured.")).toMatchObject({
+        severity: "pass",
+      });
+    } finally {
+      process.chdir(previousCwd);
+    }
+  });
+
+  it("does not trust workflow comments and keeps unreadable workflow paths diagnostic", async () => {
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-doctor-action-"));
+    await fs.mkdir(path.join(temp, ".github", "workflows"), { recursive: true });
+    await fs.writeFile(
+      path.join(temp, ".github", "workflows", "boardreadyops.yml"),
+      `# permissions: pull-requests: write
+# uses: actions/checkout@${"d".repeat(40)}
+permissions:
+  contents: read
+jobs:
+  unrelated:
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@${"d".repeat(40)}
+  doctor:
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oaslananka/boardreadyops@${"d".repeat(40)}
+`,
+      "utf8",
+    );
+
+    const previousCwd = process.cwd();
+    process.chdir(temp);
+    try {
+      const comments = captureStreams();
+      expect(await runCli(["doctor", "--check", "action", "--format", "json"], comments)).toBe(0);
+      const commentsReport = JSON.parse(comments.stdoutText());
+      expect(doctorItem(commentsReport, "action", "actions/checkout is not SHA-pinned.")).toMatchObject({
+        severity: "warn",
+      });
+      expect(
+        doctorItem(commentsReport, "action", "permissions: pull-requests or issues write missing for PR comments."),
+      ).toMatchObject({ severity: "warn" });
+
+      await fs.rm(path.join(temp, ".github", "workflows", "boardreadyops.yml"));
+      await fs.mkdir(path.join(temp, ".github", "workflows", "boardreadyops.yml"));
+      const unreadable = captureStreams();
+      expect(await runCli(["doctor", "--check", "action", "--format", "json"], unreadable)).toBe(0);
+      const unreadableReport = JSON.parse(unreadable.stdoutText());
+      expect(
+        doctorItem(unreadableReport, "action", "Unable to read or parse .github/workflows/boardreadyops.yml workflow."),
+      ).toMatchObject({ severity: "warn" });
+    } finally {
+      process.chdir(previousCwd);
+    }
+  });
+
+  it("reports discovered suppression and baseline files", async () => {
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-doctor-suppressions-"));
+    await fs.writeFile(path.join(temp, ".boardreadyops-suppressions.yml"), "version: 1\n", "utf8");
+    await fs.writeFile(path.join(temp, ".boardreadyops-baseline.json"), "{}\n", "utf8");
+
+    const previousCwd = process.cwd();
+    process.chdir(temp);
+    try {
+      const doctor = captureStreams();
+      expect(await runCli(["doctor", "--check", "suppressions", "--format", "json"], doctor)).toBe(0);
+      const report = JSON.parse(doctor.stdoutText());
+      expect(
+        doctorItem(report, "suppressions", ".boardreadyops-suppressions.yml suppressions file found."),
+      ).toMatchObject({ severity: "info" });
+      expect(doctorItem(report, "suppressions", ".boardreadyops-baseline.json baseline found.")).toMatchObject({
+        severity: "info",
+      });
+    } finally {
+      process.chdir(previousCwd);
+    }
   });
 
   it("explains manufacturing output detection", async () => {
@@ -397,4 +593,20 @@ function captureStreams() {
     stdoutText(): string;
     stderrText(): string;
   };
+}
+
+function doctorItem(
+  report: { checks: Array<{ name: string; items: Array<{ message: string }> }> },
+  checkName: string,
+  message: string,
+) {
+  return report.checks.find((check) => check.name === checkName)?.items.find((item) => item.message === message);
+}
+
+function restoreEnv(name: string, value: string | undefined): void {
+  if (value === undefined) {
+    delete process.env[name];
+    return;
+  }
+  process.env[name] = value;
 }

@@ -4,6 +4,21 @@
 
 Use `boardreadyops run --gate release` to select a configured gate from `boardreadyops.yml`. A selected gate enforces its configured threshold and named requirements for local release checks; GitHub Action runs auto-detect `pull_request`, `main`, or `release` when the Action `gate` input is empty.
 
+## Doctor
+
+`boardreadyops doctor` diagnoses the current environment and repository before a full pipeline run. Its checks cover the Node and npm runtime, KiCad CLI availability, configured adapter credentials, repository discovery and manufacturing outputs, suppression state, and the conventional `.github/workflows/boardreadyops.yml` or `.github/workflows/boardreadyops.yaml` workflow.
+
+```sh
+boardreadyops doctor
+boardreadyops doctor --check repository
+boardreadyops doctor --format json
+boardreadyops schema doctor
+```
+
+`--check` accepts `runtime`, `kicad`, `adapters`, `repository`, `suppressions`, or `action`; unknown check names return exit code `2`. `--format` accepts only `text` and `json`, and unknown formats also return exit code `2`.
+
+The JSON form returns structured check items with `pass`, `warn`, `fail`, or `info` severities plus deduplicated recommendations. `boardreadyops schema doctor` prints the JSON Schema for consumers that ingest the report.
+
 ## Baselines
 
 Baseline commands operate on the configured baseline file, or `.boardreadyops-baseline.json` when the config does not override it.

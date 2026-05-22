@@ -11,7 +11,7 @@ import {
   showBaselineCommand,
 } from "./commands/baseline.js";
 import { checkCommand } from "./commands/check.js";
-import { doctorCommand } from "./commands/doctor.js";
+import { type DoctorCommandOptions, doctorCommand } from "./commands/doctor.js";
 import { explainCommand } from "./commands/explain.js";
 import { initCommand } from "./commands/init.js";
 import { addCommonOptions, type CommonCliOptions, runCommand } from "./commands/run.js";
@@ -47,9 +47,13 @@ export async function runCli(
     },
   );
 
-  program.command("doctor").action(async () => {
-    process.exitCode = await doctorCommand(streams);
-  });
+  program
+    .command("doctor")
+    .option("--format <format>", "text or json", "text")
+    .option("--check <name>", "run one doctor check")
+    .action(async (options: DoctorCommandOptions) => {
+      process.exitCode = await doctorCommand(options, streams);
+    });
 
   program
     .command("explain")
@@ -61,7 +65,7 @@ export async function runCli(
 
   program
     .command("schema")
-    .argument("[name]", "config, findings, or pinmap", "config")
+    .argument("[name]", "config, doctor, findings, or pinmap", "config")
     .action((name: string | undefined) => {
       process.exitCode = schemaCommand(name, streams);
     });
