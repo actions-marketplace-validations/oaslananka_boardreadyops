@@ -5,9 +5,13 @@ export const dnpConsistencyRule = rule(
   {
     id: "bom.dnp-consistency",
     title: "BOM DNP state differs from PCB population state",
+    description: "Compares BOM do-not-populate flags with PCB footprint population attributes.",
+    rationale: "A BOM and PCB population mismatch can fabricate or assemble the wrong variant.",
     defaultSeverity: "medium",
     appliesTo: ["bom", "pcb"],
     configKeys: ["rules.bom.dnp-consistency.severity"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["bom", "pcb", "variant"],
   },
   async (context) => {
     if (!shouldRun(context, "bom.dnp-consistency")) {

@@ -6,9 +6,13 @@ export const layerStackupRule = rule(
   {
     id: "manufacturing.layer-stackup",
     title: "PCB stackup layer count does not match expected copper layers",
+    description: "Compares the parsed PCB stackup layer count with configured expectations.",
+    rationale: "Stackup mismatches change fabrication cost and electrical assumptions.",
     defaultSeverity: "medium",
     appliesTo: ["pcb"],
     configKeys: ["rules.manufacturing.layer-stackup.expected-layers"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["manufacturing", "pcb", "stackup"],
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.layer-stackup")) {

@@ -10,7 +10,7 @@ import { discoverProjects } from "../../src/core/discovery.js";
 import { createFinding } from "../../src/core/findings.js";
 import { createLogger } from "../../src/core/logger.js";
 import { runPipeline } from "../../src/core/pipeline.js";
-import { listRules, registerRule } from "../../src/core/rule-registry.js";
+import { listRules, type Rule, registerRule } from "../../src/core/rule-registry.js";
 import { loadPinmap } from "../../src/pinmap/loader.js";
 import { readCsvPinmap } from "../../src/pinmap/resolvers/csv.js";
 import { readJsonPinmap } from "../../src/pinmap/resolvers/json.js";
@@ -202,8 +202,18 @@ describe("support utilities", () => {
   });
 
   it("rejects duplicate rule registration", async () => {
-    const sample = {
-      meta: { id: "sample.rule", title: "sample", defaultSeverity: "info" as const, appliesTo: [], configKeys: [] },
+    const sample: Rule = {
+      meta: {
+        id: "sample.rule",
+        title: "sample",
+        description: "Synthetic rule.",
+        rationale: "Exercises duplicate registration.",
+        defaultSeverity: "info" as const,
+        appliesTo: [],
+        configKeys: [],
+        kicadVersions: ["future"],
+        tags: ["test"],
+      },
       run: async () => [],
     };
     registerRule(sample);

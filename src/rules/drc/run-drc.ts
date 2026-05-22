@@ -8,9 +8,13 @@ export const runDrcRule = rule(
   {
     id: "drc.kicad",
     title: "KiCad DRC findings",
+    description: "Runs KiCad PCB design-rule checks and normalizes their diagnostics into findings.",
+    rationale: "KiCad DRC findings expose layout violations that should be reviewed before fabrication.",
     defaultSeverity: "high",
     appliesTo: ["pcb"],
     configKeys: ["kicad-cli", "require-kicad", "rules.drc"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["drc", "kicad", "pcb"],
   },
   async (context) => {
     if (!shouldRun(context, "drc.kicad")) {

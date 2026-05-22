@@ -8,9 +8,13 @@ export const drillCoverageRule = rule(
   {
     id: "manufacturing.drill-coverage",
     title: "Drill file does not cover PCB drill sizes",
+    description: "Compares PCB drill sizes with generated Excellon drill outputs.",
+    rationale: "Missing drill coverage can make a fabrication package incomplete or incorrect.",
     defaultSeverity: "medium",
     appliesTo: ["pcb"],
     configKeys: ["rules.manufacturing.drill-coverage.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["drill", "manufacturing", "pcb"],
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.drill-coverage")) {

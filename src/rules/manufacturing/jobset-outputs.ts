@@ -7,9 +7,13 @@ export const jobsetOutputsRule = rule(
   {
     id: "manufacturing.jobset-outputs",
     title: "Enabled KiCad jobset output is missing",
+    description: "Checks enabled KiCad jobset entries for their expected output files.",
+    rationale: "Jobset definitions are only useful when the released outputs they promise exist.",
     defaultSeverity: "medium",
     appliesTo: ["manifest"],
     configKeys: ["rules.manufacturing.jobset-outputs.enabled"],
+    kicadVersions: ["10", "future"],
+    tags: ["jobset", "kicad", "manufacturing"],
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.jobset-outputs")) {

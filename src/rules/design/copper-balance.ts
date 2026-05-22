@@ -6,9 +6,13 @@ export const copperBalanceRule = rule(
   {
     id: "design.copper-balance",
     title: "PCB copper coverage is below the configured balance threshold",
+    description: "Checks filled copper coverage on PCB layers against the configured minimum.",
+    rationale: "Low copper coverage can flag process and board-quality risks before release.",
     defaultSeverity: "low",
     appliesTo: ["pcb"],
     configKeys: ["rules.design.copper-balance.min-coverage-percent"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["copper", "design", "pcb"],
   },
   async (context) => {
     if (!shouldRun(context, "design.copper-balance")) {

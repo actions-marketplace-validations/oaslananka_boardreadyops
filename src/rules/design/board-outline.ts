@@ -6,9 +6,13 @@ export const boardOutlineRule = rule(
   {
     id: "design.board-outline",
     title: "PCB outline is not closed",
+    description: "Checks that the PCB Edge.Cuts outline is present and closes into a board boundary.",
+    rationale: "Fabricators need a closed outline to route the intended physical board shape.",
     defaultSeverity: "high",
     appliesTo: ["pcb"],
     configKeys: ["rules.design.board-outline.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["design", "edge-cuts", "pcb"],
   },
   async (context) => {
     if (!shouldRun(context, "design.board-outline")) {

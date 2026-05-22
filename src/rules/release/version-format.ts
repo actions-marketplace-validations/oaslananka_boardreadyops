@@ -7,9 +7,13 @@ export const versionFormatRule = rule(
   {
     id: "release.version-format",
     title: "Board revision does not match release version format",
+    description: "Checks schematic and PCB revisions against the configured release version pattern.",
+    rationale: "Consistent version formats keep hardware revisions searchable and automatable.",
     defaultSeverity: "low",
     appliesTo: ["pcb", "schematic"],
     configKeys: ["rules.release.version-format.pattern"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["release", "revision", "versioning"],
   },
   async (context) => {
     if (!shouldRun(context, "release.version-format")) {

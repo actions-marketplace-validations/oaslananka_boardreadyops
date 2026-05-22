@@ -6,9 +6,13 @@ export const fabNotesRule = rule(
   {
     id: "manufacturing.fab-notes",
     title: "Fabrication notes are missing",
+    description: "Checks known project paths for fabrication notes that travel with board outputs.",
+    rationale: "Fabrication notes preserve process assumptions that output files alone do not encode.",
     defaultSeverity: "medium",
     appliesTo: ["manifest"],
     configKeys: ["rules.manufacturing.fab-notes.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["documentation", "fabrication", "manufacturing"],
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.fab-notes")) {

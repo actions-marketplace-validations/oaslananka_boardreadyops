@@ -4,9 +4,13 @@ export const panelSanityRule = rule(
   {
     id: "manufacturing.panel-sanity",
     title: "Panelization output is missing",
+    description: "Checks panelized manufacturing configurations for panel output files.",
+    rationale: "Panelized jobs need the panel artifacts the assembler and fabricator expect.",
     defaultSeverity: "medium",
     appliesTo: ["manifest"],
     configKeys: ["rules.manufacturing.panel-sanity.panelized"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["manufacturing", "panel", "outputs"],
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.panel-sanity")) {

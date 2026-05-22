@@ -7,9 +7,13 @@ export const changelogPresentRule = rule(
   {
     id: "release.changelog-present",
     title: "Changelog entry is missing",
+    description: "Checks CHANGELOG.md for an entry matching the board revision.",
+    rationale: "Released hardware needs revision notes that reviewers and manufacturers can trace.",
     defaultSeverity: "medium",
     appliesTo: ["manifest"],
     configKeys: ["rules.release.changelog-present.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["changelog", "release", "traceability"],
   },
   async (context) => {
     if (!shouldRun(context, "release.changelog-present")) {

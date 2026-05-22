@@ -5,9 +5,13 @@ export const missingMpnRule = rule(
   {
     id: "bom.missing-mpn",
     title: "BOM row is missing manufacturer part number",
+    description: "Checks populated BOM and schematic rows for missing manufacturer part numbers.",
+    rationale: "Assembly sourcing needs stable part numbers to avoid ambiguous substitutions.",
     defaultSeverity: "high",
     appliesTo: ["bom", "schematic"],
     configKeys: ["rules.bom.missing-mpn.ignore-refs"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["bom", "mpn", "sourcing"],
   },
   async (context) => {
     if (!shouldRun(context, "bom.missing-mpn")) {

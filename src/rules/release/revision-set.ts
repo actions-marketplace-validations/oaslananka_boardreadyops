@@ -6,9 +6,13 @@ export const revisionSetRule = rule(
   {
     id: "release.revision-set",
     title: "PCB revision is missing",
+    description: "Checks PCB title-block revisions against the configured release tag pattern.",
+    rationale: "Boards without stable revisions are difficult to fabricate, review, and reproduce.",
     defaultSeverity: "high",
     appliesTo: ["pcb"],
     configKeys: ["rules.release.revision-set.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["pcb", "release", "revision"],
   },
   async (context) => {
     if (!shouldRun(context, "release.revision-set")) {

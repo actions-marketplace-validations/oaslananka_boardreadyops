@@ -15,9 +15,13 @@ export const outputsPresentRule = rule(
   {
     id: "manufacturing.outputs-present",
     title: "Required manufacturing outputs are missing or stale",
+    description: "Checks required fabrication outputs and whether they are fresh relative to PCB sources.",
+    rationale: "A release without current manufacturing outputs is not ready to send to a fab.",
     defaultSeverity: "high",
     appliesTo: ["pcb", "manifest"],
     configKeys: ["rules.manufacturing.outputs-present.required"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["fabrication", "manufacturing", "outputs"],
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.outputs-present")) {

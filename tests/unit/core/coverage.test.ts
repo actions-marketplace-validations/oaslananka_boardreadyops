@@ -177,11 +177,31 @@ rules:
     expect(listRules()).toEqual([]);
 
     registerRule({
-      meta: { id: "z.rule", title: "Z", defaultSeverity: "info", appliesTo: [], configKeys: [] },
+      meta: {
+        id: "z.rule",
+        title: "Z",
+        description: "Synthetic Z rule.",
+        rationale: "Exercises rule registry ordering.",
+        defaultSeverity: "info",
+        appliesTo: [],
+        configKeys: [],
+        kicadVersions: ["future"],
+        tags: ["test"],
+      },
       run: async () => [],
     });
     registerRule({
-      meta: { id: "a.rule", title: "A", defaultSeverity: "info", appliesTo: [], configKeys: [] },
+      meta: {
+        id: "a.rule",
+        title: "A",
+        description: "Synthetic A rule.",
+        rationale: "Exercises rule registry ordering.",
+        defaultSeverity: "info",
+        appliesTo: [],
+        configKeys: [],
+        kicadVersions: ["future"],
+        tags: ["test"],
+      },
       run: async () => [],
     });
     expect(listRules().map((rule) => rule.meta.id)).toEqual(["a.rule", "z.rule"]);

@@ -6,9 +6,13 @@ export const tagMatchesRevisionRule = rule(
   {
     id: "release.tag-matches-revision",
     title: "Git tag does not match PCB revision",
+    description: "Checks tag CI context against the board revision recorded in PCB metadata.",
+    rationale: "Release tags should identify the exact board revision being fabricated.",
     defaultSeverity: "high",
     appliesTo: ["pcb", "manifest"],
     configKeys: ["GITHUB_REF_NAME"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["git", "release", "revision"],
   },
   async (context) => {
     if (!shouldRun(context, "release.tag-matches-revision")) {

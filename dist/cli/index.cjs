@@ -236862,9 +236862,13 @@ var dnpConsistencyRule = rule(
   {
     id: "bom.dnp-consistency",
     title: "BOM DNP state differs from PCB population state",
+    description: "Compares BOM do-not-populate flags with PCB footprint population attributes.",
+    rationale: "A BOM and PCB population mismatch can fabricate or assemble the wrong variant.",
     defaultSeverity: "medium",
     appliesTo: ["bom", "pcb"],
-    configKeys: ["rules.bom.dnp-consistency.severity"]
+    configKeys: ["rules.bom.dnp-consistency.severity"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["bom", "pcb", "variant"]
   },
   async (context) => {
     if (!shouldRun(context, "bom.dnp-consistency")) {
@@ -236892,9 +236896,13 @@ var eolDetectionRule = rule(
   {
     id: "bom.eol-detection",
     title: "BOM part is marked EOL",
+    description: "Checks lifecycle-style BOM fields for end-of-life and not-recommended markers.",
+    rationale: "End-of-life components create sourcing and redesign risk before fabrication.",
     defaultSeverity: "high",
     appliesTo: ["bom"],
-    configKeys: ["rules.bom.eol-detection.severity"]
+    configKeys: ["rules.bom.eol-detection.severity"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["bom", "lifecycle", "sourcing"]
   },
   async (context) => {
     if (!shouldRun(context, "bom.eol-detection")) {
@@ -236920,9 +236928,13 @@ var footprintMismatchRule = rule(
   {
     id: "bom.footprint-mismatch",
     title: "BOM footprint differs from PCB footprint",
+    description: "Compares normalized BOM footprint values with PCB footprint assignments.",
+    rationale: "Footprint mismatches can make sourced parts incompatible with the fabricated board.",
     defaultSeverity: "medium",
     appliesTo: ["bom", "pcb"],
-    configKeys: ["rules.bom.footprint-mismatch.severity"]
+    configKeys: ["rules.bom.footprint-mismatch.severity"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["bom", "footprint", "pcb"]
   },
   async (context) => {
     if (!shouldRun(context, "bom.footprint-mismatch")) {
@@ -236953,9 +236965,13 @@ var lifecycleRule = rule(
   {
     id: "bom.lifecycle",
     title: "BOM component lifecycle status is risky",
+    description: "Checks BOM lifecycle fields and local lifecycle data for risky component states.",
+    rationale: "Lifecycle risk should be visible before teams commit to parts and fab outputs.",
     defaultSeverity: "medium",
     appliesTo: ["bom"],
-    configKeys: ["rules.bom.lifecycle.db"]
+    configKeys: ["rules.bom.lifecycle.db"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["bom", "lifecycle", "sourcing"]
   },
   async (context) => {
     if (!shouldRun(context, "bom.lifecycle")) {
@@ -237011,9 +237027,13 @@ var missingMpnRule = rule(
   {
     id: "bom.missing-mpn",
     title: "BOM row is missing manufacturer part number",
+    description: "Checks populated BOM and schematic rows for missing manufacturer part numbers.",
+    rationale: "Assembly sourcing needs stable part numbers to avoid ambiguous substitutions.",
     defaultSeverity: "high",
     appliesTo: ["bom", "schematic"],
-    configKeys: ["rules.bom.missing-mpn.ignore-refs"]
+    configKeys: ["rules.bom.missing-mpn.ignore-refs"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["bom", "mpn", "sourcing"]
   },
   async (context) => {
     if (!shouldRun(context, "bom.missing-mpn")) {
@@ -237041,9 +237061,13 @@ var singleSourceRule = rule(
   {
     id: "bom.single-source",
     title: "BOM part has a single supplier",
+    description: "Checks supplier metadata for BOM rows that only list one source.",
+    rationale: "Single-source parts increase procurement risk when a supplier changes availability.",
     defaultSeverity: "medium",
     appliesTo: ["bom"],
-    configKeys: ["rules.bom.single-source.severity"]
+    configKeys: ["rules.bom.single-source.severity"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["bom", "sourcing", "supplier"]
   },
   async (context) => {
     if (!shouldRun(context, "bom.single-source")) {
@@ -237070,9 +237094,13 @@ var variantConsistencyRule = rule(
   {
     id: "bom.variant-consistency",
     title: "Variant BOM contains a DNP override component",
+    description: "Checks KiCad variant DNP overrides against each variant-specific BOM.",
+    rationale: "Variant BOM drift can populate components that a selected hardware variant excludes.",
     defaultSeverity: "high",
     appliesTo: ["bom", "project"],
-    configKeys: ["projects.variants", "rules.bom.variant-consistency.enabled"]
+    configKeys: ["projects.variants", "rules.bom.variant-consistency.enabled"],
+    kicadVersions: ["10", "future"],
+    tags: ["bom", "variant", "kicad"]
   },
   async (context) => {
     if (!shouldRun(context, "bom.variant-consistency")) {
@@ -237136,9 +237164,13 @@ var boardOutlineRule = rule(
   {
     id: "design.board-outline",
     title: "PCB outline is not closed",
+    description: "Checks that the PCB Edge.Cuts outline is present and closes into a board boundary.",
+    rationale: "Fabricators need a closed outline to route the intended physical board shape.",
     defaultSeverity: "high",
     appliesTo: ["pcb"],
-    configKeys: ["rules.design.board-outline.enabled"]
+    configKeys: ["rules.design.board-outline.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["design", "edge-cuts", "pcb"]
   },
   async (context) => {
     if (!shouldRun(context, "design.board-outline")) {
@@ -237172,9 +237204,13 @@ var copperBalanceRule = rule(
   {
     id: "design.copper-balance",
     title: "PCB copper coverage is below the configured balance threshold",
+    description: "Checks filled copper coverage on PCB layers against the configured minimum.",
+    rationale: "Low copper coverage can flag process and board-quality risks before release.",
     defaultSeverity: "low",
     appliesTo: ["pcb"],
-    configKeys: ["rules.design.copper-balance.min-coverage-percent"]
+    configKeys: ["rules.design.copper-balance.min-coverage-percent"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["copper", "design", "pcb"]
   },
   async (context) => {
     if (!shouldRun(context, "design.copper-balance")) {
@@ -252054,9 +252090,13 @@ var runDrcRule = rule(
   {
     id: "drc.kicad",
     title: "KiCad DRC findings",
+    description: "Runs KiCad PCB design-rule checks and normalizes their diagnostics into findings.",
+    rationale: "KiCad DRC findings expose layout violations that should be reviewed before fabrication.",
     defaultSeverity: "high",
     appliesTo: ["pcb"],
-    configKeys: ["kicad-cli", "require-kicad", "rules.drc"]
+    configKeys: ["kicad-cli", "require-kicad", "rules.drc"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["drc", "kicad", "pcb"]
   },
   async (context) => {
     if (!shouldRun(context, "drc.kicad")) {
@@ -252089,9 +252129,13 @@ var runErcRule = rule(
   {
     id: "erc.kicad",
     title: "KiCad ERC findings",
+    description: "Runs KiCad schematic electrical-rule checks and normalizes their diagnostics into findings.",
+    rationale: "ERC diagnostics catch schematic connectivity and electrical intent problems early.",
     defaultSeverity: "high",
     appliesTo: ["schematic"],
-    configKeys: ["kicad-cli", "require-kicad", "rules.erc"]
+    configKeys: ["kicad-cli", "require-kicad", "rules.erc"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["erc", "kicad", "schematic"]
   },
   async (context) => {
     if (!shouldRun(context, "erc.kicad")) {
@@ -252125,9 +252169,13 @@ var drillCoverageRule = rule(
   {
     id: "manufacturing.drill-coverage",
     title: "Drill file does not cover PCB drill sizes",
+    description: "Compares PCB drill sizes with generated Excellon drill outputs.",
+    rationale: "Missing drill coverage can make a fabrication package incomplete or incorrect.",
     defaultSeverity: "medium",
     appliesTo: ["pcb"],
-    configKeys: ["rules.manufacturing.drill-coverage.enabled"]
+    configKeys: ["rules.manufacturing.drill-coverage.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["drill", "manufacturing", "pcb"]
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.drill-coverage")) {
@@ -252168,9 +252216,13 @@ var fabNotesRule = rule(
   {
     id: "manufacturing.fab-notes",
     title: "Fabrication notes are missing",
+    description: "Checks known project paths for fabrication notes that travel with board outputs.",
+    rationale: "Fabrication notes preserve process assumptions that output files alone do not encode.",
     defaultSeverity: "medium",
     appliesTo: ["manifest"],
-    configKeys: ["rules.manufacturing.fab-notes.enabled"]
+    configKeys: ["rules.manufacturing.fab-notes.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["documentation", "fabrication", "manufacturing"]
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.fab-notes")) {
@@ -252290,9 +252342,13 @@ var jobsetOutputsRule = rule(
   {
     id: "manufacturing.jobset-outputs",
     title: "Enabled KiCad jobset output is missing",
+    description: "Checks enabled KiCad jobset entries for their expected output files.",
+    rationale: "Jobset definitions are only useful when the released outputs they promise exist.",
     defaultSeverity: "medium",
     appliesTo: ["manifest"],
-    configKeys: ["rules.manufacturing.jobset-outputs.enabled"]
+    configKeys: ["rules.manufacturing.jobset-outputs.enabled"],
+    kicadVersions: ["10", "future"],
+    tags: ["jobset", "kicad", "manufacturing"]
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.jobset-outputs")) {
@@ -252330,9 +252386,13 @@ var layerStackupRule = rule(
   {
     id: "manufacturing.layer-stackup",
     title: "PCB stackup layer count does not match expected copper layers",
+    description: "Compares the parsed PCB stackup layer count with configured expectations.",
+    rationale: "Stackup mismatches change fabrication cost and electrical assumptions.",
     defaultSeverity: "medium",
     appliesTo: ["pcb"],
-    configKeys: ["rules.manufacturing.layer-stackup.expected-layers"]
+    configKeys: ["rules.manufacturing.layer-stackup.expected-layers"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["manufacturing", "pcb", "stackup"]
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.layer-stackup")) {
@@ -252375,9 +252435,13 @@ var outputsPresentRule = rule(
   {
     id: "manufacturing.outputs-present",
     title: "Required manufacturing outputs are missing or stale",
+    description: "Checks required fabrication outputs and whether they are fresh relative to PCB sources.",
+    rationale: "A release without current manufacturing outputs is not ready to send to a fab.",
     defaultSeverity: "high",
     appliesTo: ["pcb", "manifest"],
-    configKeys: ["rules.manufacturing.outputs-present.required"]
+    configKeys: ["rules.manufacturing.outputs-present.required"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["fabrication", "manufacturing", "outputs"]
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.outputs-present")) {
@@ -252421,9 +252485,13 @@ var panelSanityRule = rule(
   {
     id: "manufacturing.panel-sanity",
     title: "Panelization output is missing",
+    description: "Checks panelized manufacturing configurations for panel output files.",
+    rationale: "Panelized jobs need the panel artifacts the assembler and fabricator expect.",
     defaultSeverity: "medium",
     appliesTo: ["manifest"],
-    configKeys: ["rules.manufacturing.panel-sanity.panelized"]
+    configKeys: ["rules.manufacturing.panel-sanity.panelized"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["manufacturing", "panel", "outputs"]
   },
   async (context) => {
     if (!shouldRun(context, "manufacturing.panel-sanity")) {
@@ -252519,9 +252587,13 @@ var pinmapNetLabelRule = rule(
   {
     id: "pinmap.net-label",
     title: "Pinmap net is not declared as a schematic net label",
+    description: "Checks pinmap net names against schematic labels visible to firmware integration.",
+    rationale: "Pinmap entries without matching schematic labels are easy to miswire in firmware.",
     defaultSeverity: "medium",
     appliesTo: ["pinmap", "schematic"],
-    configKeys: ["pinmap", "projects.pinmap", "rules.pinmap.net-label.enabled"]
+    configKeys: ["pinmap", "projects.pinmap", "rules.pinmap.net-label.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["firmware", "pinmap", "schematic"]
   },
   async (context) => {
     if (!shouldRun(context, "pinmap.net-label")) {
@@ -252556,9 +252628,13 @@ var pinmapVerifyRule = rule(
   {
     id: "pinmap.verify",
     title: "Pinmap net is not present in schematic",
+    description: "Checks configured pinmap nets against parsed schematic net labels.",
+    rationale: "A pinmap that references absent nets cannot safely guide firmware integration.",
     defaultSeverity: "high",
     appliesTo: ["pinmap", "schematic"],
-    configKeys: ["pinmap", "projects.pinmap"]
+    configKeys: ["pinmap", "projects.pinmap"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["firmware", "pinmap", "schematic"]
   },
   async (context) => {
     if (!shouldRun(context, "pinmap.verify")) {
@@ -252602,9 +252678,13 @@ var pinmapCollisionRule = rule(
   {
     id: "pinmap.collision",
     title: "Pinmap contains duplicate pin or net entries",
+    description: "Checks pinmap files for duplicate pin and net assignments.",
+    rationale: "Pinmap collisions make hardware-to-firmware mappings ambiguous.",
     defaultSeverity: "high",
     appliesTo: ["pinmap"],
-    configKeys: ["pinmap", "projects.pinmap"]
+    configKeys: ["pinmap", "projects.pinmap"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["firmware", "pinmap", "validation"]
   },
   async (context) => {
     if (!shouldRun(context, "pinmap.collision")) {
@@ -252643,9 +252723,13 @@ var pinmapUnmappedPinRule = rule(
   {
     id: "pinmap.unmapped-pin",
     title: "Connected schematic pin is missing from the pinmap",
+    description: "Checks connected schematic pins for matching pinmap entries.",
+    rationale: "Connected pins omitted from a pinmap leave firmware-facing interfaces undocumented.",
     defaultSeverity: "medium",
     appliesTo: ["pinmap", "schematic"],
-    configKeys: ["pinmap", "projects.pinmap"]
+    configKeys: ["pinmap", "projects.pinmap"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["firmware", "pinmap", "schematic"]
   },
   async (context) => {
     if (!shouldRun(context, "pinmap.unmapped-pin")) {
@@ -252688,9 +252772,13 @@ var changelogPresentRule = rule(
   {
     id: "release.changelog-present",
     title: "Changelog entry is missing",
+    description: "Checks CHANGELOG.md for an entry matching the board revision.",
+    rationale: "Released hardware needs revision notes that reviewers and manufacturers can trace.",
     defaultSeverity: "medium",
     appliesTo: ["manifest"],
-    configKeys: ["rules.release.changelog-present.enabled"]
+    configKeys: ["rules.release.changelog-present.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["changelog", "release", "traceability"]
   },
   async (context) => {
     if (!shouldRun(context, "release.changelog-present")) {
@@ -252745,9 +252833,13 @@ var revisionSetRule = rule(
   {
     id: "release.revision-set",
     title: "PCB revision is missing",
+    description: "Checks PCB title-block revisions against the configured release tag pattern.",
+    rationale: "Boards without stable revisions are difficult to fabricate, review, and reproduce.",
     defaultSeverity: "high",
     appliesTo: ["pcb"],
-    configKeys: ["rules.release.revision-set.enabled"]
+    configKeys: ["rules.release.revision-set.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["pcb", "release", "revision"]
   },
   async (context) => {
     if (!shouldRun(context, "release.revision-set")) {
@@ -252794,9 +252886,13 @@ var tagMatchesRevisionRule = rule(
   {
     id: "release.tag-matches-revision",
     title: "Git tag does not match PCB revision",
+    description: "Checks tag CI context against the board revision recorded in PCB metadata.",
+    rationale: "Release tags should identify the exact board revision being fabricated.",
     defaultSeverity: "high",
     appliesTo: ["pcb", "manifest"],
-    configKeys: ["GITHUB_REF_NAME"]
+    configKeys: ["GITHUB_REF_NAME"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["git", "release", "revision"]
   },
   async (context) => {
     if (!shouldRun(context, "release.tag-matches-revision")) {
@@ -252834,9 +252930,13 @@ var versionFormatRule = rule(
   {
     id: "release.version-format",
     title: "Board revision does not match release version format",
+    description: "Checks schematic and PCB revisions against the configured release version pattern.",
+    rationale: "Consistent version formats keep hardware revisions searchable and automatable.",
     defaultSeverity: "low",
     appliesTo: ["pcb", "schematic"],
-    configKeys: ["rules.release.version-format.pattern"]
+    configKeys: ["rules.release.version-format.pattern"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["release", "revision", "versioning"]
   },
   async (context) => {
     if (!shouldRun(context, "release.version-format")) {

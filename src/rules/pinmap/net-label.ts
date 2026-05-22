@@ -6,9 +6,13 @@ export const pinmapNetLabelRule = rule(
   {
     id: "pinmap.net-label",
     title: "Pinmap net is not declared as a schematic net label",
+    description: "Checks pinmap net names against schematic labels visible to firmware integration.",
+    rationale: "Pinmap entries without matching schematic labels are easy to miswire in firmware.",
     defaultSeverity: "medium",
     appliesTo: ["pinmap", "schematic"],
     configKeys: ["pinmap", "projects.pinmap", "rules.pinmap.net-label.enabled"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["firmware", "pinmap", "schematic"],
   },
   async (context) => {
     if (!shouldRun(context, "pinmap.net-label")) {

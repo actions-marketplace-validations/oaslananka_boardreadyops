@@ -4,9 +4,14 @@ import type { Finding, Severity } from "./findings.js";
 export interface RuleMetadata {
   id: string;
   title: string;
+  description: string;
+  rationale: string;
   defaultSeverity: Severity;
   appliesTo: string[];
   configKeys: string[];
+  kicadVersions: ("9" | "10" | "future")[];
+  tags: string[];
+  docUrl?: string;
 }
 
 export interface Rule {

@@ -8,9 +8,13 @@ export const variantConsistencyRule = rule(
   {
     id: "bom.variant-consistency",
     title: "Variant BOM contains a DNP override component",
+    description: "Checks KiCad variant DNP overrides against each variant-specific BOM.",
+    rationale: "Variant BOM drift can populate components that a selected hardware variant excludes.",
     defaultSeverity: "high",
     appliesTo: ["bom", "project"],
     configKeys: ["projects.variants", "rules.bom.variant-consistency.enabled"],
+    kicadVersions: ["10", "future"],
+    tags: ["bom", "variant", "kicad"],
   },
   async (context) => {
     if (!shouldRun(context, "bom.variant-consistency")) {

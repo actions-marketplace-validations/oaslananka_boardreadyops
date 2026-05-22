@@ -10,9 +10,13 @@ export const lifecycleRule = rule(
   {
     id: "bom.lifecycle",
     title: "BOM component lifecycle status is risky",
+    description: "Checks BOM lifecycle fields and local lifecycle data for risky component states.",
+    rationale: "Lifecycle risk should be visible before teams commit to parts and fab outputs.",
     defaultSeverity: "medium",
     appliesTo: ["bom"],
     configKeys: ["rules.bom.lifecycle.db"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["bom", "lifecycle", "sourcing"],
   },
   async (context) => {
     if (!shouldRun(context, "bom.lifecycle")) {

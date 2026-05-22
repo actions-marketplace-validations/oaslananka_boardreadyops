@@ -58,3 +58,7 @@ export function registerBuiltInRules(): void {
   ].forEach(registerRule);
   registered = true;
 }
+
+export function resetBuiltInRuleRegistrationForTests(): void {
+  registered = false;
+}

@@ -8,9 +8,13 @@ export const pinmapVerifyRule = rule(
   {
     id: "pinmap.verify",
     title: "Pinmap net is not present in schematic",
+    description: "Checks configured pinmap nets against parsed schematic net labels.",
+    rationale: "A pinmap that references absent nets cannot safely guide firmware integration.",
     defaultSeverity: "high",
     appliesTo: ["pinmap", "schematic"],
     configKeys: ["pinmap", "projects.pinmap"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["firmware", "pinmap", "schematic"],
   },
   async (context) => {
     if (!shouldRun(context, "pinmap.verify")) {
@@ -55,9 +59,13 @@ export const pinmapCollisionRule = rule(
   {
     id: "pinmap.collision",
     title: "Pinmap contains duplicate pin or net entries",
+    description: "Checks pinmap files for duplicate pin and net assignments.",
+    rationale: "Pinmap collisions make hardware-to-firmware mappings ambiguous.",
     defaultSeverity: "high",
     appliesTo: ["pinmap"],
     configKeys: ["pinmap", "projects.pinmap"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["firmware", "pinmap", "validation"],
   },
   async (context) => {
     if (!shouldRun(context, "pinmap.collision")) {
@@ -97,9 +105,13 @@ export const pinmapUnmappedPinRule = rule(
   {
     id: "pinmap.unmapped-pin",
     title: "Connected schematic pin is missing from the pinmap",
+    description: "Checks connected schematic pins for matching pinmap entries.",
+    rationale: "Connected pins omitted from a pinmap leave firmware-facing interfaces undocumented.",
     defaultSeverity: "medium",
     appliesTo: ["pinmap", "schematic"],
     configKeys: ["pinmap", "projects.pinmap"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["firmware", "pinmap", "schematic"],
   },
   async (context) => {
     if (!shouldRun(context, "pinmap.unmapped-pin")) {

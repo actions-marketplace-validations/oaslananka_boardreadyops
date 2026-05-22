@@ -5,9 +5,13 @@ export const eolDetectionRule = rule(
   {
     id: "bom.eol-detection",
     title: "BOM part is marked EOL",
+    description: "Checks lifecycle-style BOM fields for end-of-life and not-recommended markers.",
+    rationale: "End-of-life components create sourcing and redesign risk before fabrication.",
     defaultSeverity: "high",
     appliesTo: ["bom"],
     configKeys: ["rules.bom.eol-detection.severity"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["bom", "lifecycle", "sourcing"],
   },
   async (context) => {
     if (!shouldRun(context, "bom.eol-detection")) {

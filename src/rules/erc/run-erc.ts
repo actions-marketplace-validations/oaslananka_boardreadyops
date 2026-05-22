@@ -8,9 +8,13 @@ export const runErcRule = rule(
   {
     id: "erc.kicad",
     title: "KiCad ERC findings",
+    description: "Runs KiCad schematic electrical-rule checks and normalizes their diagnostics into findings.",
+    rationale: "ERC diagnostics catch schematic connectivity and electrical intent problems early.",
     defaultSeverity: "high",
     appliesTo: ["schematic"],
     configKeys: ["kicad-cli", "require-kicad", "rules.erc"],
+    kicadVersions: ["9", "10", "future"],
+    tags: ["erc", "kicad", "schematic"],
   },
   async (context) => {
     if (!shouldRun(context, "erc.kicad")) {
