@@ -291059,6 +291059,16 @@ var config_schema_default = {
               const: false
             }
           ]
+        },
+        html: {
+          oneOf: [
+            {
+              type: "string"
+            },
+            {
+              const: false
+            }
+          ]
         }
       }
     }

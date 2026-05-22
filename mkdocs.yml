@@ -66,6 +66,7 @@ nav:
       - JSON: reports/json.md
       - SARIF: reports/sarif.md
       - Markdown: reports/markdown.md
+      - HTML: reports/html.md
       - JUnit: reports/junit.md
       - Annotations: reports/annotations.md
   - Integrations:

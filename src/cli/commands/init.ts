@@ -27,6 +27,7 @@ report:
   sarif: build/boardreadyops.sarif.json
   json: build/boardreadyops.findings.json
   markdown: build/boardreadyops.report.md
+  html: build/boardreadyops.report.html
   # junit: build/boardreadyops.junit.xml
 `;
 

@@ -2,7 +2,7 @@
 
 CI preflight for production-ready PCBs.
 
-BoardReadyOps checks KiCad hardware repositories for production readiness before fabrication. It runs locally as a CLI and in CI as a GitHub Action, producing JSON, SARIF, Markdown, JUnit, and workflow annotation output.
+BoardReadyOps checks KiCad hardware repositories for production readiness before fabrication. It runs locally as a CLI and in CI as a GitHub Action, producing JSON, SARIF, Markdown, HTML, JUnit, and workflow annotation output.
 
 [![CI](https://github.com/oaslananka/boardreadyops/actions/workflows/ci.yml/badge.svg)](https://github.com/oaslananka/boardreadyops/actions/workflows/ci.yml)
 [![GitHub Marketplace](https://img.shields.io/badge/Marketplace-BoardReadyOps-blue?logo=github)](https://github.com/marketplace/actions/boardreadyops)
@@ -130,6 +130,7 @@ report:
   sarif: build/boardreadyops.sarif.json
   json: build/boardreadyops.findings.json
   markdown: build/boardreadyops.report.md
+  html: build/boardreadyops.report.html
 ```
 
 The config schema is committed at `schemas/config.schema.json`.

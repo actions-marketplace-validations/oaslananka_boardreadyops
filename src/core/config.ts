@@ -63,6 +63,7 @@ export interface BoardReadyOpsConfig {
     json?: string | false;
     markdown?: string | false;
     junit?: string | false;
+    html?: string | false;
   };
 }
 

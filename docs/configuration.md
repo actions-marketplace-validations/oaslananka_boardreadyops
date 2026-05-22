@@ -15,6 +15,11 @@ rules:
     patterns:
       gerber: ["**/release/**/*.gbr"]
 fail-on: high
+report:
+  json: build/boardreadyops.findings.json
+  sarif: build/boardreadyops.sarif.json
+  markdown: build/boardreadyops.report.md
+  html: build/boardreadyops.report.html
 ```
 
 `projects` entries add project-local settings for a discovered KiCad project. They do not narrow discovery: BoardReadyOps checks every `.kicad_pro` under the workspace unless the CLI receives `--project`.
@@ -55,6 +60,22 @@ gates:
 Selecting a configured gate runs in enforce mode and uses that gate's `fail-on` threshold. A selected gate must exist in the config. Its required checks keep their backing rules enabled and selected even when the base rule config or CLI rule filters would skip them.
 
 Gate manufacturing output requirements feed the existing `manufacturing.outputs-present` rule so missing `gerber`, `drill`, `position`, and `bom` outputs surface as findings before the gate requirement fails.
+
+## Reports
+
+Use the `report` block to write deterministic artifacts under the repository root. `json`, `sarif`, `markdown`, `html`, and `junit` accept relative paths; setting a key to `false` disables that configured report.
+
+```yaml
+version: 1
+report:
+  json: build/boardreadyops.findings.json
+  sarif: build/boardreadyops.sarif.json
+  markdown: build/boardreadyops.report.md
+  html: build/boardreadyops.report.html
+  junit: build/boardreadyops.junit.xml
+```
+
+HTML reports are standalone files with embedded CSS and filtering JavaScript, so they can be shared without publishing additional assets.
 
 ## Suppressions
 

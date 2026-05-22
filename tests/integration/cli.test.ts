@@ -336,6 +336,7 @@ jobs:
       expect(await runCli(["init"], init)).toBe(0);
       const config = await fs.readFile(path.join(initDir, "boardreadyops.yml"), "utf8");
       expect(config).toContain("version: 1");
+      expect(config).toContain("html: build/boardreadyops.report.html");
       expect(config).toContain("# junit: build/boardreadyops.junit.xml");
     } finally {
       process.chdir(previous);

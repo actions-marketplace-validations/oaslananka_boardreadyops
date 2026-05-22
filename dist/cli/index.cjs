@@ -80495,10 +80495,10 @@ ${lanes.join("\n")}
               /* ImportAttributes */
             );
             const members = createSymbolTable();
-            forEach(node.elements, (attr) => {
-              const member = createSymbol(4, getNameFromImportAttribute(attr));
+            forEach(node.elements, (attr2) => {
+              const member = createSymbol(4, getNameFromImportAttribute(attr2));
               member.parent = symbol2;
-              member.links.type = checkImportAttribute(attr);
+              member.links.type = checkImportAttribute(attr2);
               member.links.target = member;
               members.set(member.escapedName, member);
             });
@@ -112030,10 +112030,10 @@ ${lanes.join("\n")}
           if (!isImportEqualsDeclaration(node) && node.attributes) {
             const diagnostic = node.attributes.token === 118 ? Diagnostics.Import_attribute_values_must_be_string_literal_expressions : Diagnostics.Import_assertion_values_must_be_string_literal_expressions;
             let hasError = false;
-            for (const attr of node.attributes.elements) {
-              if (!isStringLiteral(attr.value)) {
+            for (const attr2 of node.attributes.elements) {
+              if (!isStringLiteral(attr2.value)) {
                 hasError = true;
-                error210(attr.value, diagnostic);
+                error210(attr2.value, diagnostic);
               }
             }
             return !hasError;
@@ -112306,9 +112306,9 @@ ${lanes.join("\n")}
           checkImportAttributes(node);
         }
         function hasTypeJsonImportAttribute(node) {
-          return !!node.attributes && node.attributes.elements.some((attr) => {
+          return !!node.attributes && node.attributes.elements.some((attr2) => {
             var _a3;
-            return getTextOfIdentifierOrLiteral(attr.name) === "type" && ((_a3 = tryCast(attr.value, isStringLiteralLike)) == null ? void 0 : _a3.text) === "json";
+            return getTextOfIdentifierOrLiteral(attr2.name) === "type" && ((_a3 = tryCast(attr2.value, isStringLiteralLike)) == null ? void 0 : _a3.text) === "json";
           });
         }
         function checkImportEqualsDeclaration(node) {
@@ -116004,11 +116004,11 @@ ${lanes.join("\n")}
           checkGrammarJsxName(node.tagName);
           checkGrammarTypeArguments(node, node.typeArguments);
           const seen = /* @__PURE__ */ new Map();
-          for (const attr of node.attributes.properties) {
-            if (attr.kind === 294) {
+          for (const attr2 of node.attributes.properties) {
+            if (attr2.kind === 294) {
               continue;
             }
-            const { name, initializer: initializer3 } = attr;
+            const { name, initializer: initializer3 } = attr2;
             const escapedText = getEscapedTextOfJsxAttributeName(name);
             if (!seen.get(escapedText)) {
               seen.set(escapedText, true);
@@ -131888,7 +131888,7 @@ ${lanes.join("\n")}
           return target && target >= 5 ? factory2.createObjectLiteralExpression(transformJsxAttributesToProps(attrs, children)) : transformJsxAttributesToExpression(attrs, children);
         }
         function transformJsxAttributesToProps(attrs, children) {
-          const props = flatten(spanMap(attrs, isJsxSpreadAttribute, (attrs2, isSpread) => flatten(map3(attrs2, (attr) => isSpread ? transformJsxSpreadAttributeToProps(attr) : transformJsxAttributeToObjectLiteralElement(attr)))));
+          const props = flatten(spanMap(attrs, isJsxSpreadAttribute, (attrs2, isSpread) => flatten(map3(attrs2, (attr2) => isSpread ? transformJsxSpreadAttributeToProps(attr2) : transformJsxAttributeToObjectLiteralElement(attr2)))));
           if (children) {
             props.push(children);
           }
@@ -131897,10 +131897,10 @@ ${lanes.join("\n")}
         function transformJsxAttributesToExpression(attrs, children) {
           const expressions = [];
           let properties = [];
-          for (const attr of attrs) {
-            if (isJsxSpreadAttribute(attr)) {
-              if (isObjectLiteralExpression(attr.expression) && !hasProto(attr.expression)) {
-                for (const prop of attr.expression.properties) {
+          for (const attr2 of attrs) {
+            if (isJsxSpreadAttribute(attr2)) {
+              if (isObjectLiteralExpression(attr2.expression) && !hasProto(attr2.expression)) {
+                for (const prop of attr2.expression.properties) {
                   if (isSpreadAssignment(prop)) {
                     finishObjectLiteralIfNeeded();
                     expressions.push(Debug.checkDefined(visitNode(prop.expression, visitor, isExpression)));
@@ -131911,10 +131911,10 @@ ${lanes.join("\n")}
                 continue;
               }
               finishObjectLiteralIfNeeded();
-              expressions.push(Debug.checkDefined(visitNode(attr.expression, visitor, isExpression)));
+              expressions.push(Debug.checkDefined(visitNode(attr2.expression, visitor, isExpression)));
               continue;
             }
-            properties.push(transformJsxAttributeToObjectLiteralElement(attr));
+            properties.push(transformJsxAttributeToObjectLiteralElement(attr2));
           }
           if (children) {
             properties.push(children);
@@ -187014,9 +187014,9 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const checker = context.program.getTypeChecker();
         const jsxAttributesNode = info.parentDeclaration.attributes;
         const hasSpreadAttribute = some(jsxAttributesNode.properties, isJsxSpreadAttribute);
-        const attrs = map3(info.attributes, (attr) => {
-          const value = tryGetValueFromType(context, checker, importAdder, quotePreference, checker.getTypeOfSymbol(attr), info.parentDeclaration);
-          const name = factory.createIdentifier(attr.name);
+        const attrs = map3(info.attributes, (attr2) => {
+          const value = tryGetValueFromType(context, checker, importAdder, quotePreference, checker.getTypeOfSymbol(attr2), info.parentDeclaration);
+          const name = factory.createIdentifier(attr2.name);
           const jsxAttribute = factory.createJsxAttribute(name, factory.createJsxExpression(
             /*dotDotDotToken*/
             void 0,
@@ -195965,7 +195965,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const importAttributes = contextToken.kind === 19 || contextToken.kind === 28 ? tryCast(contextToken.parent, isImportAttributes) : contextToken.kind === 59 ? tryCast(contextToken.parent.parent, isImportAttributes) : void 0;
           if (importAttributes === void 0) return 0;
           const existing = new Set(importAttributes.elements.map(getNameFromImportAttribute));
-          symbols = filter(typeChecker.getTypeAtLocation(importAttributes).getApparentProperties(), (attr) => !existing.has(attr.escapedName));
+          symbols = filter(typeChecker.getTypeAtLocation(importAttributes).getApparentProperties(), (attr2) => !existing.has(attr2.escapedName));
           return 1;
         }
         function tryGetLocalNamedExportCompletionSymbols() {
@@ -196363,14 +196363,14 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         function filterJsxAttributes(symbols2, attributes) {
           const seenNames = /* @__PURE__ */ new Set();
           const membersDeclaredBySpreadAssignment = /* @__PURE__ */ new Set();
-          for (const attr of attributes) {
-            if (isCurrentlyEditingNode(attr)) {
+          for (const attr2 of attributes) {
+            if (isCurrentlyEditingNode(attr2)) {
               continue;
             }
-            if (attr.kind === 292) {
-              seenNames.add(getEscapedTextOfJsxAttributeName(attr.name));
-            } else if (isJsxSpreadAttribute(attr)) {
-              setMembersDeclaredBySpreadAssignment(attr, membersDeclaredBySpreadAssignment);
+            if (attr2.kind === 292) {
+              seenNames.add(getEscapedTextOfJsxAttributeName(attr2.name));
+            } else if (isJsxSpreadAttribute(attr2)) {
+              setMembersDeclaredBySpreadAssignment(attr2, membersDeclaredBySpreadAssignment);
             }
           }
           const filteredSymbols = symbols2.filter((a) => !seenNames.has(a.escapedName));
@@ -236226,6 +236226,16 @@ var config_schema_default = {
               const: false
             }
           ]
+        },
+        html: {
+          oneOf: [
+            {
+              type: "string"
+            },
+            {
+              const: false
+            }
+          ]
         }
       }
     }
@@ -254703,6 +254713,571 @@ function outputSummary(output) {
 // src/cli/output.ts
 var import_node_path31 = __toESM(require("node:path"), 1);
 
+// src/report/html.ts
+var severities = ["critical", "high", "medium", "low", "info"];
+function formatHtml(result) {
+  const projectRows = projectBreakdown(result);
+  const ruleRows = ruleBreakdown(result.findings);
+  const filter = filterOptions(result.findings);
+  const visibleCount = `${result.findings.length} ${plural("finding", result.findings.length)}`;
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BoardReadyOps Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #f7f9fb;
+      --surface: #ffffff;
+      --text: #1b2430;
+      --muted: #566477;
+      --border: #cfd7e2;
+      --accent: #0b5cad;
+      --critical: #b42318;
+      --high: #b54708;
+      --medium: #7a5c00;
+      --low: #0f766e;
+      --info: #175cd3;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    header,
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 32px 0 16px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    h2 {
+      margin: 32px 0 12px;
+      font-size: 1.35rem;
+    }
+
+    h3 {
+      margin: 16px 0 8px;
+      font-size: 1rem;
+    }
+
+    .metadata {
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    .summary-grid,
+    .breakdown-grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .metric,
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 14px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.8rem;
+    }
+
+    .metric span,
+    .empty,
+    .muted {
+      color: var(--muted);
+    }
+
+    .filter-bar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      align-items: end;
+      margin: 24px 0 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      padding: 12px;
+      box-shadow: 0 6px 16px rgba(20, 31, 46, 0.08);
+    }
+
+    label {
+      display: grid;
+      gap: 4px;
+      font-weight: 700;
+    }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      padding: 8px;
+      font: inherit;
+    }
+
+    .count {
+      align-self: center;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    caption {
+      padding: 10px 0;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    th,
+    td {
+      border-top: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    thead th {
+      border-top: 0;
+      background: #eef3f8;
+    }
+
+    code {
+      overflow-wrap: anywhere;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+    }
+
+    .badge {
+      display: inline-block;
+      min-width: 72px;
+      border-radius: 999px;
+      padding: 2px 9px;
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .severity-critical {
+      background: var(--critical);
+    }
+
+    .severity-high {
+      background: var(--high);
+    }
+
+    .severity-medium {
+      background: var(--medium);
+    }
+
+    .severity-low {
+      background: var(--low);
+    }
+
+    .severity-info {
+      background: var(--info);
+    }
+
+    details {
+      margin-top: 8px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .detail-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      margin-top: 10px;
+    }
+
+    ol,
+    ul {
+      margin: 6px 0 0;
+      padding-left: 22px;
+    }
+
+    pre {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #f2f5f8;
+      padding: 10px;
+    }
+
+    @media (max-width: 760px) {
+      header,
+      main {
+        width: min(100% - 20px, 1180px);
+      }
+
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: block;
+      }
+
+      thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+
+      tr {
+        border-top: 1px solid var(--border);
+      }
+
+      td {
+        border-top: 0;
+      }
+
+      td::before {
+        display: block;
+        color: var(--muted);
+        content: attr(data-label);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .filter-bar {
+        position: static;
+        box-shadow: none;
+      }
+
+      select,
+      script {
+        display: none;
+      }
+
+      a {
+        color: #000000;
+        text-decoration: underline;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>BoardReadyOps Report</h1>
+    <p class="metadata">Generated ${escapeHtml2(result.generatedAt)} by ${escapeHtml2(result.tool.name)} ${escapeHtml2(
+    result.tool.version
+  )}. ${result.summary.failed ? "Threshold failed." : "Threshold passed."}</p>
+  </header>
+  <main>
+    <section aria-labelledby="summary-heading">
+      <h2 id="summary-heading">Summary by Severity</h2>
+      <div class="summary-grid">
+        ${summaryCards(result)}
+      </div>
+    </section>
+
+    <section aria-labelledby="project-heading">
+      <h2 id="project-heading">Per-project Breakdown</h2>
+      <div class="breakdown-grid">
+        ${projectRows.length > 0 ? projectRows.map(renderProjectPanel).join("\n        ") : emptyPanel("No projects were reported.")}
+      </div>
+    </section>
+
+    <section aria-labelledby="rule-heading">
+      <h2 id="rule-heading">Per-rule Grouping</h2>
+      ${ruleRows.length > 0 ? `<table>
+        <caption>Findings grouped by rule</caption>
+        <thead>
+          <tr><th scope="col">Rule</th><th scope="col">Total</th><th scope="col">Severity counts</th></tr>
+        </thead>
+        <tbody>
+          ${ruleRows.map(renderRuleRow).join("\n          ")}
+        </tbody>
+      </table>` : emptyPanel("No rules produced findings.")}
+    </section>
+
+    <section aria-labelledby="findings-heading">
+      <h2 id="findings-heading">Findings</h2>
+      <section class="filter-bar" aria-label="Filter findings">
+        <label>Severity
+          <select id="severity-filter" data-filter="severity">
+            <option value="">All severities</option>
+            ${filter.severities.map((severity) => `<option value="${attr(severity)}">${escapeHtml2(severity)}</option>`).join("\n            ")}
+          </select>
+        </label>
+        <label>Rule
+          <select id="rule-filter" data-filter="rule">
+            <option value="">All rules</option>
+            ${filter.rules.map((rule2) => `<option value="${attr(rule2)}">${escapeHtml2(rule2)}</option>`).join("\n            ")}
+          </select>
+        </label>
+        <label>Project
+          <select id="project-filter" data-filter="project">
+            <option value="">All projects</option>
+            ${filter.projects.map((project) => `<option value="${attr(project)}">${escapeHtml2(project)}</option>`).join("\n            ")}
+          </select>
+        </label>
+        <output class="count" id="visible-count" aria-live="polite">${escapeHtml2(visibleCount)}</output>
+      </section>
+      ${result.findings.length > 0 ? `<table id="findings-table">
+        <caption>Filterable finding list</caption>
+        <thead>
+          <tr><th scope="col">Severity</th><th scope="col">Rule</th><th scope="col">Project</th><th scope="col">Finding</th></tr>
+        </thead>
+        <tbody>
+          ${result.findings.map(renderFindingRow).join("\n          ")}
+        </tbody>
+      </table>` : emptyPanel("No findings.")}
+    </section>
+  </main>
+  <script>
+    "use strict";
+    const filters = Array.from(document.querySelectorAll("[data-filter]"));
+    const rows = Array.from(document.querySelectorAll("#findings-table tbody tr"));
+    const counter = document.getElementById("visible-count");
+    const plural = (count) => count === 1 ? "finding" : "findings";
+    const applyFilters = () => {
+      const active = Object.fromEntries(filters.map((filter) => [filter.dataset.filter, filter.value]));
+      let visible = 0;
+      for (const row of rows) {
+        const matched = (!active.severity || row.dataset.severity === active.severity)
+          && (!active.rule || row.dataset.rule === active.rule)
+          && (!active.project || row.dataset.project === active.project);
+        row.hidden = !matched;
+        if (matched) {
+          visible += 1;
+        }
+      }
+      if (counter) {
+        counter.value = visible + " " + plural(visible);
+        counter.textContent = counter.value;
+      }
+    };
+    for (const filter of filters) {
+      filter.addEventListener("change", applyFilters);
+    }
+  </script>
+</body>
+</html>
+`;
+  return `${html.replace(/[ \t]+$/gm, "").trimEnd()}
+`;
+}
+function summaryCards(result) {
+  const metrics = [
+    { label: "Total", count: result.summary.total },
+    ...severities.map((severity) => ({ label: severity, count: result.summary[severity] }))
+  ];
+  return metrics.map(
+    (metric) => `<article class="metric">
+          <strong>${metric.count}</strong>
+          <span>${escapeHtml2(metric.label)}</span>
+        </article>`
+  ).join("\n        ");
+}
+function projectBreakdown(result) {
+  const projects = /* @__PURE__ */ new Map();
+  for (const project of result.projects) {
+    projects.set(project.projectFile, emptyBreakdown(project.projectFile));
+  }
+  for (const finding2 of result.findings) {
+    const label = finding2.project ?? "Unassigned";
+    const entry = projects.get(label) ?? emptyBreakdown(label);
+    entry.total += 1;
+    entry.counts[finding2.severity] += 1;
+    projects.set(label, entry);
+  }
+  return [...projects.values()].sort((a, b) => b.total - a.total || a.label.localeCompare(b.label));
+}
+function ruleBreakdown(findings) {
+  const rules = /* @__PURE__ */ new Map();
+  for (const finding2 of findings) {
+    const entry = rules.get(finding2.ruleId) ?? emptyBreakdown(finding2.ruleId);
+    entry.total += 1;
+    entry.counts[finding2.severity] += 1;
+    rules.set(finding2.ruleId, entry);
+  }
+  return [...rules.values()].sort((a, b) => b.total - a.total || a.label.localeCompare(b.label));
+}
+function emptyBreakdown(label) {
+  return {
+    label,
+    total: 0,
+    counts: { critical: 0, high: 0, medium: 0, low: 0, info: 0 }
+  };
+}
+function renderProjectPanel(project) {
+  return `<article class="panel">
+          <h3><code>${escapeHtml2(project.label)}</code></h3>
+          <p><strong>${project.total}</strong> ${escapeHtml2(plural("finding", project.total))}</p>
+          <p class="muted">${severityCounts(project)}</p>
+        </article>`;
+}
+function renderRuleRow(rule2) {
+  return `<tr>
+            <td data-label="Rule"><code>${escapeHtml2(rule2.label)}</code></td>
+            <td data-label="Total">${rule2.total}</td>
+            <td data-label="Severity counts">${severityCounts(rule2)}</td>
+          </tr>`;
+}
+function renderFindingRow(finding2) {
+  const project = finding2.project ?? "Unassigned";
+  return `<tr data-severity="${attr(finding2.severity)}" data-rule="${attr(finding2.ruleId)}" data-project="${attr(project)}">
+            <td data-label="Severity"><span class="badge severity-${attr(finding2.severity)}">${escapeHtml2(finding2.severity)}</span></td>
+            <td data-label="Rule"><code>${escapeHtml2(finding2.ruleId)}</code></td>
+            <td data-label="Project"><code>${escapeHtml2(project)}</code></td>
+            <td data-label="Finding">
+              ${escapeHtml2(finding2.message)}
+              <details>
+                <summary>Details</summary>
+                <div class="detail-grid">
+                  <section>
+                    <h3>Resource</h3>
+                    <p><code>${escapeHtml2(finding2.resource.path)}</code> <span class="muted">(${escapeHtml2(finding2.resource.kind)})</span></p>
+                    ${locationHtml(finding2)}
+                  </section>
+                  ${detailsHtml(finding2)}
+                  ${fixHtml(finding2)}
+                  ${referencesHtml(finding2)}
+                </div>
+              </details>
+            </td>
+          </tr>`;
+}
+function locationHtml(finding2) {
+  const values = [];
+  if (finding2.location?.region) {
+    values.push(`lines ${finding2.location.region.startLine}-${finding2.location.region.endLine}`);
+  } else if (finding2.location?.line) {
+    values.push(`line ${finding2.location.line}`);
+  }
+  if (finding2.location?.column) {
+    values.push(`column ${finding2.location.column}`);
+  }
+  if (finding2.location?.boardCoordinates) {
+    const coordinates = finding2.location.boardCoordinates;
+    values.push(
+      `${coordinates.layer ?? "board"} (${formatNumber(coordinates.x)}${coordinates.units}, ${formatNumber(
+        coordinates.y
+      )}${coordinates.units})`
+    );
+  }
+  return values.length > 0 ? `<p>${escapeHtml2(values.join(", "))}</p>` : '<p class="muted">No location provided.</p>';
+}
+function detailsHtml(finding2) {
+  if (!finding2.details && !finding2.confidence) {
+    return "";
+  }
+  const detail = JSON.stringify(finding2.details ?? {}, null, 2);
+  return `<section>
+                    <h3>Context</h3>
+                    ${finding2.confidence ? `<p>Confidence: ${escapeHtml2(finding2.confidence)}</p>` : ""}
+                    ${finding2.details ? `<pre><code>${escapeHtml2(detail)}</code></pre>` : ""}
+                  </section>`;
+}
+function fixHtml(finding2) {
+  if (!finding2.fix) {
+    return '<section><h3>Fix</h3><p class="muted">No fix suggestion provided.</p></section>';
+  }
+  const steps = finding2.fix.steps && finding2.fix.steps.length > 0 ? `<ol>${finding2.fix.steps.map((step) => `<li>${escapeHtml2(step)}</li>`).join("")}</ol>` : "";
+  return `<section>
+                    <h3>Fix</h3>
+                    <p>${escapeHtml2(finding2.fix.description)}</p>
+                    ${steps}
+                  </section>`;
+}
+function referencesHtml(finding2) {
+  const references = [...finding2.references ?? [], ...finding2.fix?.references ?? []];
+  if (references.length === 0) {
+    return '<section><h3>References</h3><p class="muted">No references provided.</p></section>';
+  }
+  return `<section>
+                    <h3>References</h3>
+                    <ul>${references.map((reference) => `<li><a href="${attr(reference)}">${escapeHtml2(reference)}</a></li>`).join("")}</ul>
+                  </section>`;
+}
+function filterOptions(findings) {
+  return {
+    severities: severities.filter((severity) => findings.some((finding2) => finding2.severity === severity)),
+    rules: uniqueSorted(findings.map((finding2) => finding2.ruleId)),
+    projects: uniqueSorted(findings.map((finding2) => finding2.project ?? "Unassigned"))
+  };
+}
+function severityCounts(row) {
+  return severities.filter((severity) => row.counts[severity] > 0).map((severity) => `${row.counts[severity]} ${severity}`).join(", ") || "0 findings";
+}
+function emptyPanel(message) {
+  return `<div class="panel empty">${escapeHtml2(message)}</div>`;
+}
+function uniqueSorted(values) {
+  return [...new Set(values)].sort((a, b) => a.localeCompare(b));
+}
+function plural(word, count) {
+  return count === 1 ? word : `${word}s`;
+}
+function formatNumber(value) {
+  return Object.is(value, -0) ? "0" : Number.isInteger(value) ? value.toString() : value.toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
+}
+function attr(value) {
+  return escapeHtml2(value).replace(/'/g, "&#39;");
+}
+function escapeHtml2(value) {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 // src/report/json.ts
 function formatJson(result) {
   return `${JSON.stringify(result, null, 2)}
@@ -254847,7 +255422,8 @@ async function writeReports(result, root, outputs, loaded, stdout) {
     json: outputs.json ?? configOutput(loaded, "json"),
     sarif: outputs.sarif ?? configOutput(loaded, "sarif"),
     markdown: outputs.markdown ?? configOutput(loaded, "markdown"),
-    junit: outputs.junit ?? configOutput(loaded, "junit")
+    junit: outputs.junit ?? configOutput(loaded, "junit"),
+    html: outputs.html ?? configOutput(loaded, "html")
   };
   const written = {};
   if (targets.json) {
@@ -254861,6 +255437,9 @@ async function writeReports(result, root, outputs, loaded, stdout) {
   }
   if (targets.junit) {
     written.junit = await writeOrStdout(root, targets.junit, formatJunit(result), stdout);
+  }
+  if (targets.html) {
+    written.html = await writeOrStdout(root, targets.html, formatHtml(result), stdout);
   }
   return written;
 }
@@ -255070,11 +255649,11 @@ async function repositoryCheck(root) {
   items.push(
     projects.length === 0 ? item("warn", "No KiCad projects discovered.", { recommendation: "Add a .kicad_pro project before CI." }) : item(
       projects.length === 1 ? "pass" : "warn",
-      `${projects.length} KiCad project${plural(projects.length)} discovered.`
+      `${projects.length} KiCad project${plural2(projects.length)} discovered.`
     )
   );
   items.push(
-    gerbers.length === 0 ? item("fail", "No Gerber outputs found.", { recommendation: "Generate Gerber outputs from KiCad before CI." }) : item("pass", `${gerbers.length} Gerber output${plural(gerbers.length)} found.`)
+    gerbers.length === 0 ? item("fail", "No Gerber outputs found.", { recommendation: "Generate Gerber outputs from KiCad before CI." }) : item("pass", `${gerbers.length} Gerber output${plural2(gerbers.length)} found.`)
   );
   return items;
 }
@@ -255238,7 +255817,7 @@ function collectRecommendations(checks) {
 function renderItem(entry) {
   return `[${entry.severity}] ${entry.message}`;
 }
-function plural(count) {
+function plural2(count) {
   return count === 1 ? "" : "s";
 }
 
@@ -255344,6 +255923,7 @@ report:
   sarif: build/boardreadyops.sarif.json
   json: build/boardreadyops.findings.json
   markdown: build/boardreadyops.report.md
+  html: build/boardreadyops.report.html
   # junit: build/boardreadyops.junit.xml
 `;
 async function initCommand(cwd, streams) {
