@@ -68,6 +68,24 @@ jobs:
 
 SARIF upload requires `security-events: write`. Pull request comments require `pull-requests: write`.
 
+Use the full container action when a workflow should carry KiCad CLI inside the
+BoardReadyOps runtime instead of installing KiCad separately:
+
+```yaml
+      # Replace this placeholder with the release commit SHA that backs v1.
+      - uses: oaslananka/boardreadyops/apps/container@0123456789abcdef0123456789abcdef01234567 # v1
+        with:
+          config: boardreadyops.yml
+          require-kicad: "true"
+          mode: enforce
+```
+
+The same image can run as a CLI:
+
+```bash
+docker run --rm ghcr.io/oaslananka/boardreadyops-full:v1 --help
+```
+
 ## CLI
 
 ```bash

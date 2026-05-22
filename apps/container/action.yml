@@ -1,0 +1,119 @@
+name: BoardReadyOps Full
+description: BoardReadyOps with KiCad CLI preinstalled.
+author: Osman Aslan
+branding:
+  icon: shield
+  color: blue
+runs:
+  using: docker
+  image: docker://ghcr.io/oaslananka/boardreadyops-full:v1
+  entrypoint: /usr/local/bin/boardreadyops-action
+  args:
+    - ${{ inputs['path'] }}
+    - ${{ inputs['project'] }}
+    - ${{ inputs['config'] }}
+    - ${{ inputs['mode'] }}
+    - ${{ inputs['require-kicad'] }}
+    - ${{ inputs['kicad-cli'] }}
+    - ${{ inputs['bom'] }}
+    - ${{ inputs['pinmap'] }}
+    - ${{ inputs['variant'] }}
+    - ${{ inputs['sarif'] }}
+    - ${{ inputs['json'] }}
+    - ${{ inputs['markdown'] }}
+    - ${{ inputs['upload-sarif'] }}
+    - ${{ inputs['upload-artifacts'] }}
+    - ${{ inputs['comment-pr'] }}
+    - ${{ inputs['artifact-name'] }}
+    - ${{ inputs['fail-on'] }}
+    - ${{ inputs['annotations'] }}
+inputs:
+  path:
+    description: Directory to scan.
+    required: false
+    default: .
+  project:
+    description: Explicit .kicad_pro path. If omitted, all discovered projects are scanned.
+    required: false
+    default: ""
+  config:
+    description: Path to boardreadyops.yml.
+    required: false
+    default: boardreadyops.yml
+  mode:
+    description: "warn or enforce"
+    required: false
+    default: warn
+  require-kicad:
+    description: Fail when kicad-cli is not available.
+    required: false
+    default: "false"
+  kicad-cli:
+    description: Explicit kicad-cli path.
+    required: false
+    default: ""
+  bom:
+    description: BOM source path or "auto".
+    required: false
+    default: auto
+  pinmap:
+    description: Pinmap file path. Empty disables pinmap rules.
+    required: false
+    default: ""
+  variant:
+    description: KiCad variant name used by variant-aware BoardReadyOps rules.
+    required: false
+    default: ""
+  sarif:
+    description: Output SARIF path. Empty disables.
+    required: false
+    default: boardreadyops.sarif.json
+  json:
+    description: Output JSON findings path. Empty disables.
+    required: false
+    default: boardreadyops.findings.json
+  markdown:
+    description: Output Markdown report path. Empty disables.
+    required: false
+    default: boardreadyops.report.md
+  upload-sarif:
+    description: Upload SARIF to GitHub Code Scanning.
+    required: false
+    default: "true"
+  upload-artifacts:
+    description: Upload reports as workflow artifacts.
+    required: false
+    default: "true"
+  comment-pr:
+    description: Post a sticky Markdown comment on pull requests.
+    required: false
+    default: "true"
+  artifact-name:
+    description: Workflow artifact name.
+    required: false
+    default: boardreadyops
+  fail-on:
+    description: Severity threshold above which the action exits non-zero. One of critical, high, medium, low, never.
+    required: false
+    default: high
+  annotations:
+    description: Emit ::error/::warning workflow annotations.
+    required: false
+    default: "true"
+outputs:
+  findings:
+    description: Total finding count.
+  critical:
+    description: Count of critical findings.
+  high:
+    description: Count of high findings.
+  medium:
+    description: Count of medium findings.
+  low:
+    description: Count of low findings.
+  sarif-path:
+    description: SARIF output path if produced.
+  json-path:
+    description: JSON output path if produced.
+  markdown-path:
+    description: Markdown output path if produced.

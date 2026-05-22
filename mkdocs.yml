@@ -47,7 +47,9 @@ nav:
   - Installation: install.md
   - Configuration: configuration.md
   - CLI: cli.md
-  - GitHub Action: action.md
+  - GitHub Action:
+      - Node Action: action.md
+      - Container Action: github-action.md
   - Rules:
       - Overview: rules/index.md
       - BOM: rules/bom.md
