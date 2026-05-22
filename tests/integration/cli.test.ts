@@ -103,6 +103,147 @@ describe("CLI integration", () => {
     }
   });
 
+  it("captures, shows, diffs, prunes, and clears a baseline from the CLI", async () => {
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-baseline-cli-"));
+    await fs.writeFile(path.join(temp, "sample.kicad_pro"), "{}");
+    await fs.writeFile(
+      path.join(temp, "boardreadyops.yml"),
+      `version: 1
+rules:
+  drc.kicad:
+    enabled: false
+  erc.kicad:
+    enabled: false
+  release.changelog-present:
+    enabled: false
+  release.revision-set:
+    enabled: false
+`,
+    );
+
+    const capture = captureStreams();
+    expect(await runCli(["baseline", "capture", temp], capture)).toBe(0);
+    expect(capture.stdoutText()).toContain(".boardreadyops-baseline.json");
+
+    const show = captureStreams();
+    expect(await runCli(["baseline", "show", temp], show)).toBe(0);
+    expect(JSON.parse(show.stdoutText()).findings).toHaveLength(3);
+
+    const diff = captureStreams();
+    expect(await runCli(["baseline", "diff", temp], diff)).toBe(0);
+    expect(diff.stdoutText()).toContain("Added: 0");
+    expect(diff.stdoutText()).toContain("Removed: 0");
+    expect(diff.stdoutText()).toContain("Unchanged: 3");
+
+    await fs.writeFile(path.join(temp, "sample.kicad_sch"), "(kicad_sch)");
+    const prune = captureStreams();
+    expect(await runCli(["baseline", "prune", temp], prune)).toBe(0);
+    expect(
+      JSON.parse(await fs.readFile(path.join(temp, ".boardreadyops-baseline.json"), "utf8")).findings,
+    ).toHaveLength(2);
+
+    const clear = captureStreams();
+    expect(await runCli(["baseline", "clear", temp], clear)).toBe(0);
+    await expect(fs.stat(path.join(temp, ".boardreadyops-baseline.json"))).rejects.toThrow();
+  });
+
+  it("uses explicit config paths for baseline subcommands", async () => {
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-baseline-config-"));
+    await fs.mkdir(path.join(temp, "ci"), { recursive: true });
+    await fs.writeFile(path.join(temp, "sample.kicad_pro"), "{}");
+    await fs.writeFile(
+      path.join(temp, "ci", "boardreadyops.yml"),
+      `version: 1
+baseline:
+  file: audit/current.json
+  mode: new-only
+rules:
+  drc.kicad:
+    enabled: false
+  erc.kicad:
+    enabled: false
+  release.changelog-present:
+    enabled: false
+  release.revision-set:
+    enabled: false
+`,
+    );
+    await fs.mkdir(path.join(temp, "audit"), { recursive: true });
+    await fs.writeFile(path.join(temp, "audit", "current.json"), "null\n", "utf8");
+
+    const capture = captureStreams();
+    expect(await runCli(["baseline", "capture", temp, "--config", "ci/boardreadyops.yml"], capture)).toBe(0);
+    expect(capture.stdoutText()).toContain("audit/current.json");
+    await expect(fs.stat(path.join(temp, "audit", "current.json"))).resolves.toBeTruthy();
+    await expect(fs.stat(path.join(temp, ".boardreadyops-baseline.json"))).rejects.toThrow();
+
+    const show = captureStreams();
+    expect(await runCli(["baseline", "show", temp, "--config", "ci/boardreadyops.yml"], show)).toBe(0);
+    expect(JSON.parse(show.stdoutText()).findings).toHaveLength(3);
+  });
+
+  it("keeps suppressed and baselined findings visible without failing the run", async () => {
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-suppressed-baseline-"));
+    await fs.writeFile(path.join(temp, "sample.kicad_pro"), "{}");
+    const initial = await runPipeline({ path: temp, failOn: "never" });
+    const projectShapeFindings = initial.findings.filter((finding) => finding.ruleId === "manifest.project-discovery");
+    expect(projectShapeFindings).toHaveLength(2);
+    const [suppressed, baselined] = projectShapeFindings;
+    if (!suppressed || !baselined) {
+      throw new Error("expected two project-shape findings");
+    }
+    await fs.writeFile(
+      path.join(temp, "boardreadyops.yml"),
+      `version: 1
+suppressions:
+  - rule: ${suppressed.ruleId}
+    fingerprint: ${suppressed.fingerprint}
+    reason: project is still being created
+baseline:
+  file: .boardreadyops-baseline.json
+  mode: new-only
+rules:
+  drc.kicad:
+    enabled: false
+  erc.kicad:
+    enabled: false
+  release.changelog-present:
+    enabled: false
+  release.revision-set:
+    enabled: false
+`,
+    );
+    await fs.writeFile(
+      path.join(temp, ".boardreadyops-baseline.json"),
+      JSON.stringify(
+        {
+          version: 1,
+          capturedAt: "2026-05-21T10:00:00.000Z",
+          capturedBy: "boardreadyops/1.0.2",
+          findings: [
+            {
+              fingerprint: baselined.fingerprint,
+              ruleId: baselined.ruleId,
+              message: baselined.message,
+              suppressedUntil: null,
+            },
+          ],
+        },
+        null,
+        2,
+      ),
+    );
+
+    const streams = captureStreams();
+    expect(
+      await runCli(["run", temp, "--rule", "manifest.project-discovery", "--json", "-", "--no-annotations"], streams),
+    ).toBe(0);
+    const result = JSON.parse(streams.stdoutText());
+    expect(result.summary.total).toBe(2);
+    expect(result.summary.failed).toBe(false);
+    expect(result.findings.map((finding: { suppressed?: boolean }) => finding.suppressed)).toEqual([true, true]);
+  });
+
   it("maps bad configuration and missing required KiCad to dedicated exit codes", async () => {
     const badConfig = captureStreams();
     expect(await runCli(["run", path.join(fixtureRoot, "malformed-config"), "--no-annotations"], badConfig)).toBe(2);

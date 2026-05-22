@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { boardReadyVersion } from "../generated/version.js";
 import { registerBuiltInRules } from "../rules/_index.js";
+import { applyBaseline, readBaseline, resolveBaselinePath } from "./baseline.js";
 import { defaultConcurrency, mapLimit } from "./concurrency.js";
 import { type BoardReadyOpsConfig, defaultConfig, type LoadedConfig, loadConfig } from "./config.js";
 import type { PipelineOptions, RuleContext } from "./context.js";
@@ -10,6 +11,7 @@ import { createFinding, type Finding, sortFindings, summarizeFindings } from "./
 import { createLogger, type Logger } from "./logger.js";
 import type { RunResult } from "./result.js";
 import { listRules } from "./rule-registry.js";
+import { applySuppressions } from "./suppressions.js";
 
 export async function runPipeline(
   input: Partial<PipelineOptions> & { cwd?: string; path?: string } = {},
@@ -46,7 +48,7 @@ export async function runPipeline(
   for (const group of projectFindings) {
     findings.push(...group);
   }
-  const sorted = sortFindings(findings);
+  const sorted = await controlledFindings(root, config, options, sortFindings(findings));
   return {
     schemaVersion: 1,
     tool: {
@@ -58,6 +60,20 @@ export async function runPipeline(
     findings: sorted,
     generatedAt: new Date().toISOString(),
   };
+}
+
+async function controlledFindings(
+  root: string,
+  config: BoardReadyOpsConfig,
+  options: PipelineOptions,
+  findings: Finding[],
+): Promise<Finding[]> {
+  const suppressed = applySuppressions(findings, config.suppressions);
+  if (options.ignoreBaseline || !config.baseline || config.baseline.mode === "all") {
+    return suppressed;
+  }
+  const baseline = await readBaseline(resolveBaselinePath(root, config.baseline));
+  return baseline ? applyBaseline(suppressed, baseline, config.baseline.mode) : suppressed;
 }
 
 export async function canonicalRoot(input: string): Promise<string> {
@@ -88,6 +104,7 @@ function normalizeOptions(
     failOn: input.failOn ?? config["fail-on"] ?? "high",
     rules: input.rules ?? [],
     skips: input.skips ?? [],
+    ignoreBaseline: input.ignoreBaseline ?? false,
     annotations: input.annotations ?? true,
     quiet: input.quiet ?? false,
     verbose: input.verbose ?? false,

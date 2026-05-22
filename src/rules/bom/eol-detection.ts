@@ -28,7 +28,7 @@ export const eolDetectionRule = rule(
           path: row.sourcePath,
           kind: "bom",
           line: row.line,
-          details: { lifecycle: row.lifecycle, mpn: row.mpn },
+          details: { reference: row.reference, lifecycle: row.lifecycle, mpn: row.mpn },
         }),
       );
   },

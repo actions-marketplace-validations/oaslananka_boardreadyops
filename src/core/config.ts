@@ -26,12 +26,28 @@ interface ProjectConfig {
   }>;
 }
 
+export interface SuppressionConfig {
+  rule: string;
+  project?: string;
+  reason: string;
+  expires?: string;
+  refs?: string[];
+  fingerprint?: string;
+}
+
+export interface BaselineConfig {
+  file: string;
+  mode: "new-only" | "all";
+}
+
 export interface BoardReadyOpsConfig {
   version: 1;
   mode?: "warn" | "enforce";
   projects?: ProjectConfig[];
   rules?: Record<string, RuleConfig | boolean>;
   "fail-on"?: FailOn;
+  suppressions?: SuppressionConfig[];
+  baseline?: BaselineConfig;
   report?: {
     sarif?: string | false;
     json?: string | false;

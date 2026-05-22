@@ -164,6 +164,27 @@ rules:
     expect(result.findings.some((finding) => finding.ruleId === "release.revision-set")).toBe(true);
   });
 
+  it("keeps findings active when a configured baseline file is not present yet", async () => {
+    const root = await writeFixture({
+      "board.kicad_pro": "{}",
+      "boardreadyops.yml": `version: 1
+baseline:
+  file: audit/missing-baseline.json
+  mode: new-only
+rules:
+  release.changelog-present:
+    enabled: false
+  release.revision-set:
+    enabled: false
+`,
+    });
+
+    const result = await runPipeline({ path: root, rules: ["manifest.project-discovery"], failOn: "high" });
+
+    expect(result.findings).toHaveLength(2);
+    expect(result.summary.failed).toBe(true);
+  });
+
   it("treats empty explicit config files as invalid config objects", async () => {
     const root = await writeFixture({ "blank.yml": "" });
 

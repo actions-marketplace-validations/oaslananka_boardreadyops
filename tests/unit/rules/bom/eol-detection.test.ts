@@ -6,7 +6,7 @@ describe("bom.eol-detection", () => {
   it("flags lifecycle markers that indicate end of life risk", async () => {
     const result = await runFixture("bom-eol");
     const findings = expectRule(result, "bom.eol-detection", 1);
-    expect(findings[0]?.details).toMatchObject({ lifecycle: "EOL" });
+    expect(findings[0]?.details).toMatchObject({ lifecycle: "EOL", reference: "R1" });
   });
 
   it("ignores DNP rows even when lifecycle text is risky", async () => {

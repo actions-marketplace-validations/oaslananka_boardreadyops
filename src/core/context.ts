@@ -26,6 +26,7 @@ export interface PipelineOptions {
   failOn: FailOn;
   rules: string[];
   skips: string[];
+  ignoreBaseline: boolean;
   annotations: boolean;
   quiet: boolean;
   verbose: boolean;

@@ -33,7 +33,11 @@ export const footprintMismatchRule = rule(
           path: row.sourcePath,
           kind: "bom",
           line: row.line,
-          details: { bom: row.footprint, pcb: pcbFootprints.get(row.reference)?.footprint },
+          details: {
+            reference: row.reference,
+            bom: row.footprint,
+            pcb: pcbFootprints.get(row.reference)?.footprint,
+          },
         }),
       );
   },

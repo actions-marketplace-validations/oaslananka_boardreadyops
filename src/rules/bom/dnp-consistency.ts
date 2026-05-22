@@ -31,7 +31,11 @@ export const dnpConsistencyRule = rule(
           path: row.sourcePath,
           kind: "bom",
           line: row.line,
-          details: { bomDnp: Boolean(row.dnp), pcbDnp: Boolean(pcbFootprints.get(row.reference)?.dnp) },
+          details: {
+            reference: row.reference,
+            bomDnp: Boolean(row.dnp),
+            pcbDnp: Boolean(pcbFootprints.get(row.reference)?.dnp),
+          },
         }),
       );
   },

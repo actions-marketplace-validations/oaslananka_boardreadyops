@@ -17,6 +17,28 @@ describe("configuration", () => {
   it("validates the versioned config schema", () => {
     expect(validateConfig({ version: 1, failOn: "high" })).not.toEqual([]);
     expect(validateConfig({ version: 1, "fail-on": "high" })).toEqual([]);
+    expect(
+      validateConfig({
+        version: 1,
+        suppressions: [
+          {
+            rule: "manufacturing.outputs-present",
+            project: "hardware/prototype",
+            reason: "prototype outputs are not published",
+            expires: "2026-10-01",
+            refs: ["U3"],
+            fingerprint: "a".repeat(64),
+          },
+        ],
+        baseline: { file: ".boardreadyops-baseline.json", mode: "new-only" },
+      }),
+    ).toEqual([]);
+    expect(
+      validateConfig({
+        version: 1,
+        suppressions: [{ rule: "bom.lifecycle", reason: "ref suppression requires refs", refs: [] }],
+      }),
+    ).not.toEqual([]);
     expect(validateConfig({ version: 1, report: { junit: "build/boardreadyops.junit.xml" } })).toEqual([]);
     expect(validateConfig({ version: 2 }).join("\n")).toContain("must be equal to constant");
   });
@@ -25,6 +47,20 @@ describe("configuration", () => {
     const loaded = await loadConfig(path.join(fixtureRoot, "safe-basic"));
     expect(loaded.errors).toEqual([]);
     expect(loaded.path?.endsWith("boardreadyops.yml")).toBe(true);
+  });
+
+  it("does not read baseline files when all findings remain active", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-baseline-all-"));
+    await fs.writeFile(
+      path.join(root, "boardreadyops.yml"),
+      "version: 1\nbaseline:\n  file: .boardreadyops-baseline.json\n  mode: all\n",
+      "utf8",
+    );
+    await fs.writeFile(path.join(root, ".boardreadyops-baseline.json"), "null\n", "utf8");
+
+    await expect(runPipeline({ path: root, failOn: "never", rules: ["not.a.rule"] })).resolves.toMatchObject({
+      summary: { total: 1 },
+    });
   });
 });
 

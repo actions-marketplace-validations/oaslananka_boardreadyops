@@ -88,6 +88,9 @@
         "fingerprint": {
           "type": "string",
           "pattern": "^[a-f0-9]{64}$"
+        },
+        "suppressed": {
+          "type": "boolean"
         }
       },
       "allOf": [
@@ -332,7 +335,11 @@
     },
     "bomEolDetails": {
       "type": "object",
+      "required": ["reference"],
       "properties": {
+        "reference": {
+          "type": "string"
+        },
         "lifecycle": {
           "type": "string"
         },

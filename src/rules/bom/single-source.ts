@@ -28,7 +28,7 @@ export const singleSourceRule = rule(
           path: row.sourcePath,
           kind: "bom",
           line: row.line,
-          details: { mpn: row.mpn, supplier: row.suppliers?.[0] },
+          details: { reference: row.reference, mpn: row.mpn, supplier: row.suppliers?.[0] },
         }),
       );
   },

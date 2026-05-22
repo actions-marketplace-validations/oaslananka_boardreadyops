@@ -2,6 +2,14 @@
 import path from "node:path";
 import { Command } from "commander";
 import { boardReadyVersion } from "../generated/version.js";
+import {
+  type BaselineCliOptions,
+  captureBaselineCommand,
+  clearBaselineCommand,
+  diffBaselineCommand,
+  pruneBaselineCommand,
+  showBaselineCommand,
+} from "./commands/baseline.js";
 import { checkCommand } from "./commands/check.js";
 import { doctorCommand } from "./commands/doctor.js";
 import { initCommand } from "./commands/init.js";
@@ -53,6 +61,33 @@ export async function runCli(
     process.exitCode = await initCommand(process.cwd(), streams);
   });
 
+  const baseline = program.command("baseline").description("capture and maintain finding baselines");
+  addBaselineOptions(baseline.command("capture").argument("[path]", "directory to scan")).action(
+    async (pathInput: string | undefined, options: BaselineCliOptions) => {
+      process.exitCode = await captureBaselineCommand(pathInput, options, streams);
+    },
+  );
+  addBaselineOptions(baseline.command("diff").argument("[path]", "directory to scan")).action(
+    async (pathInput: string | undefined, options: BaselineCliOptions) => {
+      process.exitCode = await diffBaselineCommand(pathInput, options, streams);
+    },
+  );
+  addBaselineOptions(baseline.command("clear").argument("[path]", "directory to scan")).action(
+    async (pathInput: string | undefined, options: BaselineCliOptions) => {
+      process.exitCode = await clearBaselineCommand(pathInput, options, streams);
+    },
+  );
+  addBaselineOptions(baseline.command("show").argument("[path]", "directory to scan")).action(
+    async (pathInput: string | undefined, options: BaselineCliOptions) => {
+      process.exitCode = await showBaselineCommand(pathInput, options, streams);
+    },
+  );
+  addBaselineOptions(baseline.command("prune").argument("[path]", "directory to scan")).action(
+    async (pathInput: string | undefined, options: BaselineCliOptions) => {
+      process.exitCode = await pruneBaselineCommand(pathInput, options, streams);
+    },
+  );
+
   try {
     await program.parseAsync(rewriteDefaultCommand(argv), { from: "user" });
     return process.exitCode && typeof process.exitCode === "number" ? process.exitCode : 0;
@@ -65,8 +100,12 @@ export async function runCli(
   }
 }
 
+function addBaselineOptions(command: Command): Command {
+  return command.option("--config <path>", "boardreadyops.yml location");
+}
+
 function rewriteDefaultCommand(argv: string[]): string[] {
-  const commands = new Set(["run", "check", "doctor", "schema", "init", "help"]);
+  const commands = new Set(["run", "check", "doctor", "schema", "init", "baseline", "help"]);
   const first = argv[0];
   if (first === "--help" || first === "-h" || first === "--version" || first === "-V") {
     return argv;

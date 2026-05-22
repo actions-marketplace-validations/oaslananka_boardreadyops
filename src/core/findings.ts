@@ -43,6 +43,7 @@ export interface Finding {
   fix?: FixSuggestion | undefined;
   confidence?: ConfidenceLevel | undefined;
   fingerprint: string;
+  suppressed?: boolean | undefined;
 }
 
 export interface FindingInput extends Omit<Finding, "fingerprint"> {
@@ -122,7 +123,9 @@ export function shouldFail(findings: Finding[], failOn: FailOn): boolean {
     return false;
   }
   const threshold = severityRank[failOn];
-  return findings.some((finding) => finding.severity !== "info" && severityRank[finding.severity] >= threshold);
+  return findings.some(
+    (finding) => !finding.suppressed && finding.severity !== "info" && severityRank[finding.severity] >= threshold,
+  );
 }
 
 export function sortFindings(findings: Finding[]): Finding[] {

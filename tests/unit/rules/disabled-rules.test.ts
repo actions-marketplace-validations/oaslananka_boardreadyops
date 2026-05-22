@@ -89,6 +89,7 @@ function ruleContext(rulesConfig: NonNullable<RuleContext["config"]["rules"]>): 
       failOn: "never",
       rules: [],
       skips: [],
+      ignoreBaseline: false,
       annotations: false,
       quiet: true,
       verbose: false,
