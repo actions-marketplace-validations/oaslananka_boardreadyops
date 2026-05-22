@@ -19,7 +19,7 @@ yamllint .github/workflows/ .github/actions/ action.yml action.yaml
 gitleaks detect --source . --redact --verbose
 ```
 
-`corepack pnpm outdated --json` is informational manual review output, not a hard release gate. pnpm exits non-zero when any package is outdated; that is expected and acceptable for intentional runtime holdbacks such as keeping `@types/node` on the latest Node 24 type package while `package.json` declares `>=24 <25`. Do not run this line under `set -e`, fail CI solely on its exit code, or treat the expected `@types/node` holdback as a release blocker without a matching runtime range change.
+`corepack pnpm outdated --json` is informational manual review output, not a hard release gate. pnpm exits non-zero when any package is outdated; review expected differences manually. Do not run this line under `set -e` or fail CI solely on its exit code.
 
 Before tagging, inspect each external workflow action metadata and confirm no JavaScript action runs on `node12`, `node16`, or `node20`. Prefer Node24 actions, composite actions, Docker actions, or directly installed official CLIs.
 
