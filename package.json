@@ -47,6 +47,8 @@
     "benchmark": "vitest bench --run",
     "mutation": "stryker run",
     "build": "node scripts/build.mjs",
+    "build:binary": "node scripts/build-binary.mjs",
+    "build:binary:verify": "node scripts/verify-binaries.mjs",
     "watch": "node scripts/watch.mjs",
     "verify:dist": "node scripts/verify-dist.mjs",
     "verify:version": "node scripts/verify-version.mjs",

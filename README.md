@@ -15,6 +15,22 @@ BoardReadyOps checks KiCad hardware repositories for production readiness before
 npm i -g boardreadyops
 ```
 
+### Install Via Script
+
+Linux and macOS release binaries can be installed with the checksum-verifying shell installer:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/oaslananka/boardreadyops/main/install.sh | sh
+```
+
+Windows x64 release binaries can be installed with PowerShell:
+
+```powershell
+irm https://raw.githubusercontent.com/oaslananka/boardreadyops/main/install.ps1 | iex
+```
+
+The installers download the release asset plus `SHA256SUMS` before placing `boardreadyops` on the local command path. A Homebrew formula template for the same binary assets lives at `Formula/boardreadyops.rb`; update its release checksums from `SHA256SUMS` when publishing it through a tap.
+
 ## Quick Start
 
 ```bash
