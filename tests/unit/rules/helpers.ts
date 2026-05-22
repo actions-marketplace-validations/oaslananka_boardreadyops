@@ -25,6 +25,9 @@ export function expectRule(result: RunResult, ruleId: string, count?: number): F
   } else {
     expect(findings).toHaveLength(count);
   }
+  for (const finding of findings) {
+    expect(finding.fix?.description).toBeTruthy();
+  }
   return findings;
 }
 

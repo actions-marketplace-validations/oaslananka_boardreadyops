@@ -21,6 +21,59 @@ describe("report formats", () => {
     const payload = JSON.parse(formatSarif(sampleResult()));
     expect(validate(payload), JSON.stringify(validate.errors)).toBe(true);
     expect(payload.runs[0].results[0].partialFingerprints.primaryLocationLineHash).toMatch(/^[a-f0-9]{64}$/);
+    expect(payload.runs[0].tool.driver.rules[0].help.text).toContain("Add manufacturer part numbers.");
+    expect(payload.runs[0].tool.driver.rules[0].help.markdown).toContain("1. Populate the MPN column.");
+  });
+
+  it("keeps SARIF fix help readable when no steps are provided", () => {
+    const payload = JSON.parse(
+      formatSarif(
+        sampleResult([
+          createFinding({
+            ruleId: "bom.single-source",
+            severity: "medium",
+            message: "R1 has one source.",
+            resource: { path: "bom.csv", kind: "bom" },
+            fix: { description: "Add an alternate approved source." },
+          }),
+        ]),
+      ),
+    );
+
+    expect(payload.runs[0].tool.driver.rules[0].help).toEqual({
+      text: "Add an alternate approved source.",
+      markdown: "Add an alternate approved source.",
+    });
+  });
+
+  it("keeps per-finding SARIF fix metadata for repeated rule ids", () => {
+    const payload = JSON.parse(
+      formatSarif(
+        sampleResult([
+          createFinding({
+            ruleId: "manifest.project-discovery",
+            severity: "high",
+            message: "Project has no schematic.",
+            resource: { path: "main.kicad_pro", kind: "project" },
+            fix: { description: "Add a matching schematic file." },
+          }),
+          createFinding({
+            ruleId: "manifest.project-discovery",
+            severity: "high",
+            message: "Project has no board.",
+            resource: { path: "main.kicad_pro", kind: "project" },
+            fix: { description: "Add a matching board file." },
+          }),
+        ]),
+      ),
+    );
+
+    expect(payload.runs[0].tool.driver.rules).toHaveLength(1);
+    expect(
+      payload.runs[0].results.map(
+        (result: { properties: { fix?: { description: string } } }) => result.properties.fix?.description,
+      ),
+    ).toEqual(["Add a matching schematic file.", "Add a matching board file."]);
   });
 
   it("renders PR Markdown for empty and populated finding sets without unresolved tokens", () => {
@@ -31,8 +84,46 @@ describe("report formats", () => {
 
     const populated = formatMarkdown(sampleResult(), [{ label: "SARIF", url: "https://example.test/sarif" }]);
     expect(populated).toContain("Top Findings");
+    expect(populated).toContain("## Fix");
+    expect(populated).toContain("Add manufacturer part numbers.");
     expect(populated).toContain("[SARIF](https://example.test/sarif)");
     expect(populated).not.toMatch(/{{|}}/);
+  });
+
+  it("renders fixes from findings outside the top finding summary", () => {
+    const findings = Array.from({ length: 10 }, (_, index) =>
+      createFinding({
+        ruleId: "bom.missing-mpn",
+        severity: "high",
+        message: `Missing MPN ${index}.`,
+        resource: { path: `bom-${index}.csv`, kind: "bom" },
+      }),
+    );
+    findings.push(
+      createFinding({
+        ruleId: "bom.single-source",
+        severity: "medium",
+        message: "R1 has one source.",
+        resource: { path: "late-bom.csv", kind: "bom" },
+        fix: { description: "Add an alternate approved source." },
+      }),
+    );
+
+    const markdown = formatMarkdown(sampleResult(findings));
+    expect(markdown).toContain("## Fix");
+    expect(markdown).toContain("Add an alternate approved source.");
+  });
+
+  it("keeps fix metadata in JSON output", () => {
+    const payload = JSON.parse(formatJson(sampleResult()));
+    expect(payload.findings[0]).toMatchObject({
+      project: "assembly/main.kicad_pro",
+      fix: {
+        description: "Add manufacturer part numbers.",
+        steps: ["Populate the MPN column.", "Re-run the BOM check."],
+      },
+      confidence: "high",
+    });
   });
 });
 
@@ -52,10 +143,18 @@ function sampleFinding() {
     ruleId: "bom.missing-mpn",
     severity: "high",
     message: "R1 is missing an MPN.",
+    project: "assembly/main.kicad_pro",
     resource: { path: "bom.csv", kind: "bom" },
     location: { line: 2, column: 1 },
     details: { reference: "R1" },
     references: ["https://github.com/oaslananka/boardreadyops/blob/main/docs/rules/bom.md"],
+    fix: {
+      description: "Add manufacturer part numbers.",
+      steps: ["Populate the MPN column.", "Re-run the BOM check."],
+      references: ["https://example.test/mpn"],
+      automated: false,
+    },
+    confidence: "high",
   });
 }
 

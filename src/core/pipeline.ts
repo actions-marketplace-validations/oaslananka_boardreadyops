@@ -117,6 +117,15 @@ function configFindings(root: string, loaded: LoadedConfig): Finding[] {
         kind: "manifest",
       },
       location: { line: 1, column: 1 },
+      fix: {
+        description: "Correct the BoardReadyOps configuration before checking the repository again.",
+        steps: [
+          "Review the reported configuration error.",
+          "Update the configuration file.",
+          "Run BoardReadyOps again.",
+        ],
+      },
+      confidence: "definite",
     }),
   );
 }
@@ -129,6 +138,11 @@ function projectShapeFindings(projects: Awaited<ReturnType<typeof discoverProjec
         severity: "high",
         message: "No .kicad_pro project was found.",
         resource: { path: ".", kind: "manifest" },
+        fix: {
+          description: "Add a KiCad project file or point BoardReadyOps at the project to review.",
+          steps: ["Confirm the repository contains a .kicad_pro file.", "Run BoardReadyOps with the project path."],
+        },
+        confidence: "definite",
       }),
     ];
   }
@@ -140,7 +154,13 @@ function projectShapeFindings(projects: Awaited<ReturnType<typeof discoverProjec
           ruleId: "manifest.project-discovery",
           severity: "high",
           message: `${project.projectFile} has no matching schematic file.`,
+          project: project.projectFile,
           resource: { path: project.projectFile, kind: "project" },
+          fix: {
+            description: "Restore the schematic that belongs to this KiCad project.",
+            steps: ["Check the project schematic path.", "Add or rename the matching .kicad_sch file."],
+          },
+          confidence: "definite",
         }),
       );
     }
@@ -150,7 +170,13 @@ function projectShapeFindings(projects: Awaited<ReturnType<typeof discoverProjec
           ruleId: "manifest.project-discovery",
           severity: "high",
           message: `${project.projectFile} has no matching board file.`,
+          project: project.projectFile,
           resource: { path: project.projectFile, kind: "project" },
+          fix: {
+            description: "Restore the board file that belongs to this KiCad project.",
+            steps: ["Check the project board path.", "Add or rename the matching .kicad_pcb file."],
+          },
+          confidence: "definite",
         }),
       );
     }

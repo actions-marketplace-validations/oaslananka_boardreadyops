@@ -49,6 +49,32 @@ describe("discovery and findings", () => {
     expect(summarizeFindings([finding], "high")).toMatchObject({ total: 1, high: 1, failed: true });
   });
 
+  it("keeps project, fix, and confidence metadata on findings", () => {
+    const finding = createFinding({
+      ruleId: "bom.missing-mpn",
+      severity: "high",
+      message: "missing",
+      project: "assembly/main.kicad_pro",
+      resource: { path: "bom.csv", kind: "bom" },
+      fix: {
+        description: "Add manufacturer part numbers before fabrication.",
+        steps: ["Populate the MPN column.", "Re-run the BOM check."],
+        references: ["https://example.test/mpn"],
+        automated: false,
+      },
+      confidence: "definite",
+    });
+
+    expect(finding).toMatchObject({
+      project: "assembly/main.kicad_pro",
+      fix: {
+        description: "Add manufacturer part numbers before fabrication.",
+        steps: ["Populate the MPN column.", "Re-run the BOM check."],
+      },
+      confidence: "definite",
+    });
+  });
+
   it("runs bounded concurrency helpers", async () => {
     expect(defaultConcurrency()).toBeGreaterThanOrEqual(1);
     const values = await mapLimit([1, 2, 3], 2, async (value) => value * 2);

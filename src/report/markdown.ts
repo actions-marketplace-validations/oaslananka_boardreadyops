@@ -11,12 +11,16 @@ export interface MarkdownArtifact {
 }
 
 export function formatMarkdown(result: RunResult, artifacts: MarkdownArtifact[] = []): string {
+  const topFindings = result.findings.slice(0, 10);
+  const fixFindings = result.findings.filter((finding) => finding.fix).slice(0, 10);
   return Mustache.render(
     prCommentTemplate,
     {
       ...result,
       hasFindings: result.findings.length > 0,
-      topFindings: result.findings.slice(0, 10),
+      topFindings,
+      hasFixes: fixFindings.length > 0,
+      fixFindings,
       hasArtifacts: artifacts.length > 0,
       artifacts,
     },

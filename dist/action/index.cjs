@@ -291005,6 +291005,7 @@ function createFinding(input) {
 function fingerprintFor(input) {
   const stable = stableStringify({
     ruleId: input.ruleId,
+    ...input.project ? { project: input.project } : {},
     path: input.resource.path,
     kind: input.resource.kind,
     message: input.message,
@@ -291161,21 +291162,33 @@ function configFor(context5, id) {
 function finding(context5, input) {
   const absolute = import_node_path4.default.isAbsolute(input.path) ? input.path : import_node_path4.default.resolve(context5.root, input.path);
   const location = input.line || input.column ? { line: input.line, column: input.column } : void 0;
+  const reference = `https://github.com/oaslananka/boardreadyops/blob/main/docs/rules/${input.ruleId.split(".")[0]}.md`;
   const base = {
     ruleId: input.ruleId,
     severity: input.severity,
     message: input.message,
+    project: context5.projects[0]?.projectFile,
     resource: {
       path: normalizeRelative(context5.root, absolute),
       kind: input.kind
     },
-    references: [`https://github.com/oaslananka/boardreadyops/blob/main/docs/rules/${input.ruleId.split(".")[0]}.md`]
+    references: [reference],
+    fix: input.fix ?? defaultFix(input.ruleId, reference),
+    confidence: input.confidence ?? "high"
   };
   return createFinding({
     ...base,
     ...location ? { location } : {},
     ...input.details ? { details: input.details } : {}
   });
+}
+function defaultFix(ruleId, reference) {
+  return {
+    description: `Resolve the ${ruleId} finding before fabrication.`,
+    steps: ["Review the affected file and rule guidance.", "Update the project evidence.", "Run BoardReadyOps again."],
+    references: [reference],
+    automated: false
+  };
 }
 function refIgnored(reference, patterns2) {
   if (!Array.isArray(patterns2)) {
@@ -308064,7 +308077,16 @@ function configFindings(root, loaded) {
         path: loaded.path ? import_node_path26.default.relative(root, loaded.path).replace(/\\/g, "/") : "boardreadyops.yml",
         kind: "manifest"
       },
-      location: { line: 1, column: 1 }
+      location: { line: 1, column: 1 },
+      fix: {
+        description: "Correct the BoardReadyOps configuration before checking the repository again.",
+        steps: [
+          "Review the reported configuration error.",
+          "Update the configuration file.",
+          "Run BoardReadyOps again."
+        ]
+      },
+      confidence: "definite"
     })
   );
 }
@@ -308075,7 +308097,12 @@ function projectShapeFindings(projects) {
         ruleId: "manifest.project-discovery",
         severity: "high",
         message: "No .kicad_pro project was found.",
-        resource: { path: ".", kind: "manifest" }
+        resource: { path: ".", kind: "manifest" },
+        fix: {
+          description: "Add a KiCad project file or point BoardReadyOps at the project to review.",
+          steps: ["Confirm the repository contains a .kicad_pro file.", "Run BoardReadyOps with the project path."]
+        },
+        confidence: "definite"
       })
     ];
   }
@@ -308087,7 +308114,13 @@ function projectShapeFindings(projects) {
           ruleId: "manifest.project-discovery",
           severity: "high",
           message: `${project.projectFile} has no matching schematic file.`,
-          resource: { path: project.projectFile, kind: "project" }
+          project: project.projectFile,
+          resource: { path: project.projectFile, kind: "project" },
+          fix: {
+            description: "Restore the schematic that belongs to this KiCad project.",
+            steps: ["Check the project schematic path.", "Add or rename the matching .kicad_sch file."]
+          },
+          confidence: "definite"
         })
       );
     }
@@ -308097,7 +308130,13 @@ function projectShapeFindings(projects) {
           ruleId: "manifest.project-discovery",
           severity: "high",
           message: `${project.projectFile} has no matching board file.`,
-          resource: { path: project.projectFile, kind: "project" }
+          project: project.projectFile,
+          resource: { path: project.projectFile, kind: "project" },
+          fix: {
+            description: "Restore the board file that belongs to this KiCad project.",
+            steps: ["Check the project board path.", "Add or rename the matching .kicad_pcb file."]
+          },
+          confidence: "definite"
         })
       );
     }
@@ -308590,7 +308629,7 @@ mustache.Writer = Writer;
 var mustache_default = mustache;
 
 // src/report/templates/pr-comment.mustache
-var pr_comment_default = "<!-- boardreadyops:sticky:v1 -->\n{{> summary}}\n\n{{#hasFindings}}\n## Top Findings\n\n{{#topFindings}}\n- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}\n{{/topFindings}}\n{{/hasFindings}}\n{{^hasFindings}}\nNo findings.\n{{/hasFindings}}\n\n{{#hasArtifacts}}\n## Artifacts\n\n{{#artifacts}}\n- [{{label}}]({{{url}}})\n{{/artifacts}}\n{{/hasArtifacts}}\n";
+var pr_comment_default = "<!-- boardreadyops:sticky:v1 -->\n{{> summary}}\n\n{{#hasFindings}}\n## Top Findings\n\n{{#topFindings}}\n- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}\n{{/topFindings}}\n{{/hasFindings}}\n{{^hasFindings}}\nNo findings.\n{{/hasFindings}}\n{{#hasFixes}}\n\n## Fix\n\n{{#fixFindings}}\n- `{{ruleId}}` in `{{resource.path}}`: {{fix.description}}\n{{#fix.steps}}\n  1. {{.}}\n{{/fix.steps}}\n{{/fixFindings}}\n{{/hasFixes}}\n\n{{#hasArtifacts}}\n## Artifacts\n\n{{#artifacts}}\n- [{{label}}]({{{url}}})\n{{/artifacts}}\n{{/hasArtifacts}}\n";
 
 // src/report/templates/summary.mustache
 var summary_default = "# BoardReadyOps Report\n\n| Metric | Count |\n| --- | ---: |\n| Total | {{summary.total}} |\n| Critical | {{summary.critical}} |\n| High | {{summary.high}} |\n| Medium | {{summary.medium}} |\n| Low | {{summary.low}} |\n| Info | {{summary.info}} |\n";
@@ -308598,12 +308637,16 @@ var summary_default = "# BoardReadyOps Report\n\n| Metric | Count |\n| --- | ---
 // src/report/markdown.ts
 var stickyMarker = "<!-- boardreadyops:sticky:v1 -->";
 function formatMarkdown(result, artifacts = []) {
+  const topFindings = result.findings.slice(0, 10);
+  const fixFindings = result.findings.filter((finding2) => finding2.fix).slice(0, 10);
   return mustache_default.render(
     pr_comment_default,
     {
       ...result,
       hasFindings: result.findings.length > 0,
-      topFindings: result.findings.slice(0, 10),
+      topFindings,
+      hasFixes: fixFindings.length > 0,
+      fixFindings,
       hasArtifacts: artifacts.length > 0,
       artifacts
     },
@@ -308634,6 +308677,7 @@ function formatSarif(result) {
               name: finding2.ruleId,
               shortDescription: { text: finding2.ruleId },
               fullDescription: { text: finding2.message },
+              ...finding2.fix ? { help: sarifHelp(finding2.fix) } : {},
               helpUri: finding2.references?.[0] ?? "https://github.com/oaslananka/boardreadyops/tree/main/docs/rules",
               defaultConfiguration: {
                 level: sarifLevel(finding2.severity)
@@ -308664,7 +308708,9 @@ function formatSarif(result) {
           properties: {
             severity: finding2.severity,
             resourceKind: finding2.resource.kind,
-            details: finding2.details
+            ...finding2.details ? { details: finding2.details } : {},
+            ...finding2.fix ? { fix: finding2.fix } : {},
+            ...finding2.confidence ? { confidence: finding2.confidence } : {}
           }
         }))
       }
@@ -308681,6 +308727,13 @@ function sarifLevel(severity) {
     return "warning";
   }
   return "note";
+}
+function sarifHelp(fix) {
+  const numberedSteps = fix.steps?.map((step, index) => `${index + 1}. ${step}`) ?? [];
+  return {
+    text: [fix.description, ...numberedSteps].join("\n"),
+    markdown: [fix.description, ...numberedSteps].join("\n\n")
+  };
 }
 
 // node_modules/@actions/github/lib/context.js

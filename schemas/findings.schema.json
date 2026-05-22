@@ -52,6 +52,9 @@
         "message": {
           "type": "string"
         },
+        "project": {
+          "type": "string"
+        },
         "resource": {
           "type": "object",
           "required": ["path", "kind"],
@@ -75,6 +78,12 @@
           "items": {
             "type": "string"
           }
+        },
+        "fix": {
+          "$ref": "#/$defs/fixSuggestion"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidenceLevel"
         },
         "fingerprint": {
           "type": "string",
@@ -229,6 +238,37 @@
           }
         }
       ]
+    },
+    "fixSuggestion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "automated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "confidenceLevel": {
+      "enum": ["definite", "high", "medium", "low"]
     },
     "ruleId": {
       "oneOf": [

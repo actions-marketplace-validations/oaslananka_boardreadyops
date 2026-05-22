@@ -23,6 +23,7 @@ export function formatSarif(result: RunResult): string {
               name: finding.ruleId,
               shortDescription: { text: finding.ruleId },
               fullDescription: { text: finding.message },
+              ...(finding.fix ? { help: sarifHelp(finding.fix) } : {}),
               helpUri: finding.references?.[0] ?? "https://github.com/oaslananka/boardreadyops/tree/main/docs/rules",
               defaultConfiguration: {
                 level: sarifLevel(finding.severity),
@@ -53,7 +54,9 @@ export function formatSarif(result: RunResult): string {
           properties: {
             severity: finding.severity,
             resourceKind: finding.resource.kind,
-            details: finding.details,
+            ...(finding.details ? { details: finding.details } : {}),
+            ...(finding.fix ? { fix: finding.fix } : {}),
+            ...(finding.confidence ? { confidence: finding.confidence } : {}),
           },
         })),
       },
@@ -70,4 +73,12 @@ function sarifLevel(severity: Finding["severity"]): "error" | "warning" | "note"
     return "warning";
   }
   return "note";
+}
+
+function sarifHelp(fix: NonNullable<Finding["fix"]>): { text: string; markdown: string } {
+  const numberedSteps = fix.steps?.map((step, index) => `${index + 1}. ${step}`) ?? [];
+  return {
+    text: [fix.description, ...numberedSteps].join("\n"),
+    markdown: [fix.description, ...numberedSteps].join("\n\n"),
+  };
 }

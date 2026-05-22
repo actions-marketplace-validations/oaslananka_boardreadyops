@@ -1,7 +1,13 @@
 import path from "node:path";
 import { isRuleEnabled, ruleConfig, ruleSeverity } from "../core/config.js";
 import type { RuleContext } from "../core/context.js";
-import { createFinding, type Finding, type Severity } from "../core/findings.js";
+import {
+  type ConfidenceLevel,
+  createFinding,
+  type Finding,
+  type FixSuggestion,
+  type Severity,
+} from "../core/findings.js";
 import type { Rule, RuleMetadata } from "../core/rule-registry.js";
 import { normalizeRelative } from "../util/path.js";
 
@@ -40,25 +46,40 @@ export function finding(
     line?: number | undefined;
     column?: number | undefined;
     details?: Record<string, unknown> | undefined;
+    fix?: FixSuggestion | undefined;
+    confidence?: ConfidenceLevel | undefined;
   },
 ): Finding {
   const absolute = path.isAbsolute(input.path) ? input.path : path.resolve(context.root, input.path);
   const location = input.line || input.column ? { line: input.line, column: input.column } : undefined;
+  const reference = `https://github.com/oaslananka/boardreadyops/blob/main/docs/rules/${input.ruleId.split(".")[0]}.md`;
   const base = {
     ruleId: input.ruleId,
     severity: input.severity,
     message: input.message,
+    project: context.projects[0]?.projectFile,
     resource: {
       path: normalizeRelative(context.root, absolute),
       kind: input.kind,
     },
-    references: [`https://github.com/oaslananka/boardreadyops/blob/main/docs/rules/${input.ruleId.split(".")[0]}.md`],
+    references: [reference],
+    fix: input.fix ?? defaultFix(input.ruleId, reference),
+    confidence: input.confidence ?? "high",
   };
   return createFinding({
     ...base,
     ...(location ? { location } : {}),
     ...(input.details ? { details: input.details } : {}),
   });
+}
+
+function defaultFix(ruleId: string, reference: string): FixSuggestion {
+  return {
+    description: `Resolve the ${ruleId} finding before fabrication.`,
+    steps: ["Review the affected file and rule guidance.", "Update the project evidence.", "Run BoardReadyOps again."],
+    references: [reference],
+    automated: false,
+  };
 }
 
 export function refIgnored(reference: string, patterns: unknown): boolean {

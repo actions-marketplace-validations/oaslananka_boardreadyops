@@ -4,11 +4,20 @@ import { stableStringify } from "../util/strings.js";
 const severityNames = ["critical", "high", "medium", "low", "info"] as const;
 export type Severity = (typeof severityNames)[number];
 export type FailOn = Exclude<Severity, "info"> | "never";
+export type ConfidenceLevel = "definite" | "high" | "medium" | "low";
+
+export interface FixSuggestion {
+  description: string;
+  steps?: string[] | undefined;
+  references?: string[] | undefined;
+  automated?: boolean | undefined;
+}
 
 export interface Finding {
   ruleId: string;
   severity: Severity;
   message: string;
+  project?: string | undefined;
   resource: {
     path: string;
     kind: "project" | "schematic" | "pcb" | "bom" | "pinmap" | "manifest";
@@ -31,6 +40,8 @@ export interface Finding {
   };
   details?: Record<string, unknown> | undefined;
   references?: string[] | undefined;
+  fix?: FixSuggestion | undefined;
+  confidence?: ConfidenceLevel | undefined;
   fingerprint: string;
 }
 
@@ -75,6 +86,7 @@ export function createFinding(input: FindingInput): Finding {
 export function fingerprintFor(input: Omit<Finding, "fingerprint">): string {
   const stable = stableStringify({
     ruleId: input.ruleId,
+    ...(input.project ? { project: input.project } : {}),
     path: input.resource.path,
     kind: input.resource.kind,
     message: input.message,

@@ -1,3 +1,4 @@
+import type { FixSuggestion } from "../core/findings.js";
 import type { RunResult } from "../core/result.js";
 
 export function formatJunit(result: RunResult): string {
@@ -6,7 +7,7 @@ export function formatJunit(result: RunResult): string {
       const failure =
         finding.severity === "info"
           ? ""
-          : `<failure message="${xml(finding.message)}">${xml(JSON.stringify(finding.details ?? {}))}</failure>`;
+          : `<failure message="${xml(finding.message)}">${failureBody(finding.fix, finding.details ?? {})}</failure>`;
       return `<testcase classname="${xml(finding.ruleId)}" name="${xml(finding.resource.path)}">${failure}</testcase>`;
     })
     .join("");
@@ -15,4 +16,8 @@ export function formatJunit(result: RunResult): string {
 
 function xml(value: string): string {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function failureBody(fix: FixSuggestion | undefined, details: Record<string, unknown>): string {
+  return xml(JSON.stringify(fix ? { ...details, fix } : details));
 }

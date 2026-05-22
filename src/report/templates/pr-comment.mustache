@@ -11,6 +11,17 @@
 {{^hasFindings}}
 No findings.
 {{/hasFindings}}
+{{#hasFixes}}
+
+## Fix
+
+{{#fixFindings}}
+- `{{ruleId}}` in `{{resource.path}}`: {{fix.description}}
+{{#fix.steps}}
+  1. {{.}}
+{{/fix.steps}}
+{{/fixFindings}}
+{{/hasFixes}}
 
 {{#hasArtifacts}}
 ## Artifacts

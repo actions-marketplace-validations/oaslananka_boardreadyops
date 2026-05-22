@@ -61,6 +61,10 @@ describe("JUnit report", () => {
         message: 'R1 & "C1" need <MPN>',
         resource: { path: "bom&parts.csv", kind: "bom" },
         details: { ref: "R1", message: "A < B" },
+        fix: {
+          description: "Add the missing MPN before release.",
+          steps: ["Open the BOM.", "Fill the MPN field."],
+        },
       }),
       createFinding({
         ruleId: "info.rule",
@@ -83,6 +87,84 @@ describe("JUnit report", () => {
     expect(xml).toContain("bom.&lt;missing&gt;");
     expect(xml).toContain("R1 &amp; &quot;C1&quot; need &lt;MPN&gt;");
     expect(xml).toContain("bom&amp;parts.csv");
+    expect(JSON.parse(decodeXml(failureBody(xml)))).toEqual({
+      ref: "R1",
+      message: "A < B",
+      fix: {
+        description: "Add the missing MPN before release.",
+        steps: ["Open the BOM.", "Fill the MPN field."],
+      },
+    });
     expect(xml.match(/<failure/g)).toHaveLength(1);
   });
+
+  it("emits structured fix JSON when a finding has no details or fix steps", () => {
+    const finding = createFinding({
+      ruleId: "bom.single-source",
+      severity: "medium",
+      message: "R1 has one source.",
+      resource: { path: "bom.csv", kind: "bom" },
+      fix: { description: "Add an alternate approved source." },
+    });
+
+    const xml = formatJunit({
+      schemaVersion: 1,
+      tool: { name: "boardreadyops", version: "0.9.0" },
+      summary: summarizeFindings([finding], "high"),
+      projects: [],
+      findings: [finding],
+      generatedAt: "2026-05-18T00:00:00.000Z",
+    } satisfies RunResult);
+
+    expect(JSON.parse(decodeXml(failureBody(xml)))).toEqual({
+      fix: { description: "Add an alternate approved source." },
+    });
+  });
+
+  it("keeps JUnit failure body parseable when remediation is present", () => {
+    const finding = createFinding({
+      ruleId: "bom.missing-mpn",
+      severity: "high",
+      message: "R1 is missing an MPN.",
+      resource: { path: "bom.csv", kind: "bom" },
+      details: { reference: "R1", mpn: "UNKNOWN" },
+      fix: {
+        description: "Add the missing MPN before release.",
+        steps: ["Open the BOM.", "Fill the MPN field."],
+      },
+    });
+
+    const xml = formatJunit({
+      schemaVersion: 1,
+      tool: { name: "boardreadyops", version: "0.9.0" },
+      summary: summarizeFindings([finding], "high"),
+      projects: [],
+      findings: [finding],
+      generatedAt: "2026-05-18T00:00:00.000Z",
+    } satisfies RunResult);
+
+    const body = decodeXml(failureBody(xml));
+    expect(JSON.parse(body)).toEqual({
+      reference: "R1",
+      mpn: "UNKNOWN",
+      fix: {
+        description: "Add the missing MPN before release.",
+        steps: ["Open the BOM.", "Fill the MPN field."],
+      },
+    });
+  });
 });
+
+function failureBody(xml: string): string {
+  const match = xml.match(/<failure[^>]*>([\s\S]*)<\/failure>/);
+  expect(match?.[1]).toBeDefined();
+  return match?.[1] ?? "";
+}
+
+function decodeXml(value: string): string {
+  return value
+    .replace(/&quot;/g, '"')
+    .replace(/&gt;/g, ">")
+    .replace(/&lt;/g, "<")
+    .replace(/&amp;/g, "&");
+}
