@@ -1,0 +1,8 @@
+{
+  "fixture": "all-violations",
+  "expectedRules": ["design.board-outline", "manufacturing.outputs-present", "manufacturing.panel-sanity"],
+  "expectedSeverities": ["high", "high", "medium"],
+  "expectPass": false,
+  "performanceBaselineMs": 400,
+  "runRules": ["design.board-outline", "manufacturing.outputs-present", "manufacturing.panel-sanity"]
+}

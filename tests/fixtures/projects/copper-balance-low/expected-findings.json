@@ -1,0 +1,8 @@
+{
+  "fixture": "copper-balance-low",
+  "expectedRules": ["design.copper-balance"],
+  "expectedSeverities": ["low"],
+  "expectPass": true,
+  "performanceBaselineMs": 100,
+  "runRules": ["design.copper-balance"]
+}

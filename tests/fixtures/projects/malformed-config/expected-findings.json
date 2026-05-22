@@ -1,0 +1,8 @@
+{
+  "fixture": "malformed-config",
+  "expectedRules": ["config.invalid"],
+  "expectedSeverities": ["high"],
+  "expectPass": false,
+  "performanceBaselineMs": 100,
+  "runRules": []
+}

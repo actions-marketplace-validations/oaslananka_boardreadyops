@@ -1,0 +1,8 @@
+{
+  "fixture": "release-tag-mismatch",
+  "expectedRules": [],
+  "expectedSeverities": [],
+  "expectPass": true,
+  "performanceBaselineMs": 100,
+  "runRules": []
+}

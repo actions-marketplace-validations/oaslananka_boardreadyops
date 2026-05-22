@@ -1,0 +1,8 @@
+{
+  "fixture": "missing-gerber",
+  "expectedRules": ["manufacturing.outputs-present"],
+  "expectedSeverities": ["high"],
+  "expectPass": false,
+  "performanceBaselineMs": 200,
+  "runRules": ["manufacturing.outputs-present"]
+}

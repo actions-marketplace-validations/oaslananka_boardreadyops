@@ -1,0 +1,8 @@
+{
+  "fixture": "bom-dnp-consistency",
+  "expectedRules": ["bom.dnp-consistency"],
+  "expectedSeverities": ["medium"],
+  "expectPass": true,
+  "performanceBaselineMs": 100,
+  "runRules": ["bom.dnp-consistency"]
+}

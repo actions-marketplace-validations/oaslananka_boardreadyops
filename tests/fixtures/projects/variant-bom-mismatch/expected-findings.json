@@ -1,0 +1,8 @@
+{
+  "fixture": "variant-bom-mismatch",
+  "expectedRules": ["bom.variant-consistency"],
+  "expectedSeverities": ["high"],
+  "expectPass": false,
+  "performanceBaselineMs": 200,
+  "runRules": ["bom.variant-consistency"]
+}

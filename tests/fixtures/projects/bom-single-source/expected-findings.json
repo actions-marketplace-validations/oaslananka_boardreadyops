@@ -1,0 +1,8 @@
+{
+  "fixture": "bom-single-source",
+  "expectedRules": ["bom.single-source"],
+  "expectedSeverities": ["medium"],
+  "expectPass": true,
+  "performanceBaselineMs": 100,
+  "runRules": ["bom.single-source"]
+}

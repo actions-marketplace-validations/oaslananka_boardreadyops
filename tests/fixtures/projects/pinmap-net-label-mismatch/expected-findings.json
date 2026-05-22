@@ -1,0 +1,8 @@
+{
+  "fixture": "pinmap-net-label-mismatch",
+  "expectedRules": ["pinmap.net-label"],
+  "expectedSeverities": ["medium"],
+  "expectPass": true,
+  "performanceBaselineMs": 100,
+  "runRules": ["pinmap.net-label"]
+}

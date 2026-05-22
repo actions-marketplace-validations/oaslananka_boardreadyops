@@ -1,0 +1,8 @@
+{
+  "fixture": "valid-4layer",
+  "expectedRules": [],
+  "expectedSeverities": [],
+  "expectPass": true,
+  "performanceBaselineMs": 200,
+  "runRules": ["manufacturing.layer-stackup"]
+}

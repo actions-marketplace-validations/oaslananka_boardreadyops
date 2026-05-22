@@ -1,0 +1,8 @@
+{
+  "fixture": "eol-components",
+  "expectedRules": ["bom.eol-detection"],
+  "expectedSeverities": ["high"],
+  "expectPass": false,
+  "performanceBaselineMs": 200,
+  "runRules": ["bom.eol-detection"]
+}

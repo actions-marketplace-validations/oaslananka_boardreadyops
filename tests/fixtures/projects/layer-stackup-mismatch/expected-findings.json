@@ -1,0 +1,8 @@
+{
+  "fixture": "layer-stackup-mismatch",
+  "expectedRules": ["manufacturing.layer-stackup"],
+  "expectedSeverities": ["medium"],
+  "expectPass": true,
+  "performanceBaselineMs": 100,
+  "runRules": ["manufacturing.layer-stackup"]
+}

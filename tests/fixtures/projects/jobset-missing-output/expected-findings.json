@@ -1,0 +1,8 @@
+{
+  "fixture": "jobset-missing-output",
+  "expectedRules": ["manufacturing.jobset-outputs"],
+  "expectedSeverities": ["medium"],
+  "expectPass": true,
+  "performanceBaselineMs": 100,
+  "runRules": ["manufacturing.jobset-outputs"]
+}

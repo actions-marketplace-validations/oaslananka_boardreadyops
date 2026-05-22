@@ -1,0 +1,8 @@
+{
+  "fixture": "board-outline-open",
+  "expectedRules": ["design.board-outline"],
+  "expectedSeverities": ["high"],
+  "expectPass": false,
+  "performanceBaselineMs": 100,
+  "runRules": ["design.board-outline"]
+}

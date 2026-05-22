@@ -1,0 +1,8 @@
+{
+  "fixture": "missing-schematic",
+  "expectedRules": ["manifest.project-discovery"],
+  "expectedSeverities": ["high"],
+  "expectPass": false,
+  "performanceBaselineMs": 100,
+  "runRules": []
+}

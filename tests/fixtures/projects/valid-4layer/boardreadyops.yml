@@ -1,0 +1,5 @@
+version: 1
+rules:
+  manufacturing.layer-stackup:
+    expected-layers: 4
+fail-on: never

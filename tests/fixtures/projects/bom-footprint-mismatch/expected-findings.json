@@ -1,0 +1,8 @@
+{
+  "fixture": "bom-footprint-mismatch",
+  "expectedRules": ["bom.footprint-mismatch"],
+  "expectedSeverities": ["medium"],
+  "expectPass": true,
+  "performanceBaselineMs": 100,
+  "runRules": ["bom.footprint-mismatch"]
+}

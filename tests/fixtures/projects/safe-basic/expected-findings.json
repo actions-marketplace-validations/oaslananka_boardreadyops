@@ -1,0 +1,8 @@
+{
+  "fixture": "safe-basic",
+  "expectedRules": [],
+  "expectedSeverities": [],
+  "expectPass": true,
+  "performanceBaselineMs": 100,
+  "runRules": []
+}

@@ -1,0 +1,8 @@
+{
+  "fixture": "release-bad-version-format",
+  "expectedRules": ["release.version-format"],
+  "expectedSeverities": ["low"],
+  "expectPass": true,
+  "performanceBaselineMs": 100,
+  "runRules": ["release.version-format"]
+}

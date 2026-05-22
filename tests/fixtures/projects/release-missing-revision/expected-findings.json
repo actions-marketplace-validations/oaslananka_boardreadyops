@@ -1,0 +1,8 @@
+{
+  "fixture": "release-missing-revision",
+  "expectedRules": ["release.revision-set"],
+  "expectedSeverities": ["high"],
+  "expectPass": false,
+  "performanceBaselineMs": 100,
+  "runRules": ["release.revision-set"]
+}

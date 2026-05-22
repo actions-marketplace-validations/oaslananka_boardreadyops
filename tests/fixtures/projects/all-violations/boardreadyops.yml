@@ -1,0 +1,16 @@
+version: 1
+projects:
+  - path: .
+rules:
+  drc.kicad:
+    enabled: false
+  erc.kicad:
+    enabled: false
+  release.changelog-present:
+    enabled: false
+  manufacturing.outputs-present:
+    enabled: true
+    required: [gerber, drill, position, pdf, step]
+  manufacturing.panel-sanity:
+    panelized: true
+fail-on: never

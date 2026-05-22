@@ -1,0 +1,8 @@
+{
+  "fixture": "bom-lifecycle",
+  "expectedRules": ["bom.lifecycle"],
+  "expectedSeverities": ["high"],
+  "expectPass": false,
+  "performanceBaselineMs": 100,
+  "runRules": ["bom.lifecycle"]
+}

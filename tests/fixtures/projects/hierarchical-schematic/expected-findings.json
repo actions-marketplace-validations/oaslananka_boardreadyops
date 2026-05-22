@@ -1,0 +1,8 @@
+{
+  "fixture": "hierarchical-schematic",
+  "expectedRules": [],
+  "expectedSeverities": [],
+  "expectPass": true,
+  "performanceBaselineMs": 200,
+  "runRules": ["design.board-outline"]
+}

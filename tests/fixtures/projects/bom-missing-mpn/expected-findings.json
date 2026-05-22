@@ -1,0 +1,8 @@
+{
+  "fixture": "bom-missing-mpn",
+  "expectedRules": ["bom.missing-mpn"],
+  "expectedSeverities": ["high"],
+  "expectPass": false,
+  "performanceBaselineMs": 100,
+  "runRules": ["bom.missing-mpn"]
+}

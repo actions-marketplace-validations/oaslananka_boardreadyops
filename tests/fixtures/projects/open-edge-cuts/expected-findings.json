@@ -1,0 +1,8 @@
+{
+  "fixture": "open-edge-cuts",
+  "expectedRules": ["design.board-outline"],
+  "expectedSeverities": ["high"],
+  "expectPass": false,
+  "performanceBaselineMs": 200,
+  "runRules": ["design.board-outline"]
+}

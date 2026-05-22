@@ -1,0 +1,9 @@
+{
+  "fixture": "manufacturing-stale-outputs",
+  "expectedRules": ["manufacturing.outputs-present"],
+  "expectedSeverities": ["high"],
+  "expectPass": false,
+  "performanceBaselineMs": 100,
+  "runRules": ["manufacturing.outputs-present"],
+  "stalePaths": ["old.drl"]
+}

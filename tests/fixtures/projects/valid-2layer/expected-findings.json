@@ -1,0 +1,8 @@
+{
+  "fixture": "valid-2layer",
+  "expectedRules": [],
+  "expectedSeverities": [],
+  "expectPass": true,
+  "performanceBaselineMs": 200,
+  "runRules": ["design.board-outline"]
+}

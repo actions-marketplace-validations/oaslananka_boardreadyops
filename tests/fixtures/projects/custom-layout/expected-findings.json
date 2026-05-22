@@ -1,0 +1,8 @@
+{
+  "fixture": "custom-layout",
+  "expectedRules": [],
+  "expectedSeverities": [],
+  "expectPass": true,
+  "performanceBaselineMs": 200,
+  "runRules": ["manufacturing.outputs-present"]
+}

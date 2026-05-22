@@ -1,0 +1,5 @@
+version: 1
+rules:
+  design.copper-balance:
+    min-coverage-percent: 15
+fail-on: never

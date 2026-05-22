@@ -1,0 +1,8 @@
+{
+  "fixture": "manufacturing-drill-missing",
+  "expectedRules": ["manufacturing.drill-coverage"],
+  "expectedSeverities": ["medium"],
+  "expectPass": true,
+  "performanceBaselineMs": 100,
+  "runRules": ["manufacturing.drill-coverage"]
+}

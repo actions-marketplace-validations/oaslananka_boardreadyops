@@ -1,0 +1,14 @@
+version: 1
+mode: warn
+projects:
+  - path: .
+rules:
+  drc.kicad:
+    enabled: false
+  erc.kicad:
+    enabled: false
+  release.changelog-present:
+    enabled: false
+  manufacturing.panel-sanity:
+    panelized: true
+fail-on: high
