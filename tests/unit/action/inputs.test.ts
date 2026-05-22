@@ -1,0 +1,99 @@
+import path from "node:path";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { detectActionGate, readActionInputs } from "../../../src/action/inputs.js";
+
+describe("action gate detection", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it.each([
+    ["pull_request", "refs/pull/7/merge", "pull_request"],
+    ["pull_request_target", "refs/heads/main", "pull_request"],
+    ["push", "refs/heads/main", "main"],
+    ["push", "refs/tags/v1.0.0", "release"],
+    ["workflow_dispatch", "refs/heads/feature", "main"],
+  ])("detects %s on %s as %s", (event, ref, gate) => {
+    expect(detectActionGate(event, ref)).toBe(gate);
+  });
+
+  it("uses auto-detected gates when the Action input is empty", () => {
+    vi.stubEnv("INPUT_GATE", "");
+    vi.stubEnv("GITHUB_EVENT_NAME", "push");
+    vi.stubEnv("GITHUB_REF", "refs/tags/v1.0.0");
+
+    expect(readActionInputs(path.resolve("."))).toMatchObject({ gate: "release", gateAutoDetected: true });
+  });
+
+  it("parses explicit Action inputs", () => {
+    const workspace = path.resolve(".");
+    vi.stubEnv("INPUT_PATH", "hardware");
+    vi.stubEnv("INPUT_PROJECT", "hardware/board.kicad_pro");
+    vi.stubEnv("INPUT_CONFIG", "config/custom.yml");
+    vi.stubEnv("INPUT_MODE", "enforce");
+    vi.stubEnv("INPUT_REQUIRE-KICAD", "yes");
+    vi.stubEnv("INPUT_KICAD-CLI", "kicad-cli");
+    vi.stubEnv("INPUT_BOM", "bom/production.csv");
+    vi.stubEnv("INPUT_PINMAP", "pinmaps/header.csv");
+    vi.stubEnv("INPUT_VARIANT", "production");
+    vi.stubEnv("INPUT_GATE", "release");
+    vi.stubEnv("INPUT_FAIL-ON", "medium");
+    vi.stubEnv("INPUT_ANNOTATIONS", "no");
+    vi.stubEnv("INPUT_SARIF", "reports/findings.sarif.json");
+    vi.stubEnv("INPUT_JSON", "reports/findings.json");
+    vi.stubEnv("INPUT_MARKDOWN", "reports/findings.md");
+    vi.stubEnv("INPUT_UPLOAD-SARIF", "0");
+    vi.stubEnv("INPUT_UPLOAD-ARTIFACTS", "1");
+    vi.stubEnv("INPUT_COMMENT-PR", "false");
+    vi.stubEnv("INPUT_ARTIFACT-NAME", "boardreadyops-release");
+
+    expect(readActionInputs(workspace)).toMatchObject({
+      path: path.join(workspace, "hardware"),
+      project: path.join(workspace, "hardware/board.kicad_pro"),
+      config: path.join(workspace, "config/custom.yml"),
+      mode: "enforce",
+      requireKicad: true,
+      kicadCli: "kicad-cli",
+      bom: path.join(workspace, "bom/production.csv"),
+      pinmap: path.join(workspace, "pinmaps/header.csv"),
+      variant: "production",
+      gate: "release",
+      gateAutoDetected: false,
+      failOn: "medium",
+      annotations: false,
+      outputs: {
+        sarif: "reports/findings.sarif.json",
+        json: "reports/findings.json",
+        markdown: "reports/findings.md",
+      },
+      uploadSarif: false,
+      uploadArtifacts: true,
+      commentPr: false,
+      artifactName: "boardreadyops-release",
+    });
+  });
+
+  it("rejects invalid parser values", () => {
+    vi.stubEnv("INPUT_MODE", "report");
+    expect(() => readActionInputs(path.resolve("."))).toThrow("Input mode must be warn or enforce.");
+
+    vi.unstubAllEnvs();
+    vi.stubEnv("INPUT_FAIL-ON", "blocker");
+    expect(() => readActionInputs(path.resolve("."))).toThrow(
+      "Input fail-on must be critical, high, medium, low, or never.",
+    );
+
+    vi.unstubAllEnvs();
+    vi.stubEnv("INPUT_REQUIRE-KICAD", "sometimes");
+    expect(() => readActionInputs(path.resolve("."))).toThrow("Input require-kicad must be true or false.");
+  });
+
+  it("rejects unsafe workspace paths and artifact names", () => {
+    vi.stubEnv("INPUT_PATH", "../outside");
+    expect(() => readActionInputs(path.resolve("."))).toThrow("Input path must stay inside GITHUB_WORKSPACE");
+
+    vi.unstubAllEnvs();
+    vi.stubEnv("INPUT_ARTIFACT-NAME", "bad/name");
+    expect(() => readActionInputs(path.resolve("."))).toThrow("artifact-name must be a non-empty artifact name.");
+  });
+});

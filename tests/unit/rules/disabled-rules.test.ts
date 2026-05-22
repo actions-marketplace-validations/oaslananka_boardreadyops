@@ -87,6 +87,7 @@ function ruleContext(rulesConfig: NonNullable<RuleContext["config"]["rules"]>): 
       pinmap: undefined,
       variant: undefined,
       failOn: "never",
+      gate: undefined,
       rules: [],
       skips: [],
       ignoreBaseline: false,

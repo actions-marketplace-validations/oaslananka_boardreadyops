@@ -61,6 +61,22 @@ describe("CLI integration", () => {
     expect(code).toBe(1);
   });
 
+  it("uses a selected gate fail-on threshold from config", async () => {
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-cli-gate-"));
+    await fs.cp(path.join(fixtureRoot, "bom-missing-mpn"), temp, { recursive: true });
+    await fs.appendFile(
+      path.join(temp, "boardreadyops.yml"),
+      `
+gates:
+  release:
+    fail-on: critical
+`,
+      "utf8",
+    );
+
+    expect(await runCli(["run", temp, "--gate", "release", "--no-annotations"], memoryStreams())).toBe(0);
+  });
+
   it("prints schemas and doctor diagnostics", async () => {
     const schema = captureStreams();
     expect(await runCli(["schema", "config"], schema)).toBe(0);

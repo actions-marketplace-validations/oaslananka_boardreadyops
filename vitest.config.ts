@@ -22,7 +22,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
-      include: ["src/{core,rules,bom,pinmap,report,kicad}/**/*.ts"],
+      include: ["src/{core,rules,bom,pinmap,report,kicad}/**/*.ts", "src/action/inputs.ts"],
       exclude: [
         "src/report/templates/**",
         "src/**/types.ts",

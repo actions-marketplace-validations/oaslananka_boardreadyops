@@ -17,6 +17,7 @@ export interface CommonCliOptions {
   bom?: string;
   pinmap?: string;
   variant?: string;
+  gate?: string;
   sarif?: string | boolean;
   json?: string | boolean;
   markdown?: string | boolean;
@@ -60,6 +61,7 @@ export async function runCommand(
     bom: options.bom,
     pinmap: options.pinmap,
     variant: options.variant,
+    gate: options.gate,
     failOn: options.failOn ?? "high",
     rules: options.rule ?? [],
     skips: options.skip ?? [],
@@ -88,6 +90,7 @@ export function addCommonOptions(command: Command): Command {
     .option("--bom <path>", "BOM source path or auto")
     .option("--pinmap <path>", "pinmap file path")
     .option("--variant <name>", "KiCad variant name")
+    .option("--gate <name>", "gate from boardreadyops.yml")
     .option("--sarif [path]", "write SARIF report")
     .option("--json [path]", "write JSON report")
     .option("--markdown [path]", "write Markdown report")

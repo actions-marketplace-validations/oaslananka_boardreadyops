@@ -92,6 +92,34 @@
     "fail-on": {
       "enum": ["critical", "high", "medium", "low", "never"]
     },
+    "gates": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "fail-on": {
+            "enum": ["critical", "high", "medium", "low", "never"]
+          },
+          "require": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "clean-drc",
+                "clean-erc",
+                "gerber",
+                "drill",
+                "position",
+                "bom",
+                "changelog",
+                "tagged-release",
+                "no-eol-components"
+              ]
+            }
+          }
+        }
+      }
+    },
     "suppressions": {
       "type": "array",
       "items": {

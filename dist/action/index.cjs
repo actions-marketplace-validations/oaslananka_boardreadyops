@@ -290883,6 +290883,34 @@ var config_schema_default = {
     "fail-on": {
       enum: ["critical", "high", "medium", "low", "never"]
     },
+    gates: {
+      type: "object",
+      additionalProperties: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+          "fail-on": {
+            enum: ["critical", "high", "medium", "low", "never"]
+          },
+          require: {
+            type: "array",
+            items: {
+              enum: [
+                "clean-drc",
+                "clean-erc",
+                "gerber",
+                "drill",
+                "position",
+                "bom",
+                "changelog",
+                "tagged-release",
+                "no-eol-components"
+              ]
+            }
+          }
+        }
+      }
+    },
     suppressions: {
       type: "array",
       items: {
@@ -308155,6 +308183,100 @@ async function safeReadDir(dir) {
   }
 }
 
+// src/core/gates/requirements.ts
+var gateRequirementNames = [
+  "clean-drc",
+  "clean-erc",
+  "gerber",
+  "drill",
+  "position",
+  "bom",
+  "changelog",
+  "tagged-release",
+  "no-eol-components"
+];
+var manufacturingOutputRequirements = /* @__PURE__ */ new Set(["gerber", "drill", "position", "bom"]);
+var gateRequirementRules = {
+  "clean-drc": "drc.kicad",
+  "clean-erc": "erc.kicad",
+  gerber: "manufacturing.outputs-present",
+  drill: "manufacturing.outputs-present",
+  position: "manufacturing.outputs-present",
+  bom: "manufacturing.outputs-present",
+  changelog: "release.changelog-present",
+  "tagged-release": "release.tag-matches-revision",
+  "no-eol-components": "bom.eol-detection"
+};
+function requiredManufacturingOutputs(requirements) {
+  return requirements.filter(
+    (requirement) => isGateRequirement(requirement) && manufacturingOutputRequirements.has(requirement)
+  );
+}
+function requiredGateRules(requirements) {
+  return [
+    ...new Set(
+      requirements.filter((requirement) => isGateRequirement(requirement)).map((requirement) => gateRequirementRules[requirement])
+    )
+  ];
+}
+function gateRequirementFindings(findings, requirements, projects) {
+  return requirements.filter(isGateRequirement).flatMap((requirement) => requirementFindings(findings, requirement, projects)).map(
+    ({ requirement, blockedBy, reason }) => createFinding({
+      ruleId: "gate.requirement",
+      severity: "critical",
+      message: `Gate requirement ${requirement} is not satisfied.`,
+      resource: { path: ".", kind: "manifest" },
+      details: {
+        requirement,
+        blockedBy: blockedBy.map((finding2) => finding2.ruleId),
+        ...reason ? { reason } : {}
+      }
+    })
+  );
+}
+function isGateRequirement(value) {
+  return gateRequirementNames.includes(value);
+}
+function requirementFindings(findings, requirement, projects) {
+  const blockedBy = findings.filter((finding2) => requirementMatchesFinding(requirement, finding2));
+  if (blockedBy.length > 0) {
+    return [{ requirement, blockedBy }];
+  }
+  const reason = skippedTargetReason(requirement, projects);
+  return reason ? [{ requirement, blockedBy: [], reason }] : [];
+}
+function skippedTargetReason(requirement, projects) {
+  if (!projects) {
+    return void 0;
+  }
+  if (requirement === "clean-drc" && projects.flatMap((project) => project.boardFiles).length === 0) {
+    return "no PCB files were checked";
+  }
+  if (requirement === "clean-erc" && projects.flatMap((project) => project.schematicFiles).length === 0) {
+    return "no schematic files were checked";
+  }
+  return void 0;
+}
+function requirementMatchesFinding(requirement, finding2) {
+  switch (requirement) {
+    case "clean-drc":
+      return finding2.ruleId.startsWith("drc.");
+    case "clean-erc":
+      return finding2.ruleId.startsWith("erc.");
+    case "gerber":
+    case "drill":
+    case "position":
+    case "bom":
+      return finding2.ruleId === "manufacturing.outputs-present" && finding2.details?.required === requirement;
+    case "changelog":
+      return finding2.ruleId === "release.changelog-present";
+    case "tagged-release":
+      return finding2.ruleId === "release.tag-matches-revision";
+    case "no-eol-components":
+      return finding2.ruleId === "bom.eol-detection";
+  }
+}
+
 // src/core/logger.ts
 var import_picocolors = __toESM(require_picocolors(), 1);
 var levelRank = {
@@ -308260,12 +308382,18 @@ async function runPipeline(input = {}, logger7) {
   const cwd = input.cwd ?? process.cwd();
   const root = await canonicalRoot(import_node_path28.default.resolve(cwd, input.path ?? "."));
   const loaded = await loadConfig(root, input.config);
-  const config2 = { ...defaultConfig(), ...loaded.config };
-  const options = normalizeOptions(cwd, root, config2, input);
+  const loadedConfig = { ...defaultConfig(), ...loaded.config };
+  const gate = input.gate ? loadedConfig.gates?.[input.gate] : void 0;
+  const missingExplicitGate = input.gate && !gate && input.gateAutoDetected !== true ? `Gate "${input.gate}" not found in configuration.` : void 0;
+  if (missingExplicitGate) {
+    loaded.errors.push(missingExplicitGate);
+  }
+  const config2 = gate ? applyGateRequirements(loadedConfig, gate) : loadedConfig;
+  const options = normalizeOptions(cwd, root, config2, input, gate, missingExplicitGate ? "critical" : void 0);
   const activeLogger = logger7 ?? createLogger(options.quiet ? "silent" : options.verbose ? "debug" : "info");
   const projects = await discoverConfiguredProjects(root, options, config2);
   const findings = [];
-  findings.push(...configFindings(root, loaded));
+  findings.push(...configFindings(root, loaded, missingExplicitGate ? /* @__PURE__ */ new Set([missingExplicitGate]) : void 0));
   findings.push(...projectShapeFindings(projects));
   const activeRules = listRules().filter((rule2) => {
     if (options.rules.length > 0 && !options.rules.includes(rule2.meta.id)) {
@@ -308287,7 +308415,11 @@ async function runPipeline(input = {}, logger7) {
   for (const group of projectFindings) {
     findings.push(...group);
   }
-  const sorted = await controlledFindings(root, config2, options, sortFindings(findings));
+  const gatedFindings = sortFindings([
+    ...findings,
+    ...gateRequirementFindings(findings, gate?.require ?? [], projects)
+  ]);
+  const sorted = await controlledFindings(root, config2, options, gatedFindings);
   return {
     schemaVersion: 1,
     tool: {
@@ -308315,27 +308447,64 @@ async function canonicalRoot(input) {
     return input;
   }
 }
-function normalizeOptions(cwd, root, config2, input) {
+function normalizeOptions(cwd, root, config2, input, gate, forceFailOn) {
+  const gateRules = requiredGateRules(gate?.require ?? []);
+  const inputRules = input.rules ?? [];
   return {
     cwd,
     path: root,
     project: input.project,
     config: input.config,
-    mode: input.mode ?? config2.mode ?? "warn",
+    mode: gate ? "enforce" : input.mode ?? config2.mode ?? "warn",
     requireKicad: input.requireKicad ?? false,
     kicadCli: input.kicadCli,
     bom: input.bom,
     pinmap: input.pinmap,
     variant: input.variant,
-    failOn: input.failOn ?? config2["fail-on"] ?? "high",
-    rules: input.rules ?? [],
-    skips: input.skips ?? [],
+    failOn: forceFailOn ?? gate?.["fail-on"] ?? input.failOn ?? config2["fail-on"] ?? "high",
+    gate: input.gate,
+    gateAutoDetected: input.gateAutoDetected ?? false,
+    rules: inputRules.length > 0 ? [.../* @__PURE__ */ new Set([...inputRules, ...gateRules])] : [],
+    skips: (input.skips ?? []).filter((ruleId) => !gateRules.includes(ruleId)),
     ignoreBaseline: input.ignoreBaseline ?? false,
     annotations: input.annotations ?? true,
     quiet: input.quiet ?? false,
     verbose: input.verbose ?? false,
     color: input.color ?? "auto"
   };
+}
+function applyGateRequirements(config2, gate) {
+  const requiredRules = requiredGateRules(gate.require ?? []);
+  const requiredOutputs = requiredManufacturingOutputs(gate.require ?? []);
+  if (requiredRules.length === 0) {
+    return config2;
+  }
+  const rules = { ...config2.rules };
+  for (const ruleId of requiredRules) {
+    rules[ruleId] = enableRule(rules[ruleId]);
+  }
+  const outputConfig = ruleObjectConfig(rules["manufacturing.outputs-present"]);
+  const existingRequired = Array.isArray(outputConfig.required) ? outputConfig.required.filter((entry) => typeof entry === "string") : [];
+  if (requiredOutputs.length > 0) {
+    rules["manufacturing.outputs-present"] = {
+      ...outputConfig,
+      enabled: true,
+      required: [.../* @__PURE__ */ new Set([...existingRequired, ...requiredOutputs])]
+    };
+  }
+  return {
+    ...config2,
+    rules
+  };
+}
+function enableRule(ruleConfig2) {
+  return {
+    ...ruleObjectConfig(ruleConfig2),
+    enabled: true
+  };
+}
+function ruleObjectConfig(ruleConfig2) {
+  return typeof ruleConfig2 === "object" && ruleConfig2 !== null ? ruleConfig2 : {};
 }
 async function discoverConfiguredProjects(root, options, config2) {
   if (options.project) {
@@ -308347,11 +308516,11 @@ async function discoverConfiguredProjects(root, options, config2) {
   }
   return discoverProjects(root);
 }
-function configFindings(root, loaded) {
+function configFindings(root, loaded, criticalErrors = /* @__PURE__ */ new Set()) {
   return loaded.errors.map(
     (error52) => createFinding({
       ruleId: "config.invalid",
-      severity: "high",
+      severity: criticalErrors.has(error52) ? "critical" : "high",
       message: `Configuration is invalid: ${error52}`,
       resource: {
         path: loaded.path ? import_node_path28.default.relative(root, loaded.path).replace(/\\/g, "/") : "boardreadyops.yml",
@@ -312798,6 +312967,7 @@ async function upsertPullRequestComment(result) {
 var import_node_path29 = __toESM(require("node:path"), 1);
 function readActionInputs(workspace = process.env.GITHUB_WORKSPACE ?? process.cwd()) {
   const root = import_node_path29.default.resolve(workspace);
+  const gate = empty(getInput("gate"));
   return {
     cwd: root,
     path: workspacePath(root, getInput("path") || "."),
@@ -312809,6 +312979,8 @@ function readActionInputs(workspace = process.env.GITHUB_WORKSPACE ?? process.cw
     bom: bomInput(root, getInput("bom") || "auto"),
     pinmap: optionalPath(root, getInput("pinmap")),
     variant: empty(getInput("variant")),
+    gate: gate ?? detectActionGate(process.env.GITHUB_EVENT_NAME ?? "", process.env.GITHUB_REF ?? ""),
+    gateAutoDetected: !gate,
     failOn: failOnInput(getInput("fail-on") || "high"),
     annotations: boolInput("annotations", true),
     quiet: false,
@@ -312826,6 +312998,18 @@ function readActionInputs(workspace = process.env.GITHUB_WORKSPACE ?? process.cw
     commentPr: boolInput("comment-pr", true),
     artifactName: artifactName(getInput("artifact-name") || "boardreadyops")
   };
+}
+function detectActionGate(event, ref) {
+  if (event === "pull_request" || event === "pull_request_target") {
+    return "pull_request";
+  }
+  if (ref.startsWith("refs/tags/")) {
+    return "release";
+  }
+  if (ref === "refs/heads/main") {
+    return "main";
+  }
+  return "main";
 }
 function boolInput(name, fallback) {
   const value = getInput(name);

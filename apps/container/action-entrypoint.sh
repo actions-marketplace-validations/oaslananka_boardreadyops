@@ -11,13 +11,14 @@ exec env \
   "INPUT_BOM=${7-}" \
   "INPUT_PINMAP=${8-}" \
   "INPUT_VARIANT=${9-}" \
-  "INPUT_SARIF=${10-}" \
-  "INPUT_JSON=${11-}" \
-  "INPUT_MARKDOWN=${12-}" \
-  "INPUT_UPLOAD-SARIF=${13-}" \
-  "INPUT_UPLOAD-ARTIFACTS=${14-}" \
-  "INPUT_COMMENT-PR=${15-}" \
-  "INPUT_ARTIFACT-NAME=${16-}" \
-  "INPUT_FAIL-ON=${17-}" \
-  "INPUT_ANNOTATIONS=${18-}" \
+  "INPUT_GATE=${10-}" \
+  "INPUT_SARIF=${11-}" \
+  "INPUT_JSON=${12-}" \
+  "INPUT_MARKDOWN=${13-}" \
+  "INPUT_UPLOAD-SARIF=${14-}" \
+  "INPUT_UPLOAD-ARTIFACTS=${15-}" \
+  "INPUT_COMMENT-PR=${16-}" \
+  "INPUT_ARTIFACT-NAME=${17-}" \
+  "INPUT_FAIL-ON=${18-}" \
+  "INPUT_ANNOTATIONS=${19-}" \
   node /usr/local/lib/node_modules/boardreadyops/dist/action/index.cjs

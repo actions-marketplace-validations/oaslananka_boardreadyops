@@ -31,6 +31,7 @@ jobs:
 | `bom` | `auto` | BOM source path or "auto". |
 | `pinmap` | `` | Pinmap file path. Empty disables pinmap rules. |
 | `variant` | `` | KiCad variant name used by variant-aware BoardReadyOps rules. |
+| `gate` | `` | Gate name from boardreadyops.yml. Empty auto-detects pull_request, main, or release. |
 | `sarif` | `boardreadyops.sarif.json` | Output SARIF path. Empty disables. |
 | `json` | `boardreadyops.findings.json` | Output JSON findings path. Empty disables. |
 | `markdown` | `boardreadyops.report.md` | Output Markdown report path. Empty disables. |

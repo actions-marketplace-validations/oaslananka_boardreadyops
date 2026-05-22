@@ -44,6 +44,10 @@ inputs:
     description: KiCad variant name used by variant-aware BoardReadyOps rules.
     required: false
     default: ""
+  gate:
+    description: Gate name from boardreadyops.yml. Empty auto-detects pull_request, main, or release.
+    required: false
+    default: ""
   sarif:
     description: Output SARIF path. Empty disables.
     required: false

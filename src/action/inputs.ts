@@ -18,6 +18,7 @@ export interface ActionInputs extends Partial<PipelineOptions> {
 
 export function readActionInputs(workspace = process.env.GITHUB_WORKSPACE ?? process.cwd()): ActionInputs {
   const root = path.resolve(workspace);
+  const gate = empty(core.getInput("gate"));
   return {
     cwd: root,
     path: workspacePath(root, core.getInput("path") || "."),
@@ -29,6 +30,8 @@ export function readActionInputs(workspace = process.env.GITHUB_WORKSPACE ?? pro
     bom: bomInput(root, core.getInput("bom") || "auto"),
     pinmap: optionalPath(root, core.getInput("pinmap")),
     variant: empty(core.getInput("variant")),
+    gate: gate ?? detectActionGate(process.env.GITHUB_EVENT_NAME ?? "", process.env.GITHUB_REF ?? ""),
+    gateAutoDetected: !gate,
     failOn: failOnInput(core.getInput("fail-on") || "high"),
     annotations: boolInput("annotations", true),
     quiet: false,
@@ -46,6 +49,19 @@ export function readActionInputs(workspace = process.env.GITHUB_WORKSPACE ?? pro
     commentPr: boolInput("comment-pr", true),
     artifactName: artifactName(core.getInput("artifact-name") || "boardreadyops"),
   };
+}
+
+export function detectActionGate(event: string, ref: string): string {
+  if (event === "pull_request" || event === "pull_request_target") {
+    return "pull_request";
+  }
+  if (ref.startsWith("refs/tags/")) {
+    return "release";
+  }
+  if (ref === "refs/heads/main") {
+    return "main";
+  }
+  return "main";
 }
 
 function boolInput(name: string, fallback: boolean): boolean {

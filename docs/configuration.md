@@ -13,6 +13,27 @@ rules:
 fail-on: high
 ```
 
+Use `gates` when event-specific enforcement needs stricter requirements than the repository default:
+
+```yaml
+version: 1
+fail-on: high
+gates:
+  pull_request:
+    fail-on: critical
+    require: []
+  main:
+    fail-on: high
+    require: [clean-drc, clean-erc]
+  release:
+    fail-on: medium
+    require: [clean-drc, clean-erc, gerber, drill, position, bom, changelog, tagged-release, no-eol-components]
+```
+
+Selecting a configured gate runs in enforce mode and uses that gate's `fail-on` threshold. A selected gate must exist in the config. Its required checks keep their backing rules enabled and selected even when the base rule config or CLI rule filters would skip them.
+
+Gate manufacturing output requirements feed the existing `manufacturing.outputs-present` rule so missing `gerber`, `drill`, `position`, and `bom` outputs surface as findings before the gate requirement fails.
+
 ## Suppressions
 
 Use scoped suppressions for intentional findings. A suppression must name the rule and a reason. Optional matchers narrow it to a project path, designator reference, or stable finding fingerprint. Expired suppressions no longer change the run result.

@@ -4,10 +4,18 @@ import { boardReadyVersion } from "../generated/version.js";
 import { registerBuiltInRules } from "../rules/_index.js";
 import { applyBaseline, readBaseline, resolveBaselinePath } from "./baseline.js";
 import { defaultConcurrency, mapLimit } from "./concurrency.js";
-import { type BoardReadyOpsConfig, defaultConfig, type LoadedConfig, loadConfig } from "./config.js";
+import {
+  type BoardReadyOpsConfig,
+  defaultConfig,
+  type GateConfig,
+  type LoadedConfig,
+  loadConfig,
+  type RuleConfig,
+} from "./config.js";
 import type { PipelineOptions, RuleContext } from "./context.js";
 import { discoverProjects } from "./discovery.js";
-import { createFinding, type Finding, sortFindings, summarizeFindings } from "./findings.js";
+import { createFinding, type FailOn, type Finding, sortFindings, summarizeFindings } from "./findings.js";
+import { gateRequirementFindings, requiredGateRules, requiredManufacturingOutputs } from "./gates/requirements.js";
 import { createLogger, type Logger } from "./logger.js";
 import type { RunResult } from "./result.js";
 import { listRules } from "./rule-registry.js";
@@ -21,12 +29,21 @@ export async function runPipeline(
   const cwd = input.cwd ?? process.cwd();
   const root = await canonicalRoot(path.resolve(cwd, input.path ?? "."));
   const loaded = await loadConfig(root, input.config);
-  const config = { ...defaultConfig(), ...loaded.config };
-  const options = normalizeOptions(cwd, root, config, input);
+  const loadedConfig = { ...defaultConfig(), ...loaded.config };
+  const gate = input.gate ? loadedConfig.gates?.[input.gate] : undefined;
+  const missingExplicitGate =
+    input.gate && !gate && input.gateAutoDetected !== true
+      ? `Gate "${input.gate}" not found in configuration.`
+      : undefined;
+  if (missingExplicitGate) {
+    loaded.errors.push(missingExplicitGate);
+  }
+  const config = gate ? applyGateRequirements(loadedConfig, gate) : loadedConfig;
+  const options = normalizeOptions(cwd, root, config, input, gate, missingExplicitGate ? "critical" : undefined);
   const activeLogger = logger ?? createLogger(options.quiet ? "silent" : options.verbose ? "debug" : "info");
   const projects = await discoverConfiguredProjects(root, options, config);
   const findings: Finding[] = [];
-  findings.push(...configFindings(root, loaded));
+  findings.push(...configFindings(root, loaded, missingExplicitGate ? new Set([missingExplicitGate]) : undefined));
   findings.push(...projectShapeFindings(projects));
   const activeRules = listRules().filter((rule) => {
     if (options.rules.length > 0 && !options.rules.includes(rule.meta.id)) {
@@ -48,7 +65,11 @@ export async function runPipeline(
   for (const group of projectFindings) {
     findings.push(...group);
   }
-  const sorted = await controlledFindings(root, config, options, sortFindings(findings));
+  const gatedFindings = sortFindings([
+    ...findings,
+    ...gateRequirementFindings(findings, gate?.require ?? [], projects),
+  ]);
+  const sorted = await controlledFindings(root, config, options, gatedFindings);
   return {
     schemaVersion: 1,
     tool: {
@@ -89,27 +110,71 @@ function normalizeOptions(
   root: string,
   config: BoardReadyOpsConfig,
   input: Partial<PipelineOptions>,
+  gate?: GateConfig,
+  forceFailOn?: FailOn,
 ): PipelineOptions {
+  const gateRules = requiredGateRules(gate?.require ?? []);
+  const inputRules = input.rules ?? [];
   return {
     cwd,
     path: root,
     project: input.project,
     config: input.config,
-    mode: input.mode ?? config.mode ?? "warn",
+    mode: gate ? "enforce" : (input.mode ?? config.mode ?? "warn"),
     requireKicad: input.requireKicad ?? false,
     kicadCli: input.kicadCli,
     bom: input.bom,
     pinmap: input.pinmap,
     variant: input.variant,
-    failOn: input.failOn ?? config["fail-on"] ?? "high",
-    rules: input.rules ?? [],
-    skips: input.skips ?? [],
+    failOn: forceFailOn ?? gate?.["fail-on"] ?? input.failOn ?? config["fail-on"] ?? "high",
+    gate: input.gate,
+    gateAutoDetected: input.gateAutoDetected ?? false,
+    rules: inputRules.length > 0 ? [...new Set([...inputRules, ...gateRules])] : [],
+    skips: (input.skips ?? []).filter((ruleId) => !gateRules.includes(ruleId)),
     ignoreBaseline: input.ignoreBaseline ?? false,
     annotations: input.annotations ?? true,
     quiet: input.quiet ?? false,
     verbose: input.verbose ?? false,
     color: input.color ?? "auto",
   };
+}
+
+function applyGateRequirements(config: BoardReadyOpsConfig, gate: GateConfig): BoardReadyOpsConfig {
+  const requiredRules = requiredGateRules(gate.require ?? []);
+  const requiredOutputs = requiredManufacturingOutputs(gate.require ?? []);
+  if (requiredRules.length === 0) {
+    return config;
+  }
+  const rules = { ...config.rules };
+  for (const ruleId of requiredRules) {
+    rules[ruleId] = enableRule(rules[ruleId]);
+  }
+  const outputConfig = ruleObjectConfig(rules["manufacturing.outputs-present"]);
+  const existingRequired = Array.isArray(outputConfig.required)
+    ? outputConfig.required.filter((entry): entry is string => typeof entry === "string")
+    : [];
+  if (requiredOutputs.length > 0) {
+    rules["manufacturing.outputs-present"] = {
+      ...outputConfig,
+      enabled: true,
+      required: [...new Set([...existingRequired, ...requiredOutputs])],
+    };
+  }
+  return {
+    ...config,
+    rules,
+  };
+}
+
+function enableRule(ruleConfig: RuleConfig | boolean | undefined): RuleConfig {
+  return {
+    ...ruleObjectConfig(ruleConfig),
+    enabled: true,
+  };
+}
+
+function ruleObjectConfig(ruleConfig: RuleConfig | boolean | undefined): RuleConfig {
+  return typeof ruleConfig === "object" && ruleConfig !== null ? ruleConfig : {};
 }
 
 async function discoverConfiguredProjects(root: string, options: PipelineOptions, config: BoardReadyOpsConfig) {
@@ -123,11 +188,11 @@ async function discoverConfiguredProjects(root: string, options: PipelineOptions
   return discoverProjects(root);
 }
 
-function configFindings(root: string, loaded: LoadedConfig): Finding[] {
+function configFindings(root: string, loaded: LoadedConfig, criticalErrors = new Set<string>()): Finding[] {
   return loaded.errors.map((error) =>
     createFinding({
       ruleId: "config.invalid",
-      severity: "high",
+      severity: criticalErrors.has(error) ? "critical" : "high",
       message: `Configuration is invalid: ${error}`,
       resource: {
         path: loaded.path ? path.relative(root, loaded.path).replace(/\\/g, "/") : "boardreadyops.yml",

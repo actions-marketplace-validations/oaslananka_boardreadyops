@@ -18,6 +18,7 @@ runs:
     - ${{ inputs['bom'] }}
     - ${{ inputs['pinmap'] }}
     - ${{ inputs['variant'] }}
+    - ${{ inputs['gate'] }}
     - ${{ inputs['sarif'] }}
     - ${{ inputs['json'] }}
     - ${{ inputs['markdown'] }}
@@ -62,6 +63,10 @@ inputs:
     default: ""
   variant:
     description: KiCad variant name used by variant-aware BoardReadyOps rules.
+    required: false
+    default: ""
+  gate:
+    description: Gate name from boardreadyops.yml. Empty auto-detects pull_request, main, or release.
     required: false
     default: ""
   sarif:

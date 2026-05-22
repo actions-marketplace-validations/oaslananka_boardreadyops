@@ -2,6 +2,8 @@
 
 `boardreadyops run [path]` runs the full pipeline. `boardreadyops check [path]` is the concise preflight form for local and CI use. `boardreadyops check <rule-id> [path]` runs one rule. `doctor`, `schema`, and `init` support setup and automation.
 
+Use `boardreadyops run --gate release` to select a configured gate from `boardreadyops.yml`. A selected gate enforces its configured threshold and named requirements for local release checks; GitHub Action runs auto-detect `pull_request`, `main`, or `release` when the Action `gate` input is empty.
+
 ## Baselines
 
 Baseline commands operate on the configured baseline file, or `.boardreadyops-baseline.json` when the config does not override it.

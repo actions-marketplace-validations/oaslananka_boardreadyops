@@ -20,6 +20,12 @@ describe("configuration", () => {
     expect(
       validateConfig({
         version: 1,
+        gates: {
+          release: {
+            "fail-on": "medium",
+            require: ["clean-drc", "gerber", "tagged-release"],
+          },
+        },
         suppressions: [
           {
             rule: "manufacturing.outputs-present",
@@ -33,6 +39,7 @@ describe("configuration", () => {
         baseline: { file: ".boardreadyops-baseline.json", mode: "new-only" },
       }),
     ).toEqual([]);
+    expect(validateConfig({ version: 1, gates: { release: { require: ["unknown"] } } })).not.toEqual([]);
     expect(
       validateConfig({
         version: 1,

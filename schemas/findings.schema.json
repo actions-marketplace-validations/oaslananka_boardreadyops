@@ -279,6 +279,7 @@
           "enum": [
             "config.invalid",
             "manifest.project-discovery",
+            "gate.requirement",
             "bom.missing-mpn",
             "bom.single-source",
             "bom.eol-detection",

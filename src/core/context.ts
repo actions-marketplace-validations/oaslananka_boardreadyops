@@ -24,6 +24,8 @@ export interface PipelineOptions {
   pinmap: string | undefined;
   variant: string | undefined;
   failOn: FailOn;
+  gate: string | undefined;
+  gateAutoDetected?: boolean;
   rules: string[];
   skips: string[];
   ignoreBaseline: boolean;

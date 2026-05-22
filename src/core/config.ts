@@ -40,12 +40,18 @@ export interface BaselineConfig {
   mode: "new-only" | "all";
 }
 
+export interface GateConfig {
+  "fail-on"?: FailOn;
+  require?: string[];
+}
+
 export interface BoardReadyOpsConfig {
   version: 1;
   mode?: "warn" | "enforce";
   projects?: ProjectConfig[];
   rules?: Record<string, RuleConfig | boolean>;
   "fail-on"?: FailOn;
+  gates?: Record<string, GateConfig>;
   suppressions?: SuppressionConfig[];
   baseline?: BaselineConfig;
   report?: {
