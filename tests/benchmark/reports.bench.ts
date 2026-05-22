@@ -21,6 +21,7 @@ const result: RunResult = {
   summary: summarizeFindings(findings, "high"),
   projects: [],
   findings,
+  fabrication: { bom: [], outputs: [] },
   generatedAt: "2026-05-18T00:00:00.000Z",
 };
 

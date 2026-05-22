@@ -1,8 +1,10 @@
 import * as github from "@actions/github";
+import { diffFabrication } from "../core/diff/fabrication.js";
 import type { RunResult } from "../core/result.js";
 import { formatMarkdown, stickyMarker } from "../report/markdown.js";
+import { loadPreviousRunResult } from "./previous-result.js";
 
-export async function upsertPullRequestComment(result: RunResult): Promise<string> {
+export async function upsertPullRequestComment(result: RunResult, artifactName: string): Promise<string> {
   const token = process.env.GITHUB_TOKEN;
   const repository = process.env.GITHUB_REPOSITORY;
   const pull = github.context.payload.pull_request;
@@ -19,7 +21,14 @@ export async function upsertPullRequestComment(result: RunResult): Promise<strin
     return "";
   }
   const octokit = github.getOctokit(token);
-  const body = formatMarkdown(result);
+  const previous = await loadPreviousRunResult(token, owner, repo, artifactName, pull);
+  const body = formatMarkdown(
+    result,
+    [],
+    previous?.fabrication
+      ? diffFabrication(previous.fabrication, result.fabrication, previous.findings, result.findings)
+      : undefined,
+  );
   const comments = await octokit.paginate(octokit.rest.issues.listComments, {
     owner,
     repo,

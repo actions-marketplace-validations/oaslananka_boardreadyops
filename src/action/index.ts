@@ -47,7 +47,7 @@ export async function runAction(): Promise<void> {
     await uploadSarif(written.sarif);
   }
   if (inputs.commentPr) {
-    await upsertPullRequestComment(result);
+    await upsertPullRequestComment(result, inputs.artifactName);
   }
   if (result.summary.failed) {
     throw new Error(

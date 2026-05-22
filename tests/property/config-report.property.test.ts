@@ -31,6 +31,7 @@ describe("config and report properties", () => {
               resource: { path: "board.kicad_pro", kind: "project" },
             }),
           ],
+          fabrication: { bom: [], outputs: [] },
           generatedAt: "2026-05-18T00:00:00.000Z",
         };
         expect(() => JSON.parse(formatJson(result))).not.toThrow();

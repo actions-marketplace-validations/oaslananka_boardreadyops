@@ -54,3 +54,7 @@ jobs:
 | `sarif-path` | SARIF output path if produced. |
 | `json-path` | JSON output path if produced. |
 | `markdown-path` | Markdown output path if produced. |
+
+## Pull request comments
+
+When `comment-pr` is enabled, the sticky pull request comment summarizes the current findings. If the Action can read a previous BoardReadyOps JSON artifact from the pull request head branch or base branch, the comment also includes a fabrication diff for BOM rows, manufacturing outputs, and newly added findings.

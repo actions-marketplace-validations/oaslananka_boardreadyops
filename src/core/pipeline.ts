@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { boardReadyVersion } from "../generated/version.js";
 import { registerBuiltInRules } from "../rules/_index.js";
+import { captureFabricationSnapshot } from "../rules/fabrication-snapshot.js";
 import { applyBaseline, readBaseline, resolveBaselinePath } from "./baseline.js";
 import { defaultConcurrency, mapLimit } from "./concurrency.js";
 import {
@@ -70,6 +71,7 @@ export async function runPipeline(
     ...gateRequirementFindings(findings, gate?.require ?? [], projects),
   ]);
   const sorted = await controlledFindings(root, config, options, gatedFindings);
+  const fabrication = await captureFabricationSnapshot(root, projects, options, config);
   return {
     schemaVersion: 1,
     tool: {
@@ -79,6 +81,7 @@ export async function runPipeline(
     summary: summarizeFindings(sorted, options.failOn),
     projects,
     findings: sorted,
+    fabrication,
     generatedAt: new Date().toISOString(),
   };
 }

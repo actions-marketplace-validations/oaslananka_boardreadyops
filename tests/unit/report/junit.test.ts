@@ -65,6 +65,7 @@ function sampleResult(findings: Finding[] = []): RunResult {
     summary: summarizeFindings(findings, "high"),
     projects: [],
     findings,
+    fabrication: { bom: [], outputs: [] },
     generatedAt: "2026-05-21T00:00:00.000Z",
   };
 }

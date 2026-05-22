@@ -55,6 +55,10 @@ ${rows}
 | Name | Description |
 | --- | --- |
 ${outputs}
+
+## Pull request comments
+
+When \`comment-pr\` is enabled, the sticky pull request comment summarizes the current findings. If the Action can read a previous BoardReadyOps JSON artifact from the pull request head branch or base branch, the comment also includes a fabrication diff for BOM rows, manufacturing outputs, and newly added findings.
 `;
 await mkdir("docs", { recursive: true });
 await writeFile("docs/action.md", content, "utf8");

@@ -80,6 +80,7 @@ describe("JUnit report", () => {
       summary: summarizeFindings(findings, "high"),
       projects: [],
       findings,
+      fabrication: { bom: [], outputs: [] },
       generatedAt: "2026-05-18T00:00:00.000Z",
     } satisfies RunResult);
 
@@ -113,6 +114,7 @@ describe("JUnit report", () => {
       summary: summarizeFindings([finding], "high"),
       projects: [],
       findings: [finding],
+      fabrication: { bom: [], outputs: [] },
       generatedAt: "2026-05-18T00:00:00.000Z",
     } satisfies RunResult);
 
@@ -140,6 +142,7 @@ describe("JUnit report", () => {
       summary: summarizeFindings([finding], "high"),
       projects: [],
       findings: [finding],
+      fabrication: { bom: [], outputs: [] },
       generatedAt: "2026-05-18T00:00:00.000Z",
     } satisfies RunResult);
 

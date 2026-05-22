@@ -1,7 +1,45 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`report snapshots > formats fabrication diff Markdown 1`] = `
+"<!-- boardreadyops:sticky:v1 -->
+# BoardReadyOps Report
+
+| Metric | Count |
+| --- | ---: |
+| Total | 1 |
+| Critical | 0 |
+| High | 1 |
+| Medium | 0 |
+| Low | 0 |
+| Info | 0 |
+
+## Top Findings
+
+- **high** \`bom.missing-mpn\` in \`bom.csv\`: R1 is missing an MPN.
+
+## Fabrication Changes
+
+### BOM
+| Ref | Previous | Current | Status |
+| --- | --- | --- | --- |
+| D2 | LED red | - | removed |
+| R1 | - | 10k 0402 | added |
+
+### Manufacturing Outputs
+- drill: changed (1 changed)
+
+### New Findings
+- **high** \`bom.missing-mpn\` in \`bom.csv\`: R1 is missing an MPN.
+
+"
+`;
+
 exports[`report snapshots > formats stable JSON 1`] = `
 {
+  "fabrication": {
+    "bom": [],
+    "outputs": [],
+  },
   "findings": [
     {
       "details": {
@@ -62,6 +100,7 @@ exports[`report snapshots > formats stable Markdown 1`] = `
 ## Top Findings
 
 - **high** \`bom.missing-mpn\` in \`bom.csv\`: R1 is missing an MPN.
+
 
 "
 `;

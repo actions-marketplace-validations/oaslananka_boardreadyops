@@ -158,4 +158,19 @@ describe("reporting", () => {
     expect(sarif.version).toBe("2.1.0");
     expect(sarif.runs[0].tool.driver.name).toBe("BoardReadyOps");
   });
+
+  it("captures fabrication snapshot data for JSON artifacts", async () => {
+    const result = (await runPipeline({
+      path: path.join(fixtureRoot, "bom-single-source"),
+      failOn: "never",
+    })) as Awaited<ReturnType<typeof runPipeline>> & {
+      fabrication?: {
+        bom: Array<{ reference: string }>;
+        outputs: Array<{ kind: string }>;
+      };
+    };
+
+    expect(result.fabrication?.bom.map((row) => row.reference)).toContain("R1");
+    expect(result.fabrication?.outputs.map((output) => output.kind)).toContain("bom");
+  });
 });

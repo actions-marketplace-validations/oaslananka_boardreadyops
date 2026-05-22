@@ -1,4 +1,5 @@
 import type { ProjectContext } from "./context.js";
+import type { FabricationSnapshot } from "./diff/fabrication.js";
 import type { Finding, FindingSummary } from "./findings.js";
 
 export interface RunResult {
@@ -10,5 +11,6 @@ export interface RunResult {
   summary: FindingSummary;
   projects: ProjectContext[];
   findings: Finding[];
+  fabrication: FabricationSnapshot;
   generatedAt: string;
 }

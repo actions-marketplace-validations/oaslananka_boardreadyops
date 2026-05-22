@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { diffFabrication } from "../../src/core/diff/fabrication.js";
 import { createFinding, summarizeFindings } from "../../src/core/findings.js";
 import type { RunResult } from "../../src/core/result.js";
 import { formatJson } from "../../src/report/json.js";
@@ -21,6 +22,7 @@ const result: RunResult = {
   summary: summarizeFindings([finding], "high"),
   projects: [],
   findings: [finding],
+  fabrication: { bom: [], outputs: [] },
   generatedAt: "2026-05-18T00:00:00.000Z",
 };
 
@@ -35,6 +37,27 @@ describe("report snapshots", () => {
 
   it("formats stable Markdown", () => {
     expect(formatMarkdown(result)).toMatchSnapshot();
+  });
+
+  it("formats fabrication diff Markdown", () => {
+    expect(
+      formatMarkdown(
+        result,
+        [],
+        diffFabrication(
+          {
+            bom: [{ reference: "D2", value: "LED red" }],
+            outputs: [{ kind: "drill", files: [{ path: "fab/board.drl", digest: "old" }] }],
+          },
+          {
+            bom: [{ reference: "R1", value: "10k", footprint: "0402" }],
+            outputs: [{ kind: "drill", files: [{ path: "fab/board.drl", digest: "new" }] }],
+          },
+          [],
+          [finding],
+        ),
+      ),
+    ).toMatchSnapshot();
   });
 
   it("formats stable JUnit", () => {

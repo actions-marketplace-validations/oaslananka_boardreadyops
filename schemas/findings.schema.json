@@ -33,11 +33,67 @@
         "$ref": "#/$defs/finding"
       }
     },
+    "fabrication": {
+      "$ref": "#/$defs/fabrication"
+    },
     "generatedAt": {
       "type": "string"
     }
   },
   "$defs": {
+    "fabrication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bom", "outputs"],
+      "properties": {
+        "bom": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["reference"],
+            "properties": {
+              "reference": { "type": "string" },
+              "sourcePath": { "type": "string" },
+              "value": { "type": "string" },
+              "footprint": { "type": "string" },
+              "manufacturer": { "type": "string" },
+              "mpn": { "type": "string" },
+              "suppliers": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "files"],
+            "properties": {
+              "kind": { "type": "string" },
+              "files": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["path", "digest"],
+                  "properties": {
+                    "path": { "type": "string" },
+                    "digest": {
+                      "type": "string",
+                      "pattern": "^[a-f0-9]{64}$"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "finding": {
       "type": "object",
       "additionalProperties": false,

@@ -23,6 +23,40 @@ No findings.
 {{/fixFindings}}
 {{/hasFixes}}
 
+{{#hasFabricationDiff}}
+## Fabrication Changes
+
+### BOM
+{{#fabrication.bom.hasRows}}
+| Ref | Previous | Current | Status |
+| --- | --- | --- | --- |
+{{#fabrication.bom.rows}}
+| {{reference}} | {{previous}} | {{current}} | {{status}} |
+{{/fabrication.bom.rows}}
+{{#fabrication.bom.truncated}}
+_BOM diff truncated._
+{{/fabrication.bom.truncated}}
+{{/fabrication.bom.hasRows}}
+{{^fabrication.bom.hasRows}}
+No BOM changes recorded.
+{{/fabrication.bom.hasRows}}
+
+### Manufacturing Outputs
+{{#fabrication.outputs}}
+- {{kind}}: {{status}}{{#summary}} ({{summary}}){{/summary}}
+{{/fabrication.outputs}}
+
+{{#fabrication.findings.hasAdded}}
+### New Findings
+{{#fabrication.findings.added}}
+- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}
+{{/fabrication.findings.added}}
+{{#fabrication.findings.addedTruncated}}
+_...and {{fabrication.findings.addedRemaining}} more new findings._
+{{/fabrication.findings.addedTruncated}}
+{{/fabrication.findings.hasAdded}}
+{{/hasFabricationDiff}}
+
 {{#hasArtifacts}}
 ## Artifacts
 

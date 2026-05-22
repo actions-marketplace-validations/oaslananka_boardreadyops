@@ -90,6 +90,63 @@ describe("report formats", () => {
     expect(populated).not.toMatch(/{{|}}/);
   });
 
+  it("renders fabrication changes in PR Markdown", () => {
+    const markdown = formatMarkdown(sampleResult(), [], {
+      bom: {
+        truncated: false,
+        rows: [
+          {
+            reference: "C45",
+            previous: "",
+            current: "100nF 0402",
+            status: "added",
+          },
+        ],
+      },
+      outputs: [
+        { kind: "drill", status: "changed", changed: 1, added: 0, removed: 0 },
+        { kind: "gerber", status: "unchanged", changed: 0, added: 0, removed: 0 },
+      ],
+      findings: {
+        added: [sampleFinding()],
+        removed: [],
+        unchanged: [],
+      },
+    });
+
+    expect(markdown).toContain("Fabrication Changes");
+    expect(markdown).toContain("| C45 | - | 100nF 0402 | added |");
+    expect(markdown).toContain("- drill: changed (1 changed)");
+    expect(markdown).toContain("- gerber: unchanged");
+    expect(markdown).toContain("New Findings");
+  });
+
+  it("limits new finding rows in fabrication changes", () => {
+    const added = Array.from({ length: 12 }, (_, index) =>
+      createFinding({
+        ruleId: "bom.missing-mpn",
+        severity: "high",
+        message: `Missing MPN ${index}.`,
+        resource: { path: `bom-${index}.csv`, kind: "bom" },
+      }),
+    );
+
+    const markdown = formatMarkdown(sampleResult(), [], {
+      bom: { truncated: false, rows: [] },
+      outputs: [],
+      findings: {
+        added,
+        removed: [],
+        unchanged: [],
+      },
+    });
+
+    expect(markdown).toContain("Missing MPN 0.");
+    expect(markdown).toContain("Missing MPN 9.");
+    expect(markdown).not.toContain("Missing MPN 10.");
+    expect(markdown).toContain("_...and 2 more new findings._");
+  });
+
   it("renders fixes from findings outside the top finding summary", () => {
     const findings = Array.from({ length: 10 }, (_, index) =>
       createFinding({
@@ -134,6 +191,7 @@ function sampleResult(findings = [sampleFinding()]): RunResult {
     summary: summarizeFindings(findings, "high"),
     projects: [],
     findings,
+    fabrication: { bom: [], outputs: [] },
     generatedAt: "2026-05-18T00:00:00.000Z",
   };
 }

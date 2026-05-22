@@ -64,6 +64,59 @@ fail-on: never
     expect(explicit.findings.some((finding) => finding.ruleId === "release.revision-set")).toBe(false);
   });
 
+  it("captures every configured project BOM and only project-scoped manufacturing outputs", async () => {
+    const root = await writeFixture({
+      "main/main.kicad_pro": "{}",
+      "main/main.kicad_sch": "(kicad_sch)",
+      "main/main.kicad_pcb": '(kicad_pcb (title_block (rev "v1.0")))',
+      "main/bom.csv":
+        "Reference,Value,Footprint,Manufacturer,MPN,Supplier 1,Lifecycle,DNP\nR1,10k,0603,Acme,R-10K,DigiKey,Active,false\n",
+      "main/fab/main.drl": "M48",
+      "child/child.kicad_pro": "{}",
+      "child/child.kicad_sch": "(kicad_sch)",
+      "child/child.kicad_pcb": '(kicad_pcb (title_block (rev "v1.0")))',
+      "child/bom.csv":
+        "Reference,Value,Footprint,Manufacturer,MPN,Supplier 1,Lifecycle,DNP\nR2,22k,0603,Acme,R-22K,LCSC,Active,false\n",
+      "outside/noise.drl": "unrelated",
+      "boardreadyops.yml": `version: 1
+projects:
+  - path: main
+    bom: main/bom.csv
+  - path: child
+    bom: child/bom.csv
+fail-on: never
+`,
+    });
+
+    const result = await runPipeline({ path: root, rules: ["release.revision-set"], failOn: "never" });
+    const drill = result.fabrication.outputs.find((output) => output.kind === "drill");
+    const bom = result.fabrication.outputs.find((output) => output.kind === "bom");
+
+    expect(result.fabrication.bom.map((row) => row.reference)).toEqual(["R1", "R2"]);
+    expect(bom?.files.map((file) => file.path)).toEqual(["child/bom.csv", "main/bom.csv"]);
+    expect(drill?.files.map((file) => file.path)).toEqual(["main/fab/main.drl"]);
+  });
+
+  it("keeps non-BOM pipeline runs alive when a configured BOM path is stale", async () => {
+    const root = await writeFixture({
+      "main.kicad_pro": "{}",
+      "main.kicad_sch": "(kicad_sch)",
+      "main.kicad_pcb": '(kicad_pcb (title_block (rev "v1.0")))',
+      "boardreadyops.yml": `version: 1
+projects:
+  - path: .
+    bom: stale.csv
+fail-on: never
+`,
+    });
+
+    await expect(runPipeline({ path: root, rules: ["design.board-outline"], failOn: "never" })).resolves.toMatchObject({
+      fabrication: {
+        bom: [],
+      },
+    });
+  });
+
   it("keeps child project jobsets out of parent project contexts", async () => {
     const root = await writeFixture({
       "parent.kicad_pro": "{}",
