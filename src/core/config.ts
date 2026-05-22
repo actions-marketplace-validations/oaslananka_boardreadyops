@@ -36,6 +36,7 @@ export interface BoardReadyOpsConfig {
     sarif?: string | false;
     json?: string | false;
     markdown?: string | false;
+    junit?: string | false;
   };
 }
 

@@ -235985,6 +235985,16 @@ var config_schema_default = {
               const: false
             }
           ]
+        },
+        junit: {
+          oneOf: [
+            {
+              type: "string"
+            },
+            {
+              const: false
+            }
+          ]
         }
       }
     }
@@ -253687,6 +253697,19 @@ function formatJson(result) {
 `;
 }
 
+// src/report/junit.ts
+function formatJunit(result) {
+  const cases = result.findings.map((finding2) => {
+    const failure = finding2.severity === "info" ? "" : `<failure message="${xml(finding2.message)}">${xml(JSON.stringify(finding2.details ?? {}))}</failure>`;
+    return `<testcase classname="${xml(finding2.ruleId)}" name="${xml(finding2.resource.path)}">${failure}</testcase>`;
+  }).join("");
+  return `<?xml version="1.0" encoding="UTF-8"?><testsuite name="boardreadyops" tests="${result.findings.length}" failures="${result.summary.total - result.summary.info}">${cases}</testsuite>
+`;
+}
+function xml(value) {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 // src/report/sarif.ts
 function formatSarif(result) {
   const rules = /* @__PURE__ */ new Map();
@@ -253764,7 +253787,8 @@ async function writeReports(result, root, outputs, loaded, stdout) {
   const targets = {
     json: outputs.json ?? configOutput(loaded, "json"),
     sarif: outputs.sarif ?? configOutput(loaded, "sarif"),
-    markdown: outputs.markdown ?? configOutput(loaded, "markdown")
+    markdown: outputs.markdown ?? configOutput(loaded, "markdown"),
+    junit: outputs.junit ?? configOutput(loaded, "junit")
   };
   const written = {};
   if (targets.json) {
@@ -253775,6 +253799,9 @@ async function writeReports(result, root, outputs, loaded, stdout) {
   }
   if (targets.markdown) {
     written.markdown = await writeOrStdout(root, targets.markdown, formatMarkdown(result), stdout);
+  }
+  if (targets.junit) {
+    written.junit = await writeOrStdout(root, targets.junit, formatJunit(result), stdout);
   }
   return written;
 }
@@ -253916,6 +253943,7 @@ report:
   sarif: build/boardreadyops.sarif.json
   json: build/boardreadyops.findings.json
   markdown: build/boardreadyops.report.md
+  # junit: build/boardreadyops.junit.xml
 `;
 async function initCommand(cwd, streams) {
   const file2 = import_node_path29.default.resolve(cwd, "boardreadyops.yml");

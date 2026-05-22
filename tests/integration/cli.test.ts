@@ -34,6 +34,28 @@ describe("CLI integration", () => {
     expect(await fs.stat(path.join(temp, "out.md"))).toBeTruthy();
   });
 
+  it("writes configured JUnit reports", async () => {
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-junit-"));
+    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, { recursive: true });
+    await fs.writeFile(
+      path.join(temp, "boardreadyops.yml"),
+      "version: 1\nreport:\n  junit: build/boardreadyops.junit.xml\n",
+      "utf8",
+    );
+
+    expect(
+      await runCli(
+        ["run", temp, "--rule", "bom.missing-mpn", "--no-annotations", "--fail-on", "never"],
+        memoryStreams(),
+      ),
+    ).toBe(0);
+
+    const xml = await fs.readFile(path.join(temp, "build/boardreadyops.junit.xml"), "utf8");
+    expect(xml).toContain('<?xml version="1.0" encoding="UTF-8"?>');
+    expect(xml).toContain("<testsuite");
+    expect(xml).toContain("</testsuite>");
+  });
+
   it("returns exit code 1 at the fail-on threshold", async () => {
     const code = await runCli(["run", path.join(fixtureRoot, "bom-missing-mpn"), "--no-annotations"], memoryStreams());
     expect(code).toBe(1);
@@ -73,7 +95,9 @@ describe("CLI integration", () => {
     try {
       const init = captureStreams();
       expect(await runCli(["init"], init)).toBe(0);
-      expect(await fs.readFile(path.join(initDir, "boardreadyops.yml"), "utf8")).toContain("version: 1");
+      const config = await fs.readFile(path.join(initDir, "boardreadyops.yml"), "utf8");
+      expect(config).toContain("version: 1");
+      expect(config).toContain("# junit: build/boardreadyops.junit.xml");
     } finally {
       process.chdir(previous);
     }

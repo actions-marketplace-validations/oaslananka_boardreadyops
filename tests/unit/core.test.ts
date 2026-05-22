@@ -17,6 +17,7 @@ describe("configuration", () => {
   it("validates the versioned config schema", () => {
     expect(validateConfig({ version: 1, failOn: "high" })).not.toEqual([]);
     expect(validateConfig({ version: 1, "fail-on": "high" })).toEqual([]);
+    expect(validateConfig({ version: 1, report: { junit: "build/boardreadyops.junit.xml" } })).toEqual([]);
     expect(validateConfig({ version: 2 }).join("\n")).toContain("must be equal to constant");
   });
 

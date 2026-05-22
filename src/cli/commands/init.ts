@@ -27,6 +27,7 @@ report:
   sarif: build/boardreadyops.sarif.json
   json: build/boardreadyops.findings.json
   markdown: build/boardreadyops.report.md
+  # junit: build/boardreadyops.junit.xml
 `;
 
 export async function initCommand(cwd: string, streams: { stdout: NodeJS.WritableStream }): Promise<number> {

@@ -290916,6 +290916,16 @@ var config_schema_default = {
               const: false
             }
           ]
+        },
+        junit: {
+          oneOf: [
+            {
+              type: "string"
+            },
+            {
+              const: false
+            }
+          ]
         }
       }
     }
