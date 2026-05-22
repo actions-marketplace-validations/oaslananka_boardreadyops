@@ -6,13 +6,14 @@ applies-to:
   - pcb
 config-keys:
   - rules.manufacturing.outputs-present.required
+  - rules.manufacturing.outputs-present.patterns
 ---
 
 # manufacturing.outputs-present
 
 ## What It Checks
 
-Checks configured fabrication outputs and freshness against PCB source mtimes.
+Checks vendor-aware fabrication output patterns and freshness against PCB source mtimes.
 
 ## When It Fires
 

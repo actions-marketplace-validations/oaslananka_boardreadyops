@@ -31470,9 +31470,9 @@ var require_patternProperties = __commonJS({
       code(cxt) {
         const { gen, schema: schema2, data, parentSchema, it } = cxt;
         const { opts } = it;
-        const patterns2 = (0, code_1.allSchemaProperties)(schema2);
-        const alwaysValidPatterns = patterns2.filter((p) => (0, util_1.alwaysValidSchema)(it, schema2[p]));
-        if (patterns2.length === 0 || alwaysValidPatterns.length === patterns2.length && (!it.opts.unevaluated || it.props === true)) {
+        const patterns = (0, code_1.allSchemaProperties)(schema2);
+        const alwaysValidPatterns = patterns.filter((p) => (0, util_1.alwaysValidSchema)(it, schema2[p]));
+        if (patterns.length === 0 || alwaysValidPatterns.length === patterns.length && (!it.opts.unevaluated || it.props === true)) {
           return;
         }
         const checkProperties = opts.strictSchema && !opts.allowMatchingProperties && parentSchema.properties;
@@ -31483,7 +31483,7 @@ var require_patternProperties = __commonJS({
         const { props } = it;
         validatePatternProperties();
         function validatePatternProperties() {
-          for (const pat of patterns2) {
+          for (const pat of patterns) {
             if (checkProperties)
               checkMatchingProperties(pat);
             if (it.allErrors) {
@@ -60154,11 +60154,11 @@ ${lanes.join("\n")}
         exclude: excludeMatcher
       };
       function getRegularExpressionForWildcard(specs, basePath, usage) {
-        const patterns2 = getRegularExpressionsForWildcards(specs, basePath, usage);
-        if (!patterns2 || !patterns2.length) {
+        const patterns = getRegularExpressionsForWildcards(specs, basePath, usage);
+        if (!patterns || !patterns.length) {
           return void 0;
         }
-        const pattern = patterns2.map((pattern2) => `(?:${pattern2})`).join("|");
+        const pattern = patterns.map((pattern2) => `(?:${pattern2})`).join("|");
         const terminator = usage === "exclude" ? "(?:$|/)" : "$";
         return `^(?:${pattern})${terminator}`;
       }
@@ -60246,14 +60246,14 @@ ${lanes.join("\n")}
       function matchFiles(path33, extensions, excludes, includes, useCaseSensitiveFileNames2, currentDirectory, depth, getFileSystemEntries, realpath3) {
         path33 = normalizePath2(path33);
         currentDirectory = normalizePath2(currentDirectory);
-        const patterns2 = getFileMatcherPatterns(path33, excludes, includes, useCaseSensitiveFileNames2, currentDirectory);
-        const includeFileRegexes = patterns2.includeFilePatterns && patterns2.includeFilePatterns.map((pattern) => getRegexFromPattern(pattern, useCaseSensitiveFileNames2));
-        const includeDirectoryRegex = patterns2.includeDirectoryPattern && getRegexFromPattern(patterns2.includeDirectoryPattern, useCaseSensitiveFileNames2);
-        const excludeRegex = patterns2.excludePattern && getRegexFromPattern(patterns2.excludePattern, useCaseSensitiveFileNames2);
+        const patterns = getFileMatcherPatterns(path33, excludes, includes, useCaseSensitiveFileNames2, currentDirectory);
+        const includeFileRegexes = patterns.includeFilePatterns && patterns.includeFilePatterns.map((pattern) => getRegexFromPattern(pattern, useCaseSensitiveFileNames2));
+        const includeDirectoryRegex = patterns.includeDirectoryPattern && getRegexFromPattern(patterns.includeDirectoryPattern, useCaseSensitiveFileNames2);
+        const excludeRegex = patterns.excludePattern && getRegexFromPattern(patterns.excludePattern, useCaseSensitiveFileNames2);
         const results = includeFileRegexes ? includeFileRegexes.map(() => []) : [[]];
         const visited = /* @__PURE__ */ new Map();
         const toCanonical = createGetCanonicalFileName(useCaseSensitiveFileNames2);
-        for (const basePath of patterns2.basePaths) {
+        for (const basePath of patterns.basePaths) {
           visitDirectory(basePath, combinePaths(currentDirectory, basePath), depth);
         }
         return flatten(results);
@@ -60606,7 +60606,7 @@ ${lanes.join("\n")}
           return result;
         }
         let matchableStringSet;
-        let patterns2;
+        let patterns;
         const pathList = getOwnKeys(paths);
         for (const path33 of pathList) {
           const patternOrStr = tryParsePattern(path33);
@@ -60615,14 +60615,14 @@ ${lanes.join("\n")}
           } else if (typeof patternOrStr === "string") {
             (matchableStringSet ?? (matchableStringSet = /* @__PURE__ */ new Set())).add(patternOrStr);
           } else {
-            (patterns2 ?? (patterns2 = [])).push(patternOrStr);
+            (patterns ?? (patterns = [])).push(patternOrStr);
           }
         }
         parsedPatternsCache.set(
           paths,
           result = {
             matchableStringSet,
-            patterns: patterns2
+            patterns
           }
         );
         return result;
@@ -60654,14 +60654,14 @@ ${lanes.join("\n")}
         directories: emptyArray
       };
       function matchPatternOrExact(parsedPatterns, candidate) {
-        const { matchableStringSet, patterns: patterns2 } = parsedPatterns;
+        const { matchableStringSet, patterns } = parsedPatterns;
         if (matchableStringSet == null ? void 0 : matchableStringSet.has(candidate)) {
           return candidate;
         }
-        if (patterns2 === void 0 || patterns2.length === 0) {
+        if (patterns === void 0 || patterns.length === 0) {
           return void 0;
         }
-        return findBestPatternMatch(patterns2, (_2) => _2, candidate);
+        return findBestPatternMatch(patterns, (_2) => _2, candidate);
       }
       function sliceAfter(arr, value) {
         const index = arr.indexOf(value);
@@ -83259,9 +83259,9 @@ ${lanes.join("\n")}
       }
       function matchesSpecs(path33, includeSpecs, excludeSpecs, host) {
         if (!includeSpecs) return returnTrue;
-        const patterns2 = getFileMatcherPatterns(path33, excludeSpecs, includeSpecs, host.useCaseSensitiveFileNames, host.getCurrentDirectory());
-        const excludeRe = patterns2.excludePattern && getRegexFromPattern(patterns2.excludePattern, host.useCaseSensitiveFileNames);
-        const includeRe = patterns2.includeFilePattern && getRegexFromPattern(patterns2.includeFilePattern, host.useCaseSensitiveFileNames);
+        const patterns = getFileMatcherPatterns(path33, excludeSpecs, includeSpecs, host.useCaseSensitiveFileNames, host.getCurrentDirectory());
+        const excludeRe = patterns.excludePattern && getRegexFromPattern(patterns.excludePattern, host.useCaseSensitiveFileNames);
+        const includeRe = patterns.includeFilePattern && getRegexFromPattern(patterns.includeFilePattern, host.useCaseSensitiveFileNames);
         if (includeRe) {
           if (excludeRe) {
             return (path210) => !(includeRe.test(path210) && !excludeRe.test(path210));
@@ -219938,8 +219938,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         for (const key of keys) {
           if (key === ".") continue;
           const keyWithoutLeadingDotSlash = key.replace(/^\.\//, "") + ((isExports || isImports) && endsWith(key, "/") ? "*" : "");
-          const patterns2 = getPatternsForKey(key);
-          if (patterns2) {
+          const patterns = getPatternsForKey(key);
+          if (patterns) {
             const pathPattern = tryParsePattern(keyWithoutLeadingDotSlash);
             if (!pathPattern) continue;
             const isMatch = typeof pathPattern === "object" && isPatternMatch(pathPattern, fragment);
@@ -219951,7 +219951,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             if (typeof pathPattern === "string" || matchedPath === void 0 || comparePaths2(keyWithoutLeadingDotSlash, matchedPath) !== 1) {
               pathResults.push({
                 matchedPattern: isMatch,
-                results: getCompletionsForPathMapping(keyWithoutLeadingDotSlash, patterns2, fragment, baseDirectory, extensionOptions, isExports, isImports, program, host, moduleSpecifierResolutionHost).map(({ name, kind, extension }) => nameAndKind(name, kind, extension))
+                results: getCompletionsForPathMapping(keyWithoutLeadingDotSlash, patterns, fragment, baseDirectory, extensionOptions, isExports, isImports, program, host, moduleSpecifierResolutionHost).map(({ name, kind, extension }) => nameAndKind(name, kind, extension))
               });
             }
           }
@@ -220139,7 +220139,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       function getFragmentDirectory(fragment) {
         return containsSlash(fragment) ? hasTrailingDirectorySeparator(fragment) ? fragment : getDirectoryPath(fragment) : void 0;
       }
-      function getCompletionsForPathMapping(path33, patterns2, fragment, packageDirectory, extensionOptions, isExports, isImports, program, host, moduleSpecifierResolutionHost) {
+      function getCompletionsForPathMapping(path33, patterns, fragment, packageDirectory, extensionOptions, isExports, isImports, program, host, moduleSpecifierResolutionHost) {
         const parsedPath = tryParsePattern(path33);
         if (!parsedPath) {
           return emptyArray;
@@ -220158,12 +220158,12 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             parsedPath.prefix,
             "directory"
             /* directory */
-          ) : flatMap(patterns2, (pattern) => {
+          ) : flatMap(patterns, (pattern) => {
             var _a3;
             return (_a3 = getModulesForPathsPattern("", packageDirectory, pattern, extensionOptions, isExports, isImports, program, host, moduleSpecifierResolutionHost)) == null ? void 0 : _a3.map(({ name, ...rest }) => ({ name: parsedPath.prefix + name + parsedPath.suffix, ...rest }));
           });
         }
-        return flatMap(patterns2, (pattern) => getModulesForPathsPattern(remainingFragment, packageDirectory, pattern, extensionOptions, isExports, isImports, program, host, moduleSpecifierResolutionHost));
+        return flatMap(patterns, (pattern) => getModulesForPathsPattern(remainingFragment, packageDirectory, pattern, extensionOptions, isExports, isImports, program, host, moduleSpecifierResolutionHost));
         function justPathMappingName(name, kind) {
           return startsWith(name, fragment) ? [{ name: removeTrailingDirectorySeparator(name), kind, extension: void 0 }] : emptyArray;
         }
@@ -252805,7 +252805,7 @@ var require_picomatch = __commonJS({
       const regex = glob instanceof RegExp ? glob : picomatch.makeRe(glob, options);
       return regex.test(path33.basename(input));
     };
-    picomatch.isMatch = (str2, patterns2, options) => picomatch(patterns2, options)(str2);
+    picomatch.isMatch = (str2, patterns, options) => picomatch(patterns, options)(str2);
     picomatch.parse = (pattern, options) => {
       if (Array.isArray(pattern)) return pattern.map((p) => picomatch.parse(p, options));
       return parse8(pattern, { ...options, fastpaths: false });
@@ -252876,8 +252876,8 @@ var require_micromatch = __commonJS({
       const index = v.indexOf("{");
       return index > -1 && v.indexOf("}", index) > -1;
     };
-    var micromatch = (list, patterns2, options) => {
-      patterns2 = [].concat(patterns2);
+    var micromatch = (list, patterns, options) => {
+      patterns = [].concat(patterns);
       list = [].concat(list);
       let omit3 = /* @__PURE__ */ new Set();
       let keep = /* @__PURE__ */ new Set();
@@ -252889,8 +252889,8 @@ var require_micromatch = __commonJS({
           options.onResult(state3);
         }
       };
-      for (let i = 0; i < patterns2.length; i++) {
-        let isMatch = picomatch(String(patterns2[i]), { ...options, onResult }, true);
+      for (let i = 0; i < patterns.length; i++) {
+        let isMatch = picomatch(String(patterns[i]), { ...options, onResult }, true);
         let negated = isMatch.state.negated || isMatch.state.negatedExtglob;
         if (negated) negatives++;
         for (let item of list) {
@@ -252905,31 +252905,31 @@ var require_micromatch = __commonJS({
           }
         }
       }
-      let result = negatives === patterns2.length ? [...items] : [...keep];
+      let result = negatives === patterns.length ? [...items] : [...keep];
       let matches = result.filter((item) => !omit3.has(item));
       if (options && matches.length === 0) {
         if (options.failglob === true) {
-          throw new Error(`No matches found for "${patterns2.join(", ")}"`);
+          throw new Error(`No matches found for "${patterns.join(", ")}"`);
         }
         if (options.nonull === true || options.nullglob === true) {
-          return options.unescape ? patterns2.map((p) => p.replace(/\\/g, "")) : patterns2;
+          return options.unescape ? patterns.map((p) => p.replace(/\\/g, "")) : patterns;
         }
       }
       return matches;
     };
     micromatch.match = micromatch;
     micromatch.matcher = (pattern, options) => picomatch(pattern, options);
-    micromatch.isMatch = (str2, patterns2, options) => picomatch(patterns2, options)(str2);
+    micromatch.isMatch = (str2, patterns, options) => picomatch(patterns, options)(str2);
     micromatch.any = micromatch.isMatch;
-    micromatch.not = (list, patterns2, options = {}) => {
-      patterns2 = [].concat(patterns2).map(String);
+    micromatch.not = (list, patterns, options = {}) => {
+      patterns = [].concat(patterns).map(String);
       let result = /* @__PURE__ */ new Set();
       let items = [];
       let onResult = (state3) => {
         if (options.onResult) options.onResult(state3);
         items.push(state3.output);
       };
-      let matches = new Set(micromatch(list, patterns2, { ...options, onResult }));
+      let matches = new Set(micromatch(list, patterns, { ...options, onResult }));
       for (let item of items) {
         if (!matches.has(item)) {
           result.add(item);
@@ -252954,18 +252954,18 @@ var require_micromatch = __commonJS({
       }
       return micromatch.isMatch(str2, pattern, { ...options, contains: true });
     };
-    micromatch.matchKeys = (obj, patterns2, options) => {
+    micromatch.matchKeys = (obj, patterns, options) => {
       if (!utils.isObject(obj)) {
         throw new TypeError("Expected the first argument to be an object");
       }
-      let keys = micromatch(Object.keys(obj), patterns2, options);
+      let keys = micromatch(Object.keys(obj), patterns, options);
       let res = {};
       for (let key of keys) res[key] = obj[key];
       return res;
     };
-    micromatch.some = (list, patterns2, options) => {
+    micromatch.some = (list, patterns, options) => {
       let items = [].concat(list);
-      for (let pattern of [].concat(patterns2)) {
+      for (let pattern of [].concat(patterns)) {
         let isMatch = picomatch(String(pattern), options);
         if (items.some((item) => isMatch(item))) {
           return true;
@@ -252973,9 +252973,9 @@ var require_micromatch = __commonJS({
       }
       return false;
     };
-    micromatch.every = (list, patterns2, options) => {
+    micromatch.every = (list, patterns, options) => {
       let items = [].concat(list);
-      for (let pattern of [].concat(patterns2)) {
+      for (let pattern of [].concat(patterns)) {
         let isMatch = picomatch(String(pattern), options);
         if (!items.every((item) => isMatch(item))) {
           return false;
@@ -252983,11 +252983,11 @@ var require_micromatch = __commonJS({
       }
       return true;
     };
-    micromatch.all = (str2, patterns2, options) => {
+    micromatch.all = (str2, patterns, options) => {
       if (typeof str2 !== "string") {
         throw new TypeError(`Expected a string: "${util3.inspect(str2)}"`);
       }
-      return [].concat(patterns2).every((p) => picomatch(p, options)(str2));
+      return [].concat(patterns).every((p) => picomatch(p, options)(str2));
     };
     micromatch.capture = (glob, input, options) => {
       let posix = utils.isWindows(options);
@@ -252999,9 +252999,9 @@ var require_micromatch = __commonJS({
     };
     micromatch.makeRe = (...args) => picomatch.makeRe(...args);
     micromatch.scan = (...args) => picomatch.scan(...args);
-    micromatch.parse = (patterns2, options) => {
+    micromatch.parse = (patterns, options) => {
       let res = [];
-      for (let pattern of [].concat(patterns2 || [])) {
+      for (let pattern of [].concat(patterns || [])) {
         for (let str2 of braces(String(pattern), options)) {
           res.push(picomatch.parse(str2, options));
         }
@@ -253092,20 +253092,20 @@ var require_pattern2 = __commonJS({
       return !isNegativePattern(pattern);
     }
     exports2.isPositivePattern = isPositivePattern;
-    function getNegativePatterns(patterns2) {
-      return patterns2.filter(isNegativePattern);
+    function getNegativePatterns(patterns) {
+      return patterns.filter(isNegativePattern);
     }
     exports2.getNegativePatterns = getNegativePatterns;
-    function getPositivePatterns(patterns2) {
-      return patterns2.filter(isPositivePattern);
+    function getPositivePatterns(patterns) {
+      return patterns.filter(isPositivePattern);
     }
     exports2.getPositivePatterns = getPositivePatterns;
-    function getPatternsInsideCurrentDirectory(patterns2) {
-      return patterns2.filter((pattern) => !isPatternRelatedToParentDirectory(pattern));
+    function getPatternsInsideCurrentDirectory(patterns) {
+      return patterns.filter((pattern) => !isPatternRelatedToParentDirectory(pattern));
     }
     exports2.getPatternsInsideCurrentDirectory = getPatternsInsideCurrentDirectory;
-    function getPatternsOutsideCurrentDirectory(patterns2) {
-      return patterns2.filter(isPatternRelatedToParentDirectory);
+    function getPatternsOutsideCurrentDirectory(patterns) {
+      return patterns.filter(isPatternRelatedToParentDirectory);
     }
     exports2.getPatternsOutsideCurrentDirectory = getPatternsOutsideCurrentDirectory;
     function isPatternRelatedToParentDirectory(pattern) {
@@ -253129,16 +253129,16 @@ var require_pattern2 = __commonJS({
       return endsWithSlashGlobStar(pattern) || isStaticPattern(basename3);
     }
     exports2.isAffectDepthOfReadingPattern = isAffectDepthOfReadingPattern;
-    function expandPatternsWithBraceExpansion(patterns2) {
-      return patterns2.reduce((collection, pattern) => {
+    function expandPatternsWithBraceExpansion(patterns) {
+      return patterns.reduce((collection, pattern) => {
         return collection.concat(expandBraceExpansion(pattern));
       }, []);
     }
     exports2.expandPatternsWithBraceExpansion = expandPatternsWithBraceExpansion;
     function expandBraceExpansion(pattern) {
-      const patterns2 = micromatch.braces(pattern, { expand: true, nodupes: true, keepEscaping: true });
-      patterns2.sort((a, b) => a.length - b.length);
-      return patterns2.filter((pattern2) => pattern2 !== "");
+      const patterns = micromatch.braces(pattern, { expand: true, nodupes: true, keepEscaping: true });
+      patterns.sort((a, b) => a.length - b.length);
+      return patterns.filter((pattern2) => pattern2 !== "");
     }
     exports2.expandBraceExpansion = expandBraceExpansion;
     function getPatternParts(pattern, options) {
@@ -253157,8 +253157,8 @@ var require_pattern2 = __commonJS({
       return micromatch.makeRe(pattern, options);
     }
     exports2.makeRe = makeRe;
-    function convertPatternsToRe(patterns2, options) {
-      return patterns2.map((pattern) => makeRe(pattern, options));
+    function convertPatternsToRe(patterns, options) {
+      return patterns.map((pattern) => makeRe(pattern, options));
     }
     exports2.convertPatternsToRe = convertPatternsToRe;
     function matchAny(entry, patternsRe) {
@@ -253169,10 +253169,10 @@ var require_pattern2 = __commonJS({
       return pattern.replace(DOUBLE_SLASH_RE, "/");
     }
     exports2.removeDuplicateSlashes = removeDuplicateSlashes;
-    function partitionAbsoluteAndRelative(patterns2) {
+    function partitionAbsoluteAndRelative(patterns) {
       const absolute = [];
       const relative = [];
-      for (const pattern of patterns2) {
+      for (const pattern of patterns) {
         if (isAbsolute(pattern)) {
           absolute.push(pattern);
         } else {
@@ -253379,10 +253379,10 @@ var require_tasks = __commonJS({
     exports2.convertPatternGroupToTask = exports2.convertPatternGroupsToTasks = exports2.groupPatternsByBaseDirectory = exports2.getNegativePatternsAsPositive = exports2.getPositivePatterns = exports2.convertPatternsToTasks = exports2.generate = void 0;
     var utils = require_utils5();
     function generate(input, settings) {
-      const patterns2 = processPatterns(input, settings);
+      const patterns = processPatterns(input, settings);
       const ignore = processPatterns(settings.ignore, settings);
-      const positivePatterns = getPositivePatterns(patterns2);
-      const negativePatterns = getNegativePatternsAsPositive(patterns2, ignore);
+      const positivePatterns = getPositivePatterns(patterns);
+      const negativePatterns = getNegativePatternsAsPositive(patterns, ignore);
       const staticPatterns = positivePatterns.filter((pattern) => utils.pattern.isStaticPattern(pattern, settings));
       const dynamicPatterns = positivePatterns.filter((pattern) => utils.pattern.isDynamicPattern(pattern, settings));
       const staticTasks = convertPatternsToTasks(
@@ -253401,14 +253401,14 @@ var require_tasks = __commonJS({
     }
     exports2.generate = generate;
     function processPatterns(input, settings) {
-      let patterns2 = input;
+      let patterns = input;
       if (settings.braceExpansion) {
-        patterns2 = utils.pattern.expandPatternsWithBraceExpansion(patterns2);
+        patterns = utils.pattern.expandPatternsWithBraceExpansion(patterns);
       }
       if (settings.baseNameMatch) {
-        patterns2 = patterns2.map((pattern) => pattern.includes("/") ? pattern : `**/${pattern}`);
+        patterns = patterns.map((pattern) => pattern.includes("/") ? pattern : `**/${pattern}`);
       }
-      return patterns2.map((pattern) => utils.pattern.removeDuplicateSlashes(pattern));
+      return patterns.map((pattern) => utils.pattern.removeDuplicateSlashes(pattern));
     }
     function convertPatternsToTasks(positive, negative, dynamic) {
       const tasks = [];
@@ -253425,19 +253425,19 @@ var require_tasks = __commonJS({
       return tasks;
     }
     exports2.convertPatternsToTasks = convertPatternsToTasks;
-    function getPositivePatterns(patterns2) {
-      return utils.pattern.getPositivePatterns(patterns2);
+    function getPositivePatterns(patterns) {
+      return utils.pattern.getPositivePatterns(patterns);
     }
     exports2.getPositivePatterns = getPositivePatterns;
-    function getNegativePatternsAsPositive(patterns2, ignore) {
-      const negative = utils.pattern.getNegativePatterns(patterns2).concat(ignore);
+    function getNegativePatternsAsPositive(patterns, ignore) {
+      const negative = utils.pattern.getNegativePatterns(patterns).concat(ignore);
       const positive = negative.map(utils.pattern.convertToPositivePattern);
       return positive;
     }
     exports2.getNegativePatternsAsPositive = getNegativePatternsAsPositive;
-    function groupPatternsByBaseDirectory(patterns2) {
+    function groupPatternsByBaseDirectory(patterns) {
       const group = {};
-      return patterns2.reduce((collection, pattern) => {
+      return patterns.reduce((collection, pattern) => {
         const base = utils.pattern.getBaseDirectory(pattern);
         if (base in collection) {
           collection[base].push(pattern);
@@ -254761,11 +254761,11 @@ var require_stream3 = __commonJS({
       dynamic(root, options) {
         return this._walkStream(root, options);
       }
-      static(patterns2, options) {
-        const filepaths = patterns2.map(this._getFullEntryPath, this);
+      static(patterns, options) {
+        const filepaths = patterns.map(this._getFullEntryPath, this);
         const stream4 = new stream_1.PassThrough({ objectMode: true });
         stream4._write = (index, _enc, done) => {
-          return this._getEntry(filepaths[index], patterns2[index], options).then((entry) => {
+          return this._getEntry(filepaths[index], patterns[index], options).then((entry) => {
             if (entry !== null && options.entryFilter(entry)) {
               stream4.push(entry);
             }
@@ -254825,9 +254825,9 @@ var require_async5 = __commonJS({
           });
         });
       }
-      async static(patterns2, options) {
+      async static(patterns, options) {
         const entries = [];
-        const stream4 = this._readerStream.static(patterns2, options);
+        const stream4 = this._readerStream.static(patterns, options);
         return new Promise((resolve2, reject) => {
           stream4.once("error", reject);
           stream4.on("data", (entry) => entries.push(entry));
@@ -254900,8 +254900,8 @@ var require_partial = __commonJS({
       match(filepath) {
         const parts = filepath.split("/");
         const levels = parts.length;
-        const patterns2 = this._storage.filter((info2) => !info2.complete || info2.segments.length > levels);
-        for (const pattern of patterns2) {
+        const patterns = this._storage.filter((info2) => !info2.complete || info2.segments.length > levels);
+        for (const pattern of patterns) {
           const section = pattern.sections[0];
           if (!pattern.complete && levels > section.length) {
             return true;
@@ -254944,11 +254944,11 @@ var require_deep = __commonJS({
         const negativeRe = this._getNegativePatternsRe(negative);
         return (entry) => this._filter(basePath, entry, matcher, negativeRe);
       }
-      _getMatcher(patterns2) {
-        return new partial_1.default(patterns2, this._settings, this._micromatchOptions);
+      _getMatcher(patterns) {
+        return new partial_1.default(patterns, this._settings, this._micromatchOptions);
       }
-      _getNegativePatternsRe(patterns2) {
-        const affectDepthOfReadingPatterns = patterns2.filter(utils.pattern.isAffectDepthOfReadingPattern);
+      _getNegativePatternsRe(patterns) {
+        const affectDepthOfReadingPatterns = patterns.filter(utils.pattern.isAffectDepthOfReadingPattern);
         return utils.pattern.convertPatternsToRe(affectDepthOfReadingPatterns, this._micromatchOptions);
       }
       _filter(basePath, entry, matcher, negativeRe) {
@@ -255006,7 +255006,7 @@ var require_entry = __commonJS({
       }
       getFilter(positive, negative) {
         const [absoluteNegative, relativeNegative] = utils.pattern.partitionAbsoluteAndRelative(negative);
-        const patterns2 = {
+        const patterns = {
           positive: {
             all: utils.pattern.convertPatternsToRe(positive, this._micromatchOptions)
           },
@@ -255015,9 +255015,9 @@ var require_entry = __commonJS({
             relative: utils.pattern.convertPatternsToRe(relativeNegative, Object.assign(Object.assign({}, this._micromatchOptions), { dot: true }))
           }
         };
-        return (entry) => this._filter(entry, patterns2);
+        return (entry) => this._filter(entry, patterns);
       }
-      _filter(entry, patterns2) {
+      _filter(entry, patterns) {
         const filepath = utils.path.removeLeadingDotSegment(entry.path);
         if (this._settings.unique && this._isDuplicateEntry(filepath)) {
           return false;
@@ -255025,7 +255025,7 @@ var require_entry = __commonJS({
         if (this._onlyFileFilter(entry) || this._onlyDirectoryFilter(entry)) {
           return false;
         }
-        const isMatched = this._isMatchToPatternsSet(filepath, patterns2, entry.dirent.isDirectory());
+        const isMatched = this._isMatchToPatternsSet(filepath, patterns, entry.dirent.isDirectory());
         if (this._settings.unique && isMatched) {
           this._createIndexRecord(filepath);
         }
@@ -255043,16 +255043,16 @@ var require_entry = __commonJS({
       _onlyDirectoryFilter(entry) {
         return this._settings.onlyDirectories && !entry.dirent.isDirectory();
       }
-      _isMatchToPatternsSet(filepath, patterns2, isDirectory2) {
-        const isMatched = this._isMatchToPatterns(filepath, patterns2.positive.all, isDirectory2);
+      _isMatchToPatternsSet(filepath, patterns, isDirectory2) {
+        const isMatched = this._isMatchToPatterns(filepath, patterns.positive.all, isDirectory2);
         if (!isMatched) {
           return false;
         }
-        const isMatchedByRelativeNegative = this._isMatchToPatterns(filepath, patterns2.negative.relative, isDirectory2);
+        const isMatchedByRelativeNegative = this._isMatchToPatterns(filepath, patterns.negative.relative, isDirectory2);
         if (isMatchedByRelativeNegative) {
           return false;
         }
-        const isMatchedByAbsoluteNegative = this._isMatchToAbsoluteNegative(filepath, patterns2.negative.absolute, isDirectory2);
+        const isMatchedByAbsoluteNegative = this._isMatchToAbsoluteNegative(filepath, patterns.negative.absolute, isDirectory2);
         if (isMatchedByAbsoluteNegative) {
           return false;
         }
@@ -255267,9 +255267,9 @@ var require_sync5 = __commonJS({
       dynamic(root, options) {
         return this._walkSync(root, options);
       }
-      static(patterns2, options) {
+      static(patterns, options) {
         const entries = [];
-        for (const pattern of patterns2) {
+        for (const pattern of patterns) {
           const filepath = this._getFullEntryPath(pattern);
           const entry = this._getEntry(filepath, pattern, options);
           if (entry === null || !options.entryFilter(entry)) {
@@ -255422,9 +255422,9 @@ var require_out4 = __commonJS({
       FastGlob2.stream = stream4;
       function generateTasks(source, options) {
         assertPatternsInput(source);
-        const patterns2 = [].concat(source);
+        const patterns = [].concat(source);
         const settings = new settings_1.default(options);
-        return taskManager.generate(patterns2, settings);
+        return taskManager.generate(patterns, settings);
       }
       FastGlob2.generateTasks = generateTasks;
       function isDynamicPattern(source, options) {
@@ -255471,9 +255471,9 @@ var require_out4 = __commonJS({
       })(win32 = FastGlob2.win32 || (FastGlob2.win32 = {}));
     })(FastGlob || (FastGlob = {}));
     function getWorks(source, _Provider, options) {
-      const patterns2 = [].concat(source);
+      const patterns = [].concat(source);
       const settings = new settings_1.default(options);
-      const tasks = taskManager.generate(patterns2, settings);
+      const tasks = taskManager.generate(patterns, settings);
       const provider = new _Provider(settings);
       return tasks.map(provider.read, provider);
     }
@@ -278895,9 +278895,9 @@ var require_file = __commonJS({
     var glob = require_index_min();
     var file2 = module2.exports = {};
     var pathSeparatorRe = /[\/\\]/g;
-    var processPatterns = function(patterns2, fn) {
+    var processPatterns = function(patterns, fn) {
       var result = [];
-      flatten(patterns2).forEach(function(pattern) {
+      flatten(patterns).forEach(function(pattern) {
         var exclusion = pattern.indexOf("!") === 0;
         if (exclusion) {
           pattern = pattern.slice(1);
@@ -278917,11 +278917,11 @@ var require_file = __commonJS({
     };
     file2.expand = function(...args) {
       var options = isPlainObject4(args[0]) ? args.shift() : {};
-      var patterns2 = Array.isArray(args[0]) ? args[0] : args;
-      if (patterns2.length === 0) {
+      var patterns = Array.isArray(args[0]) ? args[0] : args;
+      if (patterns.length === 0) {
         return [];
       }
-      var matches = processPatterns(patterns2, function(pattern) {
+      var matches = processPatterns(patterns, function(pattern) {
         return glob.sync(pattern, options);
       });
       if (options.filter) {
@@ -278940,7 +278940,7 @@ var require_file = __commonJS({
       }
       return matches;
     };
-    file2.expandMapping = function(patterns2, destBase, options) {
+    file2.expandMapping = function(patterns, destBase, options) {
       options = Object.assign({
         rename: function(destBase2, destPath) {
           return path33.join(destBase2 || "", destPath);
@@ -278948,7 +278948,7 @@ var require_file = __commonJS({
       }, options);
       var files = [];
       var fileByDest = {};
-      file2.expand(options, patterns2).forEach(function(src) {
+      file2.expand(options, patterns).forEach(function(src) {
         var destPath = src;
         if (options.flatten) {
           destPath = path33.basename(destPath);
@@ -290874,6 +290874,16 @@ var config_schema_default = {
                 items: {
                   type: "string"
                 }
+              },
+              patterns: {
+                type: "object",
+                additionalProperties: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    minLength: 1
+                  }
+                }
               }
             }
           }
@@ -291272,11 +291282,11 @@ function defaultFix(ruleId, reference) {
     automated: false
   };
 }
-function refIgnored(reference, patterns2) {
-  if (!Array.isArray(patterns2)) {
+function refIgnored(reference, patterns) {
+  if (!Array.isArray(patterns)) {
     return false;
   }
-  return patterns2.some((pattern) => typeof pattern === "string" && globLike(pattern, reference));
+  return patterns.some((pattern) => typeof pattern === "string" && globLike(pattern, reference));
 }
 function globLike(pattern, value) {
   const escaped = pattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*");
@@ -291811,8 +291821,8 @@ function polygonArea(points) {
 
 // src/util/glob.ts
 var import_fast_glob = __toESM(require_out4(), 1);
-async function globFiles(root, patterns2) {
-  const results = await (0, import_fast_glob.default)(patterns2, {
+async function globFiles(root, patterns) {
+  const results = await (0, import_fast_glob.default)(patterns, {
     cwd: root,
     absolute: true,
     dot: false,
@@ -295579,8 +295589,8 @@ var $ZodUnion = /* @__PURE__ */ $constructor("$ZodUnion", (inst, def) => {
   });
   defineLazy(inst._zod, "pattern", () => {
     if (def.options.every((o) => o._zod.pattern)) {
-      const patterns2 = def.options.map((o) => o._zod.pattern);
-      return new RegExp(`^(${patterns2.map((p) => cleanRegex(p.source)).join("|")})$`);
+      const patterns = def.options.map((o) => o._zod.pattern);
+      return new RegExp(`^(${patterns.map((p) => cleanRegex(p.source)).join("|")})$`);
     }
     return void 0;
   });
@@ -304127,7 +304137,7 @@ var formatMap = {
 var stringProcessor = (schema2, ctx, _json, _params) => {
   const json3 = _json;
   json3.type = "string";
-  const { minimum, maximum, format, patterns: patterns2, contentEncoding } = schema2._zod.bag;
+  const { minimum, maximum, format, patterns, contentEncoding } = schema2._zod.bag;
   if (typeof minimum === "number")
     json3.minLength = minimum;
   if (typeof maximum === "number")
@@ -304142,8 +304152,8 @@ var stringProcessor = (schema2, ctx, _json, _params) => {
   }
   if (contentEncoding)
     json3.contentEncoding = contentEncoding;
-  if (patterns2 && patterns2.size > 0) {
-    const regexes = [...patterns2];
+  if (patterns && patterns.size > 0) {
+    const regexes = [...patterns];
     if (regexes.length === 1)
       json3.pattern = regexes[0].source;
     else if (regexes.length > 1) {
@@ -304475,14 +304485,14 @@ var recordProcessor = (schema2, ctx, _json, params) => {
   json3.type = "object";
   const keyType = def.keyType;
   const keyBag = keyType._zod.bag;
-  const patterns2 = keyBag?.patterns;
-  if (def.mode === "loose" && patterns2 && patterns2.size > 0) {
+  const patterns = keyBag?.patterns;
+  if (def.mode === "loose" && patterns && patterns.size > 0) {
     const valueSchema = process2(def.valueType, ctx, {
       ...params,
       path: [...params.path, "patternProperties", "*"]
     });
     json3.patternProperties = {};
-    for (const pattern of patterns2) {
+    for (const pattern of patterns) {
       json3.patternProperties[pattern.source] = valueSchema;
     }
   } else {
@@ -307430,61 +307440,163 @@ var layerStackupRule = rule(
 
 // src/rules/manufacturing/outputs-present.ts
 var import_node_path18 = __toESM(require("node:path"), 1);
-var patterns = {
-  gerber: ["**/*.gbr", "**/*.gbrjob"],
-  drill: ["**/*.drl"],
-  position: ["**/*.pos", "**/*position*.csv"],
+var defaultPatterns = {
+  gerber: [
+    "**/*.gbr",
+    "**/*.gtl",
+    "**/*.gbl",
+    "**/*.gts",
+    "**/*.gbs",
+    "**/*.gto",
+    "**/*.gbo",
+    "**/*.gm1",
+    "**/*.gm2",
+    "**/*.gbrjob",
+    "**/gerbers/**/*.gbr",
+    "**/fabrication/**/*.gbr",
+    "**/production/**/*.gbr",
+    "**/jlcpcb/**/*.gbr",
+    "**/pcbway/**/*.gbr",
+    "**/aisler/**/*.gbr",
+    "**/oshpark/**/*.gbr",
+    "**/outputs/**/*.gbr",
+    "**/release/**/*.gbr",
+    "**/manufacturing/**/*.gbr"
+  ],
+  drill: ["**/*.drl", "**/*.xln", "**/*.ncd", "**/*.cnc", "**/*-PTH.drl", "**/*-NPTH.drl"],
+  position: [
+    "**/*.pos",
+    "**/*position*.csv",
+    "**/CPL*.csv",
+    "**/positions*.csv",
+    "**/*-top-pos.csv",
+    "**/*-bottom-pos.csv",
+    "**/*_cpl.csv",
+    "**/*-both.pos"
+  ],
+  bom: [
+    "**/bom.csv",
+    "**/BOM*.csv",
+    "**/bill-of-materials*.csv",
+    "**/*_bom.csv",
+    "**/bom*.xml",
+    "**/BOM*.xml",
+    "**/*_bom.xml",
+    "**/bill-of-materials*.xml",
+    "**/bom.xlsx",
+    "**/BOM*.xlsx"
+  ],
   pdf: ["**/*.pdf"],
   step: ["**/*.step", "**/*.stp"]
 };
-var outputsPresentRule = rule(
-  {
-    id: "manufacturing.outputs-present",
-    title: "Required manufacturing outputs are missing or stale",
-    description: "Checks required fabrication outputs and whether they are fresh relative to PCB sources.",
-    rationale: "A release without current manufacturing outputs is not ready to send to a fab.",
-    defaultSeverity: "high",
-    appliesTo: ["pcb", "manifest"],
-    configKeys: ["rules.manufacturing.outputs-present.required"],
-    kicadVersions: ["9", "10", "future"],
-    tags: ["fabrication", "manufacturing", "outputs"]
-  },
-  async (context5) => {
-    if (!shouldRun(context5, "manufacturing.outputs-present")) {
-      return [];
-    }
-    const required2 = configFor(context5, "manufacturing.outputs-present").required;
-    if (!Array.isArray(required2) || required2.length === 0) {
-      return [];
-    }
-    const output = [];
-    const newestBoard = Math.max(
-      0,
-      ...(await Promise.all(
-        context5.projects.flatMap(
-          (project) => project.boardFiles.map((board) => fileMtimeMs(import_node_path18.default.resolve(context5.root, board)))
-        )
-      )).filter((value) => typeof value === "number")
-    );
-    for (const requiredOutput of required2.filter((entry) => typeof entry === "string")) {
-      const found = await globFiles(context5.root, patterns[requiredOutput] ?? [`**/*${requiredOutput}*`]);
-      const fresh = newestBoard === 0 || (await Promise.all(found.map(fileMtimeMs))).some((mtime) => typeof mtime === "number" && mtime >= newestBoard);
-      if (found.length === 0 || !fresh) {
+var outputsPresentRule = {
+  ...rule(
+    {
+      id: "manufacturing.outputs-present",
+      title: "Required manufacturing outputs are missing or stale",
+      description: "Checks required fabrication outputs and whether they are fresh relative to PCB sources.",
+      rationale: "A release without current manufacturing outputs is not ready to send to a fab.",
+      defaultSeverity: "high",
+      appliesTo: ["pcb", "manifest"],
+      configKeys: ["rules.manufacturing.outputs-present.required", "rules.manufacturing.outputs-present.patterns"],
+      kicadVersions: ["9", "10", "future"],
+      tags: ["fabrication", "manufacturing", "outputs"]
+    },
+    async (context5) => {
+      if (!shouldRun(context5, "manufacturing.outputs-present")) {
+        return [];
+      }
+      const inspections = await inspectRequiredOutputs(context5);
+      if (inspections.length === 0) {
+        return [];
+      }
+      const output = [];
+      for (const inspection of inspections) {
+        if (inspection.found.length > 0 && inspection.fresh) {
+          continue;
+        }
         output.push(
           finding(context5, {
             ruleId: "manufacturing.outputs-present",
             severity: configuredSeverity(context5, "manufacturing.outputs-present", "high"),
-            message: `Required manufacturing output ${requiredOutput} is ${found.length === 0 ? "missing" : "stale"}.`,
+            message: `Required manufacturing output ${inspection.required} is ${inspection.found.length === 0 ? "missing" : "stale"}.`,
             path: ".",
             kind: "manifest",
-            details: { required: requiredOutput }
+            details: { required: inspection.required }
           })
         );
       }
+      return output;
     }
-    return output;
+  ),
+  explain: explainOutputsPresent
+};
+async function inspectRequiredOutputs(context5) {
+  const config2 = configFor(context5, "manufacturing.outputs-present");
+  const required2 = requiredOutputNames(config2.required);
+  if (required2.length === 0) {
+    return [];
   }
-);
+  const newestBoard = Math.max(
+    0,
+    ...(await Promise.all(
+      context5.projects.flatMap(
+        (project) => project.boardFiles.map((board) => fileMtimeMs(import_node_path18.default.resolve(context5.root, board)))
+      )
+    )).filter((value) => typeof value === "number")
+  );
+  const inspections = [];
+  for (const requiredOutput of required2) {
+    const outputPatterns = patternsFor(config2.patterns, requiredOutput);
+    const found = await globFiles(context5.root, outputPatterns);
+    const fresh = newestBoard === 0 || (await Promise.all(found.map(fileMtimeMs))).some((mtime) => typeof mtime === "number" && mtime >= newestBoard);
+    inspections.push({ required: requiredOutput, patterns: outputPatterns, found, fresh });
+  }
+  return inspections;
+}
+async function explainOutputsPresent(context5) {
+  const inspections = await inspectRequiredOutputs(context5);
+  return {
+    ruleId: "manufacturing.outputs-present",
+    summary: "Shows the configured manufacturing output search patterns and the files they matched.",
+    sections: [
+      {
+        title: "Searched patterns",
+        lines: inspections.map((inspection) => `${inspection.required}: ${inspection.patterns.join(", ")}`)
+      },
+      {
+        title: "Found",
+        lines: inspections.flatMap(
+          (inspection) => inspection.found.length > 0 ? inspection.found.map((file2) => `${inspection.required}: ${normalizeRelative(context5.root, file2)}`) : [`${inspection.required}: none`]
+        )
+      },
+      {
+        title: "Missing",
+        lines: inspections.filter((inspection) => inspection.found.length === 0 || !inspection.fresh).map((inspection) => inspection.found.length === 0 ? inspection.required : `${inspection.required}: stale`)
+      }
+    ]
+  };
+}
+function requiredOutputNames(value) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  return value.filter((entry) => typeof entry === "string");
+}
+function patternsFor(value, output) {
+  if (isPatternMap(value)) {
+    const configured = value[output]?.filter((pattern) => pattern.trim().length > 0);
+    if (configured && configured.length > 0) {
+      return configured;
+    }
+  }
+  return defaultPatterns[output] ?? [`**/*${output}*`];
+}
+function isPatternMap(value) {
+  return typeof value === "object" && value !== null && !Array.isArray(value) && Object.values(value).every(
+    (patterns) => Array.isArray(patterns) && patterns.every((pattern) => typeof pattern === "string")
+  );
+}
 
 // src/rules/manufacturing/panel-sanity.ts
 var panelSanityRule = rule(
@@ -308378,7 +308490,7 @@ function addFindingReference(target, value) {
 
 // src/core/pipeline.ts
 async function runPipeline(input = {}, logger7) {
-  registerBuiltInRules();
+  registerPipelineRules();
   const cwd = input.cwd ?? process.cwd();
   const root = await canonicalRoot(import_node_path28.default.resolve(cwd, input.path ?? "."));
   const loaded = await loadConfig(root, input.config);
@@ -308431,6 +308543,9 @@ async function runPipeline(input = {}, logger7) {
     findings: sorted,
     generatedAt: (/* @__PURE__ */ new Date()).toISOString()
   };
+}
+function registerPipelineRules() {
+  registerBuiltInRules();
 }
 async function controlledFindings(root, config2, options, findings) {
   const suppressed = applySuppressions(findings, config2.suppressions);
@@ -315195,7 +315310,7 @@ function internalArtifactTwirpClient(options) {
 
 // node_modules/@actions/artifact/lib/internal/upload/upload-zip-specification.js
 var fs10 = __toESM(require("fs"), 1);
-var import_path5 = require("path");
+var import_path6 = require("path");
 function validateRootDirectory(rootDirectory) {
   if (!fs10.existsSync(rootDirectory)) {
     throw new Error(`The provided rootDirectory ${rootDirectory} does not exist`);
@@ -315207,16 +315322,16 @@ function validateRootDirectory(rootDirectory) {
 }
 function getUploadZipSpecification(filesToZip, rootDirectory) {
   const specification = [];
-  rootDirectory = (0, import_path5.normalize)(rootDirectory);
-  rootDirectory = (0, import_path5.resolve)(rootDirectory);
+  rootDirectory = (0, import_path6.normalize)(rootDirectory);
+  rootDirectory = (0, import_path6.resolve)(rootDirectory);
   for (let file2 of filesToZip) {
     const stats = fs10.lstatSync(file2, { throwIfNoEntry: false });
     if (!stats) {
       throw new Error(`File ${file2} does not exist`);
     }
     if (!stats.isDirectory()) {
-      file2 = (0, import_path5.normalize)(file2);
-      file2 = (0, import_path5.resolve)(file2);
+      file2 = (0, import_path6.normalize)(file2);
+      file2 = (0, import_path6.resolve)(file2);
       if (!file2.startsWith(rootDirectory)) {
         throw new Error(`The rootDirectory: ${rootDirectory} is not a parent directory of the file: ${file2}`);
       }

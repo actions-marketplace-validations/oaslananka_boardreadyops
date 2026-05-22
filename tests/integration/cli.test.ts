@@ -92,6 +92,31 @@ gates:
     expect(doctor.stdoutText()).toContain("Node:");
   });
 
+  it("explains manufacturing output detection", async () => {
+    const explain = captureStreams();
+
+    expect(
+      await runCli(
+        ["explain", "manufacturing.outputs-present", path.join(fixtureRoot, "manufacturing-missing-outputs")],
+        explain,
+      ),
+    ).toBe(0);
+    expect(explain.stdoutText()).toContain("manufacturing.outputs-present");
+    expect(explain.stdoutText()).toContain("Searched patterns");
+    expect(explain.stdoutText()).toContain("Found");
+    expect(explain.stdoutText()).toContain("Missing");
+  });
+
+  it("reports rules that cannot be explained", async () => {
+    const unknownRule = captureStreams();
+    expect(await runCli(["explain", "unknown.rule", path.join(fixtureRoot, "safe-basic")], unknownRule)).toBe(2);
+    expect(unknownRule.stderrText()).toContain("Unknown rule: unknown.rule");
+
+    const unsupportedRule = captureStreams();
+    expect(await runCli(["explain", "bom.missing-mpn", path.join(fixtureRoot, "safe-basic")], unsupportedRule)).toBe(2);
+    expect(unsupportedRule.stderrText()).toContain("Rule bom.missing-mpn does not support explanation.");
+  });
+
   it("supports check, init, and stdout report targets", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-cli-more-"));
     await fs.cp(path.join(fixtureRoot, "pinmap-mismatch"), temp, { recursive: true });

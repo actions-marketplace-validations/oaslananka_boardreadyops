@@ -1,0 +1,10 @@
+version: 1
+projects:
+  - path: .
+rules:
+  manufacturing.outputs-present:
+    enabled: true
+    required: [gerber]
+    patterns:
+      gerber: ["**/custom_path/**/*.fab"]
+fail-on: never

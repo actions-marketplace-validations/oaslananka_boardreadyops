@@ -14,7 +14,22 @@ export interface RuleMetadata {
   docUrl?: string;
 }
 
-export interface Rule {
+interface RuleExplanationSection {
+  title: string;
+  lines: string[];
+}
+
+export interface RuleExplanation {
+  ruleId: string;
+  summary: string;
+  sections: RuleExplanationSection[];
+}
+
+interface RuleExplainer {
+  explain(context: RuleContext): Promise<RuleExplanation>;
+}
+
+export interface Rule extends Partial<RuleExplainer> {
   meta: RuleMetadata;
   run(context: RuleContext): Promise<Finding[]>;
 }

@@ -1,0 +1,8 @@
+version: 1
+projects:
+  - path: .
+rules:
+  manufacturing.outputs-present:
+    enabled: true
+    required: [gerber, drill, position, bom]
+fail-on: never

@@ -11,6 +11,7 @@ export interface RuleConfig {
   enabled?: boolean;
   severity?: Severity;
   required?: string[];
+  patterns?: Record<string, string[]>;
   "severity-overrides"?: Record<string, Severity>;
   "ignore-refs"?: string[];
   [key: string]: unknown;

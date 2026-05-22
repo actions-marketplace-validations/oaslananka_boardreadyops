@@ -1,6 +1,6 @@
 # Manufacturing Rules
 
-- [manufacturing.outputs-present](manufacturing.outputs-present.md): Checks configured fabrication outputs and freshness against PCB source mtimes.
+- [manufacturing.outputs-present](manufacturing.outputs-present.md): Checks vendor-aware fabrication output patterns and freshness against PCB source mtimes.
 - [manufacturing.jobset-outputs](manufacturing.jobset-outputs.md): Checks enabled KiCad 10 jobset entries for their expected output files.
 - [manufacturing.panel-sanity](manufacturing.panel-sanity.md): Checks that panelized builds include expected panel output files.
 - [manufacturing.fab-notes](manufacturing.fab-notes.md): Checks for fabrication notes in known project paths.

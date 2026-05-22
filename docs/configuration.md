@@ -10,6 +10,10 @@ projects:
 rules:
   bom.missing-mpn:
     enabled: true
+  manufacturing.outputs-present:
+    required: [gerber, drill, position, bom]
+    patterns:
+      gerber: ["**/release/**/*.gbr"]
 fail-on: high
 ```
 

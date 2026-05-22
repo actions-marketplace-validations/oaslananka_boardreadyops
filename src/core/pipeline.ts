@@ -25,7 +25,7 @@ export async function runPipeline(
   input: Partial<PipelineOptions> & { cwd?: string; path?: string } = {},
   logger?: Logger,
 ): Promise<RunResult> {
-  registerBuiltInRules();
+  registerPipelineRules();
   const cwd = input.cwd ?? process.cwd();
   const root = await canonicalRoot(path.resolve(cwd, input.path ?? "."));
   const loaded = await loadConfig(root, input.config);
@@ -81,6 +81,10 @@ export async function runPipeline(
     findings: sorted,
     generatedAt: new Date().toISOString(),
   };
+}
+
+export function registerPipelineRules(): void {
+  registerBuiltInRules();
 }
 
 async function controlledFindings(

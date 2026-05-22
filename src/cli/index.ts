@@ -12,6 +12,7 @@ import {
 } from "./commands/baseline.js";
 import { checkCommand } from "./commands/check.js";
 import { doctorCommand } from "./commands/doctor.js";
+import { explainCommand } from "./commands/explain.js";
 import { initCommand } from "./commands/init.js";
 import { addCommonOptions, type CommonCliOptions, runCommand } from "./commands/run.js";
 import { schemaCommand } from "./commands/schema.js";
@@ -49,6 +50,14 @@ export async function runCli(
   program.command("doctor").action(async () => {
     process.exitCode = await doctorCommand(streams);
   });
+
+  program
+    .command("explain")
+    .argument("<rule-id>", "rule identifier")
+    .argument("[path]", "directory to inspect")
+    .action(async (ruleId: string, pathInput: string | undefined) => {
+      process.exitCode = await explainCommand(ruleId, pathInput, streams);
+    });
 
   program
     .command("schema")
@@ -105,7 +114,7 @@ function addBaselineOptions(command: Command): Command {
 }
 
 function rewriteDefaultCommand(argv: string[]): string[] {
-  const commands = new Set(["run", "check", "doctor", "schema", "init", "baseline", "help"]);
+  const commands = new Set(["run", "check", "doctor", "explain", "schema", "init", "baseline", "help"]);
   const first = argv[0];
   if (first === "--help" || first === "-h" || first === "--version" || first === "-V") {
     return argv;
