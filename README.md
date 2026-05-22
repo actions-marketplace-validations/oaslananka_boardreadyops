@@ -5,6 +5,7 @@ CI preflight for production-ready PCBs.
 BoardReadyOps checks KiCad hardware repositories for production readiness before fabrication. It runs locally as a CLI and in CI as a GitHub Action, producing JSON, SARIF, Markdown, JUnit, and workflow annotation output.
 
 [![CI](https://github.com/oaslananka/boardreadyops/actions/workflows/ci.yml/badge.svg)](https://github.com/oaslananka/boardreadyops/actions/workflows/ci.yml)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-BoardReadyOps-blue?logo=github)](https://github.com/marketplace/actions/boardreadyops)
 [![npm](https://img.shields.io/npm/v/boardreadyops)](https://www.npmjs.com/package/boardreadyops)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/oaslananka/boardreadyops/badge)](https://scorecard.dev/viewer/?uri=github.com/oaslananka/boardreadyops)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)

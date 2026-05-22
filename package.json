@@ -53,13 +53,14 @@
     "verify:dist": "node scripts/verify-dist.mjs",
     "verify:version": "node scripts/verify-version.mjs",
     "verify:clean-tree": "node scripts/verify-clean-tree.mjs",
+    "verify:marketplace": "node scripts/check-marketplace-listing.mjs",
     "verify:structure": "node scripts/verify-structure.mjs",
     "gc": "node scripts/gc.mjs",
     "docs": "node scripts/generate-rule-docs.mjs && node scripts/update-action-inputs-docs.mjs && node scripts/docs-build.mjs",
     "docs:serve": "mkdocs serve",
     "knip": "knip",
     "sbom": "node scripts/generate-sbom.mjs",
-    "verify": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run build && pnpm run verify:dist && pnpm run verify:version && pnpm run test:unit && pnpm run test:property && pnpm run test:snapshot && pnpm run test:action && pnpm run coverage && pnpm run verify:structure && pnpm run gc && pnpm run docs && pnpm audit --audit-level moderate",
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run build && pnpm run verify:dist && pnpm run verify:version && pnpm run verify:marketplace && pnpm run test:unit && pnpm run test:property && pnpm run test:snapshot && pnpm run test:action && pnpm run coverage && pnpm run verify:structure && pnpm run gc && pnpm run docs && pnpm audit --audit-level moderate",
     "security": "pnpm audit --audit-level moderate"
   },
   "lint-staged": {

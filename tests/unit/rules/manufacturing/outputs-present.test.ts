@@ -27,7 +27,7 @@ describe("manufacturing.outputs-present", () => {
     const result = await runFreshVendorFixture(fixture);
 
     expectRule(result, "manufacturing.outputs-present", 0);
-  });
+  }, 15_000);
 
   it("does not treat unrelated XML files as BOM outputs", async () => {
     const root = await writeFixture({

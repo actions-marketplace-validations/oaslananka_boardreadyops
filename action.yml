@@ -1,9 +1,11 @@
-name: BoardReadyOps
-description: BoardReadyOps checks KiCad hardware repositories for production readiness before fabrication.
+name: BoardReadyOps - Hardware Fabrication Gate
+description: >-
+  Fabrication readiness checks for KiCad PCB projects. Identify and fix issues
+  before you order boards.
 author: Osman Aslan
 branding:
-  icon: check-circle
-  color: blue
+  icon: shield
+  color: green
 runs:
   using: node24
   main: dist/action/index.cjs
