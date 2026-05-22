@@ -5,6 +5,7 @@ import { cosmiconfig } from "cosmiconfig";
 import yaml from "js-yaml";
 import configSchema from "../../schemas/config.schema.json" with { type: "json" };
 import { pathExists, readTextFile } from "../util/fs.js";
+import { displayPath, normalizePathInput } from "../util/path.js";
 import { type FailOn, isSeverity, type Severity } from "./findings.js";
 
 export interface RuleConfig {
@@ -79,10 +80,15 @@ const validate = ajv.compile(configSchema);
 
 export async function loadConfig(root: string, configInput?: string): Promise<LoadedConfig> {
   try {
-    const explicit = configInput && configInput.trim() !== "" ? path.resolve(root, configInput) : undefined;
+    const explicit =
+      configInput && configInput.trim() !== "" ? path.resolve(root, normalizePathInput(configInput)) : undefined;
     if (explicit) {
       if (!(await pathExists(explicit))) {
-        return { config: defaultConfig(), path: explicit, errors: [`config file not found: ${configInput}`] };
+        return {
+          config: defaultConfig(),
+          path: explicit,
+          errors: [`config file not found: ${await displayPath(root, explicit)}`],
+        };
       }
       return validateLoaded(await loadYamlFile(explicit), explicit);
     }

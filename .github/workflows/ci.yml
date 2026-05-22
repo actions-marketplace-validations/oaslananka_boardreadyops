@@ -138,6 +138,30 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run test:int
 
+  cross-platform-paths:
+    name: ci / cross-platform-paths (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec vitest run tests/integration/cross-platform-paths.test.ts
+
   test-action:
     name: ci / test-action
     runs-on: ubuntu-latest

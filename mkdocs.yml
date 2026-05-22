@@ -47,6 +47,7 @@ nav:
   - Installation: install.md
   - Support Matrix: support-matrix.md
   - Configuration: configuration.md
+  - Cross-platform Paths: cross-platform.md
   - Multi-project Workspaces: multi-project.md
   - CLI: cli.md
   - GitHub Action:

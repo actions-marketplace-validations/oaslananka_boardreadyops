@@ -3,6 +3,7 @@ import path from "node:path";
 import { boardReadyVersion } from "../generated/version.js";
 import { registerBuiltInRules } from "../rules/_index.js";
 import { captureFabricationSnapshot } from "../rules/fabrication-snapshot.js";
+import { normalizePathInput } from "../util/path.js";
 import { applyBaseline, readBaseline, resolveBaselinePath } from "./baseline.js";
 import { defaultConcurrency, mapLimit } from "./concurrency.js";
 import {
@@ -28,7 +29,7 @@ export async function runPipeline(
 ): Promise<RunResult> {
   registerPipelineRules();
   const cwd = input.cwd ?? process.cwd();
-  const root = await canonicalRoot(path.resolve(cwd, input.path ?? "."));
+  const root = await canonicalRoot(path.resolve(cwd, normalizePathInput(input.path ?? ".")));
   const loaded = await loadConfig(root, input.config);
   const loadedConfig = { ...defaultConfig(), ...loaded.config };
   const gate = input.gate ? loadedConfig.gates?.[input.gate] : undefined;
@@ -208,7 +209,7 @@ function ruleObjectConfig(ruleConfig: RuleConfig | boolean | undefined): RuleCon
 
 function configForProject(root: string, config: BoardReadyOpsConfig, project: ProjectContext): BoardReadyOpsConfig {
   const override = config.projects?.find((candidate) => {
-    const target = path.resolve(root, candidate.path);
+    const target = path.resolve(root, normalizePathInput(candidate.path));
     return target === path.resolve(root, project.root) || target === path.resolve(root, project.projectFile);
   });
   if (!override) {

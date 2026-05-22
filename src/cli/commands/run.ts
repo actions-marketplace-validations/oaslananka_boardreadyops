@@ -6,6 +6,7 @@ import { canonicalRoot, runPipeline } from "../../core/pipeline.js";
 import { detectKicadCli } from "../../kicad/cli.js";
 import { emitAnnotations } from "../../report/annotations.js";
 import { formatMarkdown } from "../../report/markdown.js";
+import { normalizePathInput } from "../../util/path.js";
 import { type OutputOptions, writeReports } from "../output.js";
 
 export interface CommonCliOptions {
@@ -36,7 +37,7 @@ export async function runCommand(
   options: CommonCliOptions,
   streams: { stdout: NodeJS.WritableStream; stderr: NodeJS.WritableStream },
 ): Promise<number> {
-  const root = await canonicalRoot(path.resolve(pathInput ?? "."));
+  const root = await canonicalRoot(path.resolve(normalizePathInput(pathInput ?? ".")));
   const loaded = await loadConfig(root, options.config);
   if (loaded.errors.length > 0) {
     for (const error of loaded.errors) {

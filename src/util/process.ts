@@ -28,7 +28,7 @@ export function runProcess(command: string, args: string[], options: ProcessOpti
     const commandLine = useCmdShim
       ? {
           command: trustedCmdExe(),
-          args: ["/d", "/v:off", "/c", `call ${buildCmdLine(command, args)}`],
+          args: ["/d", "/v:off", "/s", "/c", `"${buildCmdLine(command, args)}"`],
         }
       : { command, args };
     const child = spawn(commandLine.command, commandLine.args, {
@@ -91,7 +91,7 @@ function quoteCmdToken(value: string): string {
     return '""';
   }
   const sanitized = value.replace(/[\r\n]/g, "");
-  return `"${sanitized.replace(/"/g, '""').replace(/([&|<>()^%!])/g, "^$1")}"`;
+  return `"${sanitized.replace(/"/g, '""')}"`;
 }
 
 function appendBounded(current: string, next: string, limit: number): string {

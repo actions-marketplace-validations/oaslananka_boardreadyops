@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { globFiles } from "../util/glob.js";
-import { normalizeRelative } from "../util/path.js";
+import { normalizePathInput, normalizeRelative } from "../util/path.js";
 import type { ProjectContext } from "./context.js";
 
 export async function discoverProjects(root: string, explicitProject?: string): Promise<ProjectContext[]> {
@@ -16,7 +16,7 @@ export async function discoverProjects(root: string, explicitProject?: string): 
 }
 
 async function explicitProjectFiles(root: string, explicitProject: string): Promise<string[]> {
-  const target = path.resolve(root, explicitProject);
+  const target = path.resolve(root, normalizePathInput(explicitProject));
   try {
     const stat = await fs.stat(target);
     if (stat.isDirectory()) {

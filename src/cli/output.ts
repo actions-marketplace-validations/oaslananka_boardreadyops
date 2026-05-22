@@ -6,6 +6,7 @@ import { formatJunit } from "../report/junit.js";
 import { formatMarkdown } from "../report/markdown.js";
 import { formatSarif } from "../report/sarif.js";
 import { writeTextFile } from "../util/fs.js";
+import { normalizePathInput } from "../util/path.js";
 
 export interface OutputOptions {
   json?: string | undefined;
@@ -58,7 +59,7 @@ async function writeOrStdout(
     stdout.write(content);
     return "-";
   }
-  const file = path.resolve(root, target);
+  const file = path.resolve(root, normalizePathInput(target));
   await writeTextFile(file, content);
   return file;
 }

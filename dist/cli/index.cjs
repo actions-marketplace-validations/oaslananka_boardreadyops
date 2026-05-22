@@ -1195,7 +1195,7 @@ var require_command = __commonJS({
     var EventEmitter = require("node:events").EventEmitter;
     var childProcess = require("node:child_process");
     var path36 = require("node:path");
-    var fs9 = require("node:fs");
+    var fs10 = require("node:fs");
     var process3 = require("node:process");
     var { Argument: Argument2, humanReadableArgName } = require_argument();
     var { CommanderError: CommanderError2 } = require_error();
@@ -2189,7 +2189,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
        * @param {string} subcommandName
        */
       _checkForMissingExecutable(executableFile, executableDir, subcommandName) {
-        if (fs9.existsSync(executableFile)) return;
+        if (fs10.existsSync(executableFile)) return;
         const executableDirMessage = executableDir ? `searched for local subcommand relative to directory '${executableDir}'` : "no directory for search for local subcommand, use .executableDir() to supply a custom directory";
         const executableMissing = `'${executableFile}' does not exist
  - if '${subcommandName}' is not meant to be an executable command, remove description parameter from '.command()' and use '.description()' instead
@@ -2208,10 +2208,10 @@ Expecting one of '${allowedValues.join("', '")}'`);
         const sourceExt = [".js", ".ts", ".tsx", ".mjs", ".cjs"];
         function findFile(baseDir, baseName) {
           const localBin = path36.resolve(baseDir, baseName);
-          if (fs9.existsSync(localBin)) return localBin;
+          if (fs10.existsSync(localBin)) return localBin;
           if (sourceExt.includes(path36.extname(baseName))) return void 0;
           const foundExt = sourceExt.find(
-            (ext) => fs9.existsSync(`${localBin}${ext}`)
+            (ext) => fs10.existsSync(`${localBin}${ext}`)
           );
           if (foundExt) return `${localBin}${foundExt}`;
           return void 0;
@@ -2223,7 +2223,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
         if (this._scriptPath) {
           let resolvedScriptPath;
           try {
-            resolvedScriptPath = fs9.realpathSync(this._scriptPath);
+            resolvedScriptPath = fs10.realpathSync(this._scriptPath);
           } catch {
             resolvedScriptPath = this._scriptPath;
           }
@@ -11124,12 +11124,12 @@ var require_dist = __commonJS({
         throw new Error(`Unknown format "${name}"`);
       return f;
     };
-    function addFormats2(ajv2, list, fs9, exportName) {
+    function addFormats2(ajv2, list, fs10, exportName) {
       var _a3;
       var _b;
       (_a3 = (_b = ajv2.opts.code).formats) !== null && _a3 !== void 0 ? _a3 : _b.formats = (0, codegen_1._)`require("ajv-formats/dist/formats").${exportName}`;
       for (const f of list)
-        ajv2.addFormat(f, fs9[f]);
+        ajv2.addFormat(f, fs10[f]);
     }
     module2.exports = exports2 = formatsPlugin;
     Object.defineProperty(exports2, "__esModule", { value: true });
@@ -11143,7 +11143,7 @@ var require_resolve_from = __commonJS({
     "use strict";
     var path36 = require("path");
     var Module = require("module");
-    var fs9 = require("fs");
+    var fs10 = require("fs");
     var resolveFrom = (fromDir, moduleId, silent) => {
       if (typeof fromDir !== "string") {
         throw new TypeError(`Expected \`fromDir\` to be of type \`string\`, got \`${typeof fromDir}\``);
@@ -11152,7 +11152,7 @@ var require_resolve_from = __commonJS({
         throw new TypeError(`Expected \`moduleId\` to be of type \`string\`, got \`${typeof moduleId}\``);
       }
       try {
-        fromDir = fs9.realpathSync(fromDir);
+        fromDir = fs10.realpathSync(fromDir);
       } catch (err) {
         if (err.code === "ENOENT") {
           fromDir = path36.resolve(fromDir);
@@ -18531,10 +18531,10 @@ var require_typescript = __commonJS({
       function and(f, g) {
         return (arg) => f(arg) && g(arg);
       }
-      function or(...fs9) {
+      function or(...fs10) {
         return (...args) => {
           let lastResult;
-          for (const f of fs9) {
+          for (const f of fs10) {
             lastResult = f(...args);
             if (lastResult) {
               return lastResult;
@@ -20109,7 +20109,7 @@ ${lanes.join("\n")}
       var tracing;
       var tracingEnabled;
       ((tracingEnabled2) => {
-        let fs9;
+        let fs10;
         let traceCount = 0;
         let traceFd = 0;
         let mode;
@@ -20118,9 +20118,9 @@ ${lanes.join("\n")}
         const legend = [];
         function startTracing2(tracingMode, traceDir, configFilePath) {
           Debug.assert(!tracing, "Tracing already started");
-          if (fs9 === void 0) {
+          if (fs10 === void 0) {
             try {
-              fs9 = require("fs");
+              fs10 = require("fs");
             } catch (e) {
               throw new Error(`tracing requires having fs
 (original error: ${e.message || e})`);
@@ -20131,8 +20131,8 @@ ${lanes.join("\n")}
           if (legendPath === void 0) {
             legendPath = combinePaths(traceDir, "legend.json");
           }
-          if (!fs9.existsSync(traceDir)) {
-            fs9.mkdirSync(traceDir, { recursive: true });
+          if (!fs10.existsSync(traceDir)) {
+            fs10.mkdirSync(traceDir, { recursive: true });
           }
           const countPart = mode === "build" ? `.${process.pid}-${++traceCount}` : mode === "server" ? `.${process.pid}` : ``;
           const tracePath = combinePaths(traceDir, `trace${countPart}.json`);
@@ -20142,10 +20142,10 @@ ${lanes.join("\n")}
             tracePath,
             typesPath
           });
-          traceFd = fs9.openSync(tracePath, "w");
+          traceFd = fs10.openSync(tracePath, "w");
           tracing = tracingEnabled2;
           const meta3 = { cat: "__metadata", ph: "M", ts: 1e3 * timestamp2(), pid: 1, tid: 1 };
-          fs9.writeSync(
+          fs10.writeSync(
             traceFd,
             "[\n" + [{ name: "process_name", args: { name: "tsc" }, ...meta3 }, { name: "thread_name", args: { name: "Main" }, ...meta3 }, { name: "TracingStartedInBrowser", ...meta3, cat: "disabled-by-default-devtools.timeline" }].map((v) => JSON.stringify(v)).join(",\n")
           );
@@ -20154,10 +20154,10 @@ ${lanes.join("\n")}
         function stopTracing() {
           Debug.assert(tracing, "Tracing is not in progress");
           Debug.assert(!!typeCatalog.length === (mode !== "server"));
-          fs9.writeSync(traceFd, `
+          fs10.writeSync(traceFd, `
 ]
 `);
-          fs9.closeSync(traceFd);
+          fs10.closeSync(traceFd);
           tracing = void 0;
           if (typeCatalog.length) {
             dumpTypes(typeCatalog);
@@ -20229,11 +20229,11 @@ ${lanes.join("\n")}
         function writeEvent(eventType, phase, name, args, extras, time3 = 1e3 * timestamp2()) {
           if (mode === "server" && phase === "checkTypes") return;
           mark("beginTracing");
-          fs9.writeSync(traceFd, `,
+          fs10.writeSync(traceFd, `,
 {"pid":1,"tid":1,"ph":"${eventType}","cat":"${phase}","ts":${time3},"name":"${name}"`);
-          if (extras) fs9.writeSync(traceFd, `,${extras}`);
-          if (args) fs9.writeSync(traceFd, `,"args":${JSON.stringify(args)}`);
-          fs9.writeSync(traceFd, `}`);
+          if (extras) fs10.writeSync(traceFd, `,${extras}`);
+          if (args) fs10.writeSync(traceFd, `,"args":${JSON.stringify(args)}`);
+          fs10.writeSync(traceFd, `}`);
           mark("endTracing");
           measure("Tracing", "beginTracing", "endTracing");
         }
@@ -20255,9 +20255,9 @@ ${lanes.join("\n")}
           var _a3, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l, _m, _n, _o, _p, _q, _r, _s;
           mark("beginDumpTypes");
           const typesPath = legend[legend.length - 1].typesPath;
-          const typesFd = fs9.openSync(typesPath, "w");
+          const typesFd = fs10.openSync(typesPath, "w");
           const recursionIdentityMap = /* @__PURE__ */ new Map();
-          fs9.writeSync(typesFd, "[");
+          fs10.writeSync(typesFd, "[");
           const numTypes = types2.length;
           for (let i = 0; i < numTypes; i++) {
             const type2 = types2[i];
@@ -20353,13 +20353,13 @@ ${lanes.join("\n")}
               flags: Debug.formatTypeFlags(type2.flags).split("|"),
               display
             };
-            fs9.writeSync(typesFd, JSON.stringify(descriptor));
+            fs10.writeSync(typesFd, JSON.stringify(descriptor));
             if (i < numTypes - 1) {
-              fs9.writeSync(typesFd, ",\n");
+              fs10.writeSync(typesFd, ",\n");
             }
           }
-          fs9.writeSync(typesFd, "]\n");
-          fs9.closeSync(typesFd);
+          fs10.writeSync(typesFd, "]\n");
+          fs10.closeSync(typesFd);
           mark("endDumpTypes");
           measure("Dump types", "beginDumpTypes", "endDumpTypes");
         }
@@ -20367,7 +20367,7 @@ ${lanes.join("\n")}
           if (!legendPath) {
             return;
           }
-          fs9.writeFileSync(legendPath, JSON.stringify(legend));
+          fs10.writeFileSync(legendPath, JSON.stringify(legend));
         }
         tracingEnabled2.dumpLegend = dumpLegend;
       })(tracingEnabled || (tracingEnabled = {}));
@@ -231066,8 +231066,8 @@ var require_utils4 = __commonJS({
     exports2.array = array2;
     var errno = require_errno();
     exports2.errno = errno;
-    var fs9 = require_fs();
-    exports2.fs = fs9;
+    var fs10 = require_fs();
+    exports2.fs = fs10;
     var path36 = require_path();
     exports2.path = path36;
     var pattern = require_pattern2();
@@ -231251,12 +231251,12 @@ var require_fs2 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createFileSystemAdapter = exports2.FILE_SYSTEM_ADAPTER = void 0;
-    var fs9 = require("fs");
+    var fs10 = require("fs");
     exports2.FILE_SYSTEM_ADAPTER = {
-      lstat: fs9.lstat,
-      stat: fs9.stat,
-      lstatSync: fs9.lstatSync,
-      statSync: fs9.statSync
+      lstat: fs10.lstat,
+      stat: fs10.stat,
+      lstatSync: fs10.lstatSync,
+      statSync: fs10.statSync
     };
     function createFileSystemAdapter(fsMethods) {
       if (fsMethods === void 0) {
@@ -231273,12 +231273,12 @@ var require_settings = __commonJS({
   "node_modules/@nodelib/fs.stat/out/settings.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
-    var fs9 = require_fs2();
+    var fs10 = require_fs2();
     var Settings = class {
       constructor(_options = {}) {
         this._options = _options;
         this.followSymbolicLink = this._getValue(this._options.followSymbolicLink, true);
-        this.fs = fs9.createFileSystemAdapter(this._options.fs);
+        this.fs = fs10.createFileSystemAdapter(this._options.fs);
         this.markSymbolicLink = this._getValue(this._options.markSymbolicLink, false);
         this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
       }
@@ -231433,8 +231433,8 @@ var require_utils5 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.fs = void 0;
-    var fs9 = require_fs3();
-    exports2.fs = fs9;
+    var fs10 = require_fs3();
+    exports2.fs = fs10;
   }
 });
 
@@ -231629,14 +231629,14 @@ var require_fs4 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.createFileSystemAdapter = exports2.FILE_SYSTEM_ADAPTER = void 0;
-    var fs9 = require("fs");
+    var fs10 = require("fs");
     exports2.FILE_SYSTEM_ADAPTER = {
-      lstat: fs9.lstat,
-      stat: fs9.stat,
-      lstatSync: fs9.lstatSync,
-      statSync: fs9.statSync,
-      readdir: fs9.readdir,
-      readdirSync: fs9.readdirSync
+      lstat: fs10.lstat,
+      stat: fs10.stat,
+      lstatSync: fs10.lstatSync,
+      statSync: fs10.statSync,
+      readdir: fs10.readdir,
+      readdirSync: fs10.readdirSync
     };
     function createFileSystemAdapter(fsMethods) {
       if (fsMethods === void 0) {
@@ -231655,12 +231655,12 @@ var require_settings2 = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     var path36 = require("path");
     var fsStat = require_out();
-    var fs9 = require_fs4();
+    var fs10 = require_fs4();
     var Settings = class {
       constructor(_options = {}) {
         this._options = _options;
         this.followSymbolicLinks = this._getValue(this._options.followSymbolicLinks, false);
-        this.fs = fs9.createFileSystemAdapter(this._options.fs);
+        this.fs = fs10.createFileSystemAdapter(this._options.fs);
         this.pathSegmentSeparator = this._getValue(this._options.pathSegmentSeparator, path36.sep);
         this.stats = this._getValue(this._options.stats, false);
         this.throwErrorOnBrokenSymbolicLink = this._getValue(this._options.throwErrorOnBrokenSymbolicLink, true);
@@ -233041,16 +233041,16 @@ var require_settings4 = __commonJS({
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DEFAULT_FILE_SYSTEM_ADAPTER = void 0;
-    var fs9 = require("fs");
+    var fs10 = require("fs");
     var os3 = require("os");
     var CPU_COUNT = Math.max(os3.cpus().length, 1);
     exports2.DEFAULT_FILE_SYSTEM_ADAPTER = {
-      lstat: fs9.lstat,
-      lstatSync: fs9.lstatSync,
-      stat: fs9.stat,
-      statSync: fs9.statSync,
-      readdir: fs9.readdir,
-      readdirSync: fs9.readdirSync
+      lstat: fs10.lstat,
+      lstatSync: fs10.lstatSync,
+      stat: fs10.stat,
+      statSync: fs10.statSync,
+      readdir: fs10.readdir,
+      readdirSync: fs10.readdirSync
     };
     var Settings = class {
       constructor(_options = {}) {
@@ -233225,7 +233225,7 @@ var {
 var boardReadyVersion = "1.0.2";
 
 // src/cli/commands/baseline.ts
-var import_promises8 = __toESM(require("node:fs/promises"), 1);
+var import_promises9 = __toESM(require("node:fs/promises"), 1);
 var import_node_path30 = __toESM(require("node:path"), 1);
 
 // src/core/baseline.ts
@@ -233326,7 +233326,7 @@ function isBaselineFinding(value) {
 }
 
 // src/core/config.ts
-var import_node_path3 = __toESM(require("node:path"), 1);
+var import_node_path4 = __toESM(require("node:path"), 1);
 var import__ = __toESM(require__(), 1);
 var import_ajv_formats = __toESM(require_dist(), 1);
 var import_cosmiconfig = __toESM(require_dist2(), 1);
@@ -236232,6 +236232,53 @@ var config_schema_default = {
   }
 };
 
+// src/util/path.ts
+var import_promises3 = __toESM(require("node:fs/promises"), 1);
+var import_node_path3 = __toESM(require("node:path"), 1);
+function toPosixPath(value) {
+  return value.replace(/\\/g, "/");
+}
+function normalizePathInput(value) {
+  return import_node_path3.default.sep === "\\" ? value.replace(/\//g, "\\") : value.replace(/\\/g, "/");
+}
+function normalizeRelative(root, target) {
+  const relative = import_node_path3.default.relative(root, target);
+  return toPosixPath(relative === "" ? "." : relative);
+}
+function isInside(parent, child) {
+  const relative = import_node_path3.default.relative(parent, child);
+  return relative === "" || !relative.startsWith("..") && !import_node_path3.default.isAbsolute(relative);
+}
+async function displayPath(root, target) {
+  const absoluteRoot = await resolveExistingPathAlias(import_node_path3.default.resolve(root));
+  const absoluteTarget = import_node_path3.default.resolve(target);
+  const comparableTarget = await resolveExistingPathAlias(absoluteTarget);
+  if (isInside(absoluteRoot, comparableTarget)) {
+    return normalizeRelative(absoluteRoot, comparableTarget);
+  }
+  if (isInside(absoluteRoot, absoluteTarget)) {
+    return normalizeRelative(absoluteRoot, absoluteTarget);
+  }
+  return `<outside-root>/${import_node_path3.default.basename(absoluteTarget)}`;
+}
+async function resolveExistingPathAlias(target) {
+  const missingSegments = [];
+  let current = import_node_path3.default.resolve(target);
+  while (true) {
+    try {
+      const real = await import_promises3.default.realpath(current);
+      return missingSegments.length > 0 ? import_node_path3.default.join(real, ...missingSegments.reverse()) : real;
+    } catch {
+      const parent = import_node_path3.default.dirname(current);
+      if (parent === current) {
+        return target;
+      }
+      missingSegments.push(import_node_path3.default.basename(current));
+      current = parent;
+    }
+  }
+}
+
 // src/core/findings.ts
 var import_node_crypto = __toESM(require("node:crypto"), 1);
 
@@ -236330,10 +236377,14 @@ var ajv = new import__.Ajv2020({ allErrors: true, allowUnionTypes: true });
 var validate = ajv.compile(config_schema_default);
 async function loadConfig(root, configInput) {
   try {
-    const explicit = configInput && configInput.trim() !== "" ? import_node_path3.default.resolve(root, configInput) : void 0;
+    const explicit = configInput && configInput.trim() !== "" ? import_node_path4.default.resolve(root, normalizePathInput(configInput)) : void 0;
     if (explicit) {
       if (!await pathExists(explicit)) {
-        return { config: defaultConfig(), path: explicit, errors: [`config file not found: ${configInput}`] };
+        return {
+          config: defaultConfig(),
+          path: explicit,
+          errors: [`config file not found: ${await displayPath(root, explicit)}`]
+        };
       }
       return validateLoaded(await loadYamlFile(explicit), explicit);
     }
@@ -236403,7 +236454,7 @@ function validateLoaded(config2, file2) {
 }
 
 // src/core/pipeline.ts
-var import_promises7 = __toESM(require("node:fs/promises"), 1);
+var import_promises8 = __toESM(require("node:fs/promises"), 1);
 var import_node_path29 = __toESM(require("node:path"), 1);
 
 // src/core/rule-registry.ts
@@ -236420,18 +236471,6 @@ function listRules() {
 
 // src/rules/helpers.ts
 var import_node_path5 = __toESM(require("node:path"), 1);
-
-// src/util/path.ts
-var import_node_path4 = __toESM(require("node:path"), 1);
-function toPosixPath(value) {
-  return value.replace(/\\/g, "/");
-}
-function normalizeRelative(root, target) {
-  const relative = import_node_path4.default.relative(root, target);
-  return toPosixPath(relative === "" ? "." : relative);
-}
-
-// src/rules/helpers.ts
 function rule(meta3, run) {
   return { meta: meta3, run };
 }
@@ -236608,7 +236647,7 @@ function parseRows(text, delimiter) {
 }
 
 // src/kicad/parsers/project-files.ts
-var import_promises3 = __toESM(require("node:fs/promises"), 1);
+var import_promises4 = __toESM(require("node:fs/promises"), 1);
 
 // src/util/json.ts
 function parseJsonValue(text) {
@@ -236774,7 +236813,7 @@ function uniqueVariants(variants) {
 // src/kicad/parsers/project-files.ts
 async function readDesignFile(file2) {
   try {
-    return await import_promises3.default.readFile(file2, "utf8");
+    return await import_promises4.default.readFile(file2, "utf8");
   } catch {
     return void 0;
   }
@@ -237173,7 +237212,7 @@ var footprintMismatchRule = rule(
 );
 
 // src/rules/bom/lifecycle.ts
-var import_promises4 = __toESM(require("node:fs/promises"), 1);
+var import_promises5 = __toESM(require("node:fs/promises"), 1);
 var import_node_path7 = __toESM(require("node:path"), 1);
 var lifecyclePattern = /\b(eol|obsolete|discontinued|nrnd|not recommended|preview)\b/i;
 var lifecycleRule = rule(
@@ -237203,7 +237242,7 @@ async function loadLifecycleDatabase(root, configured) {
     return /* @__PURE__ */ new Map();
   }
   try {
-    const raw = JSON.parse(await import_promises4.default.readFile(import_node_path7.default.resolve(root, configured), "utf8"));
+    const raw = JSON.parse(await import_promises5.default.readFile(import_node_path7.default.resolve(root, configured), "utf8"));
     return new Map(
       Object.entries(raw).filter((entry) => typeof entry[1] === "string").map(([mpn, status]) => [mpn, status])
     );
@@ -237467,7 +237506,7 @@ var copperBalanceRule = rule(
 var import_node_path13 = __toESM(require("node:path"), 1);
 
 // src/kicad/cli.ts
-var import_promises5 = __toESM(require("node:fs/promises"), 1);
+var import_promises6 = __toESM(require("node:fs/promises"), 1);
 var import_node_os = __toESM(require("node:os"), 1);
 var import_node_path12 = __toESM(require("node:path"), 1);
 
@@ -237485,7 +237524,7 @@ function runProcess(command, args, options = {}) {
     const useCmdShim = process.platform === "win32" && /\.(cmd|bat)$/i.test(command);
     const commandLine = useCmdShim ? {
       command: trustedCmdExe(),
-      args: ["/d", "/v:off", "/c", `call ${buildCmdLine(command, args)}`]
+      args: ["/d", "/v:off", "/s", "/c", `"${buildCmdLine(command, args)}"`]
     } : { command, args };
     const child = (0, import_node_child_process.spawn)(commandLine.command, commandLine.args, {
       cwd: options.cwd,
@@ -237542,7 +237581,7 @@ function quoteCmdToken(value) {
     return '""';
   }
   const sanitized = value.replace(/[\r\n]/g, "");
-  return `"${sanitized.replace(/"/g, '""').replace(/([&|<>()^%!])/g, "^$1")}"`;
+  return `"${sanitized.replace(/"/g, '""')}"`;
 }
 function appendBounded(current, next, limit) {
   if (current.length >= limit) {
@@ -252193,7 +252232,7 @@ async function detectKicadCli(explicit) {
   return { found: false };
 }
 async function runKicadReport(cliPath, kind, inputFile, _variant) {
-  const tempDir = await import_promises5.default.mkdtemp(import_node_path12.default.join(import_node_os.default.tmpdir(), "boardreadyops-"));
+  const tempDir = await import_promises6.default.mkdtemp(import_node_path12.default.join(import_node_os.default.tmpdir(), "boardreadyops-"));
   const output = import_node_path12.default.join(tempDir, `${kind}.json`);
   const args = kind === "drc" ? ["pcb", "drc", "--format", "json", "--output", output, inputFile] : ["sch", "erc", "--format", "json", "--output", output, inputFile];
   const result = await runProcess(cliPath, args, {
@@ -252203,11 +252242,11 @@ async function runKicadReport(cliPath, kind, inputFile, _variant) {
   });
   let reportText = "";
   try {
-    reportText = await import_promises5.default.readFile(output, "utf8");
+    reportText = await import_promises6.default.readFile(output, "utf8");
   } catch {
     reportText = "";
   } finally {
-    await import_promises5.default.rm(tempDir, { recursive: true, force: true }).catch(() => void 0);
+    await import_promises6.default.rm(tempDir, { recursive: true, force: true }).catch(() => void 0);
   }
   try {
     const diagnostics = parseKicadDiagnostics(reportText, kind);
@@ -253490,7 +253529,7 @@ function defaultConcurrency() {
 }
 
 // src/core/discovery.ts
-var import_promises6 = __toESM(require("node:fs/promises"), 1);
+var import_promises7 = __toESM(require("node:fs/promises"), 1);
 var import_node_path27 = __toESM(require("node:path"), 1);
 async function discoverProjects(root, explicitProject) {
   const projectFiles = explicitProject ? await explicitProjectFiles(root, explicitProject) : (await globFiles(root, ["**/*.kicad_pro"])).map((file2) => import_node_path27.default.resolve(file2));
@@ -253501,9 +253540,9 @@ async function discoverProjects(root, explicitProject) {
   return contexts;
 }
 async function explicitProjectFiles(root, explicitProject) {
-  const target = import_node_path27.default.resolve(root, explicitProject);
+  const target = import_node_path27.default.resolve(root, normalizePathInput(explicitProject));
   try {
-    const stat = await import_promises6.default.stat(target);
+    const stat = await import_promises7.default.stat(target);
     if (stat.isDirectory()) {
       const files = await globFiles(target, ["**/*.kicad_pro"]);
       return files.map((file2) => import_node_path27.default.resolve(file2));
@@ -253553,7 +253592,7 @@ async function isInsideNestedProject(projectRoot, file2) {
 }
 async function safeReadDir(dir) {
   try {
-    return await import_promises6.default.readdir(dir);
+    return await import_promises7.default.readdir(dir);
   } catch {
     return [];
   }
@@ -253756,7 +253795,7 @@ function addFindingReference(target, value) {
 async function runPipeline(input = {}, logger) {
   registerPipelineRules();
   const cwd = input.cwd ?? process.cwd();
-  const root = await canonicalRoot(import_node_path29.default.resolve(cwd, input.path ?? "."));
+  const root = await canonicalRoot(import_node_path29.default.resolve(cwd, normalizePathInput(input.path ?? ".")));
   const loaded = await loadConfig(root, input.config);
   const loadedConfig = { ...defaultConfig(), ...loaded.config };
   const gate = input.gate ? loadedConfig.gates?.[input.gate] : void 0;
@@ -253837,7 +253876,7 @@ async function controlledFindings(root, config2, options, findings) {
 }
 async function canonicalRoot(input) {
   try {
-    return await import_promises7.default.realpath(input);
+    return await import_promises8.default.realpath(input);
   } catch {
     return input;
   }
@@ -253910,7 +253949,7 @@ function ruleObjectConfig(ruleConfig2) {
 }
 function configForProject(root, config2, project) {
   const override = config2.projects?.find((candidate) => {
-    const target = import_node_path29.default.resolve(root, candidate.path);
+    const target = import_node_path29.default.resolve(root, normalizePathInput(candidate.path));
     return target === import_node_path29.default.resolve(root, project.root) || target === import_node_path29.default.resolve(root, project.projectFile);
   });
   if (!override) {
@@ -254051,7 +254090,7 @@ Unchanged: ${diff.unchanged.length}
 };
 var clearBaselineCommand = async (pathInput, options, streams) => {
   return withBaselineRoot(pathInput, options.config, streams, async (root, file2) => {
-    await import_promises8.default.rm(file2, { force: true });
+    await import_promises9.default.rm(file2, { force: true });
     streams.stdout.write(`Removed ${baselineDisplayPath(root, file2)}.
 `);
     return 0;
@@ -254834,14 +254873,14 @@ async function writeOrStdout(root, target, content, stdout) {
     stdout.write(content);
     return "-";
   }
-  const file2 = import_node_path31.default.resolve(root, target);
+  const file2 = import_node_path31.default.resolve(root, normalizePathInput(target));
   await writeTextFile(file2, content);
   return file2;
 }
 
 // src/cli/commands/run.ts
 async function runCommand(pathInput, options, streams) {
-  const root = await canonicalRoot(import_node_path32.default.resolve(pathInput ?? "."));
+  const root = await canonicalRoot(import_node_path32.default.resolve(normalizePathInput(pathInput ?? ".")));
   const loaded = await loadConfig(root, options.config);
   if (loaded.errors.length > 0) {
     for (const error51 of loaded.errors) {
