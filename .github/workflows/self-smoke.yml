@@ -47,3 +47,33 @@ jobs:
       - run: test "$PINMAP_FINDINGS" = "1"
         env:
           PINMAP_FINDINGS: ${{ steps.pinmap.outputs.findings }}
+
+  sarif-upload-smoke:
+    name: self-smoke / sarif-upload
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - id: sarif
+        uses: ./
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          path: tests/fixtures/projects/safe-basic
+          config: tests/fixtures/projects/safe-basic/boardreadyops.yml
+          require-kicad: "false"
+          upload-sarif: "true"
+          upload-artifacts: "false"
+          comment-pr: "false"
+          annotations: "false"
+          fail-on: never
+      - run: test -f "$SARIF_PATH"
+        env:
+          SARIF_PATH: ${{ steps.sarif.outputs.sarif-path }}

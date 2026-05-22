@@ -1,5 +1,178 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`report snapshots > formats SARIF context fields 1`] = `
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "runs": [
+    {
+      "results": [
+        {
+          "level": "warning",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hardware/main.kicad_pro",
+                },
+                "region": {
+                  "startColumn": 1,
+                  "startLine": 1,
+                },
+              },
+            },
+          ],
+          "message": {
+            "text": "Project has no board file.",
+          },
+          "partialFingerprints": {
+            "primaryLocationLineHash": "2622cd3f11de3652f7d30a00a54de144df4d238b8ab914098e4b966c65f2002e",
+          },
+          "properties": {
+            "resourceKind": "project",
+            "severity": "medium",
+          },
+          "ruleId": "manifest.project-discovery",
+        },
+        {
+          "level": "error",
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hardware/bom.csv",
+                },
+                "region": {
+                  "startColumn": 2,
+                  "startLine": 7,
+                },
+              },
+            },
+          ],
+          "message": {
+            "text": "R1 is missing an MPN.",
+          },
+          "partialFingerprints": {
+            "primaryLocationLineHash": "871c3384981ed78c8be1f4ab3b584eafa3fe6a430c8840a389d1269ee7d4b88f",
+          },
+          "properties": {
+            "resourceKind": "bom",
+            "severity": "high",
+          },
+          "ruleId": "bom.missing-mpn",
+        },
+        {
+          "level": "error",
+          "locations": [
+            {
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "pcb:Edge.Cuts:14.2mm,8.7mm",
+                  "kind": "member",
+                  "name": "Edge.Cuts @ (14.2mm, 8.7mm)",
+                },
+              ],
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "hardware/main.kicad_pcb",
+                },
+                "region": {
+                  "endColumn": 12,
+                  "endLine": 44,
+                  "startColumn": 3,
+                  "startLine": 42,
+                },
+              },
+            },
+          ],
+          "message": {
+            "text": "Board outline has a gap.",
+          },
+          "partialFingerprints": {
+            "primaryLocationLineHash": "7fc3f247eb79f0789e9f8f66669a22636b081b4d4efab469e8fac07ada628b82",
+          },
+          "properties": {
+            "confidence": "definite",
+            "fix": {
+              "description": "Close the outline segment.",
+              "steps": [
+                "Open Edge.Cuts.",
+                "Connect the adjacent outline endpoints.",
+              ],
+            },
+            "project": "hardware/main.kicad_pro",
+            "resourceKind": "pcb",
+            "severity": "critical",
+          },
+          "ruleId": "design.board-outline",
+        },
+      ],
+      "tool": {
+        "driver": {
+          "informationUri": "https://github.com/oaslananka/boardreadyops",
+          "name": "BoardReadyOps",
+          "rules": [
+            {
+              "defaultConfiguration": {
+                "level": "warning",
+              },
+              "fullDescription": {
+                "text": "Project has no board file.",
+              },
+              "helpUri": "https://github.com/oaslananka/boardreadyops/tree/main/docs/rules",
+              "id": "manifest.project-discovery",
+              "name": "manifest.project-discovery",
+              "shortDescription": {
+                "text": "manifest.project-discovery",
+              },
+            },
+            {
+              "defaultConfiguration": {
+                "level": "error",
+              },
+              "fullDescription": {
+                "text": "R1 is missing an MPN.",
+              },
+              "helpUri": "https://github.com/oaslananka/boardreadyops/tree/main/docs/rules",
+              "id": "bom.missing-mpn",
+              "name": "bom.missing-mpn",
+              "shortDescription": {
+                "text": "bom.missing-mpn",
+              },
+            },
+            {
+              "defaultConfiguration": {
+                "level": "error",
+              },
+              "fullDescription": {
+                "text": "Board outline has a gap.",
+              },
+              "help": {
+                "markdown": "Close the outline segment.
+
+1. Open Edge.Cuts.
+
+2. Connect the adjacent outline endpoints.",
+                "text": "Close the outline segment.
+1. Open Edge.Cuts.
+2. Connect the adjacent outline endpoints.",
+              },
+              "helpUri": "https://github.com/oaslananka/boardreadyops/tree/main/docs/rules",
+              "id": "design.board-outline",
+              "name": "design.board-outline",
+              "shortDescription": {
+                "text": "design.board-outline",
+              },
+            },
+          ],
+          "version": "0.9.0",
+        },
+      },
+    },
+  ],
+  "version": "2.1.0",
+}
+`;
+
 exports[`report snapshots > formats fabrication diff Markdown 1`] = `
 "<!-- boardreadyops:sticky:v1 -->
 # BoardReadyOps Report

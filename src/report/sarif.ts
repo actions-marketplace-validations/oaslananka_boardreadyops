@@ -35,19 +35,7 @@ export function formatSarif(result: RunResult): string {
           ruleId: finding.ruleId,
           level: sarifLevel(finding.severity),
           message: { text: finding.message },
-          locations: [
-            {
-              physicalLocation: {
-                artifactLocation: {
-                  uri: finding.resource.path,
-                },
-                region: finding.location?.region ?? {
-                  startLine: finding.location?.line ?? 1,
-                  startColumn: finding.location?.column ?? 1,
-                },
-              },
-            },
-          ],
+          locations: [sarifLocation(finding)],
           partialFingerprints: {
             primaryLocationLineHash: finding.fingerprint,
           },
@@ -66,6 +54,39 @@ export function formatSarif(result: RunResult): string {
   return `${JSON.stringify(sarif, null, 2)}\n`;
 }
 
+function sarifLocation(finding: Finding) {
+  const boardCoordinates = finding.location?.boardCoordinates;
+  const logicalLocation = boardCoordinates
+    ? {
+        logicalLocations: [
+          {
+            name: `${boardCoordinates.layer ?? "board"} @ (${sarifCoordinate(boardCoordinates.x)}${
+              boardCoordinates.units
+            }, ${sarifCoordinate(boardCoordinates.y)}${boardCoordinates.units})`,
+            kind: "member",
+            fullyQualifiedName: `pcb:${boardCoordinates.layer ?? "board"}:${sarifCoordinateWithUnits(
+              boardCoordinates.x,
+              boardCoordinates.units,
+            )},${sarifCoordinateWithUnits(boardCoordinates.y, boardCoordinates.units)}`,
+          },
+        ],
+      }
+    : {};
+
+  return {
+    physicalLocation: {
+      artifactLocation: {
+        uri: finding.resource.path,
+      },
+      region: finding.location?.region ?? {
+        startLine: sarifPositiveInteger(finding.location?.line),
+        startColumn: sarifPositiveInteger(finding.location?.column),
+      },
+    },
+    ...logicalLocation,
+  };
+}
+
 function sarifLevel(severity: Finding["severity"]): "error" | "warning" | "note" | "none" {
   if (severity === "critical" || severity === "high") {
     return "error";
@@ -74,6 +95,27 @@ function sarifLevel(severity: Finding["severity"]): "error" | "warning" | "note"
     return "warning";
   }
   return "note";
+}
+
+function sarifCoordinate(value: number): string {
+  if (Object.is(value, -0)) {
+    return "0";
+  }
+  if (Number.isInteger(value)) {
+    return value.toString();
+  }
+  return value.toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
+}
+
+function sarifCoordinateWithUnits(value: number, units: "mm" | "in"): string {
+  return `${sarifCoordinate(value)}${units}`;
+}
+
+function sarifPositiveInteger(value: number | undefined): number {
+  if (value === undefined) {
+    return 1;
+  }
+  return Number.isInteger(value) && value > 0 ? value : 1;
 }
 
 function sarifHelp(fix: NonNullable<Finding["fix"]>): { text: string; markdown: string } {

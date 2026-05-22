@@ -76,6 +76,119 @@ describe("report formats", () => {
     ).toEqual(["Add a matching schematic file.", "Add a matching board file."]);
   });
 
+  it("maps board coordinates to SARIF logical locations with finding context", () => {
+    const payload = JSON.parse(
+      formatSarif(
+        sampleResult([
+          createFinding({
+            ruleId: "design.board-outline",
+            severity: "critical",
+            message: "Board outline has a gap.",
+            project: "hardware/main.kicad_pro",
+            resource: { path: "hardware/main.kicad_pcb", kind: "pcb" },
+            location: {
+              region: {
+                startLine: 42,
+                endLine: 44,
+                startColumn: 3,
+                endColumn: 12,
+              },
+              boardCoordinates: {
+                x: 14.2,
+                y: 8.7,
+                layer: "Edge.Cuts",
+                units: "mm",
+              },
+            },
+            fix: {
+              description: "Close the outline segment.",
+              steps: ["Open Edge.Cuts.", "Connect the adjacent outline endpoints."],
+            },
+            confidence: "definite",
+          }),
+        ]),
+      ),
+    );
+
+    const result = payload.runs[0].results[0];
+    expect(result.locations[0].physicalLocation).toEqual({
+      artifactLocation: {
+        uri: "hardware/main.kicad_pcb",
+      },
+      region: {
+        startLine: 42,
+        endLine: 44,
+        startColumn: 3,
+        endColumn: 12,
+      },
+    });
+    expect(result.locations[0].logicalLocations).toEqual([
+      {
+        name: "Edge.Cuts @ (14.2mm, 8.7mm)",
+        kind: "member",
+        fullyQualifiedName: "pcb:Edge.Cuts:14.2mm,8.7mm",
+      },
+    ]);
+    expect(result.properties).toMatchObject({
+      severity: "critical",
+      project: "hardware/main.kicad_pro",
+      resourceKind: "pcb",
+      confidence: "definite",
+    });
+    expect(payload.runs[0].tool.driver.rules[0].help.text).toContain("Close the outline segment.");
+  });
+
+  it("formats fallback board logical locations with stable coordinate text", () => {
+    const payload = JSON.parse(
+      formatSarif(
+        sampleResult([
+          createFinding({
+            ruleId: "design.copper-balance",
+            severity: "medium",
+            message: "Copper balance is low near the board origin.",
+            resource: { path: "board.kicad_pcb", kind: "pcb" },
+            location: {
+              boardCoordinates: {
+                x: 14,
+                y: -0,
+                units: "in",
+              },
+            },
+          }),
+        ]),
+      ),
+    );
+
+    expect(payload.runs[0].results[0].locations[0].logicalLocations).toEqual([
+      {
+        name: "board @ (14in, 0in)",
+        kind: "member",
+        fullyQualifiedName: "pcb:board:14in,0in",
+      },
+    ]);
+  });
+
+  it("keeps fallback SARIF regions valid when line or column are zero", () => {
+    const payload = JSON.parse(
+      formatSarif(
+        sampleResult([
+          createFinding({
+            ruleId: "bom.missing-mpn",
+            severity: "high",
+            message: "R1 is missing an MPN.",
+            resource: { path: "bom.csv", kind: "bom" },
+            location: { line: 0, column: 0 },
+          }),
+        ]),
+      ),
+    );
+
+    expect(payload.runs[0].results[0].locations[0].physicalLocation.region).toEqual({
+      startLine: 1,
+      startColumn: 1,
+    });
+  });
+
   it("renders PR Markdown for empty and populated finding sets without unresolved tokens", () => {
     const empty = formatMarkdown(sampleResult([]));
     expect(empty).toContain(stickyMarker);
@@ -254,7 +367,51 @@ const sarifSchema = {
                 ruleId: { type: "string" },
                 level: { enum: ["error", "warning", "note", "none"] },
                 message: { type: "object", required: ["text"] },
-                locations: { type: "array", minItems: 1 },
+                locations: {
+                  type: "array",
+                  minItems: 1,
+                  items: {
+                    type: "object",
+                    required: ["physicalLocation"],
+                    properties: {
+                      physicalLocation: {
+                        type: "object",
+                        required: ["artifactLocation", "region"],
+                        properties: {
+                          artifactLocation: {
+                            type: "object",
+                            required: ["uri"],
+                            properties: {
+                              uri: { type: "string" },
+                            },
+                          },
+                          region: {
+                            type: "object",
+                            required: ["startLine"],
+                            properties: {
+                              startLine: { type: "integer", minimum: 1 },
+                              endLine: { type: "integer", minimum: 1 },
+                              startColumn: { type: "integer", minimum: 1 },
+                              endColumn: { type: "integer", minimum: 1 },
+                            },
+                          },
+                        },
+                      },
+                      logicalLocations: {
+                        type: "array",
+                        items: {
+                          type: "object",
+                          required: ["name", "fullyQualifiedName", "kind"],
+                          properties: {
+                            name: { type: "string" },
+                            fullyQualifiedName: { type: "string" },
+                            kind: { type: "string" },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
                 partialFingerprints: {
                   type: "object",
                   required: ["primaryLocationLineHash"],

@@ -309493,19 +309493,7 @@ function formatSarif(result) {
           ruleId: finding2.ruleId,
           level: sarifLevel(finding2.severity),
           message: { text: finding2.message },
-          locations: [
-            {
-              physicalLocation: {
-                artifactLocation: {
-                  uri: finding2.resource.path
-                },
-                region: finding2.location?.region ?? {
-                  startLine: finding2.location?.line ?? 1,
-                  startColumn: finding2.location?.column ?? 1
-                }
-              }
-            }
-          ],
+          locations: [sarifLocation(finding2)],
           partialFingerprints: {
             primaryLocationLineHash: finding2.fingerprint
           },
@@ -309524,6 +309512,33 @@ function formatSarif(result) {
   return `${JSON.stringify(sarif, null, 2)}
 `;
 }
+function sarifLocation(finding2) {
+  const boardCoordinates = finding2.location?.boardCoordinates;
+  const logicalLocation = boardCoordinates ? {
+    logicalLocations: [
+      {
+        name: `${boardCoordinates.layer ?? "board"} @ (${sarifCoordinate(boardCoordinates.x)}${boardCoordinates.units}, ${sarifCoordinate(boardCoordinates.y)}${boardCoordinates.units})`,
+        kind: "member",
+        fullyQualifiedName: `pcb:${boardCoordinates.layer ?? "board"}:${sarifCoordinateWithUnits(
+          boardCoordinates.x,
+          boardCoordinates.units
+        )},${sarifCoordinateWithUnits(boardCoordinates.y, boardCoordinates.units)}`
+      }
+    ]
+  } : {};
+  return {
+    physicalLocation: {
+      artifactLocation: {
+        uri: finding2.resource.path
+      },
+      region: finding2.location?.region ?? {
+        startLine: sarifPositiveInteger(finding2.location?.line),
+        startColumn: sarifPositiveInteger(finding2.location?.column)
+      }
+    },
+    ...logicalLocation
+  };
+}
 function sarifLevel(severity) {
   if (severity === "critical" || severity === "high") {
     return "error";
@@ -309532,6 +309547,24 @@ function sarifLevel(severity) {
     return "warning";
   }
   return "note";
+}
+function sarifCoordinate(value) {
+  if (Object.is(value, -0)) {
+    return "0";
+  }
+  if (Number.isInteger(value)) {
+    return value.toString();
+  }
+  return value.toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
+}
+function sarifCoordinateWithUnits(value, units) {
+  return `${sarifCoordinate(value)}${units}`;
+}
+function sarifPositiveInteger(value) {
+  if (value === void 0) {
+    return 1;
+  }
+  return Number.isInteger(value) && value > 0 ? value : 1;
 }
 function sarifHelp(fix) {
   const numberedSteps = fix.steps?.map((step, index) => `${index + 1}. ${step}`) ?? [];

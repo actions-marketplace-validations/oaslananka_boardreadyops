@@ -35,6 +35,57 @@ describe("report snapshots", () => {
     expect(JSON.parse(formatSarif(result))).toMatchSnapshot();
   });
 
+  it("formats SARIF context fields", () => {
+    const findings = [
+      createFinding({
+        ruleId: "manifest.project-discovery",
+        severity: "medium",
+        message: "Project has no board file.",
+        resource: { path: "hardware/main.kicad_pro", kind: "project" },
+      }),
+      createFinding({
+        ruleId: "bom.missing-mpn",
+        severity: "high",
+        message: "R1 is missing an MPN.",
+        resource: { path: "hardware/bom.csv", kind: "bom" },
+        location: { line: 7, column: 2 },
+      }),
+      createFinding({
+        ruleId: "design.board-outline",
+        severity: "critical",
+        message: "Board outline has a gap.",
+        project: "hardware/main.kicad_pro",
+        resource: { path: "hardware/main.kicad_pcb", kind: "pcb" },
+        location: {
+          region: {
+            startLine: 42,
+            endLine: 44,
+            startColumn: 3,
+            endColumn: 12,
+          },
+          boardCoordinates: {
+            x: 14.2,
+            y: 8.7,
+            layer: "Edge.Cuts",
+            units: "mm",
+          },
+        },
+        fix: {
+          description: "Close the outline segment.",
+          steps: ["Open Edge.Cuts.", "Connect the adjacent outline endpoints."],
+        },
+        confidence: "definite",
+      }),
+    ];
+    const richResult: RunResult = {
+      ...result,
+      summary: summarizeFindings(findings, "high"),
+      findings,
+    };
+
+    expect(JSON.parse(formatSarif(richResult))).toMatchSnapshot();
+  });
+
   it("formats stable Markdown", () => {
     expect(formatMarkdown(result)).toMatchSnapshot();
   });
