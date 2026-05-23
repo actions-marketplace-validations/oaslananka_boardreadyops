@@ -179,6 +179,36 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run test:action
 
+  accessibility:
+    name: ci / accessibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - name: Setup uv
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - name: Install Python docs dependencies
+        run: |
+          docs_venv="${RUNNER_TEMP}/boardreadyops-docs-venv"
+          uv venv "${docs_venv}"
+          uv pip install --python "${docs_venv}/bin/python" mkdocs==1.6.1 mkdocs-material==9.7.6 mike==2.2.0
+          echo "${docs_venv}/bin" >> "${GITHUB_PATH}"
+      - run: pnpm install --frozen-lockfile
+      - name: Verify Chrome for pa11y
+        run: google-chrome --version
+      - run: pnpm run test:a11y
+
   build:
     name: ci / build
     runs-on: ubuntu-latest

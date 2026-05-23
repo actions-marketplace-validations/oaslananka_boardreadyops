@@ -1,0 +1,89 @@
+.md-nav__link {
+  color: #1f2937;
+  opacity: 1;
+}
+
+.md-nav__link:is(:focus, :hover),
+.md-nav__link--active {
+  color: #004b8d;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.md-tabs {
+  background: #1f2937;
+  height: auto;
+  overflow: visible;
+}
+
+.md-tabs .md-grid,
+.md-tabs__list {
+  overflow: visible;
+}
+
+.md-tabs__list {
+  flex-wrap: wrap;
+  white-space: normal;
+}
+
+.md-tabs__item {
+  height: auto;
+}
+
+.md-tabs:not([hidden]) .md-tabs__link {
+  color: #ffffff;
+  opacity: 1;
+  transform: none;
+}
+
+.md-tabs:not([hidden]) .md-tabs__link:is(:focus, :hover) {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.md-typeset a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.md-typeset a:is(:focus, :hover) {
+  text-decoration-thickness: 0.12em;
+}
+
+.md-footer,
+.md-footer-meta {
+  color: #ffffff;
+}
+
+.md-footer *,
+.md-footer-meta * {
+  color: #ffffff;
+  opacity: 1;
+}
+
+.md-footer a {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.boardreadyops-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+  padding: 0;
+}
+
+.highlight:focus,
+.highlight code:focus,
+.md-typeset pre > code:focus,
+.md-typeset pre:focus {
+  outline: 3px solid #004b8d;
+  outline-offset: 2px;
+}

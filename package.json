@@ -41,6 +41,7 @@
     "test:unit": "vitest run tests/unit",
     "test:int": "vitest run tests/integration",
     "test:action": "pnpm run build && vitest run tests/action",
+    "test:a11y": "vitest run tests/unit/report/html.test.ts tests/unit/scripts/check-docs-a11y.test.ts && pnpm run docs:a11y",
     "test:property": "vitest run tests/property",
     "test:snapshot": "vitest run tests/snapshot",
     "test:bench": "vitest bench",
@@ -61,10 +62,11 @@
     "verify:structure": "node scripts/verify-structure.mjs",
     "gc": "node scripts/gc.mjs",
     "docs": "node scripts/compatibility.mjs render && node scripts/generate-rule-docs.mjs && node scripts/update-action-inputs-docs.mjs && node scripts/docs-build.mjs",
+    "docs:a11y": "node scripts/check-docs-a11y.mjs",
     "docs:serve": "mkdocs serve",
     "knip": "knip",
     "sbom": "node scripts/generate-sbom.mjs",
-    "verify": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run compatibility:check && pnpm run build && pnpm run verify:dist && pnpm run verify:version && pnpm run verify:marketplace && pnpm run test:unit && pnpm run test:property && pnpm run test:snapshot && pnpm run test:action && pnpm run coverage && pnpm run verify:structure && pnpm run gc && pnpm run docs && pnpm audit --audit-level moderate",
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run compatibility:check && pnpm run build && pnpm run verify:dist && pnpm run verify:version && pnpm run verify:marketplace && pnpm run test:unit && pnpm run test:property && pnpm run test:snapshot && pnpm run test:action && pnpm run test:a11y && pnpm run coverage && pnpm run verify:structure && pnpm run gc && pnpm run docs && pnpm audit --audit-level moderate",
     "security": "pnpm audit --audit-level moderate"
   },
   "lint-staged": {
@@ -106,7 +108,9 @@
     "knip": "6.14.1",
     "lint-staged": "^17.0.5",
     "mustache": "^4.2.0",
+    "pa11y": "9.1.1",
     "picocolors": "^1.1.1",
+    "puppeteer": "24.43.1",
     "typescript": "6.0.3",
     "vitest": "^4.1.6",
     "zod": "^4.4.3"

@@ -8,6 +8,10 @@ corepack pnpm install --frozen-lockfile
 task verify
 ```
 
+Accessibility checks are part of the verification contract. HTML report changes must keep the axe-core report test
+passing, and documentation changes must keep the MkDocs pa11y smoke test passing. The target and documented
+exceptions are in [docs/accessibility.md](docs/accessibility.md).
+
 Source changes that affect the Action must regenerate committed bundles:
 
 ```bash

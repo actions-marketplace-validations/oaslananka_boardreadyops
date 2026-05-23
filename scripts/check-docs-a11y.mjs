@@ -1,0 +1,199 @@
+import { createReadStream } from "node:fs";
+import { access, mkdtemp, rm, stat } from "node:fs/promises";
+import http from "node:http";
+import os from "node:os";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+import glob from "fast-glob";
+import { runWithMkDocsWarningSuppressed } from "./lib/run-command.mjs";
+
+export const pa11yOptions = Object.freeze({
+  standard: "WCAG2AA",
+  runners: ["axe", "htmlcs"],
+  includeWarnings: false,
+  includeNotices: false,
+  timeout: 30_000,
+  wait: 500,
+});
+
+export async function collectHtmlFiles(siteDir) {
+  const files = await glob("**/*.html", {
+    cwd: siteDir,
+    onlyFiles: true,
+    dot: false,
+  });
+  return files.sort().map((file) => path.join(siteDir, file));
+}
+
+export function formatPa11yFailures(siteDir, results) {
+  const lines = ["pa11y accessibility check failed:"];
+  for (const result of results) {
+    const relativePage = path.relative(siteDir, result.page).split(path.sep).join("/");
+    lines.push(`- ${relativePage}`);
+    for (const issue of result.issues) {
+      lines.push(`  - ${issue.type}: ${issue.message}`);
+      lines.push(`    selector: ${issue.selector}`);
+      lines.push(`    code: ${issue.code}`);
+    }
+  }
+  return lines.join("\n");
+}
+
+export async function main(root = process.cwd()) {
+  const siteDir = await mkdtemp(path.join(os.tmpdir(), "boardreadyops-mkdocs-a11y-"));
+  try {
+    await runWithMkDocsWarningSuppressed(
+      "python",
+      ["-m", "mkdocs", "build", "--strict", "--quiet", "--site-dir", siteDir],
+      {
+        cwd: root,
+      },
+    );
+    const pages = await collectHtmlFiles(siteDir);
+    const server = await startStaticServer(siteDir);
+    const { default: pa11y } = await import("pa11y");
+    const { default: puppeteer } = await import("puppeteer");
+    const failures = [];
+    const browser = await puppeteer.launch(await createChromeLaunchConfig());
+    try {
+      for (const [index, page] of pages.entries()) {
+        const relativePage = path.relative(siteDir, page).split(path.sep).join("/");
+        process.stderr.write(`pa11y ${index + 1}/${pages.length}: ${relativePage}\n`);
+        const browserPage = await browser.newPage();
+        try {
+          const result = await pa11y(pageUrlForFile(server.origin, siteDir, page), {
+            ...pa11yOptions,
+            browser,
+            page: browserPage,
+          });
+          if (result.issues.length > 0) {
+            failures.push({ page, issues: result.issues });
+          }
+        } finally {
+          await browserPage.close();
+        }
+      }
+    } finally {
+      await browser.close();
+      await server.close();
+    }
+    if (failures.length > 0) {
+      throw new Error(formatPa11yFailures(siteDir, failures));
+    }
+  } finally {
+    await rm(siteDir, { recursive: true, force: true });
+  }
+}
+
+export function pageUrlForFile(origin, siteDir, file) {
+  const relativePage = path.relative(siteDir, file).split(path.sep).map(encodeURIComponent).join("/");
+  return `${origin}/boardreadyops/${relativePage}`;
+}
+
+export async function createChromeLaunchConfig() {
+  return {
+    executablePath: process.env.PA11Y_CHROME_PATH || (await detectChromeExecutable()),
+    args: ["--no-sandbox", "--disable-dev-shm-usage"],
+  };
+}
+
+async function detectChromeExecutable() {
+  const candidates = [
+    process.env.CHROME_PATH,
+    "/usr/bin/google-chrome",
+    "/usr/bin/google-chrome-stable",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  ].filter(Boolean);
+  for (const candidate of candidates) {
+    try {
+      await access(candidate);
+      return candidate;
+    } catch {
+      // Continue to the next known browser path.
+    }
+  }
+  return undefined;
+}
+
+async function startStaticServer(siteDir) {
+  const server = http.createServer(async (request, response) => {
+    try {
+      const url = new URL(request.url ?? "/", "http://127.0.0.1");
+      const file = await resolveRequestPath(siteDir, url.pathname);
+      if (!file) {
+        response.writeHead(404);
+        response.end("Not found");
+        return;
+      }
+      response.writeHead(200, { "content-type": contentType(file) });
+      createReadStream(file).pipe(response);
+    } catch (error) {
+      response.writeHead(500);
+      response.end(error instanceof Error ? error.message : "Static server error");
+    }
+  });
+  await new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      server.off("error", reject);
+      resolve();
+    });
+  });
+  const address = server.address();
+  if (!address || typeof address === "string") {
+    throw new Error("static server did not bind to a TCP port");
+  }
+  return {
+    origin: `http://127.0.0.1:${address.port}`,
+    close: () => new Promise((resolve, reject) => server.close((error) => (error ? reject(error) : resolve()))),
+  };
+}
+
+async function resolveRequestPath(siteDir, pathname) {
+  const base = "/boardreadyops/";
+  if (!pathname.startsWith(base)) {
+    return undefined;
+  }
+  const relative = decodeURIComponent(pathname.slice(base.length)) || "index.html";
+  const candidate = path.resolve(siteDir, relative);
+  const root = path.resolve(siteDir);
+  if (candidate !== root && !candidate.startsWith(`${root}${path.sep}`)) {
+    throw new Error(`refusing to serve path outside site dir: ${pathname}`);
+  }
+  const info = await stat(candidate).catch((error) => {
+    if (error && error.code === "ENOENT") {
+      return undefined;
+    }
+    throw error;
+  });
+  if (!info) {
+    return undefined;
+  }
+  if (info.isDirectory()) {
+    return path.join(candidate, "index.html");
+  }
+  return candidate;
+}
+
+function contentType(file) {
+  if (file.endsWith(".css")) {
+    return "text/css; charset=utf-8";
+  }
+  if (file.endsWith(".js")) {
+    return "text/javascript; charset=utf-8";
+  }
+  if (file.endsWith(".json")) {
+    return "application/json; charset=utf-8";
+  }
+  if (file.endsWith(".svg")) {
+    return "image/svg+xml";
+  }
+  return "text/html; charset=utf-8";
+}
+
+const invokedPath = process.argv[1] ? pathToFileURL(path.resolve(process.argv[1])).href : "";
+if (import.meta.url === invokedPath) {
+  await main();
+}

@@ -37,6 +37,12 @@ plugins:
       alias_type: symlink
       canonical_version: latest
 
+extra_css:
+  - stylesheets/accessibility.css
+
+extra_javascript:
+  - javascripts/accessibility.js
+
 extra:
   version:
     provider: mike
@@ -46,6 +52,7 @@ nav:
   - Quickstart: quickstart.md
   - Installation: install.md
   - Support Matrix: support-matrix.md
+  - Accessibility: accessibility.md
   - Configuration: configuration.md
   - Cross-platform Paths: cross-platform.md
   - Multi-project Workspaces: multi-project.md
