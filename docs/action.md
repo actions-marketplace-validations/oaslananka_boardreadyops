@@ -63,3 +63,7 @@ jobs:
 ## Pull request comments
 
 When `comment-pr` is enabled, the sticky pull request comment summarizes the current findings. If the Action can read a previous BoardReadyOps JSON artifact from the pull request head branch or base branch, the comment also includes a fabrication diff for BOM rows, manufacturing outputs, and newly added findings.
+
+## Notifiers
+
+The Action honors the repository `notifiers` configuration from `boardreadyops.yml`. Webhook URLs, Telegram bot tokens, and SMTP credentials must be supplied through workflow environment variables or secrets referenced by the configured `webhookEnv`, `botTokenEnv`, or `smtpEnv` names. Delivery is best-effort: missing credentials, severity filters, and notifier failures do not change the Action exit code. Action notifications include a link to the current workflow run when GitHub exposes the run metadata.

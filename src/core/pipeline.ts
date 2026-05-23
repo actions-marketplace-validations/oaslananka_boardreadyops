@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { boardReadyVersion } from "../generated/version.js";
+import { dispatchNotifications, notificationPayloadFromResult } from "../notifiers/dispatch.js";
 import { registerBuiltInRules } from "../rules/_index.js";
 import { captureFabricationSnapshot } from "../rules/fabrication-snapshot.js";
 import { normalizePathInput } from "../util/path.js";
@@ -124,9 +125,15 @@ export async function runPipeline(
     fabrication,
     generatedAt: new Date().toISOString(),
   };
+  const notificationResults = await dispatchNotifications(
+    config.notifiers,
+    notificationPayloadFromResult(result, options.notificationLinks ?? {}),
+    { logger: activeLogger },
+  );
   activeLogger.debug("pipeline.finish", {
     latency_ms: Math.round(performance.now() - pipelineStart),
     findings: result.summary.total,
+    notifications: notificationResults,
   });
   return result;
 }
@@ -193,6 +200,7 @@ function normalizeOptions(
     quiet: input.quiet ?? false,
     verbose: input.verbose ?? false,
     color: input.color ?? "auto",
+    ...(input.notificationLinks ? { notificationLinks: input.notificationLinks } : {}),
   };
 }
 

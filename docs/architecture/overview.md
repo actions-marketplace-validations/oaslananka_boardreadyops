@@ -13,6 +13,7 @@ flowchart LR
   core["Core orchestration"]
   rules["Rule modules"]
   report["Report emitters"]
+  notifiers["Notifier dispatch"]
   kicad["KiCad parsers"]
   bom["BOM loaders"]
   pinmap["Pinmap loaders"]
@@ -28,7 +29,9 @@ flowchart LR
   cli --> generated
   core --> rules
   core --> generated
+  core --> notifiers
   report --> core
+  notifiers --> core
   rules --> core
   rules --> kicad
   rules --> bom
@@ -39,6 +42,7 @@ flowchart LR
   action --> util
   cli --> util
   core --> util
+  notifiers --> util
   report --> util
   rules --> util
   kicad --> util
@@ -51,7 +55,8 @@ flowchart LR
 The structure check enforces these constraints:
 
 - `src/action` and `src/cli` are runtime edges. They may call core orchestration, reports, and shared helpers that are needed at the boundary.
-- `src/core` owns orchestration and may call generated contracts, registered rules, and utilities.
+- `src/core` owns orchestration and may call generated contracts, registered rules, notifier dispatch, and utilities.
+- `src/notifiers` owns best-effort notification delivery. It may consume core finding/config types and utilities, but notifier failures must not block pipeline results.
 - `src/rules` may use core types plus the BOM, KiCad, pinmap, and utility layers needed to evaluate hardware checks.
 - `src/report` consumes core results and formats output. It does not import rule implementations.
 - `src/bom`, `src/kicad`, and `src/pinmap` stay parser-focused. Their cross-layer imports are limited to the parser dependencies encoded by the structure verifier.

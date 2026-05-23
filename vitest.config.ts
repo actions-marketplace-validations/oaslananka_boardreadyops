@@ -22,7 +22,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
-      include: ["src/{core,rules,bom,pinmap,report,kicad}/**/*.ts", "src/action/inputs.ts"],
+      include: ["src/{core,rules,bom,pinmap,report,kicad,notifiers}/**/*.ts", "src/action/inputs.ts"],
       exclude: [
         "src/report/templates/**",
         "src/**/types.ts",
@@ -68,6 +68,12 @@ export default defineConfig({
         "src/kicad/**": {
           lines: 90,
           branches: 85,
+          functions: 90,
+          statements: 90,
+        },
+        "src/notifiers/**": {
+          lines: 90,
+          branches: 75,
           functions: 90,
           statements: 90,
         },

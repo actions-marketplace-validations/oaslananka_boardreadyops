@@ -49,6 +49,34 @@ export interface GateConfig {
   require?: string[];
 }
 
+export interface BaseNotifierConfig {
+  enabled?: boolean;
+  minSeverity?: Severity;
+}
+
+export interface WebhookNotifierConfig extends BaseNotifierConfig {
+  webhookEnv?: string;
+}
+
+export interface TelegramNotifierConfig extends BaseNotifierConfig {
+  botTokenEnv?: string;
+  chatId?: string;
+}
+
+export interface EmailNotifierConfig extends BaseNotifierConfig {
+  smtpEnv?: string;
+  from?: string;
+  recipients?: string[];
+}
+
+export interface NotifiersConfig {
+  slack?: WebhookNotifierConfig;
+  teams?: WebhookNotifierConfig;
+  telegram?: TelegramNotifierConfig;
+  discord?: WebhookNotifierConfig;
+  email?: EmailNotifierConfig;
+}
+
 export interface BoardReadyOpsConfig {
   version: 1;
   mode?: "warn" | "enforce";
@@ -58,6 +86,7 @@ export interface BoardReadyOpsConfig {
   gates?: Record<string, GateConfig>;
   suppressions?: SuppressionConfig[];
   baseline?: BaselineConfig;
+  notifiers?: NotifiersConfig;
   report?: {
     sarif?: string | false;
     json?: string | false;

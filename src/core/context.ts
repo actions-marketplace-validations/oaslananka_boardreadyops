@@ -34,6 +34,10 @@ export interface PipelineOptions {
   quiet: boolean;
   verbose: boolean;
   color: "auto" | "always" | "never";
+  notificationLinks?: {
+    reportUrl?: string | undefined;
+    runUrl?: string | undefined;
+  };
 }
 
 export interface RuleContext {

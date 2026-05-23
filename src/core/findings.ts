@@ -73,8 +73,12 @@ export function isSeverity(value: unknown): value is Severity {
   return typeof value === "string" && severityNames.includes(value as Severity);
 }
 
+export function severityRankValue(severity: Severity): number {
+  return severityRank[severity];
+}
+
 function compareSeverity(a: Severity, b: Severity): number {
-  return severityRank[b] - severityRank[a];
+  return severityRankValue(b) - severityRankValue(a);
 }
 
 export function createFinding(input: FindingInput): Finding {

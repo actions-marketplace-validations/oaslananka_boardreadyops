@@ -32,7 +32,15 @@ export async function runAction(): Promise<void> {
     path: inputs.path,
     gate: inputs.gate,
   });
-  const result = await runPipeline(inputs, logger);
+  const result = await runPipeline(
+    {
+      ...inputs,
+      notificationLinks: {
+        runUrl: githubRunUrl(),
+      },
+    },
+    logger,
+  );
   const written: { sarif?: string; json?: string; markdown?: string } = {};
   if (inputs.outputs.json) {
     written.json = path.resolve(workspace, inputs.outputs.json);
@@ -86,4 +94,11 @@ async function ensureRunnerFile(file: string | undefined): Promise<void> {
   }
   await fs.mkdir(path.dirname(file), { recursive: true });
   await fs.appendFile(file, "", "utf8");
+}
+
+function githubRunUrl(): string | undefined {
+  const server = process.env.GITHUB_SERVER_URL;
+  const repository = process.env.GITHUB_REPOSITORY;
+  const runId = process.env.GITHUB_RUN_ID;
+  return server && repository && runId ? `${server}/${repository}/actions/runs/${runId}` : undefined;
 }

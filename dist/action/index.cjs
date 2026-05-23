@@ -34,8 +34,8 @@ var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: tru
 var require_tunnel = __commonJS({
   "node_modules/tunnel/lib/tunnel.js"(exports2) {
     "use strict";
-    var net = require("net");
-    var tls = require("tls");
+    var net2 = require("net");
+    var tls2 = require("tls");
     var http3 = require("http");
     var https3 = require("https");
     var events = require("events");
@@ -211,7 +211,7 @@ var require_tunnel = __commonJS({
           socket,
           servername: hostHeader ? hostHeader.replace(/:.*$/, "") : options.host
         });
-        var secureSocket = tls.connect(0, tlsOptions);
+        var secureSocket = tls2.connect(0, tlsOptions);
         self2.sockets[self2.sockets.indexOf(socket)] = secureSocket;
         cb(secureSocket);
       });
@@ -1254,7 +1254,7 @@ var require_util = __commonJS({
     var { kDestroyed, kBodyUsed, kListeners, kBody } = require_symbols();
     var { IncomingMessage } = require("node:http");
     var stream4 = require("node:stream");
-    var net = require("node:net");
+    var net2 = require("node:net");
     var { stringify } = require("node:querystring");
     var { EventEmitter: EE, addAbortListener: addAbortListenerNative } = require("node:events");
     var timers = require_timers();
@@ -1393,7 +1393,7 @@ var require_util = __commonJS({
       }
       assert2(typeof host === "string");
       const servername = getHostname(host);
-      if (net.isIP(servername)) {
+      if (net2.isIP(servername)) {
         return "";
       }
       return servername;
@@ -2969,11 +2969,11 @@ var require_dispatcher_base = __commonJS({
 var require_connect = __commonJS({
   "node_modules/undici/lib/core/connect.js"(exports2, module2) {
     "use strict";
-    var net = require("node:net");
+    var net2 = require("node:net");
     var assert2 = require("node:assert");
     var util3 = require_util();
     var { InvalidArgumentError } = require_errors();
-    var tls;
+    var tls2;
     var SessionCache = class WeakSessionCache {
       constructor(maxCachedSessions) {
         this._maxCachedSessions = maxCachedSessions;
@@ -3025,15 +3025,15 @@ var require_connect = __commonJS({
       return function connect({ hostname: hostname3, host, protocol, port, servername, localAddress, httpSocket }, callback) {
         let socket;
         if (protocol === "https:") {
-          if (!tls) {
-            tls = require("node:tls");
+          if (!tls2) {
+            tls2 = require("node:tls");
           }
           servername = servername || options.servername || util3.getServerName(host) || null;
           const sessionKey = servername || hostname3;
           assert2(sessionKey);
           const session = customSession || sessionCache.get(sessionKey) || null;
           port = port || 443;
-          socket = tls.connect({
+          socket = tls2.connect({
             highWaterMark: 16384,
             // TLS in node can't have bigger HWM anyway...
             ...options,
@@ -3052,7 +3052,7 @@ var require_connect = __commonJS({
         } else {
           assert2(!httpSocket, "httpSocket can only be sent on TLS update");
           port = port || 80;
-          socket = net.connect({
+          socket = net2.connect({
             highWaterMark: 64 * 1024,
             // Same as nodejs fs streams.
             ...options,
@@ -8867,7 +8867,7 @@ var require_client = __commonJS({
   "node_modules/undici/lib/dispatcher/client.js"(exports2, module2) {
     "use strict";
     var assert2 = require("node:assert");
-    var net = require("node:net");
+    var net2 = require("node:net");
     var http3 = require("node:http");
     var util3 = require_util();
     var { ClientStats } = require_stats();
@@ -8956,7 +8956,7 @@ var require_client = __commonJS({
         keepAliveTimeoutThreshold,
         socketPath,
         pipelining,
-        tls,
+        tls: tls2,
         strictContentLength,
         maxCachedSessions,
         connect: connect2,
@@ -9023,7 +9023,7 @@ var require_client = __commonJS({
         if (maxRequestsPerClient != null && (!Number.isInteger(maxRequestsPerClient) || maxRequestsPerClient < 0)) {
           throw new InvalidArgumentError("maxRequestsPerClient must be a positive number");
         }
-        if (localAddress != null && (typeof localAddress !== "string" || net.isIP(localAddress) === 0)) {
+        if (localAddress != null && (typeof localAddress !== "string" || net2.isIP(localAddress) === 0)) {
           throw new InvalidArgumentError("localAddress must be valid string IP address");
         }
         if (maxResponseSize != null && (!Number.isInteger(maxResponseSize) || maxResponseSize < -1)) {
@@ -9053,7 +9053,7 @@ var require_client = __commonJS({
         super({ webSocket });
         if (typeof connect2 !== "function") {
           connect2 = buildConnector({
-            ...tls,
+            ...tls2,
             maxCachedSessions,
             allowH2,
             useH2c,
@@ -9200,7 +9200,7 @@ var require_client = __commonJS({
         const idx = hostname3.indexOf("]");
         assert2(idx !== -1);
         const ip = hostname3.substring(1, idx);
-        assert2(net.isIPv6(ip));
+        assert2(net2.isIPv6(ip));
         hostname3 = ip;
       }
       client2[kConnecting] = true;
@@ -9681,7 +9681,7 @@ var require_pool = __commonJS({
         factory = defaultFactory,
         connect,
         connectTimeout,
-        tls,
+        tls: tls2,
         maxCachedSessions,
         socketPath,
         autoSelectFamily,
@@ -9702,7 +9702,7 @@ var require_pool = __commonJS({
         }
         if (typeof connect !== "function") {
           connect = buildConnector({
-            ...tls,
+            ...tls2,
             maxCachedSessions,
             allowH2,
             useH2c,
@@ -9951,7 +9951,7 @@ var require_round_robin_pool = __commonJS({
         factory = defaultFactory,
         connect,
         connectTimeout,
-        tls,
+        tls: tls2,
         maxCachedSessions,
         socketPath,
         autoSelectFamily,
@@ -9971,7 +9971,7 @@ var require_round_robin_pool = __commonJS({
         }
         if (typeof connect !== "function") {
           connect = buildConnector({
-            ...tls,
+            ...tls2,
             maxCachedSessions,
             allowH2,
             socketPath,
@@ -10283,10 +10283,10 @@ var require_socks5_utils = __commonJS({
   "node_modules/undici/lib/core/socks5-utils.js"(exports2, module2) {
     "use strict";
     var { Buffer: Buffer3 } = require("node:buffer");
-    var net = require("node:net");
+    var net2 = require("node:net");
     var { InvalidArgumentError } = require_errors();
     function parseAddress(address) {
-      if (net.isIPv4(address)) {
+      if (net2.isIPv4(address)) {
         const parts = address.split(".").map(Number);
         return {
           type: 1,
@@ -10294,7 +10294,7 @@ var require_socks5_utils = __commonJS({
           buffer: Buffer3.from(parts)
         };
       }
-      if (net.isIPv6(address)) {
+      if (net2.isIPv6(address)) {
         return {
           type: 4,
           // IPv6
@@ -10317,7 +10317,7 @@ var require_socks5_utils = __commonJS({
       if (address.includes(".")) {
         const lastColonIndex = address.lastIndexOf(":");
         const ipv4Part = address.slice(lastColonIndex + 1);
-        if (net.isIPv4(ipv4Part)) {
+        if (net2.isIPv4(ipv4Part)) {
           const octets = ipv4Part.split(".").map(Number);
           const high = (octets[0] << 8 | octets[1]).toString(16);
           const low = (octets[2] << 8 | octets[3]).toString(16);
@@ -10777,7 +10777,7 @@ var require_socks5_proxy_agent = __commonJS({
   "node_modules/undici/lib/dispatcher/socks5-proxy-agent.js"(exports2, module2) {
     "use strict";
     var { URL: URL2 } = require("node:url");
-    var tls;
+    var tls2;
     var DispatcherBase = require_dispatcher_base();
     var { InvalidArgumentError } = require_errors();
     var { Socks5Client, STATES } = require_socks5_client();
@@ -10915,11 +10915,11 @@ var require_socks5_proxy_agent = __commonJS({
                   const socket = await this.createSocks5Connection(targetHost, targetPort);
                   let finalSocket = socket;
                   if (url3.protocol === "https:") {
-                    if (!tls) {
-                      tls = require("node:tls");
+                    if (!tls2) {
+                      tls2 = require("node:tls");
                     }
                     debug2("upgrading to TLS");
-                    finalSocket = tls.connect({
+                    finalSocket = tls2.connect({
                       socket,
                       servername: targetHost,
                       ...connectOpts.tls || {}
@@ -37778,7 +37778,7 @@ var require_typescript = __commonJS({
         formatGeneratedName: () => formatGeneratedName,
         formatGeneratedNamePart: () => formatGeneratedNamePart,
         formatLocation: () => formatLocation,
-        formatMessage: () => formatMessage,
+        formatMessage: () => formatMessage2,
         formatStringFromArgs: () => formatStringFromArgs,
         formatting: () => ts_formatting_exports,
         generateDjb2Hash: () => generateDjb2Hash,
@@ -55285,7 +55285,7 @@ ${lanes.join("\n")}
       function getCanonicalDiagnostic(message, ...args) {
         return {
           code: message.code,
-          messageText: formatMessage(message, ...args)
+          messageText: formatMessage2(message, ...args)
         };
       }
       function getSpanOfTokenAtPosition(sourceFile, pos) {
@@ -59481,7 +59481,7 @@ ${lanes.join("\n")}
           reportsDeprecated: message.reportsDeprecated
         };
       }
-      function formatMessage(message, ...args) {
+      function formatMessage2(message, ...args) {
         let text = getLocaleSpecificMessage(message);
         if (some(args)) {
           text = formatStringFromArgs(text, args);
@@ -84485,7 +84485,7 @@ ${lanes.join("\n")}
         }
       }
       function trace(host, message, ...args) {
-        host.trace(formatMessage(message, ...args));
+        host.trace(formatMessage2(message, ...args));
       }
       function isTraceEnabled(compilerOptions, host) {
         return !!compilerOptions.traceResolution && host.trace !== void 0;
@@ -111057,7 +111057,7 @@ ${lanes.join("\n")}
               const childrenPropName = childPropName === void 0 ? "children" : unescapeLeadingUnderscores(childPropName);
               const childrenTargetType = getIndexedAccessType(target, getStringLiteralType(childrenPropName));
               const diagnostic = Diagnostics._0_components_don_t_accept_text_as_child_elements_Text_in_JSX_has_the_type_string_but_the_expected_type_of_1_is_2;
-              invalidTextDiagnostic = { ...diagnostic, key: "!!ALREADY FORMATTED!!", message: formatMessage(diagnostic, tagNameText, childrenPropName, typeToString(childrenTargetType)) };
+              invalidTextDiagnostic = { ...diagnostic, key: "!!ALREADY FORMATTED!!", message: formatMessage2(diagnostic, tagNameText, childrenPropName, typeToString(childrenTargetType)) };
             }
             return invalidTextDiagnostic;
           }
@@ -183936,7 +183936,7 @@ ${lanes.join("\n")}
             false,
             /*beforeOptionsDescription*/
             void 0,
-            formatMessage(Diagnostics.You_can_learn_about_all_of_the_compiler_options_at_0, "https://aka.ms/tsc")
+            formatMessage2(Diagnostics.You_can_learn_about_all_of_the_compiler_options_at_0, "https://aka.ms/tsc")
           )
         ];
         for (const line of output) {
@@ -183960,7 +183960,7 @@ ${lanes.join("\n")}
           true,
           /*beforeOptionsDescription*/
           void 0,
-          formatMessage(Diagnostics.You_can_learn_about_all_of_the_compiler_options_at_0, "https://aka.ms/tsc")
+          formatMessage2(Diagnostics.You_can_learn_about_all_of_the_compiler_options_at_0, "https://aka.ms/tsc")
         )];
         output = [...output, ...generateSectionOptionsOutput(
           sys2,
@@ -183976,7 +183976,7 @@ ${lanes.join("\n")}
           filter(buildOptions2, (option) => option !== tscBuildOption && option.showInHelp !== false),
           /*subCategory*/
           false,
-          formatMessage(Diagnostics.Using_build_b_will_make_tsc_behave_more_like_a_build_orchestrator_than_a_compiler_This_is_used_to_trigger_building_composite_projects_which_you_can_learn_more_about_at_0, "https://aka.ms/tsc-composite-builds")
+          formatMessage2(Diagnostics.Using_build_b_will_make_tsc_behave_more_like_a_build_orchestrator_than_a_compiler_This_is_used_to_trigger_building_composite_projects_which_you_can_learn_more_about_at_0, "https://aka.ms/tsc-composite-builds")
         )];
         for (const line of output) {
           sys2.write(line);
@@ -183990,7 +183990,7 @@ ${lanes.join("\n")}
           filter(buildOptions2, (option) => option !== tscBuildOption && option.showInHelp !== false),
           /*subCategory*/
           false,
-          formatMessage(Diagnostics.Using_build_b_will_make_tsc_behave_more_like_a_build_orchestrator_than_a_compiler_This_is_used_to_trigger_building_composite_projects_which_you_can_learn_more_about_at_0, "https://aka.ms/tsc-composite-builds")
+          formatMessage2(Diagnostics.Using_build_b_will_make_tsc_behave_more_like_a_build_orchestrator_than_a_compiler_This_is_used_to_trigger_building_composite_projects_which_you_can_learn_more_about_at_0, "https://aka.ms/tsc-composite-builds")
         )];
         for (const line of output) {
           sys2.write(line);
@@ -234035,7 +234035,7 @@ ${options.prefix}` : "\n" : options.prefix
         formatGeneratedName: () => formatGeneratedName,
         formatGeneratedNamePart: () => formatGeneratedNamePart,
         formatLocation: () => formatLocation,
-        formatMessage: () => formatMessage,
+        formatMessage: () => formatMessage2,
         formatStringFromArgs: () => formatStringFromArgs,
         formatting: () => ts_formatting_exports,
         generateDjb2Hash: () => generateDjb2Hash,
@@ -235862,7 +235862,7 @@ ${options.prefix}` : "\n" : options.prefix
         emptyArray: () => emptyArray2,
         findArgument: () => findArgument,
         formatDiagnosticToProtocol: () => formatDiagnosticToProtocol,
-        formatMessage: () => formatMessage2,
+        formatMessage: () => formatMessage22,
         getBaseConfigFileName: () => getBaseConfigFileName,
         getDetailWatchInfo: () => getDetailWatchInfo,
         getLocationInNewDocument: () => getLocationInNewDocument,
@@ -243832,7 +243832,7 @@ Dynamic files must always be opened with service's current directory or service 
         return edits.every((edit) => textSpanEnd(edit.span) < pos);
       }
       var CommandNames = CommandTypes;
-      function formatMessage2(msg, logger7, byteLength, newLine) {
+      function formatMessage22(msg, logger7, byteLength, newLine) {
         const verboseLogging = logger7.hasLevel(
           3
           /* verbose */
@@ -245525,7 +245525,7 @@ Project '${project.projectName}' (${ProjectKind[project.projectKind]}) ${counter
           this.writeMessage(msg);
         }
         writeMessage(msg) {
-          const msgText = formatMessage2(msg, this.logger, this.byteLength, this.host.newLine);
+          const msgText = formatMessage22(msg, this.logger, this.byteLength, this.host.newLine);
           this.host.write(msgText);
         }
         event(body2, eventName) {
@@ -248634,7 +248634,7 @@ Additional information: BADCLIENT: Bad error code, ${badCode} not found in range
         emptyArray: () => emptyArray2,
         findArgument: () => findArgument,
         formatDiagnosticToProtocol: () => formatDiagnosticToProtocol,
-        formatMessage: () => formatMessage2,
+        formatMessage: () => formatMessage22,
         getBaseConfigFileName: () => getBaseConfigFileName,
         getDetailWatchInfo: () => getDetailWatchInfo,
         getLocationInNewDocument: () => getLocationInNewDocument,
@@ -261576,7 +261576,7 @@ var require_dist4 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Agent = void 0;
-    var net = __importStar(require("net"));
+    var net2 = __importStar(require("net"));
     var http3 = __importStar(require("http"));
     var https_1 = require("https");
     __exportStar(require_helpers(), exports2);
@@ -261616,7 +261616,7 @@ var require_dist4 = __commonJS({
         if (!this.sockets[name]) {
           this.sockets[name] = [];
         }
-        const fakeSocket = new net.Socket({ writable: false });
+        const fakeSocket = new net2.Socket({ writable: false });
         this.sockets[name].push(fakeSocket);
         this.totalSocketCount++;
         return fakeSocket;
@@ -261828,8 +261828,8 @@ var require_dist5 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.HttpsProxyAgent = void 0;
-    var net = __importStar(require("net"));
-    var tls = __importStar(require("tls"));
+    var net2 = __importStar(require("net"));
+    var tls2 = __importStar(require("tls"));
     var assert_1 = __importDefault(require("assert"));
     var debug_1 = __importDefault(require_src());
     var agent_base_1 = require_dist4();
@@ -261837,7 +261837,7 @@ var require_dist5 = __commonJS({
     var parse_proxy_response_1 = require_parse_proxy_response();
     var debug2 = (0, debug_1.default)("https-proxy-agent");
     var setServernameFromNonIpHost = (options) => {
-      if (options.servername === void 0 && options.host && !net.isIP(options.host)) {
+      if (options.servername === void 0 && options.host && !net2.isIP(options.host)) {
         return {
           ...options,
           servername: options.host
@@ -261874,13 +261874,13 @@ var require_dist5 = __commonJS({
         let socket;
         if (proxy.protocol === "https:") {
           debug2("Creating `tls.Socket`: %o", this.connectOpts);
-          socket = tls.connect(setServernameFromNonIpHost(this.connectOpts));
+          socket = tls2.connect(setServernameFromNonIpHost(this.connectOpts));
         } else {
           debug2("Creating `net.Socket`: %o", this.connectOpts);
-          socket = net.connect(this.connectOpts);
+          socket = net2.connect(this.connectOpts);
         }
         const headers = typeof this.proxyHeaders === "function" ? this.proxyHeaders() : { ...this.proxyHeaders };
-        const host = net.isIPv6(opts.host) ? `[${opts.host}]` : opts.host;
+        const host = net2.isIPv6(opts.host) ? `[${opts.host}]` : opts.host;
         let payload = `CONNECT ${host}:${opts.port} HTTP/1.1\r
 `;
         if (proxy.username || proxy.password) {
@@ -261905,7 +261905,7 @@ var require_dist5 = __commonJS({
           req.once("socket", resume);
           if (opts.secureEndpoint) {
             debug2("Upgrading socket connection to TLS");
-            return tls.connect({
+            return tls2.connect({
               ...omit3(setServernameFromNonIpHost(opts), "host", "path", "port"),
               socket
             });
@@ -261913,7 +261913,7 @@ var require_dist5 = __commonJS({
           return socket;
         }
         socket.destroy();
-        const fakeSocket = new net.Socket({ writable: false });
+        const fakeSocket = new net2.Socket({ writable: false });
         fakeSocket.readable = true;
         req.once("socket", (s) => {
           debug2("Replaying proxy buffer for failed request");
@@ -261978,8 +261978,8 @@ var require_dist6 = __commonJS({
     };
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.HttpProxyAgent = void 0;
-    var net = __importStar(require("net"));
-    var tls = __importStar(require("tls"));
+    var net2 = __importStar(require("net"));
+    var tls2 = __importStar(require("tls"));
     var debug_1 = __importDefault(require_src());
     var events_1 = require("events");
     var agent_base_1 = require_dist4();
@@ -262048,10 +262048,10 @@ var require_dist6 = __commonJS({
         let socket;
         if (this.proxy.protocol === "https:") {
           debug2("Creating `tls.Socket`: %o", this.connectOpts);
-          socket = tls.connect(this.connectOpts);
+          socket = tls2.connect(this.connectOpts);
         } else {
           debug2("Creating `net.Socket`: %o", this.connectOpts);
-          socket = net.connect(this.connectOpts);
+          socket = net2.connect(this.connectOpts);
         }
         await (0, events_1.once)(socket, "connect");
         return socket;
@@ -288361,6 +288361,506 @@ var import_node_path30 = __toESM(require("node:path"), 1);
 // src/generated/version.ts
 var boardReadyVersion = "1.0.2";
 
+// src/core/findings.ts
+var import_node_crypto2 = __toESM(require("node:crypto"), 1);
+
+// src/util/strings.ts
+function stableStringify(value) {
+  if (Array.isArray(value)) {
+    return `[${value.map((entry) => stableStringify(entry)).join(",")}]`;
+  }
+  if (value && typeof value === "object") {
+    return `{${Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, entry]) => `${JSON.stringify(key)}:${stableStringify(entry)}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+function redactControlCharacters(value) {
+  return [...value].filter((char) => {
+    const code = char.charCodeAt(0);
+    return code === 9 || code === 10 || code === 13 || code >= 32 && code !== 127;
+  }).join("");
+}
+function splitRefs(value) {
+  return value.split(/[,\s]+/g).map((entry) => entry.trim()).filter(Boolean);
+}
+
+// src/core/findings.ts
+var severityNames = ["critical", "high", "medium", "low", "info"];
+var severityRank = {
+  critical: 5,
+  high: 4,
+  medium: 3,
+  low: 2,
+  info: 1
+};
+function isSeverity(value) {
+  return typeof value === "string" && severityNames.includes(value);
+}
+function severityRankValue(severity) {
+  return severityRank[severity];
+}
+function compareSeverity(a, b) {
+  return severityRankValue(b) - severityRankValue(a);
+}
+function createFinding(input) {
+  return {
+    ...input,
+    fingerprint: input.fingerprint ?? fingerprintFor(input)
+  };
+}
+function fingerprintFor(input) {
+  const stable = stableStringify({
+    ruleId: input.ruleId,
+    ...input.project === void 0 ? {} : { project: input.project },
+    path: input.resource.path,
+    kind: input.resource.kind,
+    message: input.message,
+    location: input.location,
+    details: input.details
+  });
+  return import_node_crypto2.default.createHash("sha256").update(stable).digest("hex");
+}
+function summarizeFindings(findings, failOn) {
+  const summary2 = {
+    total: findings.length,
+    critical: 0,
+    high: 0,
+    medium: 0,
+    low: 0,
+    info: 0,
+    maxSeverity: "none",
+    failed: false
+  };
+  for (const finding2 of findings) {
+    summary2[finding2.severity] += 1;
+    if (summary2.maxSeverity === "none" || severityRank[finding2.severity] > severityRank[summary2.maxSeverity]) {
+      summary2.maxSeverity = finding2.severity;
+    }
+  }
+  summary2.failed = shouldFail(findings, failOn);
+  return summary2;
+}
+function shouldFail(findings, failOn) {
+  if (failOn === "never") {
+    return false;
+  }
+  const threshold = severityRank[failOn];
+  return findings.some(
+    (finding2) => !finding2.suppressed && finding2.severity !== "info" && severityRank[finding2.severity] >= threshold
+  );
+}
+function sortFindings(findings) {
+  return [...findings].sort(
+    (a, b) => compareSeverity(a.severity, b.severity) || a.ruleId.localeCompare(b.ruleId) || (a.project ?? "").localeCompare(b.project ?? "") || a.resource.path.localeCompare(b.resource.path) || a.message.localeCompare(b.message)
+  );
+}
+
+// src/notifiers/Notifier.ts
+function isNotifierEnabled(config2) {
+  return config2?.enabled === true;
+}
+function severityMeetsThreshold(severity, minSeverity) {
+  return minSeverity ? severityRankValue(severity) >= severityRankValue(minSeverity) : true;
+}
+function topFindings(findings, limit = 5) {
+  return findings.slice(0, limit);
+}
+function renderNotificationText(payload) {
+  const lines = [payload.title, payload.summary];
+  if (payload.links.runUrl) {
+    lines.push(`Run: ${payload.links.runUrl}`);
+  }
+  if (payload.links.reportUrl) {
+    lines.push(`Report: ${payload.links.reportUrl}`);
+  }
+  if (payload.findings.length > 0) {
+    lines.push("Top findings:");
+    for (const finding2 of topFindings(payload.findings)) {
+      lines.push(`- [${finding2.severity}] ${finding2.ruleId}: ${finding2.message}`);
+    }
+  }
+  return lines.join("\n");
+}
+
+// src/notifiers/http.ts
+function envValue(env, name) {
+  if (!name) {
+    return void 0;
+  }
+  const value = (env ?? process.env)[name]?.trim();
+  return value || void 0;
+}
+async function postJson(fetcher, url3, body2) {
+  const activeFetch = fetcher ?? globalThis.fetch;
+  if (typeof activeFetch !== "function") {
+    throw new Error("fetch is not available");
+  }
+  const response = await activeFetch(url3, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body2)
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+}
+
+// src/notifiers/webhook.ts
+var WebhookNotifierBase = class {
+  constructor(config2, dependencies = {}) {
+    this.config = config2;
+    this.dependencies = dependencies;
+  }
+  config;
+  dependencies;
+  isAvailable() {
+    return isNotifierEnabled(this.config) && Boolean(this.webhookUrl());
+  }
+  async notify(payload) {
+    const webhookUrl = this.webhookUrl();
+    if (!webhookUrl) {
+      return { notifier: this.id, status: "skipped", reason: "unavailable" };
+    }
+    await postJson(this.dependencies.fetcher, webhookUrl, this.body(payload));
+    return { notifier: this.id, status: "sent" };
+  }
+  webhookUrl() {
+    return envValue(this.dependencies.env, this.config.webhookEnv);
+  }
+};
+
+// src/notifiers/discord/DiscordNotifier.ts
+var colorBySeverity = {
+  critical: 11534368,
+  high: 14170881,
+  medium: 16759040,
+  low: 30932,
+  info: 1080336
+};
+var DiscordNotifier = class extends WebhookNotifierBase {
+  id = "discord";
+  constructor(config2, dependencies = {}) {
+    super(config2, dependencies);
+  }
+  body(payload) {
+    return {
+      content: `${payload.title}
+${payload.summary}`,
+      embeds: [
+        {
+          title: payload.title,
+          description: renderNotificationText(payload),
+          color: colorBySeverity[payload.severity]
+        }
+      ]
+    };
+  }
+};
+
+// src/notifiers/email/smtp.ts
+var import_node_net = __toESM(require("node:net"), 1);
+var import_node_tls = __toESM(require("node:tls"), 1);
+async function sendSmtpEmail(smtpUrl, message, options = {}) {
+  const parsed = new URL(smtpUrl);
+  if (parsed.protocol !== "smtp:" && parsed.protocol !== "smtps:") {
+    throw new Error("SMTP URL must use smtp or smtps.");
+  }
+  const port = parsed.port ? Number.parseInt(parsed.port, 10) : parsed.protocol === "smtps:" ? 465 : 25;
+  const secure = parsed.protocol === "smtps:";
+  const socket = secure ? import_node_tls.default.connect({ host: parsed.hostname, port, servername: parsed.hostname }) : import_node_net.default.connect({ host: parsed.hostname, port });
+  const client2 = new SmtpClient(socket, options.timeoutMs ?? 1e4);
+  try {
+    await client2.expect(220);
+    await client2.command(`EHLO ${hostnameForEhlo()}`, 250);
+    if (parsed.username || parsed.password) {
+      const credentials = Buffer.from(
+        `\0${decodeURIComponent(parsed.username)}\0${decodeURIComponent(parsed.password)}`
+      ).toString("base64");
+      await client2.command(`AUTH PLAIN ${credentials}`, 235);
+    }
+    await client2.command(`MAIL FROM:<${message.from}>`, 250);
+    for (const recipient of message.to) {
+      await client2.command(`RCPT TO:<${recipient}>`, [250, 251]);
+    }
+    await client2.command("DATA", 354);
+    await client2.command(`${formatMessage(message)}\r
+.`, 250);
+    await client2.command("QUIT", 221);
+  } finally {
+    socket.end();
+  }
+}
+function formatMessage(message) {
+  return [
+    `From: ${message.from}`,
+    `To: ${message.to.join(", ")}`,
+    `Subject: ${message.subject}`,
+    "Content-Type: text/plain; charset=utf-8",
+    "",
+    message.text.replace(/^\./gm, "..")
+  ].join("\r\n");
+}
+function hostnameForEhlo() {
+  return "boardreadyops.local";
+}
+var SmtpClient = class {
+  constructor(socket, timeoutMs) {
+    this.socket = socket;
+    socket.setEncoding("utf8");
+    socket.setTimeout(timeoutMs);
+    socket.on("data", (chunk) => {
+      this.buffer += chunk;
+      this.flush();
+    });
+    socket.on("error", (error52) => this.pending?.reject(error52));
+    socket.on("timeout", () => {
+      this.pending?.reject(new Error("SMTP timeout"));
+      socket.destroy();
+    });
+  }
+  socket;
+  buffer = "";
+  pending;
+  async expect(expected) {
+    return new Promise((resolve2, reject) => {
+      this.pending = {
+        expected: Array.isArray(expected) ? expected : [expected],
+        resolve: resolve2,
+        reject
+      };
+      this.flush();
+    });
+  }
+  async command(command, expected) {
+    this.socket.write(`${command}\r
+`);
+    await this.expect(expected);
+  }
+  flush() {
+    if (!this.pending) {
+      return;
+    }
+    const response = completeResponse(this.buffer);
+    if (!response) {
+      return;
+    }
+    this.buffer = this.buffer.slice(response.length);
+    const code = Number.parseInt(response.slice(0, 3), 10);
+    const pending = this.pending;
+    this.pending = void 0;
+    if (pending.expected.includes(code)) {
+      pending.resolve();
+    } else {
+      pending.reject(new Error(`SMTP ${code}`));
+    }
+  }
+};
+function completeResponse(buffer2) {
+  const lines = buffer2.split(/\r?\n/);
+  if (lines.length < 2) {
+    return void 0;
+  }
+  let consumed = "";
+  for (const line of lines) {
+    if (line === "") {
+      return consumed || void 0;
+    }
+    consumed += `${line}\r
+`;
+    if (/^\d{3}\s/.test(line)) {
+      return consumed;
+    }
+  }
+  return void 0;
+}
+
+// src/notifiers/email/EmailNotifier.ts
+var EmailNotifier = class {
+  constructor(config2, dependencies = {}) {
+    this.config = config2;
+    this.dependencies = dependencies;
+  }
+  config;
+  dependencies;
+  id = "email";
+  isAvailable() {
+    return isNotifierEnabled(this.config) && Boolean(this.smtpUrl()) && this.recipients().length > 0;
+  }
+  async notify(payload) {
+    const smtpUrl = this.smtpUrl();
+    const recipients = this.recipients();
+    if (!smtpUrl || recipients.length === 0) {
+      return { notifier: this.id, status: "skipped", reason: "unavailable" };
+    }
+    const message = {
+      from: this.config.from?.trim() || "boardreadyops@localhost",
+      to: recipients,
+      subject: payload.title,
+      text: renderNotificationText(payload)
+    };
+    await (this.dependencies.sendEmail ?? sendSmtpEmail)(smtpUrl, message);
+    return { notifier: this.id, status: "sent" };
+  }
+  smtpUrl() {
+    return envValue(this.dependencies.env, this.config.smtpEnv);
+  }
+  recipients() {
+    return (this.config.recipients ?? []).map((recipient) => recipient.trim()).filter(Boolean);
+  }
+};
+
+// src/notifiers/slack/SlackNotifier.ts
+var SlackNotifier = class extends WebhookNotifierBase {
+  id = "slack";
+  constructor(config2, dependencies = {}) {
+    super(config2, dependencies);
+  }
+  body(payload) {
+    return {
+      text: renderNotificationText(payload),
+      blocks: [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `*${payload.title}*
+${payload.summary}`
+          }
+        }
+      ]
+    };
+  }
+};
+
+// src/notifiers/teams/TeamsNotifier.ts
+var themeColorBySeverity = {
+  critical: "B00020",
+  high: "D83B01",
+  medium: "FFB900",
+  low: "0078D4",
+  info: "107C10"
+};
+var TeamsNotifier = class extends WebhookNotifierBase {
+  id = "teams";
+  constructor(config2, dependencies = {}) {
+    super(config2, dependencies);
+  }
+  body(payload) {
+    return {
+      "@type": "MessageCard",
+      "@context": "https://schema.org/extensions",
+      themeColor: themeColorBySeverity[payload.severity],
+      title: payload.title,
+      text: renderNotificationText(payload)
+    };
+  }
+};
+
+// src/notifiers/telegram/TelegramNotifier.ts
+var TelegramNotifier = class {
+  constructor(config2, dependencies = {}) {
+    this.config = config2;
+    this.dependencies = dependencies;
+  }
+  config;
+  dependencies;
+  id = "telegram";
+  isAvailable() {
+    return isNotifierEnabled(this.config) && Boolean(this.botToken()) && Boolean(this.config.chatId?.trim());
+  }
+  async notify(payload) {
+    const token = this.botToken();
+    const chatId = this.config.chatId?.trim();
+    if (!token || !chatId) {
+      return { notifier: this.id, status: "skipped", reason: "unavailable" };
+    }
+    await postJson(this.dependencies.fetcher, `https://api.telegram.org/bot${token}/sendMessage`, {
+      chat_id: chatId,
+      text: renderNotificationText(payload),
+      disable_web_page_preview: true
+    });
+    return { notifier: this.id, status: "sent" };
+  }
+  botToken() {
+    return envValue(this.dependencies.env, this.config.botTokenEnv);
+  }
+};
+
+// src/notifiers/dispatch.ts
+async function dispatchNotifications(config2, payload, options = {}) {
+  if (!config2) {
+    return [];
+  }
+  const results = [];
+  for (const [id, notifierConfig] of Object.entries(config2)) {
+    const notifier = createNotifier(id, notifierConfig, options);
+    if (!notifierConfig.enabled) {
+      results.push({ notifier: id, status: "skipped", reason: "disabled" });
+      continue;
+    }
+    if (!severityMeetsThreshold(payload.severity, notifierConfig.minSeverity)) {
+      results.push({ notifier: id, status: "skipped", reason: "severity-filter" });
+      continue;
+    }
+    if (!notifier.isAvailable()) {
+      results.push({ notifier: id, status: "skipped", reason: "unavailable" });
+      continue;
+    }
+    try {
+      results.push(await notifier.notify(payload));
+    } catch (error52) {
+      const reason = notifierFailureReason(error52);
+      options.logger?.warn("notifier.dispatch.failed", {
+        notifier: id,
+        reason
+      });
+      results.push({ notifier: id, status: "failed", reason });
+    }
+  }
+  return results;
+}
+function notificationPayloadFromResult(result, links = {}) {
+  const severity = result.summary.maxSeverity === "none" ? "info" : result.summary.maxSeverity;
+  return {
+    title: result.summary.total === 0 ? "BoardReadyOps passed" : `BoardReadyOps found ${result.summary.total} ${findingWord(result.summary.total)}`,
+    summary: summaryText(result.summary.total, severity),
+    severity,
+    findings: result.findings,
+    links: {
+      ...links.reportUrl ? { reportUrl: links.reportUrl } : {},
+      ...links.runUrl ? { runUrl: links.runUrl } : {}
+    }
+  };
+}
+function createNotifier(id, config2, options) {
+  if (id === "slack") {
+    return new SlackNotifier(config2, options);
+  }
+  if (id === "teams") {
+    return new TeamsNotifier(config2, options);
+  }
+  if (id === "telegram") {
+    return new TelegramNotifier(config2, options);
+  }
+  if (id === "discord") {
+    return new DiscordNotifier(config2, options);
+  }
+  return new EmailNotifier(config2, options);
+}
+function summaryText(total, severity) {
+  if (total === 0) {
+    return "No findings.";
+  }
+  return `${total} ${severity} ${findingWord(total)}. Max severity: ${severity}.`;
+}
+function findingWord(total) {
+  return total === 1 ? "finding" : "findings";
+}
+function notifierFailureReason(error52) {
+  const message = error52 instanceof Error ? error52.message : "notification failed";
+  return message.replace(/\bhttps?:\/\/\S+/gi, "[REDACTED_URL]").replace(/\bsmtps?:\/\/\S+/gi, "[REDACTED_SMTP_URL]");
+}
+
 // src/core/rule-registry.ts
 var registry = /* @__PURE__ */ new Map();
 function registerRule(rule2) {
@@ -291234,6 +291734,69 @@ var config_schema_default = {
         }
       }
     },
+    notifiers: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        slack: {
+          $ref: "#/$defs/webhookNotifier"
+        },
+        teams: {
+          $ref: "#/$defs/webhookNotifier"
+        },
+        discord: {
+          $ref: "#/$defs/webhookNotifier"
+        },
+        telegram: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            enabled: {
+              type: "boolean"
+            },
+            botTokenEnv: {
+              type: "string",
+              minLength: 1
+            },
+            chatId: {
+              type: "string",
+              minLength: 1
+            },
+            minSeverity: {
+              $ref: "#/$defs/severity"
+            }
+          }
+        },
+        email: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            enabled: {
+              type: "boolean"
+            },
+            smtpEnv: {
+              type: "string",
+              minLength: 1
+            },
+            from: {
+              type: "string",
+              minLength: 1
+            },
+            recipients: {
+              type: "array",
+              minItems: 1,
+              items: {
+                type: "string",
+                minLength: 1
+              }
+            },
+            minSeverity: {
+              $ref: "#/$defs/severity"
+            }
+          }
+        }
+      }
+    },
     report: {
       type: "object",
       additionalProperties: false,
@@ -291287,6 +291850,27 @@ var config_schema_default = {
               const: false
             }
           ]
+        }
+      }
+    }
+  },
+  $defs: {
+    severity: {
+      enum: ["critical", "high", "medium", "low", "info"]
+    },
+    webhookNotifier: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        enabled: {
+          type: "boolean"
+        },
+        webhookEnv: {
+          type: "string",
+          minLength: 1
+        },
+        minSeverity: {
+          $ref: "#/$defs/severity"
         }
       }
     }
@@ -291364,97 +291948,6 @@ async function resolveExistingPathAlias(target) {
       current = parent;
     }
   }
-}
-
-// src/core/findings.ts
-var import_node_crypto2 = __toESM(require("node:crypto"), 1);
-
-// src/util/strings.ts
-function stableStringify(value) {
-  if (Array.isArray(value)) {
-    return `[${value.map((entry) => stableStringify(entry)).join(",")}]`;
-  }
-  if (value && typeof value === "object") {
-    return `{${Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, entry]) => `${JSON.stringify(key)}:${stableStringify(entry)}`).join(",")}}`;
-  }
-  return JSON.stringify(value);
-}
-function redactControlCharacters(value) {
-  return [...value].filter((char) => {
-    const code = char.charCodeAt(0);
-    return code === 9 || code === 10 || code === 13 || code >= 32 && code !== 127;
-  }).join("");
-}
-function splitRefs(value) {
-  return value.split(/[,\s]+/g).map((entry) => entry.trim()).filter(Boolean);
-}
-
-// src/core/findings.ts
-var severityNames = ["critical", "high", "medium", "low", "info"];
-var severityRank = {
-  critical: 5,
-  high: 4,
-  medium: 3,
-  low: 2,
-  info: 1
-};
-function isSeverity(value) {
-  return typeof value === "string" && severityNames.includes(value);
-}
-function compareSeverity(a, b) {
-  return severityRank[b] - severityRank[a];
-}
-function createFinding(input) {
-  return {
-    ...input,
-    fingerprint: input.fingerprint ?? fingerprintFor(input)
-  };
-}
-function fingerprintFor(input) {
-  const stable = stableStringify({
-    ruleId: input.ruleId,
-    ...input.project === void 0 ? {} : { project: input.project },
-    path: input.resource.path,
-    kind: input.resource.kind,
-    message: input.message,
-    location: input.location,
-    details: input.details
-  });
-  return import_node_crypto2.default.createHash("sha256").update(stable).digest("hex");
-}
-function summarizeFindings(findings, failOn) {
-  const summary2 = {
-    total: findings.length,
-    critical: 0,
-    high: 0,
-    medium: 0,
-    low: 0,
-    info: 0,
-    maxSeverity: "none",
-    failed: false
-  };
-  for (const finding2 of findings) {
-    summary2[finding2.severity] += 1;
-    if (summary2.maxSeverity === "none" || severityRank[finding2.severity] > severityRank[summary2.maxSeverity]) {
-      summary2.maxSeverity = finding2.severity;
-    }
-  }
-  summary2.failed = shouldFail(findings, failOn);
-  return summary2;
-}
-function shouldFail(findings, failOn) {
-  if (failOn === "never") {
-    return false;
-  }
-  const threshold = severityRank[failOn];
-  return findings.some(
-    (finding2) => !finding2.suppressed && finding2.severity !== "info" && severityRank[finding2.severity] >= threshold
-  );
-}
-function sortFindings(findings) {
-  return [...findings].sort(
-    (a, b) => compareSeverity(a.severity, b.severity) || a.ruleId.localeCompare(b.ruleId) || (a.project ?? "").localeCompare(b.project ?? "") || a.resource.path.localeCompare(b.resource.path) || a.message.localeCompare(b.message)
-  );
 }
 
 // src/core/config.ts
@@ -308967,9 +309460,15 @@ async function runPipeline(input = {}, logger7) {
     fabrication,
     generatedAt: (/* @__PURE__ */ new Date()).toISOString()
   };
+  const notificationResults = await dispatchNotifications(
+    config2.notifiers,
+    notificationPayloadFromResult(result, options.notificationLinks ?? {}),
+    { logger: activeLogger }
+  );
   activeLogger.debug("pipeline.finish", {
     latency_ms: Math.round(performance.now() - pipelineStart),
-    findings: result.summary.total
+    findings: result.summary.total,
+    notifications: notificationResults
   });
   return result;
 }
@@ -309018,7 +309517,8 @@ function normalizeOptions(cwd, root, config2, input, gate, forceFailOn) {
     annotations: input.annotations ?? true,
     quiet: input.quiet ?? false,
     verbose: input.verbose ?? false,
-    color: input.color ?? "auto"
+    color: input.color ?? "auto",
+    ...input.notificationLinks ? { notificationLinks: input.notificationLinks } : {}
   };
 }
 async function discoverConfiguredProjects(root, options) {
@@ -309982,14 +310482,14 @@ var summary_default = "# {{labels.reportTitle}}\n\n| {{labels.metric}} | {{label
 var stickyMarker = "<!-- boardreadyops:sticky:v1 -->";
 function formatMarkdown(result, artifacts = [], fabrication, locale = "en") {
   const fabricationView = fabrication ? formatFabricationDiff(fabrication, locale) : void 0;
-  const topFindings = result.findings.slice(0, 10);
+  const topFindings2 = result.findings.slice(0, 10);
   const fixFindings = result.findings.filter((finding2) => finding2.fix).slice(0, 10);
   return mustache_default.render(
     pr_comment_default,
     {
       ...result,
       hasFindings: result.findings.length > 0,
-      topFindings,
+      topFindings: topFindings2,
       hasFixes: fixFindings.length > 0,
       fixFindings,
       hasArtifacts: artifacts.length > 0,
@@ -349477,7 +349977,15 @@ async function runAction() {
     path: inputs.path,
     gate: inputs.gate
   });
-  const result = await runPipeline(inputs, logger7);
+  const result = await runPipeline(
+    {
+      ...inputs,
+      notificationLinks: {
+        runUrl: githubRunUrl()
+      }
+    },
+    logger7
+  );
   const written = {};
   if (inputs.outputs.json) {
     written.json = import_node_path33.default.resolve(workspace, inputs.outputs.json);
@@ -349529,6 +350037,12 @@ async function ensureRunnerFile(file2) {
   }
   await import_promises14.default.mkdir(import_node_path33.default.dirname(file2), { recursive: true });
   await import_promises14.default.appendFile(file2, "", "utf8");
+}
+function githubRunUrl() {
+  const server2 = process.env.GITHUB_SERVER_URL;
+  const repository = process.env.GITHUB_REPOSITORY;
+  const runId2 = process.env.GITHUB_RUN_ID;
+  return server2 && repository && runId2 ? `${server2}/${repository}/actions/runs/${runId2}` : void 0;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {

@@ -15486,7 +15486,7 @@ var require_typescript = __commonJS({
         formatGeneratedName: () => formatGeneratedName,
         formatGeneratedNamePart: () => formatGeneratedNamePart,
         formatLocation: () => formatLocation,
-        formatMessage: () => formatMessage,
+        formatMessage: () => formatMessage2,
         formatStringFromArgs: () => formatStringFromArgs,
         formatting: () => ts_formatting_exports,
         generateDjb2Hash: () => generateDjb2Hash,
@@ -32993,7 +32993,7 @@ ${lanes.join("\n")}
       function getCanonicalDiagnostic(message, ...args) {
         return {
           code: message.code,
-          messageText: formatMessage(message, ...args)
+          messageText: formatMessage2(message, ...args)
         };
       }
       function getSpanOfTokenAtPosition(sourceFile, pos) {
@@ -37189,7 +37189,7 @@ ${lanes.join("\n")}
           reportsDeprecated: message.reportsDeprecated
         };
       }
-      function formatMessage(message, ...args) {
+      function formatMessage2(message, ...args) {
         let text = getLocaleSpecificMessage(message);
         if (some(args)) {
           text = formatStringFromArgs(text, args);
@@ -62193,7 +62193,7 @@ ${lanes.join("\n")}
         }
       }
       function trace(host, message, ...args) {
-        host.trace(formatMessage(message, ...args));
+        host.trace(formatMessage2(message, ...args));
       }
       function isTraceEnabled(compilerOptions, host) {
         return !!compilerOptions.traceResolution && host.trace !== void 0;
@@ -88765,7 +88765,7 @@ ${lanes.join("\n")}
               const childrenPropName = childPropName === void 0 ? "children" : unescapeLeadingUnderscores(childPropName);
               const childrenTargetType = getIndexedAccessType(target, getStringLiteralType(childrenPropName));
               const diagnostic = Diagnostics._0_components_don_t_accept_text_as_child_elements_Text_in_JSX_has_the_type_string_but_the_expected_type_of_1_is_2;
-              invalidTextDiagnostic = { ...diagnostic, key: "!!ALREADY FORMATTED!!", message: formatMessage(diagnostic, tagNameText, childrenPropName, typeToString(childrenTargetType)) };
+              invalidTextDiagnostic = { ...diagnostic, key: "!!ALREADY FORMATTED!!", message: formatMessage2(diagnostic, tagNameText, childrenPropName, typeToString(childrenTargetType)) };
             }
             return invalidTextDiagnostic;
           }
@@ -161644,7 +161644,7 @@ ${lanes.join("\n")}
             false,
             /*beforeOptionsDescription*/
             void 0,
-            formatMessage(Diagnostics.You_can_learn_about_all_of_the_compiler_options_at_0, "https://aka.ms/tsc")
+            formatMessage2(Diagnostics.You_can_learn_about_all_of_the_compiler_options_at_0, "https://aka.ms/tsc")
           )
         ];
         for (const line of output) {
@@ -161668,7 +161668,7 @@ ${lanes.join("\n")}
           true,
           /*beforeOptionsDescription*/
           void 0,
-          formatMessage(Diagnostics.You_can_learn_about_all_of_the_compiler_options_at_0, "https://aka.ms/tsc")
+          formatMessage2(Diagnostics.You_can_learn_about_all_of_the_compiler_options_at_0, "https://aka.ms/tsc")
         )];
         output = [...output, ...generateSectionOptionsOutput(
           sys2,
@@ -161684,7 +161684,7 @@ ${lanes.join("\n")}
           filter(buildOptions, (option) => option !== tscBuildOption && option.showInHelp !== false),
           /*subCategory*/
           false,
-          formatMessage(Diagnostics.Using_build_b_will_make_tsc_behave_more_like_a_build_orchestrator_than_a_compiler_This_is_used_to_trigger_building_composite_projects_which_you_can_learn_more_about_at_0, "https://aka.ms/tsc-composite-builds")
+          formatMessage2(Diagnostics.Using_build_b_will_make_tsc_behave_more_like_a_build_orchestrator_than_a_compiler_This_is_used_to_trigger_building_composite_projects_which_you_can_learn_more_about_at_0, "https://aka.ms/tsc-composite-builds")
         )];
         for (const line of output) {
           sys2.write(line);
@@ -161698,7 +161698,7 @@ ${lanes.join("\n")}
           filter(buildOptions, (option) => option !== tscBuildOption && option.showInHelp !== false),
           /*subCategory*/
           false,
-          formatMessage(Diagnostics.Using_build_b_will_make_tsc_behave_more_like_a_build_orchestrator_than_a_compiler_This_is_used_to_trigger_building_composite_projects_which_you_can_learn_more_about_at_0, "https://aka.ms/tsc-composite-builds")
+          formatMessage2(Diagnostics.Using_build_b_will_make_tsc_behave_more_like_a_build_orchestrator_than_a_compiler_This_is_used_to_trigger_building_composite_projects_which_you_can_learn_more_about_at_0, "https://aka.ms/tsc-composite-builds")
         )];
         for (const line of output) {
           sys2.write(line);
@@ -211743,7 +211743,7 @@ ${options.prefix}` : "\n" : options.prefix
         formatGeneratedName: () => formatGeneratedName,
         formatGeneratedNamePart: () => formatGeneratedNamePart,
         formatLocation: () => formatLocation,
-        formatMessage: () => formatMessage,
+        formatMessage: () => formatMessage2,
         formatStringFromArgs: () => formatStringFromArgs,
         formatting: () => ts_formatting_exports,
         generateDjb2Hash: () => generateDjb2Hash,
@@ -213570,7 +213570,7 @@ ${options.prefix}` : "\n" : options.prefix
         emptyArray: () => emptyArray2,
         findArgument: () => findArgument,
         formatDiagnosticToProtocol: () => formatDiagnosticToProtocol,
-        formatMessage: () => formatMessage2,
+        formatMessage: () => formatMessage22,
         getBaseConfigFileName: () => getBaseConfigFileName,
         getDetailWatchInfo: () => getDetailWatchInfo,
         getLocationInNewDocument: () => getLocationInNewDocument,
@@ -221540,7 +221540,7 @@ Dynamic files must always be opened with service's current directory or service 
         return edits.every((edit) => textSpanEnd(edit.span) < pos);
       }
       var CommandNames = CommandTypes;
-      function formatMessage2(msg, logger, byteLength, newLine) {
+      function formatMessage22(msg, logger, byteLength, newLine) {
         const verboseLogging = logger.hasLevel(
           3
           /* verbose */
@@ -223233,7 +223233,7 @@ Project '${project.projectName}' (${ProjectKind[project.projectKind]}) ${counter
           this.writeMessage(msg);
         }
         writeMessage(msg) {
-          const msgText = formatMessage2(msg, this.logger, this.byteLength, this.host.newLine);
+          const msgText = formatMessage22(msg, this.logger, this.byteLength, this.host.newLine);
           this.host.write(msgText);
         }
         event(body, eventName) {
@@ -226342,7 +226342,7 @@ Additional information: BADCLIENT: Bad error code, ${badCode} not found in range
         emptyArray: () => emptyArray2,
         findArgument: () => findArgument,
         formatDiagnosticToProtocol: () => formatDiagnosticToProtocol,
-        formatMessage: () => formatMessage2,
+        formatMessage: () => formatMessage22,
         getBaseConfigFileName: () => getBaseConfigFileName,
         getDetailWatchInfo: () => getDetailWatchInfo,
         getLocationInNewDocument: () => getLocationInNewDocument,
@@ -236497,6 +236497,69 @@ var config_schema_default = {
         }
       }
     },
+    notifiers: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        slack: {
+          $ref: "#/$defs/webhookNotifier"
+        },
+        teams: {
+          $ref: "#/$defs/webhookNotifier"
+        },
+        discord: {
+          $ref: "#/$defs/webhookNotifier"
+        },
+        telegram: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            enabled: {
+              type: "boolean"
+            },
+            botTokenEnv: {
+              type: "string",
+              minLength: 1
+            },
+            chatId: {
+              type: "string",
+              minLength: 1
+            },
+            minSeverity: {
+              $ref: "#/$defs/severity"
+            }
+          }
+        },
+        email: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            enabled: {
+              type: "boolean"
+            },
+            smtpEnv: {
+              type: "string",
+              minLength: 1
+            },
+            from: {
+              type: "string",
+              minLength: 1
+            },
+            recipients: {
+              type: "array",
+              minItems: 1,
+              items: {
+                type: "string",
+                minLength: 1
+              }
+            },
+            minSeverity: {
+              $ref: "#/$defs/severity"
+            }
+          }
+        }
+      }
+    },
     report: {
       type: "object",
       additionalProperties: false,
@@ -236550,6 +236613,27 @@ var config_schema_default = {
               const: false
             }
           ]
+        }
+      }
+    }
+  },
+  $defs: {
+    severity: {
+      enum: ["critical", "high", "medium", "low", "info"]
+    },
+    webhookNotifier: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        enabled: {
+          type: "boolean"
+        },
+        webhookEnv: {
+          type: "string",
+          minLength: 1
+        },
+        minSeverity: {
+          $ref: "#/$defs/severity"
         }
       }
     }
@@ -236638,8 +236722,11 @@ var severityRank = {
 function isSeverity(value) {
   return typeof value === "string" && severityNames.includes(value);
 }
+function severityRankValue(severity) {
+  return severityRank[severity];
+}
 function compareSeverity(a, b) {
-  return severityRank[b] - severityRank[a];
+  return severityRankValue(b) - severityRankValue(a);
 }
 function createFinding(input) {
   return {
@@ -236780,6 +236867,412 @@ function validateLoaded(config2, file2) {
 // src/core/pipeline.ts
 var import_promises8 = __toESM(require("node:fs/promises"), 1);
 var import_node_path30 = __toESM(require("node:path"), 1);
+
+// src/notifiers/Notifier.ts
+function isNotifierEnabled(config2) {
+  return config2?.enabled === true;
+}
+function severityMeetsThreshold(severity, minSeverity) {
+  return minSeverity ? severityRankValue(severity) >= severityRankValue(minSeverity) : true;
+}
+function topFindings(findings, limit = 5) {
+  return findings.slice(0, limit);
+}
+function renderNotificationText(payload) {
+  const lines = [payload.title, payload.summary];
+  if (payload.links.runUrl) {
+    lines.push(`Run: ${payload.links.runUrl}`);
+  }
+  if (payload.links.reportUrl) {
+    lines.push(`Report: ${payload.links.reportUrl}`);
+  }
+  if (payload.findings.length > 0) {
+    lines.push("Top findings:");
+    for (const finding2 of topFindings(payload.findings)) {
+      lines.push(`- [${finding2.severity}] ${finding2.ruleId}: ${finding2.message}`);
+    }
+  }
+  return lines.join("\n");
+}
+
+// src/notifiers/http.ts
+function envValue(env, name) {
+  if (!name) {
+    return void 0;
+  }
+  const value = (env ?? process.env)[name]?.trim();
+  return value || void 0;
+}
+async function postJson(fetcher, url2, body) {
+  const activeFetch = fetcher ?? globalThis.fetch;
+  if (typeof activeFetch !== "function") {
+    throw new Error("fetch is not available");
+  }
+  const response = await activeFetch(url2, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+}
+
+// src/notifiers/webhook.ts
+var WebhookNotifierBase = class {
+  constructor(config2, dependencies = {}) {
+    this.config = config2;
+    this.dependencies = dependencies;
+  }
+  config;
+  dependencies;
+  isAvailable() {
+    return isNotifierEnabled(this.config) && Boolean(this.webhookUrl());
+  }
+  async notify(payload) {
+    const webhookUrl = this.webhookUrl();
+    if (!webhookUrl) {
+      return { notifier: this.id, status: "skipped", reason: "unavailable" };
+    }
+    await postJson(this.dependencies.fetcher, webhookUrl, this.body(payload));
+    return { notifier: this.id, status: "sent" };
+  }
+  webhookUrl() {
+    return envValue(this.dependencies.env, this.config.webhookEnv);
+  }
+};
+
+// src/notifiers/discord/DiscordNotifier.ts
+var colorBySeverity = {
+  critical: 11534368,
+  high: 14170881,
+  medium: 16759040,
+  low: 30932,
+  info: 1080336
+};
+var DiscordNotifier = class extends WebhookNotifierBase {
+  id = "discord";
+  constructor(config2, dependencies = {}) {
+    super(config2, dependencies);
+  }
+  body(payload) {
+    return {
+      content: `${payload.title}
+${payload.summary}`,
+      embeds: [
+        {
+          title: payload.title,
+          description: renderNotificationText(payload),
+          color: colorBySeverity[payload.severity]
+        }
+      ]
+    };
+  }
+};
+
+// src/notifiers/email/smtp.ts
+var import_node_net = __toESM(require("node:net"), 1);
+var import_node_tls = __toESM(require("node:tls"), 1);
+async function sendSmtpEmail(smtpUrl, message, options = {}) {
+  const parsed = new URL(smtpUrl);
+  if (parsed.protocol !== "smtp:" && parsed.protocol !== "smtps:") {
+    throw new Error("SMTP URL must use smtp or smtps.");
+  }
+  const port = parsed.port ? Number.parseInt(parsed.port, 10) : parsed.protocol === "smtps:" ? 465 : 25;
+  const secure = parsed.protocol === "smtps:";
+  const socket = secure ? import_node_tls.default.connect({ host: parsed.hostname, port, servername: parsed.hostname }) : import_node_net.default.connect({ host: parsed.hostname, port });
+  const client = new SmtpClient(socket, options.timeoutMs ?? 1e4);
+  try {
+    await client.expect(220);
+    await client.command(`EHLO ${hostnameForEhlo()}`, 250);
+    if (parsed.username || parsed.password) {
+      const credentials = Buffer.from(
+        `\0${decodeURIComponent(parsed.username)}\0${decodeURIComponent(parsed.password)}`
+      ).toString("base64");
+      await client.command(`AUTH PLAIN ${credentials}`, 235);
+    }
+    await client.command(`MAIL FROM:<${message.from}>`, 250);
+    for (const recipient of message.to) {
+      await client.command(`RCPT TO:<${recipient}>`, [250, 251]);
+    }
+    await client.command("DATA", 354);
+    await client.command(`${formatMessage(message)}\r
+.`, 250);
+    await client.command("QUIT", 221);
+  } finally {
+    socket.end();
+  }
+}
+function formatMessage(message) {
+  return [
+    `From: ${message.from}`,
+    `To: ${message.to.join(", ")}`,
+    `Subject: ${message.subject}`,
+    "Content-Type: text/plain; charset=utf-8",
+    "",
+    message.text.replace(/^\./gm, "..")
+  ].join("\r\n");
+}
+function hostnameForEhlo() {
+  return "boardreadyops.local";
+}
+var SmtpClient = class {
+  constructor(socket, timeoutMs) {
+    this.socket = socket;
+    socket.setEncoding("utf8");
+    socket.setTimeout(timeoutMs);
+    socket.on("data", (chunk) => {
+      this.buffer += chunk;
+      this.flush();
+    });
+    socket.on("error", (error51) => this.pending?.reject(error51));
+    socket.on("timeout", () => {
+      this.pending?.reject(new Error("SMTP timeout"));
+      socket.destroy();
+    });
+  }
+  socket;
+  buffer = "";
+  pending;
+  async expect(expected) {
+    return new Promise((resolve, reject) => {
+      this.pending = {
+        expected: Array.isArray(expected) ? expected : [expected],
+        resolve,
+        reject
+      };
+      this.flush();
+    });
+  }
+  async command(command, expected) {
+    this.socket.write(`${command}\r
+`);
+    await this.expect(expected);
+  }
+  flush() {
+    if (!this.pending) {
+      return;
+    }
+    const response = completeResponse(this.buffer);
+    if (!response) {
+      return;
+    }
+    this.buffer = this.buffer.slice(response.length);
+    const code = Number.parseInt(response.slice(0, 3), 10);
+    const pending = this.pending;
+    this.pending = void 0;
+    if (pending.expected.includes(code)) {
+      pending.resolve();
+    } else {
+      pending.reject(new Error(`SMTP ${code}`));
+    }
+  }
+};
+function completeResponse(buffer) {
+  const lines = buffer.split(/\r?\n/);
+  if (lines.length < 2) {
+    return void 0;
+  }
+  let consumed = "";
+  for (const line of lines) {
+    if (line === "") {
+      return consumed || void 0;
+    }
+    consumed += `${line}\r
+`;
+    if (/^\d{3}\s/.test(line)) {
+      return consumed;
+    }
+  }
+  return void 0;
+}
+
+// src/notifiers/email/EmailNotifier.ts
+var EmailNotifier = class {
+  constructor(config2, dependencies = {}) {
+    this.config = config2;
+    this.dependencies = dependencies;
+  }
+  config;
+  dependencies;
+  id = "email";
+  isAvailable() {
+    return isNotifierEnabled(this.config) && Boolean(this.smtpUrl()) && this.recipients().length > 0;
+  }
+  async notify(payload) {
+    const smtpUrl = this.smtpUrl();
+    const recipients = this.recipients();
+    if (!smtpUrl || recipients.length === 0) {
+      return { notifier: this.id, status: "skipped", reason: "unavailable" };
+    }
+    const message = {
+      from: this.config.from?.trim() || "boardreadyops@localhost",
+      to: recipients,
+      subject: payload.title,
+      text: renderNotificationText(payload)
+    };
+    await (this.dependencies.sendEmail ?? sendSmtpEmail)(smtpUrl, message);
+    return { notifier: this.id, status: "sent" };
+  }
+  smtpUrl() {
+    return envValue(this.dependencies.env, this.config.smtpEnv);
+  }
+  recipients() {
+    return (this.config.recipients ?? []).map((recipient) => recipient.trim()).filter(Boolean);
+  }
+};
+
+// src/notifiers/slack/SlackNotifier.ts
+var SlackNotifier = class extends WebhookNotifierBase {
+  id = "slack";
+  constructor(config2, dependencies = {}) {
+    super(config2, dependencies);
+  }
+  body(payload) {
+    return {
+      text: renderNotificationText(payload),
+      blocks: [
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `*${payload.title}*
+${payload.summary}`
+          }
+        }
+      ]
+    };
+  }
+};
+
+// src/notifiers/teams/TeamsNotifier.ts
+var themeColorBySeverity = {
+  critical: "B00020",
+  high: "D83B01",
+  medium: "FFB900",
+  low: "0078D4",
+  info: "107C10"
+};
+var TeamsNotifier = class extends WebhookNotifierBase {
+  id = "teams";
+  constructor(config2, dependencies = {}) {
+    super(config2, dependencies);
+  }
+  body(payload) {
+    return {
+      "@type": "MessageCard",
+      "@context": "https://schema.org/extensions",
+      themeColor: themeColorBySeverity[payload.severity],
+      title: payload.title,
+      text: renderNotificationText(payload)
+    };
+  }
+};
+
+// src/notifiers/telegram/TelegramNotifier.ts
+var TelegramNotifier = class {
+  constructor(config2, dependencies = {}) {
+    this.config = config2;
+    this.dependencies = dependencies;
+  }
+  config;
+  dependencies;
+  id = "telegram";
+  isAvailable() {
+    return isNotifierEnabled(this.config) && Boolean(this.botToken()) && Boolean(this.config.chatId?.trim());
+  }
+  async notify(payload) {
+    const token = this.botToken();
+    const chatId = this.config.chatId?.trim();
+    if (!token || !chatId) {
+      return { notifier: this.id, status: "skipped", reason: "unavailable" };
+    }
+    await postJson(this.dependencies.fetcher, `https://api.telegram.org/bot${token}/sendMessage`, {
+      chat_id: chatId,
+      text: renderNotificationText(payload),
+      disable_web_page_preview: true
+    });
+    return { notifier: this.id, status: "sent" };
+  }
+  botToken() {
+    return envValue(this.dependencies.env, this.config.botTokenEnv);
+  }
+};
+
+// src/notifiers/dispatch.ts
+async function dispatchNotifications(config2, payload, options = {}) {
+  if (!config2) {
+    return [];
+  }
+  const results = [];
+  for (const [id, notifierConfig] of Object.entries(config2)) {
+    const notifier = createNotifier(id, notifierConfig, options);
+    if (!notifierConfig.enabled) {
+      results.push({ notifier: id, status: "skipped", reason: "disabled" });
+      continue;
+    }
+    if (!severityMeetsThreshold(payload.severity, notifierConfig.minSeverity)) {
+      results.push({ notifier: id, status: "skipped", reason: "severity-filter" });
+      continue;
+    }
+    if (!notifier.isAvailable()) {
+      results.push({ notifier: id, status: "skipped", reason: "unavailable" });
+      continue;
+    }
+    try {
+      results.push(await notifier.notify(payload));
+    } catch (error51) {
+      const reason = notifierFailureReason(error51);
+      options.logger?.warn("notifier.dispatch.failed", {
+        notifier: id,
+        reason
+      });
+      results.push({ notifier: id, status: "failed", reason });
+    }
+  }
+  return results;
+}
+function notificationPayloadFromResult(result, links = {}) {
+  const severity = result.summary.maxSeverity === "none" ? "info" : result.summary.maxSeverity;
+  return {
+    title: result.summary.total === 0 ? "BoardReadyOps passed" : `BoardReadyOps found ${result.summary.total} ${findingWord(result.summary.total)}`,
+    summary: summaryText(result.summary.total, severity),
+    severity,
+    findings: result.findings,
+    links: {
+      ...links.reportUrl ? { reportUrl: links.reportUrl } : {},
+      ...links.runUrl ? { runUrl: links.runUrl } : {}
+    }
+  };
+}
+function createNotifier(id, config2, options) {
+  if (id === "slack") {
+    return new SlackNotifier(config2, options);
+  }
+  if (id === "teams") {
+    return new TeamsNotifier(config2, options);
+  }
+  if (id === "telegram") {
+    return new TelegramNotifier(config2, options);
+  }
+  if (id === "discord") {
+    return new DiscordNotifier(config2, options);
+  }
+  return new EmailNotifier(config2, options);
+}
+function summaryText(total, severity) {
+  if (total === 0) {
+    return "No findings.";
+  }
+  return `${total} ${severity} ${findingWord(total)}. Max severity: ${severity}.`;
+}
+function findingWord(total) {
+  return total === 1 ? "finding" : "findings";
+}
+function notifierFailureReason(error51) {
+  const message = error51 instanceof Error ? error51.message : "notification failed";
+  return message.replace(/\bhttps?:\/\/\S+/gi, "[REDACTED_URL]").replace(/\bsmtps?:\/\/\S+/gi, "[REDACTED_SMTP_URL]");
+}
 
 // src/core/rule-registry.ts
 var registry = /* @__PURE__ */ new Map();
@@ -254396,9 +254889,15 @@ async function runPipeline(input = {}, logger) {
     fabrication,
     generatedAt: (/* @__PURE__ */ new Date()).toISOString()
   };
+  const notificationResults = await dispatchNotifications(
+    config2.notifiers,
+    notificationPayloadFromResult(result, options.notificationLinks ?? {}),
+    { logger: activeLogger }
+  );
   activeLogger.debug("pipeline.finish", {
     latency_ms: Math.round(performance.now() - pipelineStart),
-    findings: result.summary.total
+    findings: result.summary.total,
+    notifications: notificationResults
   });
   return result;
 }
@@ -254447,7 +254946,8 @@ function normalizeOptions(cwd, root, config2, input, gate, forceFailOn) {
     annotations: input.annotations ?? true,
     quiet: input.quiet ?? false,
     verbose: input.verbose ?? false,
-    color: input.color ?? "auto"
+    color: input.color ?? "auto",
+    ...input.notificationLinks ? { notificationLinks: input.notificationLinks } : {}
   };
 }
 async function discoverConfiguredProjects(root, options) {
@@ -255192,14 +255692,14 @@ var summary_default = "# {{labels.reportTitle}}\n\n| {{labels.metric}} | {{label
 // src/report/markdown.ts
 function formatMarkdown(result, artifacts = [], fabrication, locale = "en") {
   const fabricationView = fabrication ? formatFabricationDiff(fabrication, locale) : void 0;
-  const topFindings = result.findings.slice(0, 10);
+  const topFindings2 = result.findings.slice(0, 10);
   const fixFindings = result.findings.filter((finding2) => finding2.fix).slice(0, 10);
   return mustache_default.render(
     pr_comment_default,
     {
       ...result,
       hasFindings: result.findings.length > 0,
-      topFindings,
+      topFindings: topFindings2,
       hasFixes: fixFindings.length > 0,
       fixFindings,
       hasArtifacts: artifacts.length > 0,
@@ -255752,7 +256252,7 @@ function emptyBreakdown(label) {
 function renderProjectPanel(project, locale) {
   return `<article class="panel">
           <h3><code>${escapeHtml2(project.label)}</code></h3>
-          <p><strong>${project.total}</strong> ${escapeHtml2(findingWord(project.total, locale))}</p>
+          <p><strong>${project.total}</strong> ${escapeHtml2(findingWord2(project.total, locale))}</p>
           <p class="muted">${severityCounts(project, locale)}</p>
         </article>`;
 }
@@ -255879,7 +256379,7 @@ function attr(value) {
 function escapeHtml2(value) {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
-function findingWord(count, locale) {
+function findingWord2(count, locale) {
   return count === 1 ? t("report.finding.word", {}, locale) : t("report.finding.word.plural", {}, locale);
 }
 function severityLabel(severity, locale) {

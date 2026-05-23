@@ -20,6 +20,11 @@ report:
   sarif: build/boardreadyops.sarif.json
   markdown: build/boardreadyops.report.md
   html: build/boardreadyops.report.html
+notifiers:
+  slack:
+    enabled: true
+    webhookEnv: SLACK_WEBHOOK_URL
+    minSeverity: high
 ```
 
 `projects` entries add project-local settings for a discovered KiCad project. They do not narrow discovery: BoardReadyOps checks every `.kicad_pro` under the workspace unless the CLI receives `--project`.
@@ -76,6 +81,40 @@ report:
 ```
 
 HTML reports are standalone files with embedded CSS and filtering JavaScript, so they can be shared without publishing additional assets.
+
+## Notifiers
+
+Use the `notifiers` block to send run summaries to chat or email after the pipeline has produced findings. Notifiers are best-effort: unavailable credentials, severity filters, and delivery failures never change the run result or block CI.
+
+```yaml
+version: 1
+notifiers:
+  slack:
+    enabled: true
+    webhookEnv: SLACK_WEBHOOK_URL
+    minSeverity: high
+  teams:
+    enabled: false
+    webhookEnv: TEAMS_WEBHOOK_URL
+  telegram:
+    enabled: true
+    botTokenEnv: TG_BOT_TOKEN
+    chatId: "-1001234567890"
+    minSeverity: medium
+  discord:
+    enabled: false
+    webhookEnv: DISCORD_WEBHOOK_URL
+  email:
+    enabled: false
+    smtpEnv: SMTP_URL
+    from: boardreadyops@example.com
+    recipients: ["lead@example.com"]
+    minSeverity: critical
+```
+
+Secrets are referenced by environment variable name only. Do not put webhook URLs, bot tokens, or SMTP credentials directly in `boardreadyops.yml`; the schema rejects inline webhook values and the logger redacts token-like fields.
+
+`minSeverity` accepts `critical`, `high`, `medium`, `low`, or `info`. A notifier whose configured environment variable is absent is skipped. Slack, Teams, Discord, and Telegram use HTTP endpoints; email uses `smtp://` or `smtps://` from `smtpEnv`.
 
 ## Suppressions
 
