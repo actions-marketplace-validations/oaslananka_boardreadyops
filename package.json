@@ -49,6 +49,7 @@
     "coverage": "pnpm run build && vitest run --coverage tests/unit tests/action tests/property tests/snapshot",
     "benchmark": "vitest bench --run",
     "mutation": "stryker run",
+    "mutation:check": "node scripts/check-mutation-thresholds.mjs",
     "build": "node scripts/build.mjs",
     "build:binary": "node scripts/build-binary.mjs",
     "build:binary:verify": "node scripts/verify-binaries.mjs",

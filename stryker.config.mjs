@@ -8,6 +8,9 @@ export default {
   },
   testFiles: ["tests/unit/**/*.test.ts", "tests/property/**/*.test.ts", "tests/snapshot/**/*.test.ts"],
   mutate: [
+    "src/core/**/*.ts",
+    "!src/core/context.ts",
+    "!src/core/result.ts",
     "src/kicad/jobset.ts",
     "src/kicad/variants.ts",
     "src/rules/bom/lifecycle.ts",
@@ -24,7 +27,7 @@ export default {
   ],
   thresholds: {
     high: 80,
-    low: 70,
+    low: 75,
     break: 60,
   },
   reporters: ["html", "clear-text", "json"],

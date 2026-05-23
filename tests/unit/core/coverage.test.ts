@@ -8,9 +8,11 @@ import { clearRulesForTests, listRules, registerRule } from "../../../src/core/r
 import { writeFixture } from "../rules/helpers.js";
 
 const originalAvailableParallelism = os.availableParallelism;
+const originalCpus = os.cpus;
 
 afterEach(() => {
   Object.defineProperty(os, "availableParallelism", { value: originalAvailableParallelism, configurable: true });
+  Object.defineProperty(os, "cpus", { value: originalCpus, configurable: true });
 });
 
 describe("core coverage branches", () => {
@@ -20,6 +22,35 @@ describe("core coverage branches", () => {
 
     const missing = path.join(os.tmpdir(), `boardreadyops-missing-${Date.now()}`);
     expect(await canonicalRoot(missing)).toBe(missing);
+  });
+
+  it("prefers availableParallelism over the CPU list length", () => {
+    Object.defineProperty(os, "availableParallelism", { value: () => 8, configurable: true });
+    Object.defineProperty(os, "cpus", {
+      value: () => [
+        { model: "test", speed: 0, times: { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 } },
+        { model: "test", speed: 0, times: { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 } },
+      ],
+      configurable: true,
+    });
+
+    expect(defaultConcurrency()).toBe(8);
+  });
+
+  it("falls back to CPU list length and clamps empty CPU data", () => {
+    Object.defineProperty(os, "availableParallelism", { value: undefined, configurable: true });
+    Object.defineProperty(os, "cpus", {
+      value: () => [
+        { model: "test", speed: 0, times: { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 } },
+        { model: "test", speed: 0, times: { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 } },
+        { model: "test", speed: 0, times: { user: 0, nice: 0, sys: 0, idle: 0, irq: 0 } },
+      ],
+      configurable: true,
+    });
+    expect(defaultConcurrency()).toBe(3);
+
+    Object.defineProperty(os, "cpus", { value: () => [], configurable: true });
+    expect(defaultConcurrency()).toBe(1);
   });
 
   it("discovers explicit project directories and configured nested projects", async () => {
@@ -279,5 +310,8 @@ rules:
       run: async () => [],
     });
     expect(listRules().map((rule) => rule.meta.id)).toEqual(["a.rule", "z.rule"]);
+
+    clearRulesForTests();
+    expect(listRules()).toEqual([]);
   });
 });

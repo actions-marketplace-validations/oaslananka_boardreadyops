@@ -260,6 +260,13 @@ jobs:
       - run: corepack install
       - run: pnpm install --frozen-lockfile
       - run: pnpm run coverage
+      - name: Upload coverage report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          if-no-files-found: warn
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2
         with:
@@ -270,7 +277,7 @@ jobs:
   mutation:
     name: ci / mutation
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 90
     if: github.event_name == 'push' || github.event.pull_request.draft == false
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -284,12 +291,16 @@ jobs:
       - run: corepack install
       - run: pnpm install --frozen-lockfile
       - run: pnpm run mutation
+      - name: Check mutation thresholds
+        if: always()
+        run: pnpm run mutation:check --summary
       - name: Upload mutation report
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
           name: mutation-report
           path: reports/mutation/
+          if-no-files-found: warn
 
   security:
     name: ci / security

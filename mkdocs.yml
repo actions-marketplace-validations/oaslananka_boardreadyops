@@ -53,6 +53,7 @@ nav:
   - Installation: install.md
   - Support Matrix: support-matrix.md
   - Accessibility: accessibility.md
+  - Testing: testing.md
   - Configuration: configuration.md
   - Cross-platform Paths: cross-platform.md
   - Multi-project Workspaces: multi-project.md
@@ -83,7 +84,6 @@ nav:
       - BoardReadyOps Studio: integrations/boardreadyops-studio.md
   - Development:
       - Setup: development/setup.md
-      - Testing: development/testing.md
       - Writing Rules: development/writing-rules.md
       - Tooling: development/tooling.md
       - Debugging: development/debugging.md

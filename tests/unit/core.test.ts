@@ -5,7 +5,14 @@ import { describe, expect, it } from "vitest";
 import { defaultConcurrency, mapLimit } from "../../src/core/concurrency.js";
 import { loadConfig, validateConfig } from "../../src/core/config.js";
 import { discoverProjects } from "../../src/core/discovery.js";
-import { createFinding, shouldFail, summarizeFindings } from "../../src/core/findings.js";
+import {
+  createFinding,
+  isSeverity,
+  severityRankValue,
+  shouldFail,
+  sortFindings,
+  summarizeFindings,
+} from "../../src/core/findings.js";
 import { runPipeline } from "../../src/core/pipeline.js";
 import { formatJson } from "../../src/report/json.js";
 import { formatMarkdown } from "../../src/report/markdown.js";
@@ -90,6 +97,64 @@ describe("discovery and findings", () => {
     expect(shouldFail([finding], "high")).toBe(true);
     expect(shouldFail([finding], "critical")).toBe(false);
     expect(summarizeFindings([finding], "high")).toMatchObject({ total: 1, high: 1, failed: true });
+  });
+
+  it("recognizes severities and sorts findings deterministically", () => {
+    expect(isSeverity("critical")).toBe(true);
+    expect(isSeverity("none")).toBe(false);
+    expect(severityRankValue("critical")).toBeGreaterThan(severityRankValue("high"));
+
+    const findings = [
+      createFinding({
+        ruleId: "z.rule",
+        severity: "medium",
+        message: "later",
+        project: "beta",
+        resource: { path: "z.kicad_pcb", kind: "pcb" },
+      }),
+      createFinding({
+        ruleId: "a.rule",
+        severity: "critical",
+        message: "first",
+        project: "alpha",
+        resource: { path: "a.kicad_pcb", kind: "pcb" },
+      }),
+      createFinding({
+        ruleId: "a.rule",
+        severity: "medium",
+        message: "same severity sorts by project",
+        project: "alpha",
+        resource: { path: "b.kicad_pcb", kind: "pcb" },
+      }),
+      createFinding({
+        ruleId: "a.rule",
+        severity: "medium",
+        message: "same severity sorts by path",
+        project: "alpha",
+        resource: { path: "a.kicad_pcb", kind: "pcb" },
+      }),
+    ];
+
+    expect(
+      sortFindings(findings).map((finding) => [
+        finding.severity,
+        finding.ruleId,
+        finding.project,
+        finding.resource.path,
+      ]),
+    ).toEqual([
+      ["critical", "a.rule", "alpha", "a.kicad_pcb"],
+      ["medium", "a.rule", "alpha", "a.kicad_pcb"],
+      ["medium", "a.rule", "alpha", "b.kicad_pcb"],
+      ["medium", "z.rule", "beta", "z.kicad_pcb"],
+    ]);
+    expect(summarizeFindings(findings, "medium")).toMatchObject({
+      total: 4,
+      critical: 1,
+      medium: 3,
+      maxSeverity: "critical",
+      failed: true,
+    });
   });
 
   it("keeps project, fix, and confidence metadata on findings", () => {
