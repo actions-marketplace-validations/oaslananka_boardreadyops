@@ -12,6 +12,25 @@ boardreadyops run . --concurrency 2
 
 Use `boardreadyops run --gate release` to select a configured gate from `boardreadyops.yml`. A selected gate enforces its configured threshold and named requirements for local release checks; GitHub Action runs auto-detect `pull_request`, `main`, or `release` when the Action `gate` input is empty.
 
+## Logging
+
+`run` and `check` emit command lifecycle logs through the shared logger. The default is text output at `info` level on stderr. Use JSON Lines when another tool ingests logs:
+
+```bash
+boardreadyops run . --log-format json --log-level debug --log-file build/boardreadyops.jsonl
+```
+
+Supported levels are `debug`, `info`, `warn`, `error`, `critical`, and `silent`. `--quiet` maps to `silent` unless `--log-level` or `BOARDREADY_LOG_LEVEL` is set; `--verbose` maps to `debug`. The equivalent environment variables are `BOARDREADY_LOG_LEVEL`, `BOARDREADY_LOG_FORMAT`, `BOARDREADY_LOG_FILE`, `BOARDREADY_LOG_FILE_MAX_BYTES`, and `BOARDREADY_LOG_FILE_RETENTION`.
+
+Log records include stable fields such as `ts`, `level`, `event`, `session_id`, `rule`, and `latency_ms`. JSON log records redact secret-shaped values, replace the project root with `<project>`, and omit error stacks unless debug logging is enabled. File logs rotate by size with bounded retention:
+
+```bash
+boardreadyops check . \
+  --log-file build/boardreadyops.log \
+  --log-file-max-bytes 1048576 \
+  --log-file-retention 3
+```
+
 ## Locale
 
 Human-facing CLI output uses English by default and can be switched to Turkish with `BOARDREADY_LOCALE=tr`. When `BOARDREADY_LOCALE` is unset, the CLI checks `LANG` and uses Turkish for values such as `tr_TR.UTF-8`; unsupported locale values fall back to English.

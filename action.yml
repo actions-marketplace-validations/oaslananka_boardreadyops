@@ -86,6 +86,26 @@ inputs:
     description: Emit ::error/::warning workflow annotations.
     required: false
     default: "true"
+  log-level:
+    description: Log level. One of debug, info, warn, error, critical, silent.
+    required: false
+    default: info
+  log-format:
+    description: Log format. One of text, json.
+    required: false
+    default: text
+  log-file:
+    description: Optional log file path inside the workspace.
+    required: false
+    default: ""
+  log-file-max-bytes:
+    description: Rotate the log file after this many bytes. Empty uses the default.
+    required: false
+    default: ""
+  log-file-retention:
+    description: Number of rotated log files to keep. Empty uses the default.
+    required: false
+    default: ""
 outputs:
   findings:
     description: Total finding count.

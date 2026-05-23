@@ -41,6 +41,11 @@ jobs:
 | `artifact-name` | `boardreadyops` | Workflow artifact name. |
 | `fail-on` | `high` | Severity threshold above which the action exits non-zero. One of critical, high, medium, low, never. |
 | `annotations` | `true` | Emit ::error/::warning workflow annotations. |
+| `log-level` | `info` | Log level. One of debug, info, warn, error, critical, silent. |
+| `log-format` | `text` | Log format. One of text, json. |
+| `log-file` | `` | Optional log file path inside the workspace. |
+| `log-file-max-bytes` | `` | Rotate the log file after this many bytes. Empty uses the default. |
+| `log-file-retention` | `` | Number of rotated log files to keep. Empty uses the default. |
 
 ## Outputs
 

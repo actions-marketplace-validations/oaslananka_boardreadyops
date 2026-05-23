@@ -46,6 +46,11 @@ describe("action gate detection", () => {
     vi.stubEnv("INPUT_UPLOAD-ARTIFACTS", "1");
     vi.stubEnv("INPUT_COMMENT-PR", "false");
     vi.stubEnv("INPUT_ARTIFACT-NAME", "boardreadyops-release");
+    vi.stubEnv("INPUT_LOG-LEVEL", "debug");
+    vi.stubEnv("INPUT_LOG-FORMAT", "json");
+    vi.stubEnv("INPUT_LOG-FILE", "logs/boardreadyops.jsonl");
+    vi.stubEnv("INPUT_LOG-FILE-MAX-BYTES", "8192");
+    vi.stubEnv("INPUT_LOG-FILE-RETENTION", "2");
 
     expect(readActionInputs(workspace)).toMatchObject({
       path: path.join(workspace, "hardware"),
@@ -70,6 +75,11 @@ describe("action gate detection", () => {
       uploadArtifacts: true,
       commentPr: false,
       artifactName: "boardreadyops-release",
+      logLevel: "debug",
+      logFormat: "json",
+      logFile: path.join(workspace, "logs/boardreadyops.jsonl"),
+      logFileMaxBytes: 8192,
+      logFileRetention: 2,
     });
   });
 
@@ -86,6 +96,26 @@ describe("action gate detection", () => {
     vi.unstubAllEnvs();
     vi.stubEnv("INPUT_REQUIRE-KICAD", "sometimes");
     expect(() => readActionInputs(path.resolve("."))).toThrow("Input require-kicad must be true or false.");
+
+    vi.unstubAllEnvs();
+    vi.stubEnv("INPUT_LOG-LEVEL", "trace");
+    expect(() => readActionInputs(path.resolve("."))).toThrow(
+      "Input log-level must be debug, info, warn, error, critical, or silent.",
+    );
+
+    vi.unstubAllEnvs();
+    vi.stubEnv("INPUT_LOG-FORMAT", "xml");
+    expect(() => readActionInputs(path.resolve("."))).toThrow("Input log-format must be text or json.");
+
+    vi.unstubAllEnvs();
+    vi.stubEnv("INPUT_LOG-FILE-MAX-BYTES", "0");
+    expect(() => readActionInputs(path.resolve("."))).toThrow("Input log-file-max-bytes must be a positive integer.");
+
+    vi.unstubAllEnvs();
+    vi.stubEnv("INPUT_LOG-FILE-RETENTION", "-1");
+    expect(() => readActionInputs(path.resolve("."))).toThrow(
+      "Input log-file-retention must be a non-negative integer.",
+    );
   });
 
   it("rejects unsafe workspace paths and artifact names", () => {

@@ -43,6 +43,11 @@ export async function runPipeline(
   const config = gate ? applyGateRequirements(loadedConfig, gate) : loadedConfig;
   const options = normalizeOptions(cwd, root, config, input, gate, missingExplicitGate ? "critical" : undefined);
   const activeLogger = logger ?? createLogger(options.quiet ? "silent" : options.verbose ? "debug" : "info");
+  const pipelineStart = performance.now();
+  activeLogger.debug("pipeline.start", {
+    path: root,
+    project_count: projectsLengthHint(input),
+  });
   const projects = await discoverConfiguredProjects(root, options);
   const findings: Finding[] = [];
   findings.push(...configFindings(root, loaded, missingExplicitGate ? new Set([missingExplicitGate]) : undefined));
@@ -74,7 +79,27 @@ export async function runPipeline(
     };
     const output: Finding[] = [];
     for (const rule of activeRules) {
-      output.push(...(await rule.run(context)));
+      const startedAt = performance.now();
+      activeLogger.debug("pipeline.rule.start", {
+        rule: rule.meta.id,
+        project: project.projectFile,
+      });
+      try {
+        output.push(...(await rule.run(context)));
+        activeLogger.debug("pipeline.rule.finish", {
+          rule: rule.meta.id,
+          project: project.projectFile,
+          latency_ms: Math.round(performance.now() - startedAt),
+        });
+      } catch (error) {
+        activeLogger.error("pipeline.rule.error", {
+          rule: rule.meta.id,
+          project: project.projectFile,
+          latency_ms: Math.round(performance.now() - startedAt),
+          error,
+        });
+        throw error;
+      }
     }
     return output;
   });
@@ -87,7 +112,7 @@ export async function runPipeline(
   ]);
   const sorted = await controlledFindings(root, config, options, gatedFindings);
   const fabrication = await captureFabricationSnapshot(root, projects, options, config);
-  return {
+  const result: RunResult = {
     schemaVersion: 1,
     tool: {
       name: "boardreadyops",
@@ -99,6 +124,15 @@ export async function runPipeline(
     fabrication,
     generatedAt: new Date().toISOString(),
   };
+  activeLogger.debug("pipeline.finish", {
+    latency_ms: Math.round(performance.now() - pipelineStart),
+    findings: result.summary.total,
+  });
+  return result;
+}
+
+function projectsLengthHint(input: Partial<PipelineOptions>): number | undefined {
+  return input.project ? 1 : undefined;
 }
 
 export function registerPipelineRules(): void {

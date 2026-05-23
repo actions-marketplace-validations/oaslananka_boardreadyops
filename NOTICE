@@ -1545,4 +1545,3 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `buffers@0.1.1`
   - Description: Treat a collection of Buffers as a single contiguous partially mutable Buffer.
   - Homepage: https://github.com/substack/node-buffers#readme
-

@@ -42,7 +42,7 @@ export function renderNotice(report) {
 
   if (sections.length === 0) {
     lines.push("No npm dependency license notices were reported by pnpm.", "");
-    return `${lines.join("\n")}\n`;
+    return finalizeNotice(lines);
   }
 
   for (const section of sections) {
@@ -59,7 +59,11 @@ export function renderNotice(report) {
     lines.push("");
   }
 
-  return `${lines.join("\n")}\n`;
+  return finalizeNotice(lines);
+}
+
+function finalizeNotice(lines) {
+  return `${lines.join("\n").trimEnd()}\n`;
 }
 
 function licenseSections(report) {

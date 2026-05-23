@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import * as core from "@actions/core";
+import { createLogger } from "../core/logger.js";
 import { runPipeline } from "../core/pipeline.js";
 import { emitAnnotations } from "../report/annotations.js";
 import { formatJson } from "../report/json.js";
@@ -17,7 +18,21 @@ export async function runAction(): Promise<void> {
   await ensureRunnerFile(process.env.GITHUB_OUTPUT);
   await ensureRunnerFile(process.env.GITHUB_STEP_SUMMARY);
   const inputs = readActionInputs(workspace);
-  const result = await runPipeline(inputs);
+  const logger = createLogger({
+    level: inputs.logLevel,
+    format: inputs.logFormat,
+    stream: process.stderr,
+    projectRoot: workspace,
+    logFile: inputs.logFile,
+    maxFileBytes: inputs.logFileMaxBytes,
+    retention: inputs.logFileRetention,
+  });
+  const startedAt = performance.now();
+  logger.info("action.start", {
+    path: inputs.path,
+    gate: inputs.gate,
+  });
+  const result = await runPipeline(inputs, logger);
   const written: { sarif?: string; json?: string; markdown?: string } = {};
   if (inputs.outputs.json) {
     written.json = path.resolve(workspace, inputs.outputs.json);
@@ -49,6 +64,11 @@ export async function runAction(): Promise<void> {
   if (inputs.commentPr) {
     await upsertPullRequestComment(result, inputs.artifactName);
   }
+  logger.info("action.finish", {
+    findings: result.summary.total,
+    failed: result.summary.failed,
+    latency_ms: Math.round(performance.now() - startedAt),
+  });
   if (result.summary.failed) {
     throw new Error(
       `BoardReadyOps found ${result.summary.total} finding(s) at or above the configured fail-on threshold.`,

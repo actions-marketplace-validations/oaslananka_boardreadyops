@@ -32,6 +32,7 @@ describe("license compliance scripts", () => {
     expect(notice).toContain("## MIT OR Apache-2.0");
     expect(notice).toContain("- `dual@1.0.0`, `dual@2.0.0`");
     expect(notice).toContain("Container image redistributes KiCad under GPL terms.");
+    expect(notice).toMatch(/[^\n]\n$/);
   });
 
   it("allows only the approved license policy for distributed dependencies", () => {

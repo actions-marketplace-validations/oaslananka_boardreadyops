@@ -2,6 +2,7 @@ import path from "node:path";
 import * as core from "@actions/core";
 import type { PipelineOptions } from "../core/context.js";
 import type { FailOn } from "../core/findings.js";
+import { type LogFormat, type LogLevel, parseLogFormat, parseLogLevel } from "../core/logger.js";
 import { isInside } from "../util/path.js";
 
 export interface ActionInputs extends Partial<PipelineOptions> {
@@ -14,6 +15,11 @@ export interface ActionInputs extends Partial<PipelineOptions> {
   uploadArtifacts: boolean;
   commentPr: boolean;
   artifactName: string;
+  logLevel: LogLevel;
+  logFormat: LogFormat;
+  logFile?: string | undefined;
+  logFileMaxBytes?: number | undefined;
+  logFileRetention?: number | undefined;
 }
 
 export function readActionInputs(workspace = process.env.GITHUB_WORKSPACE ?? process.cwd()): ActionInputs {
@@ -48,6 +54,17 @@ export function readActionInputs(workspace = process.env.GITHUB_WORKSPACE ?? pro
     uploadArtifacts: boolInput("upload-artifacts", true),
     commentPr: boolInput("comment-pr", true),
     artifactName: artifactName(core.getInput("artifact-name") || "boardreadyops"),
+    logLevel: logLevelInput(core.getInput("log-level") || process.env.BOARDREADY_LOG_LEVEL || "info"),
+    logFormat: logFormatInput(core.getInput("log-format") || process.env.BOARDREADY_LOG_FORMAT || "text"),
+    logFile: optionalPath(root, core.getInput("log-file") || process.env.BOARDREADY_LOG_FILE || ""),
+    logFileMaxBytes: optionalPositiveInteger(
+      core.getInput("log-file-max-bytes") || process.env.BOARDREADY_LOG_FILE_MAX_BYTES || "",
+      "log-file-max-bytes",
+    ),
+    logFileRetention: optionalNonNegativeInteger(
+      core.getInput("log-file-retention") || process.env.BOARDREADY_LOG_FILE_RETENTION || "",
+      "log-file-retention",
+    ),
   };
 }
 
@@ -90,6 +107,36 @@ function failOnInput(value: string): FailOn {
     return value;
   }
   throw new Error("Input fail-on must be critical, high, medium, low, or never.");
+}
+
+function logLevelInput(value: string): LogLevel {
+  return parseLogLevel(value, "log-level");
+}
+
+function logFormatInput(value: string): LogFormat {
+  return parseLogFormat(value, "log-format");
+}
+
+function optionalPositiveInteger(value: string, name: string): number | undefined {
+  const trimmed = value.trim();
+  if (trimmed === "") {
+    return undefined;
+  }
+  if (!/^[1-9]\d*$/.test(trimmed)) {
+    throw new Error(`Input ${name} must be a positive integer.`);
+  }
+  return Number.parseInt(trimmed, 10);
+}
+
+function optionalNonNegativeInteger(value: string, name: string): number | undefined {
+  const trimmed = value.trim();
+  if (trimmed === "") {
+    return undefined;
+  }
+  if (!/^(0|[1-9]\d*)$/.test(trimmed)) {
+    throw new Error(`Input ${name} must be a non-negative integer.`);
+  }
+  return Number.parseInt(trimmed, 10);
 }
 
 function workspacePath(workspace: string, value: string): string {

@@ -7,12 +7,12 @@ export async function checkCommand(
   streams: { stdout: NodeJS.WritableStream; stderr: NodeJS.WritableStream },
 ): Promise<number> {
   if (!ruleOrPath) {
-    return runCommand(pathInput, options, streams);
+    return runCommand(pathInput, options, streams, "check");
   }
   if (!pathInput && isPathLike(ruleOrPath)) {
-    return runCommand(ruleOrPath, options, streams);
+    return runCommand(ruleOrPath, options, streams, "check");
   }
-  return runCommand(pathInput, { ...options, rule: [ruleOrPath] }, streams);
+  return runCommand(pathInput, { ...options, rule: [ruleOrPath] }, streams, "check");
 }
 
 function isPathLike(value: string): boolean {

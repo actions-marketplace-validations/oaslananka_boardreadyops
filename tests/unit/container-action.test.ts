@@ -42,6 +42,8 @@ describe("container action release surfaces", () => {
     expect(entrypoint).toContain(inputEnvAssignment("INPUT_GATE", 10));
     expect(entrypoint).toContain(inputEnvAssignment("INPUT_UPLOAD-SARIF", 14));
     expect(entrypoint).toContain(inputEnvAssignment("INPUT_FAIL-ON", 18));
+    expect(entrypoint).toContain(inputEnvAssignment("INPUT_LOG-LEVEL", 20));
+    expect(entrypoint).toContain(inputEnvAssignment("INPUT_LOG-FILE-RETENTION", 24));
   });
 
   it("builds a GitHub-compatible Ubuntu image with an unprivileged account", async () => {

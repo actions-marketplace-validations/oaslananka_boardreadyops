@@ -21,4 +21,9 @@ exec env \
   "INPUT_ARTIFACT-NAME=${17-}" \
   "INPUT_FAIL-ON=${18-}" \
   "INPUT_ANNOTATIONS=${19-}" \
+  "INPUT_LOG-LEVEL=${20-}" \
+  "INPUT_LOG-FORMAT=${21-}" \
+  "INPUT_LOG-FILE=${22-}" \
+  "INPUT_LOG-FILE-MAX-BYTES=${23-}" \
+  "INPUT_LOG-FILE-RETENTION=${24-}" \
   node /usr/local/lib/node_modules/boardreadyops/dist/action/index.cjs
