@@ -1,19 +1,28 @@
 import type { Finding, Severity } from "../core/findings.js";
 import type { RunResult } from "../core/result.js";
+import { type Locale, t } from "../i18n/t.js";
 
 const severities: Severity[] = ["critical", "high", "medium", "low", "info"];
 
-export function formatHtml(result: RunResult): string {
+export function formatHtml(result: RunResult, locale: Locale = "en"): string {
+  const labels = htmlLabels(locale);
   const projectRows = projectBreakdown(result);
   const ruleRows = ruleBreakdown(result.findings);
-  const filter = filterOptions(result.findings);
-  const visibleCount = `${result.findings.length} ${plural("finding", result.findings.length)}`;
+  const filter = filterOptions(result.findings, locale);
+  const visibleCount = t("report.finding.count", { count: result.findings.length }, locale);
+  const lang = locale === "tr" ? "tr" : "en";
+  const pluralScript =
+    locale === "en"
+      ? 'const plural = (count) => count === 1 ? "finding" : "findings";'
+      : `const singularFinding = ${JSON.stringify(t("report.finding.word", {}, locale))};
+    const pluralFinding = ${JSON.stringify(t("report.finding.word.plural", {}, locale))};
+    const plural = (count) => count === 1 ? singularFinding : pluralFinding;`;
   const html = `<!DOCTYPE html>
-<html lang="en">
+<html lang="${lang}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BoardReadyOps Report</title>
+  <title>${escapeHtml(labels.title)}</title>
   <style>
     :root {
       color-scheme: light;
@@ -304,61 +313,72 @@ export function formatHtml(result: RunResult): string {
 </head>
 <body>
   <header>
-    <h1>BoardReadyOps Report</h1>
-    <p class="metadata">Generated ${escapeHtml(result.generatedAt)} by ${escapeHtml(result.tool.name)} ${escapeHtml(
-      result.tool.version,
-    )}. ${result.summary.failed ? "Threshold failed." : "Threshold passed."}</p>
+    <h1>${escapeHtml(labels.title)}</h1>
+    <p class="metadata">${escapeHtml(
+      t(
+        "report.generatedMetadata",
+        {
+          date: result.generatedAt,
+          tool: result.tool.name,
+          version: result.tool.version,
+          threshold: result.summary.failed ? labels.thresholdFailed : labels.thresholdPassed,
+        },
+        locale,
+      ),
+    )}</p>
   </header>
   <main>
     <section aria-labelledby="summary-heading">
-      <h2 id="summary-heading">Summary by Severity</h2>
+      <h2 id="summary-heading">${escapeHtml(labels.summaryBySeverity)}</h2>
       <div class="summary-grid">
-        ${summaryCards(result)}
+        ${summaryCards(result, locale)}
       </div>
     </section>
 
     <section aria-labelledby="project-heading">
-      <h2 id="project-heading">Per-project Breakdown</h2>
+      <h2 id="project-heading">${escapeHtml(labels.perProjectBreakdown)}</h2>
       <div class="breakdown-grid">
-        ${projectRows.length > 0 ? projectRows.map(renderProjectPanel).join("\n        ") : emptyPanel("No projects were reported.")}
+        ${projectRows.length > 0 ? projectRows.map((row) => renderProjectPanel(row, locale)).join("\n        ") : emptyPanel(labels.noProjects)}
       </div>
     </section>
 
     <section aria-labelledby="rule-heading">
-      <h2 id="rule-heading">Per-rule Grouping</h2>
+      <h2 id="rule-heading">${escapeHtml(labels.perRuleGrouping)}</h2>
       ${
         ruleRows.length > 0
           ? `<table>
-        <caption>Findings grouped by rule</caption>
+        <caption>${escapeHtml(labels.groupedByRule)}</caption>
         <thead>
-          <tr><th scope="col">Rule</th><th scope="col">Total</th><th scope="col">Severity counts</th></tr>
+          <tr><th scope="col">${escapeHtml(labels.rule)}</th><th scope="col">${escapeHtml(
+            labels.total,
+          )}</th><th scope="col">${escapeHtml(labels.severityCounts)}</th></tr>
         </thead>
         <tbody>
-          ${ruleRows.map(renderRuleRow).join("\n          ")}
+          ${ruleRows.map((row) => renderRuleRow(row, locale)).join("\n          ")}
         </tbody>
       </table>`
-          : emptyPanel("No rules produced findings.")
+          : emptyPanel(labels.noRules)
       }
     </section>
 
     <section aria-labelledby="findings-heading">
-      <h2 id="findings-heading">Findings</h2>
-      <section class="filter-bar" aria-label="Filter findings">
-        <label>Severity
+      <h2 id="findings-heading">${escapeHtml(labels.findings)}</h2>
+      <section class="filter-bar" aria-label="${attr(labels.filterFindings)}">
+        <label>${escapeHtml(labels.severity)}
           <select id="severity-filter" data-filter="severity">
-            <option value="">All severities</option>
-            ${filter.severities.map((severity) => `<option value="${attr(severity)}">${escapeHtml(severity)}</option>`).join("\n            ")}
+            <option value="">${escapeHtml(labels.allSeverities)}</option>
+            ${filter.severities.map((severity) => `<option value="${attr(severity)}">${escapeHtml(severityLabel(severity, locale))}</option>`).join("\n            ")}
           </select>
         </label>
-        <label>Rule
+        <label>${escapeHtml(labels.rule)}
           <select id="rule-filter" data-filter="rule">
-            <option value="">All rules</option>
+            <option value="">${escapeHtml(labels.allRules)}</option>
             ${filter.rules.map((rule) => `<option value="${attr(rule)}">${escapeHtml(rule)}</option>`).join("\n            ")}
           </select>
         </label>
-        <label>Project
+        <label>${escapeHtml(labels.project)}
           <select id="project-filter" data-filter="project">
-            <option value="">All projects</option>
+            <option value="">${escapeHtml(labels.allProjects)}</option>
             ${filter.projects.map((project) => `<option value="${attr(project)}">${escapeHtml(project)}</option>`).join("\n            ")}
           </select>
         </label>
@@ -367,15 +387,19 @@ export function formatHtml(result: RunResult): string {
       ${
         result.findings.length > 0
           ? `<table id="findings-table">
-        <caption>Filterable finding list</caption>
+        <caption>${escapeHtml(labels.filterableFindingList)}</caption>
         <thead>
-          <tr><th scope="col">Severity</th><th scope="col">Rule</th><th scope="col">Project</th><th scope="col">Finding</th></tr>
+          <tr><th scope="col">${escapeHtml(labels.severity)}</th><th scope="col">${escapeHtml(
+            labels.rule,
+          )}</th><th scope="col">${escapeHtml(labels.project)}</th><th scope="col">${escapeHtml(
+            labels.finding,
+          )}</th></tr>
         </thead>
         <tbody>
-          ${result.findings.map(renderFindingRow).join("\n          ")}
+          ${result.findings.map((finding) => renderFindingRow(finding, locale)).join("\n          ")}
         </tbody>
       </table>`
-          : emptyPanel("No findings.")
+          : emptyPanel(labels.noFindings)
       }
     </section>
   </main>
@@ -384,7 +408,7 @@ export function formatHtml(result: RunResult): string {
     const filters = Array.from(document.querySelectorAll("[data-filter]"));
     const rows = Array.from(document.querySelectorAll("#findings-table tbody tr"));
     const counter = document.getElementById("visible-count");
-    const plural = (count) => count === 1 ? "finding" : "findings";
+    ${pluralScript}
     const applyFilters = () => {
       const active = Object.fromEntries(filters.map((filter) => [filter.dataset.filter, filter.value]));
       let visible = 0;
@@ -412,10 +436,10 @@ export function formatHtml(result: RunResult): string {
   return `${html.replace(/[ \t]+$/gm, "").trimEnd()}\n`;
 }
 
-function summaryCards(result: RunResult): string {
+function summaryCards(result: RunResult, locale: Locale): string {
   const metrics = [
-    { label: "Total", count: result.summary.total },
-    ...severities.map((severity) => ({ label: severity, count: result.summary[severity] })),
+    { label: t("report.total", {}, locale), count: result.summary.total },
+    ...severities.map((severity) => ({ label: severityLabel(severity, locale), count: result.summary[severity] })),
   ];
   return metrics
     .map(
@@ -467,122 +491,142 @@ function emptyBreakdown(label: string): Breakdown {
   };
 }
 
-function renderProjectPanel(project: Breakdown): string {
+function renderProjectPanel(project: Breakdown, locale: Locale): string {
   return `<article class="panel">
           <h3><code>${escapeHtml(project.label)}</code></h3>
-          <p><strong>${project.total}</strong> ${escapeHtml(plural("finding", project.total))}</p>
-          <p class="muted">${severityCounts(project)}</p>
+          <p><strong>${project.total}</strong> ${escapeHtml(findingWord(project.total, locale))}</p>
+          <p class="muted">${severityCounts(project, locale)}</p>
         </article>`;
 }
 
-function renderRuleRow(rule: Breakdown): string {
+function renderRuleRow(rule: Breakdown, locale: Locale): string {
+  const labels = htmlLabels(locale);
   return `<tr>
-            <td data-label="Rule"><code>${escapeHtml(rule.label)}</code></td>
-            <td data-label="Total">${rule.total}</td>
-            <td data-label="Severity counts">${severityCounts(rule)}</td>
+            <td data-label="${attr(labels.rule)}"><code>${escapeHtml(rule.label)}</code></td>
+            <td data-label="${attr(labels.total)}">${rule.total}</td>
+            <td data-label="${attr(labels.severityCounts)}">${severityCounts(rule, locale)}</td>
           </tr>`;
 }
 
-function renderFindingRow(finding: Finding): string {
-  const project = finding.project ?? "Unassigned";
+function renderFindingRow(finding: Finding, locale: Locale): string {
+  const labels = htmlLabels(locale);
+  const project = finding.project ?? t("report.unassigned", {}, locale);
   return `<tr data-severity="${attr(finding.severity)}" data-rule="${attr(finding.ruleId)}" data-project="${attr(project)}">
-            <td data-label="Severity"><span class="badge severity-${attr(finding.severity)}">${escapeHtml(finding.severity)}</span></td>
-            <td data-label="Rule"><code>${escapeHtml(finding.ruleId)}</code></td>
-            <td data-label="Project"><code>${escapeHtml(project)}</code></td>
-            <td data-label="Finding">
+            <td data-label="${attr(labels.severity)}"><span class="badge severity-${attr(finding.severity)}">${escapeHtml(severityLabel(finding.severity, locale))}</span></td>
+            <td data-label="${attr(labels.rule)}"><code>${escapeHtml(finding.ruleId)}</code></td>
+            <td data-label="${attr(labels.project)}"><code>${escapeHtml(project)}</code></td>
+            <td data-label="${attr(labels.finding)}">
               ${escapeHtml(finding.message)}
               <details>
-                <summary>Details</summary>
+                <summary>${escapeHtml(labels.details)}</summary>
                 <div class="detail-grid">
                   <section>
-                    <h3>Resource</h3>
+                    <h3>${escapeHtml(labels.resource)}</h3>
                     <p><code>${escapeHtml(finding.resource.path)}</code> <span class="muted">(${escapeHtml(finding.resource.kind)})</span></p>
-                    ${locationHtml(finding)}
+                    ${locationHtml(finding, locale)}
                   </section>
-                  ${detailsHtml(finding)}
-                  ${fixHtml(finding)}
-                  ${referencesHtml(finding)}
+                  ${detailsHtml(finding, locale)}
+                  ${fixHtml(finding, locale)}
+                  ${referencesHtml(finding, locale)}
                 </div>
               </details>
             </td>
           </tr>`;
 }
 
-function locationHtml(finding: Finding): string {
+function locationHtml(finding: Finding, locale: Locale): string {
   const values: string[] = [];
   if (finding.location?.region) {
-    values.push(`lines ${finding.location.region.startLine}-${finding.location.region.endLine}`);
+    values.push(
+      t(
+        "report.location.lines",
+        {
+          startLine: finding.location.region.startLine,
+          endLine: finding.location.region.endLine,
+        },
+        locale,
+      ),
+    );
   } else if (finding.location?.line) {
-    values.push(`line ${finding.location.line}`);
+    values.push(t("report.location.line", { line: finding.location.line }, locale));
   }
   if (finding.location?.column) {
-    values.push(`column ${finding.location.column}`);
+    values.push(t("report.location.column", { column: finding.location.column }, locale));
   }
   if (finding.location?.boardCoordinates) {
     const coordinates = finding.location.boardCoordinates;
     values.push(
-      `${coordinates.layer ?? "board"} (${formatNumber(coordinates.x)}${coordinates.units}, ${formatNumber(
+      `${coordinates.layer ?? t("report.location.board", {}, locale)} (${formatNumber(coordinates.x)}${coordinates.units}, ${formatNumber(
         coordinates.y,
       )}${coordinates.units})`,
     );
   }
-  return values.length > 0 ? `<p>${escapeHtml(values.join(", "))}</p>` : '<p class="muted">No location provided.</p>';
+  return values.length > 0
+    ? `<p>${escapeHtml(values.join(", "))}</p>`
+    : `<p class="muted">${escapeHtml(t("report.noLocation", {}, locale))}</p>`;
 }
 
-function detailsHtml(finding: Finding): string {
+function detailsHtml(finding: Finding, locale: Locale): string {
   if (!finding.details && !finding.confidence) {
     return "";
   }
   const detail = JSON.stringify(finding.details ?? {}, null, 2);
   return `<section>
-                    <h3>Context</h3>
-                    ${finding.confidence ? `<p>Confidence: ${escapeHtml(finding.confidence)}</p>` : ""}
+                    <h3>${escapeHtml(t("report.context", {}, locale))}</h3>
+                    ${finding.confidence ? `<p>${escapeHtml(t("report.confidence", {}, locale))}: ${escapeHtml(finding.confidence)}</p>` : ""}
                     ${finding.details ? `<pre><code>${escapeHtml(detail)}</code></pre>` : ""}
                   </section>`;
 }
 
-function fixHtml(finding: Finding): string {
+function fixHtml(finding: Finding, locale: Locale): string {
   if (!finding.fix) {
-    return '<section><h3>Fix</h3><p class="muted">No fix suggestion provided.</p></section>';
+    return `<section><h3>${escapeHtml(t("report.fix", {}, locale))}</h3><p class="muted">${escapeHtml(
+      t("report.noFix", {}, locale),
+    )}</p></section>`;
   }
   const steps =
     finding.fix.steps && finding.fix.steps.length > 0
       ? `<ol>${finding.fix.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}</ol>`
       : "";
   return `<section>
-                    <h3>Fix</h3>
+                    <h3>${escapeHtml(t("report.fix", {}, locale))}</h3>
                     <p>${escapeHtml(finding.fix.description)}</p>
                     ${steps}
                   </section>`;
 }
 
-function referencesHtml(finding: Finding): string {
+function referencesHtml(finding: Finding, locale: Locale): string {
   const references = [...(finding.references ?? []), ...(finding.fix?.references ?? [])];
   if (references.length === 0) {
-    return '<section><h3>References</h3><p class="muted">No references provided.</p></section>';
+    return `<section><h3>${escapeHtml(t("report.references", {}, locale))}</h3><p class="muted">${escapeHtml(
+      t("report.noReferences", {}, locale),
+    )}</p></section>`;
   }
   return `<section>
-                    <h3>References</h3>
+                    <h3>${escapeHtml(t("report.references", {}, locale))}</h3>
                     <ul>${references
                       .map((reference) => `<li><a href="${attr(reference)}">${escapeHtml(reference)}</a></li>`)
                       .join("")}</ul>
                   </section>`;
 }
 
-function filterOptions(findings: Finding[]): { severities: Severity[]; rules: string[]; projects: string[] } {
+function filterOptions(
+  findings: Finding[],
+  locale: Locale,
+): { severities: Severity[]; rules: string[]; projects: string[] } {
   return {
     severities: severities.filter((severity) => findings.some((finding) => finding.severity === severity)),
     rules: uniqueSorted(findings.map((finding) => finding.ruleId)),
-    projects: uniqueSorted(findings.map((finding) => finding.project ?? "Unassigned")),
+    projects: uniqueSorted(findings.map((finding) => finding.project ?? t("report.unassigned", {}, locale))),
   };
 }
 
-function severityCounts(row: Breakdown): string {
+function severityCounts(row: Breakdown, locale: Locale): string {
   return (
     severities
       .filter((severity) => row.counts[severity] > 0)
-      .map((severity) => `${row.counts[severity]} ${severity}`)
-      .join(", ") || "0 findings"
+      .map((severity) => `${row.counts[severity]} ${severityLabel(severity, locale)}`)
+      .join(", ") || t("report.finding.count", { count: 0 }, locale)
   );
 }
 
@@ -592,10 +636,6 @@ function emptyPanel(message: string): string {
 
 function uniqueSorted(values: string[]): string[] {
   return [...new Set(values)].sort((a, b) => a.localeCompare(b));
-}
-
-function plural(word: string, count: number): string {
-  return count === 1 ? word : `${word}s`;
 }
 
 function formatNumber(value: number): string {
@@ -612,4 +652,55 @@ function attr(value: string): string {
 
 function escapeHtml(value: string): string {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function findingWord(count: number, locale: Locale): string {
+  return count === 1 ? t("report.finding.word", {}, locale) : t("report.finding.word.plural", {}, locale);
+}
+
+function severityLabel(severity: Severity, locale: Locale): string {
+  if (locale === "en") {
+    return severity;
+  }
+  switch (severity) {
+    case "critical":
+      return t("severity.critical", {}, locale);
+    case "high":
+      return t("severity.high", {}, locale);
+    case "medium":
+      return t("severity.medium", {}, locale);
+    case "low":
+      return t("severity.low", {}, locale);
+    case "info":
+      return t("severity.info", {}, locale);
+  }
+}
+
+function htmlLabels(locale: Locale) {
+  return {
+    allProjects: t("report.allProjects", {}, locale),
+    allRules: t("report.allRules", {}, locale),
+    allSeverities: t("report.allSeverities", {}, locale),
+    details: t("report.details", {}, locale),
+    filterFindings: t("report.filterFindings", {}, locale),
+    filterableFindingList: t("report.filterableFindingList", {}, locale),
+    finding: t("report.finding", {}, locale),
+    findings: t("report.findings", {}, locale),
+    groupedByRule: t("report.groupedByRule", {}, locale),
+    noFindings: t("report.noFindings", {}, locale),
+    noProjects: t("report.noProjects", {}, locale),
+    noRules: t("report.noRules", {}, locale),
+    perProjectBreakdown: t("report.perProjectBreakdown", {}, locale),
+    perRuleGrouping: t("report.perRuleGrouping", {}, locale),
+    project: t("report.project", {}, locale),
+    resource: t("report.resource", {}, locale),
+    rule: t("report.rule", {}, locale),
+    severity: t("report.severity", {}, locale),
+    severityCounts: t("report.severityCounts", {}, locale),
+    summaryBySeverity: t("report.summaryBySeverity", {}, locale),
+    thresholdFailed: t("report.threshold.failed", {}, locale),
+    thresholdPassed: t("report.threshold.passed", {}, locale),
+    title: t("report.title", {}, locale),
+    total: t("report.total", {}, locale),
+  };
 }

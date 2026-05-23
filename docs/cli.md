@@ -12,6 +12,17 @@ boardreadyops run . --concurrency 2
 
 Use `boardreadyops run --gate release` to select a configured gate from `boardreadyops.yml`. A selected gate enforces its configured threshold and named requirements for local release checks; GitHub Action runs auto-detect `pull_request`, `main`, or `release` when the Action `gate` input is empty.
 
+## Locale
+
+Human-facing CLI output uses English by default and can be switched to Turkish with `BOARDREADY_LOCALE=tr`. When `BOARDREADY_LOCALE` is unset, the CLI checks `LANG` and uses Turkish for values such as `tr_TR.UTF-8`; unsupported locale values fall back to English.
+
+```sh
+BOARDREADY_LOCALE=tr boardreadyops doctor
+BOARDREADY_LOCALE=tr boardreadyops run . --markdown -
+```
+
+The locale setting affects status lines, configuration and environment error prefixes, doctor text output, and Markdown/HTML report labels produced by the CLI. JSON, SARIF, JUnit, rule IDs, and finding messages remain locale-independent for automation and stable references.
+
 ## Doctor
 
 `boardreadyops doctor` diagnoses the current environment and repository before a full pipeline run. Its checks cover the Node and npm runtime, KiCad CLI availability, configured adapter credentials, repository discovery and manufacturing outputs, suppression state, and the conventional `.github/workflows/boardreadyops.yml` or `.github/workflows/boardreadyops.yaml` workflow. Runtime support follows the [support matrix](support-matrix.md).

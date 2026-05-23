@@ -1,6 +1,7 @@
 import path from "node:path";
 import type { LoadedConfig } from "../core/config.js";
 import type { RunResult } from "../core/result.js";
+import type { Locale } from "../i18n/t.js";
 import { formatHtml } from "../report/html.js";
 import { formatJson } from "../report/json.js";
 import { formatJunit } from "../report/junit.js";
@@ -23,6 +24,7 @@ export async function writeReports(
   outputs: OutputOptions,
   loaded: LoadedConfig,
   stdout: NodeJS.WritableStream,
+  locale: Locale = "en",
 ): Promise<{ json?: string; sarif?: string; markdown?: string; junit?: string; html?: string }> {
   const targets = {
     json: outputs.json ?? configOutput(loaded, "json"),
@@ -39,13 +41,18 @@ export async function writeReports(
     written.sarif = await writeOrStdout(root, targets.sarif, formatSarif(result), stdout);
   }
   if (targets.markdown) {
-    written.markdown = await writeOrStdout(root, targets.markdown, formatMarkdown(result), stdout);
+    written.markdown = await writeOrStdout(
+      root,
+      targets.markdown,
+      formatMarkdown(result, [], undefined, locale),
+      stdout,
+    );
   }
   if (targets.junit) {
     written.junit = await writeOrStdout(root, targets.junit, formatJunit(result), stdout);
   }
   if (targets.html) {
-    written.html = await writeOrStdout(root, targets.html, formatHtml(result), stdout);
+    written.html = await writeOrStdout(root, targets.html, formatHtml(result, locale), stdout);
   }
   return written;
 }

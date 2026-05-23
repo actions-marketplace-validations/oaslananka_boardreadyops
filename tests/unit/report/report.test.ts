@@ -203,6 +203,25 @@ describe("report formats", () => {
     expect(populated).not.toMatch(/{{|}}/);
   });
 
+  it("renders Turkish PR Markdown labels without translating finding messages", () => {
+    const empty = formatMarkdown(sampleResult([]), [], undefined, "tr");
+    expect(empty).toContain("# BoardReadyOps Raporu");
+    expect(empty).toContain("| Ölçüt | Sayı |");
+    expect(empty).toContain("Bulgu yok.");
+    expect(empty).not.toMatch(/{{|}}/);
+
+    const populated = formatMarkdown(sampleResult(), [], undefined, "tr");
+    expect(populated).toContain("## Öne Çıkan Bulgular");
+    expect(populated).toContain("## Çözüm");
+    expect(populated).toContain("R1 is missing an MPN.");
+  });
+
+  it("renders pseudo-locale PR Markdown labels for hard-coded string smoke coverage", () => {
+    const markdown = formatMarkdown(sampleResult([]), [], undefined, "__PSEUDO__");
+    expect(markdown).toContain("# [[BoardReadyOps Report]]");
+    expect(markdown).toContain("[[No findings.]]");
+  });
+
   it("renders fabrication changes in PR Markdown", () => {
     const markdown = formatMarkdown(sampleResult(), [], {
       bom: {
@@ -218,6 +237,7 @@ describe("report formats", () => {
       },
       outputs: [
         { kind: "drill", status: "changed", changed: 1, added: 0, removed: 0 },
+        { kind: "bom", status: "changed", changed: 0, added: 2, removed: 1 },
         { kind: "gerber", status: "unchanged", changed: 0, added: 0, removed: 0 },
       ],
       findings: {
@@ -230,6 +250,7 @@ describe("report formats", () => {
     expect(markdown).toContain("Fabrication Changes");
     expect(markdown).toContain("| C45 | - | 100nF 0402 | added |");
     expect(markdown).toContain("- drill: changed (1 changed)");
+    expect(markdown).toContain("- bom: changed (2 added, 1 removed)");
     expect(markdown).toContain("- gerber: unchanged");
     expect(markdown).toContain("New Findings");
   });

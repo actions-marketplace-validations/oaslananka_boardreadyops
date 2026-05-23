@@ -1,4 +1,5 @@
 import path from "node:path";
+import { t } from "../../i18n/t.js";
 import { pathExists, writeTextFile } from "../../util/fs.js";
 
 const starter = `version: 1
@@ -34,10 +35,10 @@ report:
 export async function initCommand(cwd: string, streams: { stdout: NodeJS.WritableStream }): Promise<number> {
   const file = path.resolve(cwd, "boardreadyops.yml");
   if (await pathExists(file)) {
-    streams.stdout.write("boardreadyops.yml already exists\n");
+    streams.stdout.write(`${t("cli.init.exists")}\n`);
     return 0;
   }
   await writeTextFile(file, starter);
-  streams.stdout.write("created boardreadyops.yml\n");
+  streams.stdout.write(`${t("cli.init.created")}\n`);
   return 0;
 }

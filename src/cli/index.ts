@@ -2,6 +2,7 @@
 import path from "node:path";
 import { Command } from "commander";
 import { boardReadyVersion } from "../generated/version.js";
+import { t } from "../i18n/t.js";
 import {
   type BaselineCliOptions,
   captureBaselineCommand,
@@ -108,7 +109,7 @@ export async function runCli(
     if (isCommanderDisplay(error)) {
       return 0;
     }
-    streams.stderr.write(`${error instanceof Error ? error.message : "unexpected CLI error"}\n`);
+    streams.stderr.write(`${error instanceof Error ? error.message : t("cli.error.unexpected")}\n`);
     return 2;
   }
 }

@@ -9803,9 +9803,9 @@ var require_balanced_pool = __commonJS({
     function getGreatestCommonDivisor(a, b) {
       if (a === 0) return b;
       while (b !== 0) {
-        const t = b;
+        const t2 = b;
         b = a % b;
-        a = t;
+        a = t2;
       }
       return a;
     }
@@ -27258,7 +27258,7 @@ var require_dataType = __commonJS({
     exports2.coerceAndCheckDataType = coerceAndCheckDataType;
     var COERCIBLE = /* @__PURE__ */ new Set(["string", "number", "integer", "boolean", "null"]);
     function coerceToTypes(types2, coerceTypes) {
-      return coerceTypes ? types2.filter((t) => COERCIBLE.has(t) || coerceTypes === "array" && t === "array") : [];
+      return coerceTypes ? types2.filter((t2) => COERCIBLE.has(t2) || coerceTypes === "array" && t2 === "array") : [];
     }
     function coerceData(it, types2, coerceTo) {
       const { gen, data, opts } = it;
@@ -27268,9 +27268,9 @@ var require_dataType = __commonJS({
         gen.if((0, codegen_1._)`${dataType} == 'object' && Array.isArray(${data}) && ${data}.length == 1`, () => gen.assign(data, (0, codegen_1._)`${data}[0]`).assign(dataType, (0, codegen_1._)`typeof ${data}`).if(checkDataTypes(types2, data, opts.strictNumbers), () => gen.assign(coerced, data)));
       }
       gen.if((0, codegen_1._)`${coerced} !== undefined`);
-      for (const t of coerceTo) {
-        if (COERCIBLE.has(t) || t === "array" && opts.coerceTypes === "array") {
-          coerceSpecificType(t);
+      for (const t2 of coerceTo) {
+        if (COERCIBLE.has(t2) || t2 === "array" && opts.coerceTypes === "array") {
+          coerceSpecificType(t2);
         }
       }
       gen.else();
@@ -27280,8 +27280,8 @@ var require_dataType = __commonJS({
         gen.assign(data, coerced);
         assignParentData(it, coerced);
       });
-      function coerceSpecificType(t) {
-        switch (t) {
+      function coerceSpecificType(t2) {
+        switch (t2) {
           case "string":
             gen.elseIf((0, codegen_1._)`${dataType} == "number" || ${dataType} == "boolean"`).assign(coerced, (0, codegen_1._)`"" + ${data}`).elseIf((0, codegen_1._)`${data} === null`).assign(coerced, (0, codegen_1._)`""`);
             return;
@@ -27353,8 +27353,8 @@ var require_dataType = __commonJS({
       }
       if (types2.number)
         delete types2.integer;
-      for (const t in types2)
-        cond = (0, codegen_1.and)(cond, checkDataType(t, data, strictNums, correct));
+      for (const t2 in types2)
+        cond = (0, codegen_1.and)(cond, checkDataType(t2, data, strictNums, correct));
       return cond;
     }
     exports2.checkDataTypes = checkDataTypes;
@@ -28269,9 +28269,9 @@ var require_validate = __commonJS({
         it.dataTypes = types2;
         return;
       }
-      types2.forEach((t) => {
-        if (!includesType(it.dataTypes, t)) {
-          strictTypesError(it, `type "${t}" not allowed by context "${it.dataTypes.join(",")}"`);
+      types2.forEach((t2) => {
+        if (!includesType(it.dataTypes, t2)) {
+          strictTypesError(it, `type "${t2}" not allowed by context "${it.dataTypes.join(",")}"`);
         }
       });
       narrowSchemaTypes(it, types2);
@@ -28287,7 +28287,7 @@ var require_validate = __commonJS({
         const rule2 = rules[keyword];
         if (typeof rule2 == "object" && (0, applicability_1.shouldUseRule)(it.schema, rule2)) {
           const { type: type2 } = rule2.definition;
-          if (type2.length && !type2.some((t) => hasApplicableType(ts, t))) {
+          if (type2.length && !type2.some((t2) => hasApplicableType(ts, t2))) {
             strictTypesError(it, `missing type "${type2.join(",")}" for keyword "${keyword}"`);
           }
         }
@@ -28296,15 +28296,15 @@ var require_validate = __commonJS({
     function hasApplicableType(schTs, kwdT) {
       return schTs.includes(kwdT) || kwdT === "number" && schTs.includes("integer");
     }
-    function includesType(ts, t) {
-      return ts.includes(t) || t === "integer" && ts.includes("number");
+    function includesType(ts, t2) {
+      return ts.includes(t2) || t2 === "integer" && ts.includes("number");
     }
     function narrowSchemaTypes(it, withTypes) {
       const ts = [];
-      for (const t of it.dataTypes) {
-        if (includesType(withTypes, t))
-          ts.push(t);
-        else if (withTypes.includes("integer") && t === "number")
+      for (const t2 of it.dataTypes) {
+        if (includesType(withTypes, t2))
+          ts.push(t2);
+        else if (withTypes.includes("integer") && t2 === "number")
           ts.push("integer");
       }
       it.dataTypes = ts;
@@ -30002,7 +30002,7 @@ var require_core = __commonJS({
           type: (0, dataType_1.getJSONTypes)(def.type),
           schemaType: (0, dataType_1.getJSONTypes)(def.schemaType)
         };
-        (0, util_1.eachItem)(keyword, definition.type.length === 0 ? (k) => addRule.call(this, k, definition) : (k) => definition.type.forEach((t) => addRule.call(this, k, definition, t)));
+        (0, util_1.eachItem)(keyword, definition.type.length === 0 ? (k) => addRule.call(this, k, definition) : (k) => definition.type.forEach((t2) => addRule.call(this, k, definition, t2)));
         return this;
       }
       getKeyword(keyword) {
@@ -30201,7 +30201,7 @@ var require_core = __commonJS({
       if (dataType && post)
         throw new Error('keyword with "post" flag cannot have "type"');
       const { RULES } = this;
-      let ruleGroup = post ? RULES.post : RULES.rules.find(({ type: t }) => t === dataType);
+      let ruleGroup = post ? RULES.post : RULES.rules.find(({ type: t2 }) => t2 === dataType);
       if (!ruleGroup) {
         ruleGroup = { type: dataType, rules: [] };
         RULES.rules.push(ruleGroup);
@@ -30749,7 +30749,7 @@ var require_uniqueItems = __commonJS({
           gen.if((0, codegen_1._)`${i} > 1`, () => (canOptimize() ? loopN : loopN2)(i, j));
         }
         function canOptimize() {
-          return itemTypes.length > 0 && !itemTypes.some((t) => t === "object" || t === "array");
+          return itemTypes.length > 0 && !itemTypes.some((t2) => t2 === "object" || t2 === "array");
         }
         function loopN(i, j) {
           const item = gen.name("item");
@@ -40224,16 +40224,16 @@ var require_typescript = __commonJS({
         }
         return result;
       }
-      function assign(t, ...args) {
+      function assign(t2, ...args) {
         for (const arg of args) {
           if (arg === void 0) continue;
           for (const p in arg) {
             if (hasProperty2(arg, p)) {
-              t[p] = arg[p];
+              t2[p] = arg[p];
             }
           }
         }
-        return t;
+        return t2;
       }
       function equalOwnProperties(left, right, equalityComparer = equateValues) {
         if (left === right) return true;
@@ -40840,8 +40840,8 @@ var require_typescript = __commonJS({
       }
       function assertType(_2) {
       }
-      function singleElementArray(t) {
-        return t === void 0 ? void 0 : [t];
+      function singleElementArray(t2) {
+        return t2 === void 0 ? void 0 : [t2];
       }
       function enumerateInsertsAndDeletes(newItems, oldItems, comparer, inserted, deleted, unchanged) {
         unchanged ?? (unchanged = noop3);
@@ -41591,13 +41591,13 @@ Node ${formatSyntaxKind(node.kind)} was unexpected.`,
                 return zipWith(
                   this.sources,
                   this.targets || map3(this.sources, () => "any"),
-                  (s, t) => `${s.__debugTypeToString()} -> ${typeof t === "string" ? t : t.__debugTypeToString()}`
+                  (s, t2) => `${s.__debugTypeToString()} -> ${typeof t2 === "string" ? t2 : t2.__debugTypeToString()}`
                 ).join(", ");
               case 2:
                 return zipWith(
                   this.sources,
                   this.targets,
-                  (s, t) => `${s.__debugTypeToString()} -> ${t().__debugTypeToString()}`
+                  (s, t2) => `${s.__debugTypeToString()} -> ${t2().__debugTypeToString()}`
                 ).join(", ");
               case 5:
               case 4:
@@ -42576,7 +42576,7 @@ ${lanes.join("\n")}
               const referenceType = type2;
               referenceProperties = {
                 instantiatedType: (_d = referenceType.target) == null ? void 0 : _d.id,
-                typeArguments: (_e = referenceType.resolvedTypeArguments) == null ? void 0 : _e.map((t) => t.id),
+                typeArguments: (_e = referenceType.resolvedTypeArguments) == null ? void 0 : _e.map((t2) => t2.id),
                 referenceLocation: getLocation(referenceType.node)
               };
             }
@@ -42630,9 +42630,9 @@ ${lanes.join("\n")}
               symbolName: (symbol2 == null ? void 0 : symbol2.escapedName) && unescapeLeadingUnderscores(symbol2.escapedName),
               recursionId: recursionToken,
               isTuple: objectFlags & 8 ? true : void 0,
-              unionTypes: type2.flags & 134217728 ? (_p = type2.types) == null ? void 0 : _p.map((t) => t.id) : void 0,
-              intersectionTypes: type2.flags & 268435456 ? type2.types.map((t) => t.id) : void 0,
-              aliasTypeArguments: (_q = type2.aliasTypeArguments) == null ? void 0 : _q.map((t) => t.id),
+              unionTypes: type2.flags & 134217728 ? (_p = type2.types) == null ? void 0 : _p.map((t2) => t2.id) : void 0,
+              intersectionTypes: type2.flags & 268435456 ? type2.types.map((t2) => t2.id) : void 0,
+              aliasTypeArguments: (_q = type2.aliasTypeArguments) == null ? void 0 : _q.map((t2) => t2.id),
               keyofType: type2.flags & 2097152 ? (_r = type2.type) == null ? void 0 : _r.id : void 0,
               ...indexedAccessProperties,
               ...referenceProperties,
@@ -49128,8 +49128,8 @@ ${lanes.join("\n")}
         return result;
       }
       var tokenStrings = makeReverseMap(textToToken);
-      function tokenToString(t) {
-        return tokenStrings[t];
+      function tokenToString(t2) {
+        return tokenStrings[t2];
       }
       function stringToToken(s) {
         return textToToken.get(s);
@@ -59700,7 +59700,7 @@ ${lanes.join("\n")}
         return 3 <= moduleResolution && moduleResolution <= 99 || getResolvePackageJsonExports(options) || getResolvePackageJsonImports(options);
       }
       function usesWildcardTypes(options) {
-        return some(options.types, (t) => t === "*");
+        return some(options.types, (t2) => t2 === "*");
       }
       function createComputedCompilerOptions(options) {
         return options;
@@ -73319,44 +73319,44 @@ ${lanes.join("\n")}
             );
           }
         }
-        function parseOptional(t) {
-          if (token() === t) {
+        function parseOptional(t2) {
+          if (token() === t2) {
             nextToken();
             return true;
           }
           return false;
         }
-        function parseOptionalToken(t) {
-          if (token() === t) {
+        function parseOptionalToken(t2) {
+          if (token() === t2) {
             return parseTokenNode();
           }
           return void 0;
         }
-        function parseOptionalTokenJSDoc(t) {
-          if (token() === t) {
+        function parseOptionalTokenJSDoc(t2) {
+          if (token() === t2) {
             return parseTokenNodeJSDoc();
           }
           return void 0;
         }
-        function parseExpectedToken(t, diagnosticMessage, arg0) {
-          return parseOptionalToken(t) || createMissingNode(
-            t,
+        function parseExpectedToken(t2, diagnosticMessage, arg0) {
+          return parseOptionalToken(t2) || createMissingNode(
+            t2,
             /*reportAtCurrentPosition*/
             false,
             diagnosticMessage || Diagnostics._0_expected,
-            arg0 || tokenToString(t)
+            arg0 || tokenToString(t2)
           );
         }
-        function parseExpectedTokenJSDoc(t) {
-          const optional2 = parseOptionalTokenJSDoc(t);
+        function parseExpectedTokenJSDoc(t2) {
+          const optional2 = parseOptionalTokenJSDoc(t2);
           if (optional2) return optional2;
-          Debug.assert(isKeywordOrPunctuation(t));
+          Debug.assert(isKeywordOrPunctuation(t2));
           return createMissingNode(
-            t,
+            t2,
             /*reportAtCurrentPosition*/
             false,
             Diagnostics._0_expected,
-            tokenToString(t)
+            tokenToString(t2)
           );
         }
         function parseTokenNode() {
@@ -73541,8 +73541,8 @@ ${lanes.join("\n")}
           nextToken();
           return finishNode(node, pos);
         }
-        function parseContextualModifier(t) {
-          return token() === t && tryParse(nextTokenCanFollowModifier);
+        function parseContextualModifier(t2) {
+          return token() === t2 && tryParse(nextTokenCanFollowModifier);
         }
         function nextTokenIsOnSameLineAndCanFollowModifier() {
           nextToken();
@@ -76036,8 +76036,8 @@ ${lanes.join("\n")}
           const leftOperand = parseUnaryExpressionOrHigher();
           return parseBinaryExpressionRest(precedence, leftOperand, pos);
         }
-        function isInOrOfKeyword(t) {
-          return t === 103 || t === 165;
+        function isInOrOfKeyword(t2) {
+          return t2 === 103 || t2 === 165;
         }
         function parseBinaryExpressionRest(precedence, leftOperand, pos) {
           while (true) {
@@ -80191,18 +80191,18 @@ ${lanes.join("\n")}
               nextTokenJSDoc();
               const tagName = parseJSDocIdentifierName();
               const indentText = skipWhitespaceOrAsterisk();
-              let t;
+              let t2;
               switch (tagName.escapedText) {
                 case "type":
                   return target === 1 && parseTypeTag(start2, tagName);
                 case "prop":
                 case "property":
-                  t = 1;
+                  t2 = 1;
                   break;
                 case "arg":
                 case "argument":
                 case "param":
-                  t = 2 | 4;
+                  t2 = 2 | 4;
                   break;
                 case "template":
                   return parseTemplateTag(start2, tagName, indent3, indentText);
@@ -80211,7 +80211,7 @@ ${lanes.join("\n")}
                 default:
                   return false;
               }
-              if (!(target & t)) {
+              if (!(target & t2)) {
                 return false;
               }
               return parseParameterOrPropertyTag(start2, tagName, target, indent3);
@@ -80277,8 +80277,8 @@ ${lanes.join("\n")}
               const typeParameters = parseTemplateTagTypeParameters();
               return finishNode(factory2.createJSDocTemplateTag(tagName, constraint, typeParameters, parseTrailingTagComments(start2, getNodePos(), indent3, indentText)), start2);
             }
-            function parseOptionalJsdoc(t) {
-              if (token() === t) {
+            function parseOptionalJsdoc(t2) {
+              if (token() === t2) {
                 nextTokenJSDoc();
                 return true;
               }
@@ -85011,7 +85011,7 @@ ${lanes.join("\n")}
             }
           }
         }
-        return deduplicate(flatten(options.types.map((t) => t === "*" ? wildcardMatches : t)), equateValues);
+        return deduplicate(flatten(options.types.map((t2) => t2 === "*" ? wildcardMatches : t2)), equateValues);
       }
       function isPackageJsonInfo(entry) {
         return !!(entry == null ? void 0 : entry.contents);
@@ -86161,8 +86161,8 @@ ${lanes.join("\n")}
               }
             }
           } else if (Array.isArray(target)) {
-            for (const t of target) {
-              const success2 = loadEntrypointsFromTargetExports(t);
+            for (const t2 of target) {
+              const success2 = loadEntrypointsFromTargetExports(t2);
               if (success2) {
                 return true;
               }
@@ -90637,8 +90637,8 @@ ${lanes.join("\n")}
             if (!accept3(symbol2)) {
               return true;
             }
-            const t = getTypeOfSymbol(symbol2);
-            visitType(t);
+            const t2 = getTypeOfSymbol(symbol2);
+            visitType(t2);
             if (symbol2.exports) {
               symbol2.exports.forEach(visitSymbol);
             }
@@ -92633,8 +92633,8 @@ ${lanes.join("\n")}
         var numberOrBigIntType = getUnionType([numberType, bigintType]);
         var templateConstraintType = getUnionType([stringType, numberType, booleanType, bigintType, nullType, undefinedType]);
         var numericStringType = getTemplateLiteralType(["", ""], [numberType]);
-        var restrictiveMapper = makeFunctionTypeMapper((t) => t.flags & 524288 ? getRestrictiveTypeParameter(t) : t, () => "(restrictive mapper)");
-        var permissiveMapper = makeFunctionTypeMapper((t) => t.flags & 524288 ? wildcardType : t, () => "(permissive mapper)");
+        var restrictiveMapper = makeFunctionTypeMapper((t2) => t2.flags & 524288 ? getRestrictiveTypeParameter(t2) : t2, () => "(restrictive mapper)");
+        var permissiveMapper = makeFunctionTypeMapper((t2) => t2.flags & 524288 ? wildcardType : t2, () => "(permissive mapper)");
         var uniqueLiteralType = createIntrinsicType(
           262144,
           "never",
@@ -92642,25 +92642,25 @@ ${lanes.join("\n")}
           void 0,
           "unique literal"
         );
-        var uniqueLiteralMapper = makeFunctionTypeMapper((t) => t.flags & 524288 ? uniqueLiteralType : t, () => "(unique literal mapper)");
+        var uniqueLiteralMapper = makeFunctionTypeMapper((t2) => t2.flags & 524288 ? uniqueLiteralType : t2, () => "(unique literal mapper)");
         var outofbandVarianceMarkerHandler;
-        var reportUnreliableMapper = makeFunctionTypeMapper((t) => {
-          if (outofbandVarianceMarkerHandler && (t === markerSuperType || t === markerSubType || t === markerOtherType)) {
+        var reportUnreliableMapper = makeFunctionTypeMapper((t2) => {
+          if (outofbandVarianceMarkerHandler && (t2 === markerSuperType || t2 === markerSubType || t2 === markerOtherType)) {
             outofbandVarianceMarkerHandler(
               /*onlyUnreliable*/
               true
             );
           }
-          return t;
+          return t2;
         }, () => "(unmeasurable reporter)");
-        var reportUnmeasurableMapper = makeFunctionTypeMapper((t) => {
-          if (outofbandVarianceMarkerHandler && (t === markerSuperType || t === markerSubType || t === markerOtherType)) {
+        var reportUnmeasurableMapper = makeFunctionTypeMapper((t2) => {
+          if (outofbandVarianceMarkerHandler && (t2 === markerSuperType || t2 === markerSubType || t2 === markerOtherType)) {
             outofbandVarianceMarkerHandler(
               /*onlyUnreliable*/
               false
             );
           }
-          return t;
+          return t2;
         }, () => "(unreliable reporter)");
         var emptyObjectType = createAnonymousType(
           /*symbol*/
@@ -95690,8 +95690,8 @@ ${lanes.join("\n")}
             )) {
               return append(concatenate(concatenate([container2], additionalContainers), reexportContainers), objectLiteralContainer);
             }
-            const firstVariableMatch = !(container2.flags & getQualifiedLeftMeaning(meaning)) && container2.flags & 788968 && getDeclaredTypeOfSymbol(container2).flags & 1048576 && meaning === 111551 ? forEachSymbolTableInScope(enclosingDeclaration, (t) => {
-              return forEachEntry(t, (s) => {
+            const firstVariableMatch = !(container2.flags & getQualifiedLeftMeaning(meaning)) && container2.flags & 788968 && getDeclaredTypeOfSymbol(container2).flags & 1048576 && meaning === 111551 ? forEachSymbolTableInScope(enclosingDeclaration, (t2) => {
+              return forEachEntry(t2, (s) => {
                 if (s.flags & getQualifiedLeftMeaning(meaning) && getTypeOfSymbol(s) === getDeclaredTypeOfSymbol(container2)) {
                   return s;
                 }
@@ -97364,8 +97364,8 @@ ${lanes.join("\n")}
               const types2 = type2.types;
               const templateHead = factory.createTemplateHead(texts[0]);
               const templateSpans = factory.createNodeArray(
-                map3(types2, (t, i) => factory.createTemplateLiteralTypeSpan(
-                  typeToTypeNodeHelper(t, context5),
+                map3(types2, (t2, i) => factory.createTemplateLiteralTypeSpan(
+                  typeToTypeNodeHelper(t2, context5),
                   (i < types2.length - 1 ? factory.createTemplateMiddle : factory.createTemplateTail)(texts[i + 1])
                 ))
               );
@@ -97766,7 +97766,7 @@ ${lanes.join("\n")}
                 const arrayType = factory.createArrayTypeNode(elementType);
                 return type22.target === globalArrayType ? arrayType : factory.createTypeOperatorNode(148, arrayType);
               } else if (type22.target.objectFlags & 8) {
-                typeArguments = sameMap(typeArguments, (t, i) => removeMissingType(t, !!(type22.target.elementFlags[i] & 2)));
+                typeArguments = sameMap(typeArguments, (t2, i) => removeMissingType(t2, !!(type22.target.elementFlags[i] & 2)));
                 if (typeArguments.length > 0) {
                   const arity = getTypeReferenceArity(type22);
                   const tupleConstituentNodes = mapToTypeNodes(typeArguments.slice(0, arity), context5);
@@ -98203,7 +98203,7 @@ ${lanes.join("\n")}
             ) : void 0;
             if (propertySymbol.flags & (16 | 8192) && !getPropertiesOfObjectType(propertyType).length && !isReadonlySymbol(propertySymbol)) {
               const signatures = getSignaturesOfType(
-                filterType(propertyType, (t) => !(t.flags & 4)),
+                filterType(propertyType, (t2) => !(t2.flags & 4)),
                 0
                 /* Call */
               );
@@ -98986,7 +98986,7 @@ ${lanes.join("\n")}
                 const params = getTypeParametersOfClassOrInterface(
                   parentSymbol.flags & 2097152 ? resolveAlias(parentSymbol) : parentSymbol
                 );
-                typeParameterNodes = mapToTypeNodes(map3(params, (t) => getMappedType(t, nextSymbol.links.mapper)), context5);
+                typeParameterNodes = mapToTypeNodes(map3(params, (t2) => getMappedType(t2, nextSymbol.links.mapper)), context5);
               } else {
                 typeParameterNodes = typeParametersToTypeParameterDeclarations(symbol2, context5);
               }
@@ -99709,7 +99709,7 @@ ${lanes.join("\n")}
           }
           function serializeExistingTypeNode(context5, typeNode, addUndefined) {
             const type2 = getTypeFromTypeNode2(context5, typeNode);
-            if (addUndefined && !someType(type2, (t) => !!(t.flags & 4)) && canReuseTypeNode(context5, typeNode)) {
+            if (addUndefined && !someType(type2, (t2) => !!(t2.flags & 4)) && canReuseTypeNode(context5, typeNode)) {
               const clone22 = syntacticNodeBuilder.tryReuseExistingTypeNode(context5, typeNode);
               if (clone22) {
                 return factory.createUnionTypeNode([clone22, factory.createKeywordTypeNode(
@@ -101469,9 +101469,9 @@ ${lanes.join("\n")}
               }
               return results2;
             }
-            function serializeBaseType(t, staticType, rootName) {
+            function serializeBaseType(t2, staticType, rootName) {
               const ref = trySerializeAsTypeReference(
-                t,
+                t2,
                 111551
                 /* Value */
               );
@@ -101506,20 +101506,20 @@ ${lanes.join("\n")}
                 void 0
               );
             }
-            function trySerializeAsTypeReference(t, flags) {
+            function trySerializeAsTypeReference(t2, flags) {
               let typeArgs;
               let reference;
-              if (t.target && isSymbolAccessibleByFlags(t.target.symbol, enclosingDeclaration, flags)) {
-                typeArgs = map3(getTypeArguments(t), (t2) => typeToTypeNodeHelper(t2, context5));
+              if (t2.target && isSymbolAccessibleByFlags(t2.target.symbol, enclosingDeclaration, flags)) {
+                typeArgs = map3(getTypeArguments(t2), (t22) => typeToTypeNodeHelper(t22, context5));
                 reference = symbolToExpression(
-                  t.target.symbol,
+                  t2.target.symbol,
                   context5,
                   788968
                   /* Type */
                 );
-              } else if (t.symbol && isSymbolAccessibleByFlags(t.symbol, enclosingDeclaration, flags)) {
+              } else if (t2.symbol && isSymbolAccessibleByFlags(t2.symbol, enclosingDeclaration, flags)) {
                 reference = symbolToExpression(
-                  t.symbol,
+                  t2.symbol,
                   context5,
                   788968
                   /* Type */
@@ -101529,19 +101529,19 @@ ${lanes.join("\n")}
                 return factory.createExpressionWithTypeArguments(reference, typeArgs);
               }
             }
-            function serializeImplementedType(t) {
+            function serializeImplementedType(t2) {
               const ref = trySerializeAsTypeReference(
-                t,
+                t2,
                 788968
                 /* Type */
               );
               if (ref) {
                 return ref;
               }
-              if (t.symbol) {
+              if (t2.symbol) {
                 return factory.createExpressionWithTypeArguments(
                   symbolToExpression(
-                    t.symbol,
+                    t2.symbol,
                     context5,
                     788968
                     /* Type */
@@ -101639,11 +101639,11 @@ ${lanes.join("\n")}
           const result = [];
           let flags = 0;
           for (let i = 0; i < types2.length; i++) {
-            const t = types2[i];
-            flags |= t.flags;
-            if (!(t.flags & 12)) {
-              if (t.flags & 8192 || !expandingEnum && t.flags | 98304) {
-                const baseType = t.flags & 8192 ? booleanType : getBaseTypeOfEnumLikeType(t);
+            const t2 = types2[i];
+            flags |= t2.flags;
+            if (!(t2.flags & 12)) {
+              if (t2.flags & 8192 || !expandingEnum && t2.flags | 98304) {
+                const baseType = t2.flags & 8192 ? booleanType : getBaseTypeOfEnumLikeType(t2);
                 if (baseType.flags & 134217728) {
                   const count = baseType.types.length;
                   if (i + count <= types2.length && getRegularTypeOfLiteralType(types2[i + count - 1]) === getRegularTypeOfLiteralType(baseType.types[count - 1])) {
@@ -101653,7 +101653,7 @@ ${lanes.join("\n")}
                   }
                 }
               }
-              result.push(t);
+              result.push(t2);
             }
           }
           if (flags & 8) result.push(nullType);
@@ -102015,12 +102015,12 @@ ${lanes.join("\n")}
           );
         }
         function getRestType(source, properties, symbol2) {
-          source = filterType(source, (t) => !(t.flags & 12));
+          source = filterType(source, (t2) => !(t2.flags & 12));
           if (source.flags & 262144) {
             return emptyObjectType;
           }
           if (source.flags & 134217728) {
-            return mapType(source, (t) => getRestType(t, properties, symbol2));
+            return mapType(source, (t2) => getRestType(t2, properties, symbol2));
           }
           let omitKeyType = getUnionType(map3(properties, getLiteralTypeFromPropertyName));
           const spreadableProperties = [];
@@ -102070,7 +102070,7 @@ ${lanes.join("\n")}
           );
         }
         function getNonUndefinedType(type2) {
-          const typeOrConstraint = someType(type2, isGenericTypeWithUndefinedConstraint) ? mapType(type2, (t) => t.flags & 132644864 ? getBaseConstraintOrType(t) : t) : type2;
+          const typeOrConstraint = someType(type2, isGenericTypeWithUndefinedConstraint) ? mapType(type2, (t2) => t2.flags & 132644864 ? getBaseConstraintOrType(t2) : t2) : type2;
           return getTypeWithFacts(
             typeOrConstraint,
             524288
@@ -102181,8 +102181,8 @@ ${lanes.join("\n")}
             const elementType = checkIteratedTypeOrElementType(65 | (declaration.dotDotDotToken ? 0 : 128), parentType, undefinedType, pattern);
             const index = pattern.elements.indexOf(declaration);
             if (declaration.dotDotDotToken) {
-              const baseConstraint = mapType(parentType, (t) => t.flags & 117964800 ? getBaseConstraintOrType(t) : t);
-              type2 = everyType(baseConstraint, isTupleType) ? mapType(baseConstraint, (t) => sliceTupleType(t, index)) : createArrayType(elementType);
+              const baseConstraint = mapType(parentType, (t2) => t2.flags & 117964800 ? getBaseConstraintOrType(t2) : t2);
+              type2 = everyType(baseConstraint, isTupleType) ? mapType(baseConstraint, (t2) => sliceTupleType(t2, index)) : createArrayType(elementType);
             } else if (isArrayLikeType(parentType)) {
               const indexType = getNumberLiteralType(index);
               const declaredType = getIndexedAccessTypeOrUndefined(parentType, indexType, accessFlags, declaration.name) || errorType;
@@ -102493,7 +102493,7 @@ ${lanes.join("\n")}
                   definedInConstructor = true;
                 }
               }
-              const sourceTypes = some(constructorTypes, (t) => !!(t.flags & ~12)) ? constructorTypes : types2;
+              const sourceTypes = some(constructorTypes, (t2) => !!(t2.flags & ~12)) ? constructorTypes : types2;
               type2 = getUnionType(sourceTypes);
             }
           }
@@ -102503,7 +102503,7 @@ ${lanes.join("\n")}
             false,
             definedInMethod && !definedInConstructor
           ));
-          if (symbol2.valueDeclaration && isInJSFile(symbol2.valueDeclaration) && filterType(widened, (t) => !!(t.flags & ~12)) === neverType) {
+          if (symbol2.valueDeclaration && isInJSFile(symbol2.valueDeclaration) && filterType(widened, (t2) => !!(t2.flags & ~12)) === neverType) {
             reportImplicitAny(symbol2.valueDeclaration, anyType);
             return anyType;
           }
@@ -103068,7 +103068,7 @@ ${lanes.join("\n")}
         }
         function getBaseTypeVariableOfClass(symbol2) {
           const baseConstructorType = getBaseConstructorTypeOfClass(getDeclaredTypeOfClassOrInterface(symbol2));
-          return baseConstructorType.flags & 34078720 ? baseConstructorType : baseConstructorType.flags & 268435456 ? find(baseConstructorType.types, (t) => !!(t.flags & 34078720)) : void 0;
+          return baseConstructorType.flags & 34078720 ? baseConstructorType : baseConstructorType.flags & 268435456 ? find(baseConstructorType.types, (t2) => !!(t2.flags & 34078720)) : void 0;
         }
         function getTypeOfFuncClassEnumModule(symbol2) {
           let links = getSymbolLinks(symbol2);
@@ -103352,7 +103352,7 @@ ${lanes.join("\n")}
                 break;
               case 321: {
                 const outerTypeParameters = getOuterTypeParameters(node, includeThisTypes);
-                return node.tags ? appendTypeParameters(outerTypeParameters, flatMap(node.tags, (t) => isJSDocTemplateTag(t) ? t.typeParameters : void 0)) : outerTypeParameters;
+                return node.tags ? appendTypeParameters(outerTypeParameters, flatMap(node.tags, (t2) => isJSDocTemplateTag(t2) ? t2.typeParameters : void 0)) : outerTypeParameters;
               }
             }
           }
@@ -103551,7 +103551,7 @@ ${lanes.join("\n")}
           return type2.resolvedBaseTypes;
         }
         function getTupleBaseType(type2) {
-          const elementTypes = sameMap(type2.typeParameters, (t, i) => type2.elementFlags[i] & 8 ? getIndexedAccessType(t, numberType) : t);
+          const elementTypes = sameMap(type2.typeParameters, (t2, i) => type2.elementFlags[i] & 8 ? getIndexedAccessType(t2, numberType) : t2);
           return createArrayType(getUnionType(elementTypes || emptyArray), type2.readonly);
         }
         function resolveBaseTypesOfClass(type2) {
@@ -104129,7 +104129,7 @@ ${lanes.join("\n")}
             const typeArguments = getTypeArguments(type2);
             return length(target.typeParameters) === length(typeArguments) ? createTypeReference(target, concatenate(typeArguments, [thisArgument || target.thisType])) : type2;
           } else if (type2.flags & 268435456) {
-            const types2 = sameMap(type2.types, (t) => getTypeWithThisArgument(t, thisArgument, needApparentType));
+            const types2 = sameMap(type2.types, (t2) => getTypeWithThisArgument(t2, thisArgument, needApparentType));
             return types2 !== type2.types ? getIntersectionType(types2) : type2;
           }
           return needApparentType ? getApparentType(type2) : type2;
@@ -104266,19 +104266,19 @@ ${lanes.join("\n")}
             if (isTupleType(restType)) {
               return [expandSignatureParametersWithTupleMembers(restType, restIndex, restSymbol)];
             } else if (!skipUnionExpanding && restType.flags & 134217728 && every(restType.types, isTupleType)) {
-              return map3(restType.types, (t) => expandSignatureParametersWithTupleMembers(t, restIndex, restSymbol));
+              return map3(restType.types, (t2) => expandSignatureParametersWithTupleMembers(t2, restIndex, restSymbol));
             }
           }
           return [sig.parameters];
           function expandSignatureParametersWithTupleMembers(restType, restIndex, restSymbol) {
             const elementTypes = getTypeArguments(restType);
             const associatedNames = getUniqAssociatedNamesFromTupleType(restType, restSymbol);
-            const restParams = map3(elementTypes, (t, i) => {
+            const restParams = map3(elementTypes, (t2, i) => {
               const name = associatedNames && associatedNames[i] ? associatedNames[i] : getParameterNameAtPosition(sig, restIndex + i, restType);
               const flags = restType.target.elementFlags[i];
               const checkFlags = flags & 12 ? 32768 : flags & 2 ? 16384 : 0;
               const symbol2 = createSymbol(1, name, checkFlags);
-              symbol2.links.type = flags & 4 ? createArrayType(t) : t;
+              symbol2.links.type = flags & 4 ? createArrayType(t2) : t2;
               return symbol2;
             });
             return concatenate(sig.parameters.slice(0, restIndex), restParams);
@@ -104577,8 +104577,8 @@ ${lanes.join("\n")}
             const result = [];
             for (const info2 of sourceInfos) {
               const indexType = info2.keyType;
-              if (every(types2, (t) => !!getIndexInfoOfType(t, indexType))) {
-                result.push(createIndexInfo(indexType, getUnionType(map3(types2, (t) => getIndexTypeOfType(t, indexType))), some(types2, (t) => getIndexInfoOfType(t, indexType).isReadonly)));
+              if (every(types2, (t2) => !!getIndexInfoOfType(t2, indexType))) {
+                result.push(createIndexInfo(indexType, getUnionType(map3(types2, (t2) => getIndexTypeOfType(t2, indexType))), some(types2, (t2) => getIndexInfoOfType(t2, indexType).isReadonly)));
               }
             }
             return result;
@@ -104586,13 +104586,13 @@ ${lanes.join("\n")}
           return emptyArray;
         }
         function resolveUnionTypeMembers(type2) {
-          const callSignatures = getUnionSignatures(map3(type2.types, (t) => t === globalFunctionType ? [unknownSignature] : getSignaturesOfType(
-            t,
+          const callSignatures = getUnionSignatures(map3(type2.types, (t2) => t2 === globalFunctionType ? [unknownSignature] : getSignaturesOfType(
+            t2,
             0
             /* Call */
           )));
-          const constructSignatures = getUnionSignatures(map3(type2.types, (t) => getSignaturesOfType(
-            t,
+          const constructSignatures = getUnionSignatures(map3(type2.types, (t2) => getSignaturesOfType(
+            t2,
             1
             /* Construct */
           )));
@@ -104603,8 +104603,8 @@ ${lanes.join("\n")}
           return !type1 ? type2 : !type2 ? type1 : getIntersectionType([type1, type2]);
         }
         function findMixins(types2) {
-          const constructorTypeCount = countWhere(types2, (t) => getSignaturesOfType(
-            t,
+          const constructorTypeCount = countWhere(types2, (t2) => getSignaturesOfType(
+            t2,
             1
             /* Construct */
           ).length > 0);
@@ -104641,10 +104641,10 @@ ${lanes.join("\n")}
           const mixinFlags = findMixins(types2);
           const mixinCount = countWhere(mixinFlags, (b) => b);
           for (let i = 0; i < types2.length; i++) {
-            const t = type2.types[i];
+            const t2 = type2.types[i];
             if (!mixinFlags[i]) {
               let signatures = getSignaturesOfType(
-                t,
+                t2,
                 1
                 /* Construct */
               );
@@ -104658,11 +104658,11 @@ ${lanes.join("\n")}
               constructSignatures = appendSignatures(constructSignatures, signatures);
             }
             callSignatures = appendSignatures(callSignatures, getSignaturesOfType(
-              t,
+              t2,
               0
               /* Call */
             ));
-            indexInfos = reduceLeft(getIndexInfosOfType(t), (infos, newInfo) => appendIndexInfo(
+            indexInfos = reduceLeft(getIndexInfosOfType(t2), (infos, newInfo) => appendIndexInfo(
               infos,
               newInfo,
               /*union*/
@@ -104823,7 +104823,7 @@ ${lanes.join("\n")}
           if (!origin || !(origin.flags & 268435456)) {
             return;
           }
-          const limitedConstraint = getIntersectionType(origin.types.filter((t) => t !== type2.constraintType));
+          const limitedConstraint = getIntersectionType(origin.types.filter((t2) => t2 !== type2.constraintType));
           return limitedConstraint !== neverType ? limitedConstraint : void 0;
         }
         function resolveReverseMappedTypeMembers(type2) {
@@ -104865,8 +104865,8 @@ ${lanes.join("\n")}
         }
         function getLowerBoundOfKeyType(type2) {
           if (type2.flags & 2097152) {
-            const t = getApparentType(type2.type);
-            return isGenericTupleType(t) ? getKnownKeysOfTupleType(t) : getIndexType(t);
+            const t2 = getApparentType(type2.type);
+            return isGenericTupleType(t2) ? getKnownKeysOfTupleType(t2) : getIndexType(t2);
           }
           if (type2.flags & 67108864) {
             if (type2.root.isDistributive) {
@@ -104944,7 +104944,7 @@ ${lanes.join("\n")}
           setStructuredTypeMembers(type2, members, emptyArray, emptyArray, indexInfos || emptyArray);
           function addMemberForKeyType(keyType) {
             const propNameType = nameType ? instantiateType(nameType, appendTypeMapping(type2.mapper, typeParameter, keyType)) : keyType;
-            forEachType(propNameType, (t) => addMemberForKeyTypeWorker(keyType, t));
+            forEachType(propNameType, (t2) => addMemberForKeyTypeWorker(keyType, t2));
           }
           function addMemberForKeyTypeWorker(keyType, propNameType) {
             if (isTypeUsableAsPropertyName(propNameType)) {
@@ -105067,7 +105067,7 @@ ${lanes.join("\n")}
           }
           if (type2.flags & 268435456) {
             const optionality = getCombinedMappedTypeOptionality(type2.types[0]);
-            return every(type2.types, (t, i) => i === 0 || getCombinedMappedTypeOptionality(t) === optionality) ? optionality : 0;
+            return every(type2.types, (t2, i) => i === 0 || getCombinedMappedTypeOptionality(t2) === optionality) ? optionality : 0;
           }
           return 0;
         }
@@ -105215,7 +105215,7 @@ ${lanes.join("\n")}
             d,
             4096
             /* Const */
-          )) || type2.flags & 402653184 && some(type2.types, (t) => isConstTypeVariable(t, depth)) || type2.flags & 33554432 && isConstTypeVariable(type2.objectType, depth + 1) || type2.flags & 67108864 && isConstTypeVariable(getConstraintOfConditionalType(type2), depth + 1) || type2.flags & 16777216 && isConstTypeVariable(type2.baseType, depth) || getObjectFlags(type2) & 32 && isConstMappedType(type2, depth) || isGenericTupleType(type2) && findIndex(getElementTypes(type2), (t, i) => !!(type2.target.elementFlags[i] & 8) && isConstTypeVariable(t, depth)) >= 0));
+          )) || type2.flags & 402653184 && some(type2.types, (t2) => isConstTypeVariable(t2, depth)) || type2.flags & 33554432 && isConstTypeVariable(type2.objectType, depth + 1) || type2.flags & 67108864 && isConstTypeVariable(getConstraintOfConditionalType(type2), depth + 1) || type2.flags & 16777216 && isConstTypeVariable(type2.baseType, depth) || getObjectFlags(type2) & 32 && isConstMappedType(type2, depth) || isGenericTupleType(type2) && findIndex(getElementTypes(type2), (t2, i) => !!(type2.target.elementFlags[i] & 8) && isConstTypeVariable(t2, depth)) >= 0));
         }
         function getConstraintOfIndexedAccess(type2) {
           return hasNonCircularBaseConstraint(type2) ? getConstraintFromIndexedAccess(type2) : void 0;
@@ -105289,27 +105289,27 @@ ${lanes.join("\n")}
         function getEffectiveConstraintOfIntersection(types2, targetIsUnion) {
           let constraints;
           let hasDisjointDomainType = false;
-          for (const t of types2) {
-            if (t.flags & 132644864) {
-              let constraint = getConstraintOfType(t);
+          for (const t2 of types2) {
+            if (t2.flags & 132644864) {
+              let constraint = getConstraintOfType(t2);
               while (constraint && constraint.flags & (524288 | 2097152 | 67108864)) {
                 constraint = getConstraintOfType(constraint);
               }
               if (constraint) {
                 constraints = append(constraints, constraint);
                 if (targetIsUnion) {
-                  constraints = append(constraints, t);
+                  constraints = append(constraints, t2);
                 }
               }
-            } else if (t.flags & 12812284 || isEmptyAnonymousObjectType(t)) {
+            } else if (t2.flags & 12812284 || isEmptyAnonymousObjectType(t2)) {
               hasDisjointDomainType = true;
             }
           }
           if (constraints && (targetIsUnion || hasDisjointDomainType)) {
             if (hasDisjointDomainType) {
-              for (const t of types2) {
-                if (t.flags & 12812284 || isEmptyAnonymousObjectType(t)) {
-                  constraints = append(constraints, t);
+              for (const t2 of types2) {
+                if (t2.flags & 12812284 || isEmptyAnonymousObjectType(t2)) {
+                  constraints = append(constraints, t2);
                 }
               }
             }
@@ -105344,31 +105344,31 @@ ${lanes.join("\n")}
           }
           const stack = [];
           return type2.resolvedBaseConstraint = getImmediateBaseConstraint(type2);
-          function getImmediateBaseConstraint(t) {
-            if (!t.immediateBaseConstraint) {
+          function getImmediateBaseConstraint(t2) {
+            if (!t2.immediateBaseConstraint) {
               if (!pushTypeResolution(
-                t,
+                t2,
                 4
                 /* ImmediateBaseConstraint */
               )) {
                 return circularConstraintType;
               }
               let result;
-              const identity2 = getRecursionIdentity(t);
+              const identity2 = getRecursionIdentity(t2);
               if (stack.length < 10 || stack.length < 50 && !contains(stack, identity2)) {
                 stack.push(identity2);
                 result = computeBaseConstraint(getSimplifiedType(
-                  t,
+                  t2,
                   /*writing*/
                   false
                 ));
                 stack.pop();
               }
               if (!popTypeResolution()) {
-                if (t.flags & 524288) {
-                  const errorNode = getConstraintDeclaration(t);
+                if (t2.flags & 524288) {
+                  const errorNode = getConstraintDeclaration(t2);
                   if (errorNode) {
-                    const diagnostic = error210(errorNode, Diagnostics.Type_parameter_0_has_a_circular_constraint, typeToString(t));
+                    const diagnostic = error210(errorNode, Diagnostics.Type_parameter_0_has_a_circular_constraint, typeToString(t2));
                     if (currentNode && !isNodeDescendantOf(errorNode, currentNode) && !isNodeDescendantOf(currentNode, errorNode)) {
                       addRelatedInfo(diagnostic, createDiagnosticForNode(currentNode, Diagnostics.Circularity_originates_in_type_at_this_location));
                     }
@@ -105376,21 +105376,21 @@ ${lanes.join("\n")}
                 }
                 result = circularConstraintType;
               }
-              t.immediateBaseConstraint ?? (t.immediateBaseConstraint = result || noConstraintType);
+              t2.immediateBaseConstraint ?? (t2.immediateBaseConstraint = result || noConstraintType);
             }
-            return t.immediateBaseConstraint;
+            return t2.immediateBaseConstraint;
           }
-          function getBaseConstraint(t) {
-            const c = getImmediateBaseConstraint(t);
+          function getBaseConstraint(t2) {
+            const c = getImmediateBaseConstraint(t2);
             return c !== noConstraintType && c !== circularConstraintType ? c : void 0;
           }
-          function computeBaseConstraint(t) {
-            if (t.flags & 524288) {
-              const constraint = getConstraintFromTypeParameter(t);
-              return t.isThisType || !constraint ? constraint : getBaseConstraint(constraint);
+          function computeBaseConstraint(t2) {
+            if (t2.flags & 524288) {
+              const constraint = getConstraintFromTypeParameter(t2);
+              return t2.isThisType || !constraint ? constraint : getBaseConstraint(constraint);
             }
-            if (t.flags & 402653184) {
-              const types2 = t.types;
+            if (t2.flags & 402653184) {
+              const types2 = t2.types;
               const baseTypes = [];
               let different = false;
               for (const type22 of types2) {
@@ -105405,13 +105405,13 @@ ${lanes.join("\n")}
                 }
               }
               if (!different) {
-                return t;
+                return t2;
               }
-              return t.flags & 134217728 && baseTypes.length === types2.length ? getUnionType(baseTypes) : t.flags & 268435456 && baseTypes.length ? getIntersectionType(baseTypes) : void 0;
+              return t2.flags & 134217728 && baseTypes.length === types2.length ? getUnionType(baseTypes) : t2.flags & 268435456 && baseTypes.length ? getIntersectionType(baseTypes) : void 0;
             }
-            if (t.flags & 2097152) {
-              if (isGenericMappedType(t.type)) {
-                const mappedType = t.type;
+            if (t2.flags & 2097152) {
+              if (isGenericMappedType(t2.type)) {
+                const mappedType = t2.type;
                 if (getNameTypeFromMappedType(mappedType) && !isMappedTypeWithKeyofConstraintDeclaration(mappedType)) {
                   return getBaseConstraint(getIndexTypeForMappedType(
                     mappedType,
@@ -105422,39 +105422,39 @@ ${lanes.join("\n")}
               }
               return stringNumberSymbolType;
             }
-            if (t.flags & 4194304) {
-              const types2 = t.types;
+            if (t2.flags & 4194304) {
+              const types2 = t2.types;
               const constraints = mapDefined(types2, getBaseConstraint);
-              return constraints.length === types2.length ? getTemplateLiteralType(t.texts, constraints) : stringType;
+              return constraints.length === types2.length ? getTemplateLiteralType(t2.texts, constraints) : stringType;
             }
-            if (t.flags & 8388608) {
-              const constraint = getBaseConstraint(t.type);
-              return constraint && constraint !== t.type ? getStringMappingType(t.symbol, constraint) : stringType;
+            if (t2.flags & 8388608) {
+              const constraint = getBaseConstraint(t2.type);
+              return constraint && constraint !== t2.type ? getStringMappingType(t2.symbol, constraint) : stringType;
             }
-            if (t.flags & 33554432) {
-              if (isMappedTypeGenericIndexedAccess(t)) {
-                return getBaseConstraint(substituteIndexedMappedType(t.objectType, t.indexType));
+            if (t2.flags & 33554432) {
+              if (isMappedTypeGenericIndexedAccess(t2)) {
+                return getBaseConstraint(substituteIndexedMappedType(t2.objectType, t2.indexType));
               }
-              const baseObjectType = getBaseConstraint(t.objectType);
-              const baseIndexType = getBaseConstraint(t.indexType);
-              const baseIndexedAccess = baseObjectType && baseIndexType && getIndexedAccessTypeOrUndefined(baseObjectType, baseIndexType, t.accessFlags);
+              const baseObjectType = getBaseConstraint(t2.objectType);
+              const baseIndexType = getBaseConstraint(t2.indexType);
+              const baseIndexedAccess = baseObjectType && baseIndexType && getIndexedAccessTypeOrUndefined(baseObjectType, baseIndexType, t2.accessFlags);
               return baseIndexedAccess && getBaseConstraint(baseIndexedAccess);
             }
-            if (t.flags & 67108864) {
-              const constraint = getConstraintFromConditionalType(t);
+            if (t2.flags & 67108864) {
+              const constraint = getConstraintFromConditionalType(t2);
               return constraint && getBaseConstraint(constraint);
             }
-            if (t.flags & 16777216) {
-              return getBaseConstraint(getSubstitutionIntersection(t));
+            if (t2.flags & 16777216) {
+              return getBaseConstraint(getSubstitutionIntersection(t2));
             }
-            if (isGenericTupleType(t)) {
-              const newElements = map3(getElementTypes(t), (v, i) => {
-                const constraint = v.flags & 524288 && t.target.elementFlags[i] & 8 && getBaseConstraint(v) || v;
+            if (isGenericTupleType(t2)) {
+              const newElements = map3(getElementTypes(t2), (v, i) => {
+                const constraint = v.flags & 524288 && t2.target.elementFlags[i] & 8 && getBaseConstraint(v) || v;
                 return constraint !== v && everyType(constraint, (c) => isArrayOrTupleType(c) && !isGenericTupleType(c)) ? constraint : v;
               });
-              return createTupleType(newElements, t.target.elementFlags, t.target.readonly, t.target.labeledElementDeclarations);
+              return createTupleType(newElements, t2.target.elementFlags, t2.target.readonly, t2.target.labeledElementDeclarations);
             }
-            return t;
+            return t2;
           }
         }
         function getApparentTypeOfIntersectionType(type2, thisArgument) {
@@ -105511,7 +105511,7 @@ ${lanes.join("\n")}
           if (typeVariable && !target.declaration.nameType) {
             const modifiersType = getModifiersTypeFromMappedType(type2);
             const baseConstraint = isGenericMappedType(modifiersType) ? getApparentTypeOfMappedType(modifiersType) : getBaseConstraintOfType(modifiersType);
-            if (baseConstraint && everyType(baseConstraint, (t) => isArrayOrTupleType(t) || isArrayOrTupleOrIntersection(t))) {
+            if (baseConstraint && everyType(baseConstraint, (t2) => isArrayOrTupleType(t2) || isArrayOrTupleOrIntersection(t2))) {
               return instantiateType(target, prependTypeMapping(typeVariable, baseConstraint, type2.mapper));
             }
           }
@@ -105525,9 +105525,9 @@ ${lanes.join("\n")}
           return !!(type2.flags & 33554432 && getObjectFlags(objectType = type2.objectType) & 32 && !isGenericMappedType(objectType) && isGenericIndexType(type2.indexType) && !(getMappedTypeModifiers(objectType) & 8) && !objectType.declaration.nameType);
         }
         function getApparentType(type2) {
-          const t = type2.flags & 132644864 ? getBaseConstraintOfType(type2) || unknownType : type2;
-          const objectFlags = getObjectFlags(t);
-          return objectFlags & 32 ? getApparentTypeOfMappedType(t) : objectFlags & 4 && t !== type2 ? getTypeWithThisArgument(t, type2) : t.flags & 268435456 ? getApparentTypeOfIntersectionType(t, type2) : t.flags & 12583968 ? globalStringType : t.flags & 67648 ? globalNumberType : t.flags & 4224 ? getGlobalBigIntType() : t.flags & 8448 ? globalBooleanType : t.flags & 16896 ? getGlobalESSymbolType() : t.flags & 131072 ? emptyObjectType : t.flags & 2097152 ? stringNumberSymbolType : t.flags & 2 && !strictNullChecks ? emptyObjectType : t;
+          const t2 = type2.flags & 132644864 ? getBaseConstraintOfType(type2) || unknownType : type2;
+          const objectFlags = getObjectFlags(t2);
+          return objectFlags & 32 ? getApparentTypeOfMappedType(t2) : objectFlags & 4 && t2 !== type2 ? getTypeWithThisArgument(t2, type2) : t2.flags & 268435456 ? getApparentTypeOfIntersectionType(t2, type2) : t2.flags & 12583968 ? globalStringType : t2.flags & 67648 ? globalNumberType : t2.flags & 4224 ? getGlobalBigIntType() : t2.flags & 8448 ? globalBooleanType : t2.flags & 16896 ? getGlobalESSymbolType() : t2.flags & 131072 ? emptyObjectType : t2.flags & 2097152 ? stringNumberSymbolType : t2.flags & 2 && !strictNullChecks ? emptyObjectType : t2;
         }
         function getReducedApparentType(type2) {
           return getReducedType(getApparentType(getReducedType(type2)));
@@ -105842,12 +105842,12 @@ ${lanes.join("\n")}
               return type2.arrayFallbackSignatures;
             }
             let memberName;
-            if (everyType(type2, (t) => {
+            if (everyType(type2, (t2) => {
               var _a3;
-              return !!((_a3 = t.symbol) == null ? void 0 : _a3.parent) && isArrayOrTupleSymbol(t.symbol.parent) && (!memberName ? (memberName = t.symbol.escapedName, true) : memberName === t.symbol.escapedName);
+              return !!((_a3 = t2.symbol) == null ? void 0 : _a3.parent) && isArrayOrTupleSymbol(t2.symbol.parent) && (!memberName ? (memberName = t2.symbol.escapedName, true) : memberName === t2.symbol.escapedName);
             })) {
-              const arrayArg = mapType(type2, (t) => getMappedType((isReadonlyArraySymbol(t.symbol.parent) ? globalReadonlyArrayType : globalArrayType).typeParameters[0], t.mapper));
-              const arrayType = createArrayType(arrayArg, someType(type2, (t) => isReadonlyArraySymbol(t.symbol.parent)));
+              const arrayArg = mapType(type2, (t2) => getMappedType((isReadonlyArraySymbol(t2.symbol.parent) ? globalReadonlyArrayType : globalArrayType).typeParameters[0], t2.mapper));
+              const arrayType = createArrayType(arrayArg, someType(type2, (t2) => isReadonlyArraySymbol(t2.symbol.parent)));
               return type2.arrayFallbackSignatures = getSignaturesOfType(getTypeOfPropertyOfType(arrayType, memberName), kind);
             }
             type2.arrayFallbackSignatures = result;
@@ -107752,9 +107752,9 @@ ${lanes.join("\n")}
             return createTypeReference(target, elementTypes);
           }
           if (target.combinedFlags & 8) {
-            const unionIndex = findIndex(elementTypes, (t, i) => !!(target.elementFlags[i] & 8 && t.flags & (262144 | 134217728)));
+            const unionIndex = findIndex(elementTypes, (t2, i) => !!(target.elementFlags[i] & 8 && t2.flags & (262144 | 134217728)));
             if (unionIndex >= 0) {
-              return checkCrossProductUnion(map3(elementTypes, (t, i) => target.elementFlags[i] & 8 ? t : unknownType)) ? mapType(elementTypes[unionIndex], (t) => createNormalizedTupleType(target, replaceElement(elementTypes, unionIndex, t))) : errorType;
+              return checkCrossProductUnion(map3(elementTypes, (t2, i) => target.elementFlags[i] & 8 ? t2 : unknownType)) ? mapType(elementTypes[unionIndex], (t2) => createNormalizedTupleType(target, replaceElement(elementTypes, unionIndex, t2))) : errorType;
             }
           }
           const expandedTypes = [];
@@ -107780,9 +107780,9 @@ ${lanes.join("\n")}
                   );
                   return errorType;
                 }
-                forEach(elements, (t, n) => {
+                forEach(elements, (t2, n) => {
                   var _a22;
-                  return addElement(t, type2.target.elementFlags[n], (_a22 = type2.target.labeledElementDeclarations) == null ? void 0 : _a22[n]);
+                  return addElement(t2, type2.target.elementFlags[n], (_a22 = type2.target.labeledElementDeclarations) == null ? void 0 : _a22[n]);
                 });
               } else {
                 addElement(isArrayLikeType(type2) && getIndexTypeOfType(type2, numberType) || errorType, 4, (_c = target.labeledElementDeclarations) == null ? void 0 : _c[i]);
@@ -107795,7 +107795,7 @@ ${lanes.join("\n")}
             if (expandedFlags[i] & 2) expandedFlags[i] = 1;
           }
           if (firstRestIndex >= 0 && firstRestIndex < lastOptionalOrRestIndex) {
-            expandedTypes[firstRestIndex] = getUnionType(sameMap(expandedTypes.slice(firstRestIndex, lastOptionalOrRestIndex + 1), (t, i) => expandedFlags[firstRestIndex + i] & 8 ? getIndexedAccessType(t, numberType) : t));
+            expandedTypes[firstRestIndex] = getUnionType(sameMap(expandedTypes.slice(firstRestIndex, lastOptionalOrRestIndex + 1), (t2, i) => expandedFlags[firstRestIndex + i] & 8 ? getIndexedAccessType(t2, numberType) : t2));
             expandedTypes.splice(firstRestIndex + 1, lastOptionalOrRestIndex - firstRestIndex);
             expandedFlags.splice(firstRestIndex + 1, lastOptionalOrRestIndex - firstRestIndex);
             expandedDeclarations.splice(firstRestIndex + 1, lastOptionalOrRestIndex - firstRestIndex);
@@ -107915,7 +107915,7 @@ ${lanes.join("\n")}
           if (match) {
             return match;
           }
-          const hasEmptyObject = hasObjectTypes && some(types2, (t) => !!(t.flags & 1048576) && !isGenericMappedType(t) && isEmptyResolvedType(resolveStructuredTypeMembers(t)));
+          const hasEmptyObject = hasObjectTypes && some(types2, (t2) => !!(t2.flags & 1048576) && !isGenericMappedType(t2) && isEmptyResolvedType(resolveStructuredTypeMembers(t2)));
           const len = types2.length;
           let i = len;
           let count = 0;
@@ -107924,7 +107924,7 @@ ${lanes.join("\n")}
             const source = types2[i];
             if (hasEmptyObject || source.flags & 536346624) {
               if (source.flags & 524288 && getBaseConstraintOrType(source).flags & 134217728) {
-                if (isTypeRelatedTo(source, getUnionType(map3(types2, (t) => t === source ? neverType : t)), strictSubtypeRelation)) {
+                if (isTypeRelatedTo(source, getUnionType(map3(types2, (t2) => t2 === source ? neverType : t2)), strictSubtypeRelation)) {
                   orderedRemoveItemAt(types2, i);
                 }
                 continue;
@@ -107936,15 +107936,15 @@ ${lanes.join("\n")}
                   if (count === 1e5) {
                     const estimatedCount = count / (len - i) * len;
                     if (estimatedCount > 1e6) {
-                      (_a3 = tracing) == null ? void 0 : _a3.instant(tracing.Phase.CheckTypes, "removeSubtypes_DepthLimit", { typeIds: types2.map((t) => t.id) });
+                      (_a3 = tracing) == null ? void 0 : _a3.instant(tracing.Phase.CheckTypes, "removeSubtypes_DepthLimit", { typeIds: types2.map((t2) => t2.id) });
                       error210(currentNode, Diagnostics.Expression_produces_a_union_type_that_is_too_complex_to_represent);
                       return void 0;
                     }
                   }
                   count++;
                   if (keyProperty && target.flags & (1048576 | 268435456 | 117964800)) {
-                    const t = getTypeOfPropertyOfType(target, keyProperty.escapedName);
-                    if (t && isUnitType(t) && getRegularTypeOfLiteralType(t) !== keyPropertyType) {
+                    const t2 = getTypeOfPropertyOfType(target, keyProperty.escapedName);
+                    if (t2 && isUnitType(t2) && getRegularTypeOfLiteralType(t2) !== keyPropertyType) {
                       continue;
                     }
                   }
@@ -107963,9 +107963,9 @@ ${lanes.join("\n")}
           let i = types2.length;
           while (i > 0) {
             i--;
-            const t = types2[i];
-            const flags = t.flags;
-            const remove = flags & (1024 | 4194304 | 8388608) && includes & 32 || flags & 2048 && includes & 64 || flags & 4096 && includes & 128 || flags & 16384 && includes & 512 || reduceVoidUndefined && flags & 4 && includes & 16 || isFreshLiteralType(t) && containsType(types2, t.regularType);
+            const t2 = types2[i];
+            const flags = t2.flags;
+            const remove = flags & (1024 | 4194304 | 8388608) && includes & 32 || flags & 2048 && includes & 64 || flags & 4096 && includes & 128 || flags & 16384 && includes & 512 || reduceVoidUndefined && flags & 4 && includes & 16 || isFreshLiteralType(t2) && containsType(types2, t2.regularType);
             if (remove) {
               orderedRemoveItemAt(types2, i);
             }
@@ -107977,8 +107977,8 @@ ${lanes.join("\n")}
             let i = types2.length;
             while (i > 0) {
               i--;
-              const t = types2[i];
-              if (t.flags & 1024 && some(templates, (template) => isTypeMatchedByTemplateLiteralOrStringMapping(t, template))) {
+              const t2 = types2[i];
+              if (t2.flags & 1024 && some(templates, (template) => isTypeMatchedByTemplateLiteralOrStringMapping(t2, template))) {
                 orderedRemoveItemAt(types2, i);
               }
             }
@@ -108006,7 +108006,7 @@ ${lanes.join("\n")}
               }
             }
             const constraint = getBaseConstraintOfType(typeVariable);
-            if (everyType(constraint, (t) => containsType(primitives, t))) {
+            if (everyType(constraint, (t2) => containsType(primitives, t2))) {
               let i = types2.length;
               while (i > 0) {
                 i--;
@@ -108026,11 +108026,11 @@ ${lanes.join("\n")}
           return !!(type2.flags & 134217728 && (type2.aliasSymbol || type2.origin));
         }
         function addNamedUnions(namedUnions, types2) {
-          for (const t of types2) {
-            if (t.flags & 134217728) {
-              const origin = t.origin;
-              if (t.aliasSymbol || origin && !(origin.flags & 134217728)) {
-                pushIfUnique(namedUnions, t);
+          for (const t2 of types2) {
+            if (t2.flags & 134217728) {
+              const origin = t2.origin;
+              if (t2.aliasSymbol || origin && !(origin.flags & 134217728)) {
+                pushIfUnique(namedUnions, t2);
               } else if (origin && origin.flags & 134217728) {
                 addNamedUnions(namedUnions, origin.types);
               }
@@ -108104,9 +108104,9 @@ ${lanes.join("\n")}
             const namedUnions = [];
             addNamedUnions(namedUnions, types2);
             const reducedTypes = [];
-            for (const t of typeSet) {
-              if (!some(namedUnions, (union2) => containsType(union2.types, t))) {
-                reducedTypes.push(t);
+            for (const t2 of typeSet) {
+              if (!some(namedUnions, (union2) => containsType(union2.types, t2))) {
+                reducedTypes.push(t2);
               }
             }
             if (!aliasSymbol && namedUnions.length === 1 && reducedTypes.length === 0) {
@@ -108114,8 +108114,8 @@ ${lanes.join("\n")}
             }
             const namedTypesCount = reduceLeft(namedUnions, (sum, union2) => sum + union2.types.length, 0);
             if (namedTypesCount + reducedTypes.length === typeSet.length) {
-              for (const t of namedUnions) {
-                insertType(reducedTypes, t);
+              for (const t2 of namedUnions) {
+                insertType(reducedTypes, t2);
               }
               origin = createOriginUnionOrIntersectionType(134217728, reducedTypes);
             }
@@ -108231,8 +108231,8 @@ ${lanes.join("\n")}
           let i = types2.length;
           while (i > 0) {
             i--;
-            const t = types2[i];
-            const remove = t.flags & 32 && includes & (1024 | 4194304 | 8388608) || t.flags & 64 && includes & 2048 || t.flags & 128 && includes & 4096 || t.flags & 512 && includes & 16384 || t.flags & 16 && includes & 4 || isEmptyAnonymousObjectType(t) && includes & 13893600;
+            const t2 = types2[i];
+            const remove = t2.flags & 32 && includes & (1024 | 4194304 | 8388608) || t2.flags & 64 && includes & 2048 || t2.flags & 128 && includes & 4096 || t2.flags & 512 && includes & 16384 || t2.flags & 16 && includes & 4 || isEmptyAnonymousObjectType(t2) && includes & 13893600;
             if (remove) {
               orderedRemoveItemAt(types2, i);
             }
@@ -108257,16 +108257,16 @@ ${lanes.join("\n")}
         }
         function extractRedundantTemplateLiterals(types2) {
           let i = types2.length;
-          const literals = filter(types2, (t) => !!(t.flags & 1024));
+          const literals = filter(types2, (t2) => !!(t2.flags & 1024));
           while (i > 0) {
             i--;
-            const t = types2[i];
-            if (!(t.flags & (4194304 | 8388608))) continue;
-            for (const t2 of literals) {
-              if (isTypeSubtypeOf(t2, t)) {
+            const t2 = types2[i];
+            if (!(t2.flags & (4194304 | 8388608))) continue;
+            for (const t22 of literals) {
+              if (isTypeSubtypeOf(t22, t2)) {
                 orderedRemoveItemAt(types2, i);
                 break;
-              } else if (isPatternLiteralType(t)) {
+              } else if (isPatternLiteralType(t2)) {
                 return true;
               }
             }
@@ -108275,20 +108275,20 @@ ${lanes.join("\n")}
         }
         function removeFromEach(types2, flag) {
           for (let i = 0; i < types2.length; i++) {
-            types2[i] = filterType(types2[i], (t) => !(t.flags & flag));
+            types2[i] = filterType(types2[i], (t2) => !(t2.flags & flag));
           }
         }
         function intersectUnionsOfPrimitiveTypes(types2) {
           let unionTypes2;
-          const index = findIndex(types2, (t) => !!(getObjectFlags(t) & 32768));
+          const index = findIndex(types2, (t2) => !!(getObjectFlags(t2) & 32768));
           if (index < 0) {
             return false;
           }
           let i = index + 1;
           while (i < types2.length) {
-            const t = types2[i];
-            if (getObjectFlags(t) & 32768) {
-              (unionTypes2 || (unionTypes2 = [types2[index]])).push(t);
+            const t2 = types2[i];
+            if (getObjectFlags(t2) & 32768) {
+              (unionTypes2 || (unionTypes2 = [types2[index]])).push(t2);
               orderedRemoveItemAt(types2, i);
             } else {
               i++;
@@ -108300,17 +108300,17 @@ ${lanes.join("\n")}
           const checked = [];
           const result = [];
           for (const u of unionTypes2) {
-            for (const t of u.types) {
-              if (insertType(checked, t)) {
-                if (eachUnionContains(unionTypes2, t)) {
-                  if (t === undefinedType && result.length && result[0] === missingType) {
+            for (const t2 of u.types) {
+              if (insertType(checked, t2)) {
+                if (eachUnionContains(unionTypes2, t2)) {
+                  if (t2 === undefinedType && result.length && result[0] === missingType) {
                     continue;
                   }
-                  if (t === missingType && result.length && result[0] === undefinedType) {
+                  if (t2 === missingType && result.length && result[0] === undefinedType) {
                     result[0] = missingType;
                     continue;
                   }
-                  insertType(result, t);
+                  insertType(result, t2);
                 }
               }
             }
@@ -108376,7 +108376,7 @@ ${lanes.join("\n")}
             const primitiveType = typeSet[1 - typeVarIndex];
             if (typeVariable.flags & 34078720 && (primitiveType.flags & (12713980 | 131072) && !isGenericStringLikeType(primitiveType) || includes & 67108864)) {
               const constraint = getBaseConstraintOfType(typeVariable);
-              if (constraint && everyType(constraint, (t) => !!(t.flags & (12713980 | 131072)) || isEmptyAnonymousObjectType(t))) {
+              if (constraint && everyType(constraint, (t2) => !!(t2.flags & (12713980 | 131072)) || isEmptyAnonymousObjectType(t2))) {
                 if (isTypeStrictSubtypeOf(constraint, primitiveType)) {
                   return typeVariable;
                 }
@@ -108395,7 +108395,7 @@ ${lanes.join("\n")}
             if (includes & 134217728) {
               if (intersectUnionsOfPrimitiveTypes(typeSet)) {
                 result = getIntersectionType(typeSet, flags, aliasSymbol, aliasTypeArguments);
-              } else if (every(typeSet, (t) => !!(t.flags & 134217728 && t.types[0].flags & 4))) {
+              } else if (every(typeSet, (t2) => !!(t2.flags & 134217728 && t2.types[0].flags & 4))) {
                 const containedUndefinedType = some(typeSet, containsMissingType) ? missingType : undefinedType;
                 removeFromEach(
                   typeSet,
@@ -108403,7 +108403,7 @@ ${lanes.join("\n")}
                   /* Undefined */
                 );
                 result = getUnionType([getIntersectionType(typeSet, flags), containedUndefinedType], 1, aliasSymbol, aliasTypeArguments);
-              } else if (every(typeSet, (t) => !!(t.flags & 134217728 && (t.types[0].flags & 8 || t.types[1].flags & 8)))) {
+              } else if (every(typeSet, (t2) => !!(t2.flags & 134217728 && (t2.types[0].flags & 8 || t2.types[1].flags & 8)))) {
                 removeFromEach(
                   typeSet,
                   8
@@ -108418,7 +108418,7 @@ ${lanes.join("\n")}
                   return errorType;
                 }
                 const constituents = getCrossProductIntersections(typeSet, flags);
-                const origin = some(constituents, (t) => !!(t.flags & 268435456)) && getConstituentCountOfTypes(constituents) > getConstituentCountOfTypes(typeSet) ? createOriginUnionOrIntersectionType(268435456, typeSet) : void 0;
+                const origin = some(constituents, (t2) => !!(t2.flags & 268435456)) && getConstituentCountOfTypes(constituents) > getConstituentCountOfTypes(typeSet) ? createOriginUnionOrIntersectionType(268435456, typeSet) : void 0;
                 result = getUnionType(constituents, 1, aliasSymbol, aliasTypeArguments, origin);
               }
             } else {
@@ -108429,13 +108429,13 @@ ${lanes.join("\n")}
           return result;
         }
         function getCrossProductUnionSize(types2) {
-          return reduceLeft(types2, (n, t) => t.flags & 134217728 ? n * t.types.length : t.flags & 262144 ? 0 : n, 1);
+          return reduceLeft(types2, (n, t2) => t2.flags & 134217728 ? n * t2.types.length : t2.flags & 262144 ? 0 : n, 1);
         }
         function checkCrossProductUnion(types2) {
           var _a3;
           const size = getCrossProductUnionSize(types2);
           if (size >= 1e5) {
-            (_a3 = tracing) == null ? void 0 : _a3.instant(tracing.Phase.CheckTypes, "checkCrossProductUnion_DepthLimit", { typeIds: types2.map((t) => t.id), size });
+            (_a3 = tracing) == null ? void 0 : _a3.instant(tracing.Phase.CheckTypes, "checkCrossProductUnion_DepthLimit", { typeIds: types2.map((t2) => t2.id), size });
             error210(currentNode, Diagnostics.Expression_produces_a_union_type_that_is_too_complex_to_represent);
             return false;
           }
@@ -108455,8 +108455,8 @@ ${lanes.join("\n")}
                 n = Math.floor(n / length2);
               }
             }
-            const t = getIntersectionType(constituents, flags);
-            if (!(t.flags & 262144)) intersections.push(t);
+            const t2 = getIntersectionType(constituents, flags);
+            if (!(t2.flags & 262144)) intersections.push(t2);
           }
           return intersections;
         }
@@ -108464,7 +108464,7 @@ ${lanes.join("\n")}
           return !(type2.flags & 402653184) || type2.aliasSymbol ? 1 : type2.flags & 134217728 && type2.origin ? getConstituentCount(type2.origin) : getConstituentCountOfTypes(type2.types);
         }
         function getConstituentCountOfTypes(types2) {
-          return reduceLeft(types2, (n, t) => n + getConstituentCount(t), 0);
+          return reduceLeft(types2, (n, t2) => n + getConstituentCount(t2), 0);
         }
         function getTypeFromIntersectionTypeNode(node) {
           const links = getNodeLinks(node);
@@ -108472,8 +108472,8 @@ ${lanes.join("\n")}
             const aliasSymbol = getAliasSymbolForTypeNode(node);
             const types2 = map3(node.types, getTypeFromTypeNode);
             const emptyIndex = types2.length === 2 ? types2.indexOf(emptyTypeLiteralType) : -1;
-            const t = emptyIndex >= 0 ? types2[1 - emptyIndex] : unknownType;
-            const noSupertypeReduction = !!(t.flags & (32 | 64 | 128) || t.flags & 4194304 && isPatternLiteralType(t));
+            const t2 = emptyIndex >= 0 ? types2[1 - emptyIndex] : unknownType;
+            const noSupertypeReduction = !!(t2.flags & (32 | 64 | 128) || t2.flags & 4194304 && isPatternLiteralType(t2));
             links.resolvedType = getIntersectionType(types2, noSupertypeReduction ? 1 : 0, aliasSymbol, getTypeArgumentsForAliasSymbol(aliasSymbol));
           }
           return links.resolvedType;
@@ -108525,7 +108525,7 @@ ${lanes.join("\n")}
           } else {
             forEachType(getLowerBoundOfKeyType(constraintType), addMemberForKeyType);
           }
-          const result = indexFlags & 2 ? filterType(getUnionType(keyTypes), (t) => !(t.flags & (1 | 32))) : getUnionType(keyTypes);
+          const result = indexFlags & 2 ? filterType(getUnionType(keyTypes), (t2) => !(t2.flags & (1 | 32))) : getUnionType(keyTypes);
           if (result.flags & 134217728 && constraintType.flags & 134217728 && getTypeListId(result.types) === getTypeListId(constraintType.types)) {
             return constraintType;
           }
@@ -108568,7 +108568,7 @@ ${lanes.join("\n")}
           return neverType;
         }
         function isKeyTypeIncluded(keyType, include2) {
-          return !!(keyType.flags & include2 || keyType.flags & 268435456 && some(keyType.types, (t) => isKeyTypeIncluded(t, include2)));
+          return !!(keyType.flags & include2 || keyType.flags & 268435456 && some(keyType.types, (t2) => isKeyTypeIncluded(t2, include2)));
         }
         function getLiteralTypeFromProperties(type2, include2, includeOrigin) {
           const origin = includeOrigin && (getObjectFlags(type2) & (3 | 4) || type2.aliasSymbol) ? createOriginIndexType(type2) : void 0;
@@ -108593,7 +108593,7 @@ ${lanes.join("\n")}
         }
         function getIndexType(type2, indexFlags = 0) {
           type2 = getReducedType(type2);
-          return isNoInferType(type2) ? getNoInferType(getIndexType(type2.baseType, indexFlags)) : shouldDeferIndexType(type2, indexFlags) ? getIndexTypeForGenericType(type2, indexFlags) : type2.flags & 134217728 ? getIntersectionType(map3(type2.types, (t) => getIndexType(t, indexFlags))) : type2.flags & 268435456 ? getUnionType(map3(type2.types, (t) => getIndexType(t, indexFlags))) : getObjectFlags(type2) & 32 ? getIndexTypeForMappedType(type2, indexFlags) : type2 === wildcardType ? wildcardType : type2.flags & 2 ? neverType : type2.flags & (1 | 262144) ? stringNumberSymbolType : getLiteralTypeFromProperties(
+          return isNoInferType(type2) ? getNoInferType(getIndexType(type2.baseType, indexFlags)) : shouldDeferIndexType(type2, indexFlags) ? getIndexTypeForGenericType(type2, indexFlags) : type2.flags & 134217728 ? getIntersectionType(map3(type2.types, (t2) => getIndexType(t2, indexFlags))) : type2.flags & 268435456 ? getUnionType(map3(type2.types, (t2) => getIndexType(t2, indexFlags))) : getObjectFlags(type2) & 32 ? getIndexTypeForMappedType(type2, indexFlags) : type2 === wildcardType ? wildcardType : type2.flags & 2 ? neverType : type2.flags & (1 | 262144) ? stringNumberSymbolType : getLiteralTypeFromProperties(
             type2,
             (indexFlags & 2 ? 1024 : 12583968) | (indexFlags & 1 ? 0 : 67648 | 16896),
             indexFlags === 0
@@ -108638,9 +108638,9 @@ ${lanes.join("\n")}
           return links.resolvedType;
         }
         function getTemplateLiteralType(texts, types2) {
-          const unionIndex = findIndex(types2, (t) => !!(t.flags & (262144 | 134217728)));
+          const unionIndex = findIndex(types2, (t2) => !!(t2.flags & (262144 | 134217728)));
           if (unionIndex >= 0) {
-            return checkCrossProductUnion(types2) ? mapType(types2[unionIndex], (t) => getTemplateLiteralType(texts, replaceElement(types2, unionIndex, t))) : errorType;
+            return checkCrossProductUnion(types2) ? mapType(types2[unionIndex], (t2) => getTemplateLiteralType(texts, replaceElement(types2, unionIndex, t2))) : errorType;
           }
           if (contains(types2, wildcardType)) {
             return wildcardType;
@@ -108655,15 +108655,15 @@ ${lanes.join("\n")}
             return getStringLiteralType(text);
           }
           newTexts.push(text);
-          if (every(newTexts, (t) => t === "")) {
-            if (every(newTypes, (t) => !!(t.flags & 32))) {
+          if (every(newTexts, (t2) => t2 === "")) {
+            if (every(newTypes, (t2) => !!(t2.flags & 32))) {
               return stringType;
             }
             if (newTypes.length === 1 && isPatternLiteralType(newTypes[0])) {
               return newTypes[0];
             }
           }
-          const id = `${getTypeListId(newTypes)}|${map3(newTexts, (t) => t.length).join(",")}|${newTexts.join("")}`;
+          const id = `${getTypeListId(newTypes)}|${map3(newTexts, (t2) => t2.length).join(",")}|${newTexts.join("")}`;
           let type2 = templateLiteralTypes.get(id);
           if (!type2) {
             templateLiteralTypes.set(id, type2 = createTemplateLiteralType(newTexts, newTypes));
@@ -108671,16 +108671,16 @@ ${lanes.join("\n")}
           return type2;
           function addSpans(texts2, types22) {
             for (let i = 0; i < types22.length; i++) {
-              const t = types22[i];
-              if (t.flags & (15360 | 8 | 4)) {
-                text += getTemplateStringForType(t) || "";
+              const t2 = types22[i];
+              if (t2.flags & (15360 | 8 | 4)) {
+                text += getTemplateStringForType(t2) || "";
                 text += texts2[i + 1];
-              } else if (t.flags & 4194304) {
-                text += t.texts[0];
-                if (!addSpans(t.texts, t.types)) return false;
+              } else if (t2.flags & 4194304) {
+                text += t2.texts[0];
+                if (!addSpans(t2.texts, t2.types)) return false;
                 text += texts2[i + 1];
-              } else if (isGenericIndexType(t) || isPatternLiteralPlaceholderType(t)) {
-                newTypes.push(t);
+              } else if (isGenericIndexType(t2) || isPatternLiteralPlaceholderType(t2)) {
+                newTypes.push(t2);
                 newTexts.push(text);
                 text = texts2[i + 1];
               } else {
@@ -108703,7 +108703,7 @@ ${lanes.join("\n")}
           return type2;
         }
         function getStringMappingType(symbol2, type2) {
-          return type2.flags & (134217728 | 262144) ? mapType(type2, (t) => getStringMappingType(symbol2, t)) : type2.flags & 1024 ? getStringLiteralType(applyStringMapping(symbol2, type2.value)) : type2.flags & 4194304 ? getTemplateLiteralType(...applyTemplateStringMapping(symbol2, type2.texts, type2.types)) : (
+          return type2.flags & (134217728 | 262144) ? mapType(type2, (t2) => getStringMappingType(symbol2, t2)) : type2.flags & 1024 ? getStringLiteralType(applyStringMapping(symbol2, type2.value)) : type2.flags & 4194304 ? getTemplateLiteralType(...applyTemplateStringMapping(symbol2, type2.texts, type2.types)) : (
             // Mapping<Mapping<T>> === Mapping<T>
             type2.flags & 8388608 && symbol2 === type2.symbol ? type2 : type2.flags & (1 | 32 | 8388608) || isGenericIndexType(type2) ? getStringMappingTypeForGenericType(symbol2, type2) : (
               // This handles Mapping<`${number}`> and Mapping<`${bigint}`>
@@ -108727,9 +108727,9 @@ ${lanes.join("\n")}
         function applyTemplateStringMapping(symbol2, texts, types2) {
           switch (intrinsicTypeKinds.get(symbol2.escapedName)) {
             case 0:
-              return [texts.map((t) => t.toUpperCase()), types2.map((t) => getStringMappingType(symbol2, t))];
+              return [texts.map((t2) => t2.toUpperCase()), types2.map((t2) => getStringMappingType(symbol2, t2))];
             case 1:
-              return [texts.map((t) => t.toLowerCase()), types2.map((t) => getStringMappingType(symbol2, t))];
+              return [texts.map((t2) => t2.toLowerCase()), types2.map((t2) => getStringMappingType(symbol2, t2))];
             case 2:
               return [texts[0] === "" ? texts : [texts[0].charAt(0).toUpperCase() + texts[0].slice(1), ...texts.slice(1)], texts[0] === "" ? [getStringMappingType(symbol2, types2[0]), ...types2.slice(1)] : types2];
             case 3:
@@ -108828,7 +108828,7 @@ ${lanes.join("\n")}
             }
             if (everyType(objectType, isTupleType) && isNumericLiteralName(propName3)) {
               const index = +propName3;
-              if (accessNode && everyType(objectType, (t) => !(t.target.combinedFlags & 12)) && !(accessFlags & 16)) {
+              if (accessNode && everyType(objectType, (t2) => !(t2.target.combinedFlags & 12)) && !(accessFlags & 16)) {
                 const indexNode = getIndexNodeForAccessExpression(accessNode);
                 if (isTupleType(objectType)) {
                   if (index < 0) {
@@ -109008,10 +109008,10 @@ ${lanes.join("\n")}
         function isPatternLiteralPlaceholderType(type2) {
           if (type2.flags & 268435456) {
             let seenPlaceholder = false;
-            for (const t of type2.types) {
-              if (t.flags & (15360 | 12) || isPatternLiteralPlaceholderType(t)) {
+            for (const t2 of type2.types) {
+              if (t2.flags & (15360 | 12) || isPatternLiteralPlaceholderType(t2)) {
                 seenPlaceholder = true;
-              } else if (!(t.flags & 1048576)) {
+              } else if (!(t2.flags & 1048576)) {
                 return false;
               }
             }
@@ -109037,7 +109037,7 @@ ${lanes.join("\n")}
         function getGenericObjectFlags(type2) {
           if (type2.flags & 402653184) {
             if (!(type2.objectFlags & 2097152)) {
-              type2.objectFlags |= 2097152 | reduceLeft(type2.types, (flags, t) => flags | getGenericObjectFlags(t), 0);
+              type2.objectFlags |= 2097152 | reduceLeft(type2.types, (flags, t2) => flags | getGenericObjectFlags(t2), 0);
             }
             return type2.objectFlags & 12582912;
           }
@@ -109054,13 +109054,13 @@ ${lanes.join("\n")}
         }
         function distributeIndexOverObjectType(objectType, indexType, writing) {
           if (objectType.flags & 134217728 || objectType.flags & 268435456 && !shouldDeferIndexType(objectType)) {
-            const types2 = map3(objectType.types, (t) => getSimplifiedType(getIndexedAccessType(t, indexType), writing));
+            const types2 = map3(objectType.types, (t2) => getSimplifiedType(getIndexedAccessType(t2, indexType), writing));
             return objectType.flags & 268435456 || writing ? getIntersectionType(types2) : getUnionType(types2);
           }
         }
         function distributeObjectOverIndexType(objectType, indexType, writing) {
           if (indexType.flags & 134217728) {
-            const types2 = map3(indexType.types, (t) => getSimplifiedType(getIndexedAccessType(objectType, t), writing));
+            const types2 = map3(indexType.types, (t2) => getSimplifiedType(getIndexedAccessType(objectType, t2), writing));
             return writing ? getIntersectionType(types2) : getUnionType(types2);
           }
         }
@@ -109096,7 +109096,7 @@ ${lanes.join("\n")}
           }
           if (isGenericMappedType(objectType)) {
             if (getMappedTypeNameTypeKind(objectType) !== 2) {
-              return type2[cache] = mapType(substituteIndexedMappedType(objectType, type2.indexType), (t) => getSimplifiedType(t, writing));
+              return type2[cache] = mapType(substituteIndexedMappedType(objectType, type2.indexType), (t2) => getSimplifiedType(t2, writing));
             }
           }
           return type2[cache] = type2;
@@ -109158,9 +109158,9 @@ ${lanes.join("\n")}
           return getIndexedAccessTypeOrUndefined(objectType, indexType, accessFlags, accessNode, aliasSymbol, aliasTypeArguments) || (accessNode ? errorType : unknownType);
         }
         function indexTypeLessThan(indexType, limit) {
-          return everyType(indexType, (t) => {
-            if (t.flags & 3072) {
-              const propName3 = getPropertyNameFromType(t);
+          return everyType(indexType, (t2) => {
+            if (t2.flags & 3072) {
+              const propName3 = getPropertyNameFromType(t2);
               if (isNumericLiteralName(propName3)) {
                 const index = +propName3;
                 return index >= 0 && index < limit;
@@ -109198,8 +109198,8 @@ ${lanes.join("\n")}
           if (indexType.flags & 134217728 && !(indexType.flags & 256)) {
             const propTypes = [];
             let wasMissingProp = false;
-            for (const t of indexType.types) {
-              const propType = getPropertyTypeForIndexType(objectType, apparentObjectType, t, indexType, accessNode, accessFlags | (wasMissingProp ? 128 : 0));
+            for (const t2 of indexType.types) {
+              const propType = getPropertyTypeForIndexType(objectType, apparentObjectType, t2, indexType, accessNode, accessFlags | (wasMissingProp ? 128 : 0));
               if (propType) {
                 propTypes.push(propType);
               } else if (!accessNode) {
@@ -109307,7 +109307,7 @@ ${lanes.join("\n")}
             const inferredExtendsType = combinedMapper ? instantiateType(root.extendsType, combinedMapper) : extendsType;
             if (!checkTypeDeferred && !isDeferredType(inferredExtendsType, checkTuples)) {
               if (!(inferredExtendsType.flags & 3) && (checkType.flags & 1 || !isTypeAssignableTo(getPermissiveInstantiation(checkType), getPermissiveInstantiation(inferredExtendsType)))) {
-                if (checkType.flags & 1 || forConstraint && !(inferredExtendsType.flags & 262144) && someType(getPermissiveInstantiation(inferredExtendsType), (t) => isTypeAssignableTo(t, getPermissiveInstantiation(checkType)))) {
+                if (checkType.flags & 1 || forConstraint && !(inferredExtendsType.flags & 262144) && someType(getPermissiveInstantiation(inferredExtendsType), (t2) => isTypeAssignableTo(t2, getPermissiveInstantiation(checkType)))) {
                   (extraTypes || (extraTypes = [])).push(instantiateType(getTypeFromTypeNode(root.node.trueType), combinedMapper || mapper));
                 }
                 const falseType2 = getTypeFromTypeNode(root.node.falseType);
@@ -109353,7 +109353,7 @@ ${lanes.join("\n")}
               const newRoot = newType.root;
               if (newRoot.outerTypeParameters) {
                 const typeParamMapper = combineTypeMappers(newType.mapper, newMapper);
-                const typeArguments = map3(newRoot.outerTypeParameters, (t) => getMappedType(t, typeParamMapper));
+                const typeArguments = map3(newRoot.outerTypeParameters, (t2) => getMappedType(t2, typeParamMapper));
                 const newRootMapper = createTypeMapper(newRoot.outerTypeParameters, typeArguments);
                 const newCheckType = newRoot.isDistributive ? getMappedType(newRoot.checkType, newRootMapper) : void 0;
                 if (!newCheckType || newCheckType === newRoot.checkType || !(newCheckType.flags & (134217728 | 262144))) {
@@ -109558,11 +109558,11 @@ ${lanes.join("\n")}
           if (every(type2.types, isEmptyObjectTypeOrSpreadsIntoEmptyObject)) {
             return find(type2.types, isEmptyObjectType) || emptyObjectType;
           }
-          const firstType = find(type2.types, (t) => !isEmptyObjectTypeOrSpreadsIntoEmptyObject(t));
+          const firstType = find(type2.types, (t2) => !isEmptyObjectTypeOrSpreadsIntoEmptyObject(t2));
           if (!firstType) {
             return type2;
           }
-          const secondType = find(type2.types, (t) => t !== firstType && !isEmptyObjectTypeOrSpreadsIntoEmptyObject(t));
+          const secondType = find(type2.types, (t2) => t2 !== firstType && !isEmptyObjectTypeOrSpreadsIntoEmptyObject(t2));
           if (secondType) {
             return type2;
           }
@@ -109606,11 +109606,11 @@ ${lanes.join("\n")}
           }
           left = tryMergeUnionOfObjectTypeAndEmptyObject(left, readonly2);
           if (left.flags & 134217728) {
-            return checkCrossProductUnion([left, right]) ? mapType(left, (t) => getSpreadType(t, right, symbol2, objectFlags, readonly2)) : errorType;
+            return checkCrossProductUnion([left, right]) ? mapType(left, (t2) => getSpreadType(t2, right, symbol2, objectFlags, readonly2)) : errorType;
           }
           right = tryMergeUnionOfObjectTypeAndEmptyObject(right, readonly2);
           if (right.flags & 134217728) {
-            return checkCrossProductUnion([left, right]) ? mapType(right, (t) => getSpreadType(left, t, symbol2, objectFlags, readonly2)) : errorType;
+            return checkCrossProductUnion([left, right]) ? mapType(right, (t2) => getSpreadType(left, t2, symbol2, objectFlags, readonly2)) : errorType;
           }
           if (right.flags & (8448 | 67648 | 4224 | 12583968 | 98304 | 131072 | 2097152)) {
             return left;
@@ -110117,7 +110117,7 @@ ${lanes.join("\n")}
           }
           if (typeParameters.length) {
             const combinedMapper = combineTypeMappers(type2.mapper, mapper);
-            const typeArguments = map3(typeParameters, (t) => getMappedType(t, combinedMapper));
+            const typeArguments = map3(typeParameters, (t2) => getMappedType(t2, combinedMapper));
             const newAliasSymbol = aliasSymbol || type2.aliasSymbol;
             const newAliasTypeArguments = aliasSymbol ? aliasTypeArguments : instantiateTypes(type2.aliasTypeArguments, mapper);
             const id = getTypeListId(typeArguments) + getAliasId(newAliasSymbol, newAliasTypeArguments);
@@ -110214,27 +110214,27 @@ ${lanes.join("\n")}
             }
           }
           return instantiateType(getConstraintTypeFromMappedType(type2), mapper) === wildcardType ? wildcardType : instantiateAnonymousType(type2, mapper, aliasSymbol, aliasTypeArguments);
-          function instantiateConstituent(t) {
-            if (t.flags & (3 | 117964800 | 1048576 | 268435456) && t !== wildcardType && !isErrorType(t)) {
+          function instantiateConstituent(t2) {
+            if (t2.flags & (3 | 117964800 | 1048576 | 268435456) && t2 !== wildcardType && !isErrorType(t2)) {
               if (!type2.declaration.nameType) {
                 let constraint;
-                if (isArrayType(t) || t.flags & 1 && findResolutionCycleStartIndex(
+                if (isArrayType(t2) || t2.flags & 1 && findResolutionCycleStartIndex(
                   typeVariable,
                   4
                   /* ImmediateBaseConstraint */
                 ) < 0 && (constraint = getConstraintOfTypeParameter(typeVariable)) && everyType(constraint, isArrayOrTupleType)) {
-                  return instantiateMappedArrayType(t, type2, prependTypeMapping(typeVariable, t, mapper));
+                  return instantiateMappedArrayType(t2, type2, prependTypeMapping(typeVariable, t2, mapper));
                 }
-                if (isTupleType(t)) {
-                  return instantiateMappedTupleType(t, type2, typeVariable, mapper);
+                if (isTupleType(t2)) {
+                  return instantiateMappedTupleType(t2, type2, typeVariable, mapper);
                 }
-                if (isArrayOrTupleOrIntersection(t)) {
-                  return getIntersectionType(map3(t.types, instantiateConstituent));
+                if (isArrayOrTupleOrIntersection(t2)) {
+                  return getIntersectionType(map3(t2.types, instantiateConstituent));
                 }
               }
-              return instantiateAnonymousType(type2, prependTypeMapping(typeVariable, t, mapper));
+              return instantiateAnonymousType(type2, prependTypeMapping(typeVariable, t2, mapper));
             }
-            return t;
+            return t2;
           }
         }
         function getModifiedReadonlyState(state3, modifiers) {
@@ -110305,14 +110305,14 @@ ${lanes.join("\n")}
         function getConditionalTypeInstantiation(type2, mapper, forConstraint, aliasSymbol, aliasTypeArguments) {
           const root = type2.root;
           if (root.outerTypeParameters) {
-            const typeArguments = map3(root.outerTypeParameters, (t) => getMappedType(t, mapper));
+            const typeArguments = map3(root.outerTypeParameters, (t2) => getMappedType(t2, mapper));
             const id = (forConstraint ? "C" : "") + getTypeListId(typeArguments) + getAliasId(aliasSymbol, aliasTypeArguments);
             let result = root.instantiations.get(id);
             if (!result) {
               const newMapper = createTypeMapper(root.outerTypeParameters, typeArguments);
               const checkType = root.checkType;
               const distributionType = root.isDistributive ? getReducedType(getMappedType(checkType, newMapper)) : void 0;
-              result = distributionType && checkType !== distributionType && distributionType.flags & (134217728 | 262144) ? mapTypeWithAlias(distributionType, (t) => getConditionalType(root, prependTypeMapping(checkType, t, newMapper), forConstraint), aliasSymbol, aliasTypeArguments) : getConditionalType(root, newMapper, forConstraint, aliasSymbol, aliasTypeArguments);
+              result = distributionType && checkType !== distributionType && distributionType.flags & (134217728 | 262144) ? mapTypeWithAlias(distributionType, (t2) => getConditionalType(root, prependTypeMapping(checkType, t2, newMapper), forConstraint), aliasSymbol, aliasTypeArguments) : getConditionalType(root, newMapper, forConstraint, aliasSymbol, aliasTypeArguments);
               root.instantiations.set(id, result);
             }
             return result;
@@ -110567,7 +110567,7 @@ ${lanes.join("\n")}
           return isTypeRelatedTo(source, target, assignableRelation);
         }
         function isTypeDerivedFrom(source, target) {
-          return source.flags & 134217728 ? every(source.types, (t) => isTypeDerivedFrom(t, target)) : target.flags & 134217728 ? some(target.types, (t) => isTypeDerivedFrom(source, t)) : source.flags & 268435456 ? some(source.types, (t) => isTypeDerivedFrom(t, target)) : source.flags & 117964800 ? isTypeDerivedFrom(getBaseConstraintOfType(source) || unknownType, target) : isEmptyAnonymousObjectType(target) ? !!(source.flags & (1048576 | 131072)) : target === globalObjectType ? !!(source.flags & (1048576 | 131072)) && !isEmptyAnonymousObjectType(source) : target === globalFunctionType ? !!(source.flags & 1048576) && isFunctionObjectType(source) : hasBaseType(source, getTargetType(target)) || isArrayType(target) && !isReadonlyArrayType(target) && isTypeDerivedFrom(source, globalReadonlyArrayType);
+          return source.flags & 134217728 ? every(source.types, (t2) => isTypeDerivedFrom(t2, target)) : target.flags & 134217728 ? some(target.types, (t2) => isTypeDerivedFrom(source, t2)) : source.flags & 268435456 ? some(source.types, (t2) => isTypeDerivedFrom(t2, target)) : source.flags & 117964800 ? isTypeDerivedFrom(getBaseConstraintOfType(source) || unknownType, target) : isEmptyAnonymousObjectType(target) ? !!(source.flags & (1048576 | 131072)) : target === globalObjectType ? !!(source.flags & (1048576 | 131072)) && !isEmptyAnonymousObjectType(source) : target === globalFunctionType ? !!(source.flags & 1048576) && isFunctionObjectType(source) : hasBaseType(source, getTargetType(target)) || isArrayType(target) && !isReadonlyArrayType(target) && isTypeDerivedFrom(source, globalReadonlyArrayType);
         }
         function isTypeComparableTo(source, target) {
           return isTypeRelatedTo(source, target, comparableRelation);
@@ -110868,7 +110868,7 @@ ${lanes.join("\n")}
         }
         function elaborateIterableOrArrayLikeTargetElementwise(iterator2, source, target, relation, containingMessageChain, errorOutputContainer) {
           const tupleOrArrayLikeTargetParts = filterType(target, isArrayOrTupleLikeType);
-          const nonTupleOrArrayLikeTargetParts = filterType(target, (t) => !isArrayOrTupleLikeType(t));
+          const nonTupleOrArrayLikeTargetParts = filterType(target, (t2) => !isArrayOrTupleLikeType(t2));
           const iterationType = nonTupleOrArrayLikeTargetParts !== neverType ? getIterationTypeOfIterable(
             13,
             0,
@@ -110992,11 +110992,11 @@ ${lanes.join("\n")}
             );
             if (iterableType !== emptyGenericType) {
               const anyIterable = createIterableType(anyType);
-              arrayLikeTargetParts = filterType(childrenTargetType, (t) => isTypeAssignableTo(t, anyIterable));
-              nonArrayLikeTargetParts = filterType(childrenTargetType, (t) => !isTypeAssignableTo(t, anyIterable));
+              arrayLikeTargetParts = filterType(childrenTargetType, (t2) => isTypeAssignableTo(t2, anyIterable));
+              nonArrayLikeTargetParts = filterType(childrenTargetType, (t2) => !isTypeAssignableTo(t2, anyIterable));
             } else {
               arrayLikeTargetParts = filterType(childrenTargetType, isArrayOrTupleLikeType);
-              nonArrayLikeTargetParts = filterType(childrenTargetType, (t) => !isArrayOrTupleLikeType(t));
+              nonArrayLikeTargetParts = filterType(childrenTargetType, (t2) => !isArrayOrTupleLikeType(t2));
             }
             if (moreThanOneRealChildren) {
               if (arrayLikeTargetParts !== neverType) {
@@ -111320,8 +111320,8 @@ ${lanes.join("\n")}
           }
           return false;
         }
-        function isEmptyResolvedType(t) {
-          return t !== anyFunctionType && t.properties.length === 0 && t.callSignatures.length === 0 && t.constructSignatures.length === 0 && t.indexInfos.length === 0;
+        function isEmptyResolvedType(t2) {
+          return t2 !== anyFunctionType && t2.properties.length === 0 && t2.callSignatures.length === 0 && t2.constructSignatures.length === 0 && t2.indexInfos.length === 0;
         }
         function isEmptyObjectType(type2) {
           return type2.flags & 1048576 ? !isGenericMappedType(type2) && isEmptyResolvedType(resolveStructuredTypeMembers(type2)) : type2.flags & 131072 ? true : type2.flags & 134217728 ? some(type2.types, isEmptyObjectType) : type2.flags & 268435456 ? every(type2.types, isEmptyObjectType) : false;
@@ -111436,29 +111436,29 @@ ${lanes.join("\n")}
         }
         function isSimpleTypeRelatedTo(source, target, relation, errorReporter) {
           const s = source.flags;
-          const t = target.flags;
-          if (t & 1 || s & 262144 || source === wildcardType) return true;
-          if (t & 2 && !(relation === strictSubtypeRelation && s & 1)) return true;
-          if (t & 262144) return false;
-          if (s & 12583968 && t & 32) return true;
-          if (s & 1024 && s & 32768 && t & 1024 && !(t & 32768) && source.value === target.value) return true;
-          if (s & 67648 && t & 64) return true;
-          if (s & 2048 && s & 32768 && t & 2048 && !(t & 32768) && source.value === target.value) return true;
-          if (s & 4224 && t & 128) return true;
-          if (s & 8448 && t & 256) return true;
-          if (s & 16896 && t & 512) return true;
-          if (s & 65536 && t & 65536 && source.symbol.escapedName === target.symbol.escapedName && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
-          if (s & 32768 && t & 32768) {
-            if (s & 134217728 && t & 134217728 && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
-            if (s & 15360 && t & 15360 && source.value === target.value && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
+          const t2 = target.flags;
+          if (t2 & 1 || s & 262144 || source === wildcardType) return true;
+          if (t2 & 2 && !(relation === strictSubtypeRelation && s & 1)) return true;
+          if (t2 & 262144) return false;
+          if (s & 12583968 && t2 & 32) return true;
+          if (s & 1024 && s & 32768 && t2 & 1024 && !(t2 & 32768) && source.value === target.value) return true;
+          if (s & 67648 && t2 & 64) return true;
+          if (s & 2048 && s & 32768 && t2 & 2048 && !(t2 & 32768) && source.value === target.value) return true;
+          if (s & 4224 && t2 & 128) return true;
+          if (s & 8448 && t2 & 256) return true;
+          if (s & 16896 && t2 & 512) return true;
+          if (s & 65536 && t2 & 65536 && source.symbol.escapedName === target.symbol.escapedName && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
+          if (s & 32768 && t2 & 32768) {
+            if (s & 134217728 && t2 & 134217728 && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
+            if (s & 15360 && t2 & 15360 && source.value === target.value && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
           }
-          if (s & 4 && (!strictNullChecks && !(t & 402653184) || t & (4 | 16))) return true;
-          if (s & 8 && (!strictNullChecks && !(t & 402653184) || t & 8)) return true;
-          if (s & 1048576 && t & 131072 && !(relation === strictSubtypeRelation && isEmptyAnonymousObjectType(source) && !(getObjectFlags(source) & 8192))) return true;
+          if (s & 4 && (!strictNullChecks && !(t2 & 402653184) || t2 & (4 | 16))) return true;
+          if (s & 8 && (!strictNullChecks && !(t2 & 402653184) || t2 & 8)) return true;
+          if (s & 1048576 && t2 & 131072 && !(relation === strictSubtypeRelation && isEmptyAnonymousObjectType(source) && !(getObjectFlags(source) & 8192))) return true;
           if (relation === assignableRelation || relation === comparableRelation) {
             if (s & 1) return true;
-            if (s & 64 && (t & 65536 || t & 2048 && t & 32768)) return true;
-            if (s & 2048 && !(s & 32768) && (t & 65536 || t & 2048 && t & 32768 && source.value === target.value)) return true;
+            if (s & 64 && (t2 & 65536 || t2 & 2048 && t2 & 32768)) return true;
+            if (s & 2048 && !(s & 32768) && (t2 & 65536 || t2 & 2048 && t2 & 32768 && source.value === target.value)) return true;
             if (isUnknownLikeUnionType(target)) return true;
           }
           return false;
@@ -111510,9 +111510,9 @@ ${lanes.join("\n")}
         }
         function getNormalizedType(type2, writing) {
           while (true) {
-            const t = isFreshLiteralType(type2) ? type2.regularType : isGenericTupleType(type2) ? getNormalizedTupleType(type2, writing) : getObjectFlags(type2) & 4 ? type2.node ? createTypeReference(type2.target, getTypeArguments(type2)) : getSingleBaseForNonAugmentingSubtype(type2) || type2 : type2.flags & 402653184 ? getNormalizedUnionOrIntersectionType(type2, writing) : type2.flags & 16777216 ? writing ? type2.baseType : getSubstitutionIntersection(type2) : type2.flags & 102760448 ? getSimplifiedType(type2, writing) : type2;
-            if (t === type2) return t;
-            type2 = t;
+            const t2 = isFreshLiteralType(type2) ? type2.regularType : isGenericTupleType(type2) ? getNormalizedTupleType(type2, writing) : getObjectFlags(type2) & 4 ? type2.node ? createTypeReference(type2.target, getTypeArguments(type2)) : getSingleBaseForNonAugmentingSubtype(type2) || type2 : type2.flags & 402653184 ? getNormalizedUnionOrIntersectionType(type2, writing) : type2.flags & 16777216 ? writing ? type2.baseType : getSubstitutionIntersection(type2) : type2.flags & 102760448 ? getSimplifiedType(type2, writing) : type2;
+            if (t2 === type2) return t2;
+            type2 = t2;
           }
         }
         function getNormalizedUnionOrIntersectionType(type2, writing) {
@@ -111521,7 +111521,7 @@ ${lanes.join("\n")}
             return reduced;
           }
           if (type2.flags & 268435456 && shouldNormalizeIntersection(type2)) {
-            const normalizedTypes = sameMap(type2.types, (t) => getNormalizedType(t, writing));
+            const normalizedTypes = sameMap(type2.types, (t2) => getNormalizedType(t2, writing));
             if (normalizedTypes !== type2.types) {
               return getIntersectionType(normalizedTypes);
             }
@@ -111531,16 +111531,16 @@ ${lanes.join("\n")}
         function shouldNormalizeIntersection(type2) {
           let hasInstantiable = false;
           let hasNullableOrEmpty = false;
-          for (const t of type2.types) {
-            hasInstantiable || (hasInstantiable = !!(t.flags & 132644864));
-            hasNullableOrEmpty || (hasNullableOrEmpty = !!(t.flags & 12) || isEmptyAnonymousObjectType(t));
+          for (const t2 of type2.types) {
+            hasInstantiable || (hasInstantiable = !!(t2.flags & 132644864));
+            hasNullableOrEmpty || (hasNullableOrEmpty = !!(t2.flags & 12) || isEmptyAnonymousObjectType(t2));
             if (hasInstantiable && hasNullableOrEmpty) return true;
           }
           return false;
         }
         function getNormalizedTupleType(type2, writing) {
           const elements = getElementTypes(type2);
-          const normalizedElements = sameMap(elements, (t) => t.flags & 102760448 ? getSimplifiedType(t, writing) : t);
+          const normalizedElements = sameMap(elements, (t2) => t2.flags & 102760448 ? getSimplifiedType(t2, writing) : t2);
           return elements !== normalizedElements ? createNormalizedTupleType(type2.target, normalizedElements) : type2;
         }
         function checkTypeRelatedTo(source, target, relation, errorNode, headMessage, containingMessageChain, errorOutputContainer) {
@@ -112150,7 +112150,7 @@ ${lanes.join("\n")}
               );
             }
             if (relation === comparableRelation && target2.flags & 12713980) {
-              const constraints = sameMap(source2.types, (t) => t.flags & 132644864 ? getBaseConstraintOfType(t) || unknownType : t);
+              const constraints = sameMap(source2.types, (t2) => t2.flags & 132644864 ? getBaseConstraintOfType(t2) || unknownType : t2);
               if (constraints !== source2.types) {
                 source2 = getIntersectionType(constraints);
                 if (source2.flags & 262144) {
@@ -112362,16 +112362,16 @@ ${lanes.join("\n")}
               const variance = varianceFlags & 7;
               if (variance !== 4) {
                 const s = sources[i];
-                const t = targets[i];
+                const t2 = targets[i];
                 let related = -1;
                 if (varianceFlags & 8) {
                   related = relation === identityRelation ? isRelatedTo(
                     s,
-                    t,
+                    t2,
                     3,
                     /*reportErrors*/
                     false
-                  ) : compareTypesIdentical(s, t);
+                  ) : compareTypesIdentical(s, t2);
                 } else {
                   if (inVarianceComputation && varianceFlags & 16) {
                     instantiateType(s, reportUnreliableMapper);
@@ -112379,7 +112379,7 @@ ${lanes.join("\n")}
                   if (variance === 1) {
                     related = isRelatedTo(
                       s,
-                      t,
+                      t2,
                       3,
                       reportErrors2,
                       /*headMessage*/
@@ -112388,7 +112388,7 @@ ${lanes.join("\n")}
                     );
                   } else if (variance === 2) {
                     related = isRelatedTo(
-                      t,
+                      t2,
                       s,
                       3,
                       reportErrors2,
@@ -112398,7 +112398,7 @@ ${lanes.join("\n")}
                     );
                   } else if (variance === 3) {
                     related = isRelatedTo(
-                      t,
+                      t2,
                       s,
                       3,
                       /*reportErrors*/
@@ -112407,7 +112407,7 @@ ${lanes.join("\n")}
                     if (!related) {
                       related = isRelatedTo(
                         s,
-                        t,
+                        t2,
                         3,
                         reportErrors2,
                         /*headMessage*/
@@ -112418,7 +112418,7 @@ ${lanes.join("\n")}
                   } else {
                     related = isRelatedTo(
                       s,
-                      t,
+                      t2,
                       3,
                       reportErrors2,
                       /*headMessage*/
@@ -112427,7 +112427,7 @@ ${lanes.join("\n")}
                     );
                     if (related) {
                       related &= isRelatedTo(
-                        t,
+                        t2,
                         s,
                         3,
                         reportErrors2,
@@ -112537,9 +112537,9 @@ ${lanes.join("\n")}
             if (expandingFlags === 3) {
               (_a22 = tracing) == null ? void 0 : _a22.instant(tracing.Phase.CheckTypes, "recursiveTypeRelatedTo_DepthLimit", {
                 sourceId: source2.id,
-                sourceIdStack: sourceStack.map((t) => t.id),
+                sourceIdStack: sourceStack.map((t2) => t2.id),
                 targetId: target2.id,
-                targetIdStack: targetStack.map((t) => t.id),
+                targetIdStack: targetStack.map((t2) => t2.id),
                 depth: sourceDepth,
                 targetDepth
               });
@@ -112635,7 +112635,7 @@ ${lanes.join("\n")}
                     /* None */
                   );
                 }
-              } else if (result2 && isNonGenericObjectType(target2) && !isArrayOrTupleType(target2) && source2.flags & 268435456 && getApparentType(source2).flags & 403701760 && !some(source2.types, (t) => t === target2 || !!(getObjectFlags(t) & 262144))) {
+              } else if (result2 && isNonGenericObjectType(target2) && !isArrayOrTupleType(target2) && source2.flags & 268435456 && getApparentType(source2).flags & 403701760 && !some(source2.types, (t2) => t2 === target2 || !!(getObjectFlags(t2) & 262144))) {
                 result2 &= propertiesRelatedTo(
                   source2,
                   target2,
@@ -112661,7 +112661,7 @@ ${lanes.join("\n")}
               19456,
               /*stringsOnly*/
               false,
-              (t) => void mappedKeys.push(instantiateType(nameType, appendTypeMapping(targetType.mapper, getTypeParameterFromMappedType(targetType), t)))
+              (t2) => void mappedKeys.push(instantiateType(nameType, appendTypeMapping(targetType.mapper, getTypeParameterFromMappedType(targetType), t2)))
             );
             return getUnionType(mappedKeys);
           }
@@ -113203,7 +113203,7 @@ ${lanes.join("\n")}
                 if (varianceResult !== void 0) {
                   return varianceResult;
                 }
-              } else if (isReadonlyArrayType(target2) ? everyType(source2, isArrayOrTupleType) : isArrayType(target2) && everyType(source2, (t) => isTupleType(t) && !t.target.readonly)) {
+              } else if (isReadonlyArrayType(target2) ? everyType(source2, isArrayOrTupleType) : isArrayType(target2) && everyType(source2, (t2) => isTupleType(t2) && !t2.target.readonly)) {
                 if (relation !== identityRelation) {
                   return isRelatedTo(getIndexTypeOfType(source2, numberType) || anyType, getIndexTypeOfType(target2, numberType) || anyType, 3, reportErrors2);
                 } else {
@@ -113800,18 +113800,18 @@ ${lanes.join("\n")}
               }
             } else {
               outer:
-                for (const t of targetSignatures) {
+                for (const t2 of targetSignatures) {
                   const saveErrorInfo = captureErrorCalculationState();
                   let shouldElaborateErrors = reportErrors2;
                   for (const s of sourceSignatures) {
                     const related = signatureRelatedTo(
                       s,
-                      t,
+                      t2,
                       /*erase*/
                       true,
                       shouldElaborateErrors,
                       intersectionState,
-                      incompatibleReporter(s, t)
+                      incompatibleReporter(s, t2)
                     );
                     if (related) {
                       result2 &= related;
@@ -113822,7 +113822,7 @@ ${lanes.join("\n")}
                   }
                   if (shouldElaborateErrors) {
                     reportError(Diagnostics.Type_0_provides_no_match_for_the_signature_1, typeToString(source2), signatureToString(
-                      t,
+                      t2,
                       /*enclosingDeclaration*/
                       void 0,
                       /*flags*/
@@ -114095,7 +114095,7 @@ ${lanes.join("\n")}
         function discriminateTypeByDiscriminableItems(target, discriminators, related) {
           const types2 = target.types;
           const include2 = types2.map(
-            (t) => t.flags & 12713980 || getReducedType(t).flags & 262144 ? 0 : -1
+            (t2) => t2.flags & 12713980 || getReducedType(t2).flags & 262144 ? 0 : -1
             /* True */
           );
           for (const [getDiscriminatingType, propertyName] of discriminators) {
@@ -114104,7 +114104,7 @@ ${lanes.join("\n")}
               if (include2[i]) {
                 const targetType = getTypeOfPropertyOrIndexSignatureOfType(types2[i], propertyName);
                 if (targetType) {
-                  if (someType(getDiscriminatingType(), (t) => !!related(t, targetType))) {
+                  if (someType(getDiscriminatingType(), (t2) => !!related(t2, targetType))) {
                     matched = true;
                   } else {
                     include2[i] = 3;
@@ -114241,7 +114241,7 @@ ${lanes.join("\n")}
           return !!(getObjectFlags(type2) & 4) && !type2.node;
         }
         function isTypeReferenceWithGenericArguments(type2) {
-          return isNonDeferredTypeReference(type2) && some(getTypeArguments(type2), (t) => !!(t.flags & 524288) || isTypeReferenceWithGenericArguments(t));
+          return isNonDeferredTypeReference(type2) && some(getTypeArguments(type2), (t2) => !!(t2.flags & 524288) || isTypeReferenceWithGenericArguments(t2));
         }
         function getGenericTypeReferenceRelationKey(source, target, postFix, ignoreConstraints) {
           const typeParameters = [];
@@ -114251,23 +114251,23 @@ ${lanes.join("\n")}
           return `${constraintMarker}${sourceId},${targetId}${postFix}`;
           function getTypeReferenceId(type2, depth = 0) {
             let result = "" + type2.target.id;
-            for (const t of getTypeArguments(type2)) {
-              if (t.flags & 524288) {
-                if (ignoreConstraints || isUnconstrainedTypeParameter(t)) {
-                  let index = typeParameters.indexOf(t);
+            for (const t2 of getTypeArguments(type2)) {
+              if (t2.flags & 524288) {
+                if (ignoreConstraints || isUnconstrainedTypeParameter(t2)) {
+                  let index = typeParameters.indexOf(t2);
                   if (index < 0) {
                     index = typeParameters.length;
-                    typeParameters.push(t);
+                    typeParameters.push(t2);
                   }
                   result += "=" + index;
                   continue;
                 }
                 constraintMarker = "*";
-              } else if (depth < 4 && isTypeReferenceWithGenericArguments(t)) {
-                result += "<" + getTypeReferenceId(t, depth + 1) + ">";
+              } else if (depth < 4 && isTypeReferenceWithGenericArguments(t2)) {
+                result += "<" + getTypeReferenceId(t2, depth + 1) + ">";
                 continue;
               }
-              result += "-" + t.id;
+              result += "-" + t2.id;
             }
             return result;
           }
@@ -114283,8 +114283,8 @@ ${lanes.join("\n")}
         }
         function forEachProperty2(prop, callback) {
           if (getCheckFlags(prop) & 6) {
-            for (const t of prop.links.containingType.types) {
-              const p = getPropertyOfType(t, prop.escapedName);
+            for (const t2 of prop.links.containingType.types) {
+              const p = getPropertyOfType(t2, prop.escapedName);
               const result = p && forEachProperty2(p, callback);
               if (result) {
                 return result;
@@ -114320,21 +114320,21 @@ ${lanes.join("\n")}
               type2 = getMappedTargetWithSymbol(type2);
             }
             if (type2.flags & 268435456) {
-              return some(type2.types, (t) => isDeeplyNestedType(t, stack, depth, maxDepth));
+              return some(type2.types, (t2) => isDeeplyNestedType(t2, stack, depth, maxDepth));
             }
             const identity2 = getRecursionIdentity(type2);
             let count = 0;
             let lastTypeId = 0;
             for (let i = 0; i < depth; i++) {
-              const t = stack[i];
-              if (hasMatchingRecursionIdentity(t, identity2)) {
-                if (t.id >= lastTypeId) {
+              const t2 = stack[i];
+              if (hasMatchingRecursionIdentity(t2, identity2)) {
+                if (t2.id >= lastTypeId) {
                   count++;
                   if (count >= maxDepth) {
                     return true;
                   }
                 }
-                lastTypeId = t.id;
+                lastTypeId = t2.id;
               }
             }
           }
@@ -114342,7 +114342,7 @@ ${lanes.join("\n")}
         }
         function getMappedTargetWithSymbol(type2) {
           let target;
-          while ((getObjectFlags(type2) & 96) === 96 && (target = getModifiersTypeFromMappedType(type2)) && (target.symbol || target.flags & 268435456 && some(target.types, (t) => !!t.symbol))) {
+          while ((getObjectFlags(type2) & 96) === 96 && (target = getModifiersTypeFromMappedType(type2)) && (target.symbol || target.flags & 268435456 && some(target.types, (t2) => !!t2.symbol))) {
             type2 = target;
           }
           return type2;
@@ -114352,7 +114352,7 @@ ${lanes.join("\n")}
             type2 = getMappedTargetWithSymbol(type2);
           }
           if (type2.flags & 268435456) {
-            return some(type2.types, (t) => hasMatchingRecursionIdentity(t, identity2));
+            return some(type2.types, (t2) => hasMatchingRecursionIdentity(t2, identity2));
           }
           return getRecursionIdentity(type2) === identity2;
         }
@@ -114437,8 +114437,8 @@ ${lanes.join("\n")}
             const mapper = createTypeMapper(source.typeParameters, target.typeParameters);
             for (let i = 0; i < target.typeParameters.length; i++) {
               const s = source.typeParameters[i];
-              const t = target.typeParameters[i];
-              if (!(s === t || compareTypes2(instantiateType(getConstraintFromTypeParameter(s), mapper) || unknownType, getConstraintFromTypeParameter(t) || unknownType) && compareTypes2(instantiateType(getDefaultFromTypeParameter(s), mapper) || unknownType, getDefaultFromTypeParameter(t) || unknownType))) {
+              const t2 = target.typeParameters[i];
+              if (!(s === t2 || compareTypes2(instantiateType(getConstraintFromTypeParameter(s), mapper) || unknownType, getConstraintFromTypeParameter(t2) || unknownType) && compareTypes2(instantiateType(getDefaultFromTypeParameter(s), mapper) || unknownType, getDefaultFromTypeParameter(t2) || unknownType))) {
                 return 0;
               }
             }
@@ -114466,8 +114466,8 @@ ${lanes.join("\n")}
           const targetLen = getParameterCount(target);
           for (let i = 0; i < targetLen; i++) {
             const s = getTypeAtPosition(source, i);
-            const t = getTypeAtPosition(target, i);
-            const related = compareTypes2(t, s);
+            const t2 = getTypeAtPosition(target, i);
+            const related = compareTypes2(t2, s);
             if (!related) {
               return 0;
             }
@@ -114485,11 +114485,11 @@ ${lanes.join("\n")}
         }
         function literalTypesWithSameBaseType(types2) {
           let commonBaseType;
-          for (const t of types2) {
-            if (!(t.flags & 262144)) {
-              const baseType = getBaseTypeOfLiteralType(t);
+          for (const t2 of types2) {
+            if (!(t2.flags & 262144)) {
+              const baseType = getBaseTypeOfLiteralType(t2);
               commonBaseType ?? (commonBaseType = baseType);
-              if (baseType === t || baseType !== commonBaseType) {
+              if (baseType === t2 || baseType !== commonBaseType) {
                 return false;
               }
             }
@@ -114497,13 +114497,13 @@ ${lanes.join("\n")}
           return true;
         }
         function getCombinedTypeFlags(types2) {
-          return reduceLeft(types2, (flags, t) => flags | (t.flags & 134217728 ? getCombinedTypeFlags(t.types) : t.flags), 0);
+          return reduceLeft(types2, (flags, t2) => flags | (t2.flags & 134217728 ? getCombinedTypeFlags(t2.types) : t2.flags), 0);
         }
         function getCommonSupertype(types2) {
           if (types2.length === 1) {
             return types2[0];
           }
-          const primaryTypes = strictNullChecks ? sameMap(types2, (t) => filterType(t, (u) => !(u.flags & 12))) : types2;
+          const primaryTypes = strictNullChecks ? sameMap(types2, (t2) => filterType(t2, (u) => !(u.flags & 12))) : types2;
           const superTypeOrUnion = literalTypesWithSameBaseType(primaryTypes) ? getUnionType(primaryTypes) : getSingleCommonSupertype(primaryTypes);
           return primaryTypes === types2 ? superTypeOrUnion : getNullableType(
             superTypeOrUnion,
@@ -114512,11 +114512,11 @@ ${lanes.join("\n")}
           );
         }
         function getSingleCommonSupertype(types2) {
-          const candidate = reduceLeft(types2, (s, t) => isTypeStrictSubtypeOf(s, t) ? t : s);
-          return every(types2, (t) => t === candidate || isTypeStrictSubtypeOf(t, candidate)) ? candidate : reduceLeft(types2, (s, t) => isTypeSubtypeOf(s, t) ? t : s);
+          const candidate = reduceLeft(types2, (s, t2) => isTypeStrictSubtypeOf(s, t2) ? t2 : s);
+          return every(types2, (t2) => t2 === candidate || isTypeStrictSubtypeOf(t2, candidate)) ? candidate : reduceLeft(types2, (s, t2) => isTypeSubtypeOf(s, t2) ? t2 : s);
         }
         function getCommonSubtype(types2) {
-          return reduceLeft(types2, (s, t) => isTypeSubtypeOf(t, s) ? t : s);
+          return reduceLeft(types2, (s, t2) => isTypeSubtypeOf(t2, s) ? t2 : s);
         }
         function isArrayType(type2) {
           return !!(getObjectFlags(type2) & 4) && (type2.target === globalArrayType || type2.target === globalReadonlyArrayType);
@@ -114577,7 +114577,7 @@ ${lanes.join("\n")}
         }
         function isTupleLikeType(type2) {
           let lengthType;
-          return isTupleType(type2) || !!getPropertyOfType(type2, "0") || isArrayLikeType(type2) && !!(lengthType = getTypeOfPropertyOfType(type2, "length")) && everyType(lengthType, (t) => !!(t.flags & 2048));
+          return isTupleType(type2) || !!getPropertyOfType(type2, "0") || isArrayLikeType(type2) && !!(lengthType = getTypeOfPropertyOfType(type2, "length")) && everyType(lengthType, (t2) => !!(t2.flags & 2048));
         }
         function isArrayOrTupleLikeType(type2) {
           return isArrayLikeType(type2) || isTupleLikeType(type2);
@@ -114599,8 +114599,8 @@ ${lanes.join("\n")}
           return !!(type2.flags & 97292);
         }
         function isUnitLikeType(type2) {
-          const t = getBaseConstraintOrType(type2);
-          return t.flags & 268435456 ? some(t.types, isUnitType) : isUnitType(t);
+          const t2 = getBaseConstraintOrType(type2);
+          return t2.flags & 268435456 ? some(t2.types, isUnitType) : isUnitType(t2);
         }
         function extractUnitType(type2) {
           return type2.flags & 268435456 ? find(type2.types, isUnitType) || type2 : type2;
@@ -114657,8 +114657,8 @@ ${lanes.join("\n")}
           return getElementTypeOfSliceOfTupleType(type2, type2.target.fixedLength);
         }
         function getTupleElementTypeOutOfStartCount(type2, index, undefinedOrMissingType2) {
-          return mapType(type2, (t) => {
-            const tupleType = t;
+          return mapType(type2, (t2) => {
+            const tupleType = t2;
             const restType = getRestTypeOfTupleType(tupleType);
             if (!restType) {
               return undefinedType;
@@ -114679,8 +114679,8 @@ ${lanes.join("\n")}
             const typeArguments = getTypeArguments(type2);
             const elementTypes = [];
             for (let i = index; i < length2; i++) {
-              const t = typeArguments[i];
-              elementTypes.push(type2.target.elementFlags[i] & 8 ? getIndexedAccessType(t, numberType) : t);
+              const t2 = typeArguments[i];
+              elementTypes.push(type2.target.elementFlags[i] & 8 ? getIndexedAccessType(t2, numberType) : t2);
             }
             return writing ? getIntersectionType(elementTypes) : getUnionType(
               elementTypes,
@@ -114697,8 +114697,8 @@ ${lanes.join("\n")}
           return value.base10Value === "0";
         }
         function removeDefinitelyFalsyTypes(type2) {
-          return filterType(type2, (t) => hasTypeFacts(
-            t,
+          return filterType(type2, (t2) => hasTypeFacts(
+            t2,
             4194304
             /* Truthy */
           ));
@@ -114823,8 +114823,8 @@ ${lanes.join("\n")}
               if (isObjectLiteralType2(type2)) {
                 const prop = getPropertyOfObjectType(type2, context5.propertyName);
                 if (prop) {
-                  forEachType(getTypeOfSymbol(prop), (t) => {
-                    siblings.push(t);
+                  forEachType(getTypeOfSymbol(prop), (t2) => {
+                    siblings.push(t2);
                   });
                 }
               }
@@ -114836,9 +114836,9 @@ ${lanes.join("\n")}
         function getPropertiesOfContext(context5) {
           if (!context5.resolvedProperties) {
             const names = /* @__PURE__ */ new Map();
-            for (const t of getSiblingsOfContext(context5)) {
-              if (isObjectLiteralType2(t) && !(getObjectFlags(t) & 2097152)) {
-                for (const prop of getPropertiesOfType(t)) {
+            for (const t2 of getSiblingsOfContext(context5)) {
+              if (isObjectLiteralType2(t2) && !(getObjectFlags(t2) & 2097152)) {
+                for (const prop of getPropertiesOfType(t2)) {
                   names.set(prop.escapedName, prop);
                 }
               }
@@ -114912,7 +114912,7 @@ ${lanes.join("\n")}
                 void 0,
                 type2.types
               );
-              const widenedTypes = sameMap(type2.types, (t) => t.flags & 12 ? t : getWidenedTypeWithContext(t, unionContext));
+              const widenedTypes = sameMap(type2.types, (t2) => t2.flags & 12 ? t2 : getWidenedTypeWithContext(t2, unionContext));
               result = getUnionType(
                 widenedTypes,
                 some(widenedTypes, isEmptyObjectType) ? 2 : 1
@@ -114938,26 +114938,26 @@ ${lanes.join("\n")}
               if (some(type2.types, isEmptyObjectType)) {
                 errorReported = true;
               } else {
-                for (const t of type2.types) {
-                  errorReported || (errorReported = reportWideningErrorsInType(t));
+                for (const t2 of type2.types) {
+                  errorReported || (errorReported = reportWideningErrorsInType(t2));
                 }
               }
             } else if (isArrayOrTupleType(type2)) {
-              for (const t of getTypeArguments(type2)) {
-                errorReported || (errorReported = reportWideningErrorsInType(t));
+              for (const t2 of getTypeArguments(type2)) {
+                errorReported || (errorReported = reportWideningErrorsInType(t2));
               }
             } else if (isObjectLiteralType2(type2)) {
               for (const p of getPropertiesOfObjectType(type2)) {
-                const t = getTypeOfSymbol(p);
-                if (getObjectFlags(t) & 65536) {
-                  errorReported = reportWideningErrorsInType(t);
+                const t2 = getTypeOfSymbol(p);
+                if (getObjectFlags(t2) & 65536) {
+                  errorReported = reportWideningErrorsInType(t2);
                   if (!errorReported) {
                     const valueDeclaration = (_a3 = p.declarations) == null ? void 0 : _a3.find((d) => {
                       var _a22;
                       return ((_a22 = d.symbol.valueDeclaration) == null ? void 0 : _a22.parent) === type2.symbol.valueDeclaration;
                     });
                     if (valueDeclaration) {
-                      error210(valueDeclaration, Diagnostics.Object_literal_s_property_0_implicitly_has_an_1_type, symbolToString(p), typeToString(getWidenedType(t)));
+                      error210(valueDeclaration, Diagnostics.Object_literal_s_property_0_implicitly_has_an_1_type, symbolToString(p), typeToString(getWidenedType(t2)));
                       errorReported = true;
                     }
                   }
@@ -115240,7 +115240,7 @@ ${lanes.join("\n")}
           return false;
         }
         function isTypeParameterAtTopLevel(type2, tp, depth = 0) {
-          return !!(type2 === tp || type2.flags & 402653184 && some(type2.types, (t) => isTypeParameterAtTopLevel(t, tp, depth)) || depth < 3 && type2.flags & 67108864 && (isTypeParameterAtTopLevel(getTrueTypeFromConditionalType(type2), tp, depth + 1) || isTypeParameterAtTopLevel(getFalseTypeFromConditionalType(type2), tp, depth + 1)));
+          return !!(type2 === tp || type2.flags & 402653184 && some(type2.types, (t2) => isTypeParameterAtTopLevel(t2, tp, depth)) || depth < 3 && type2.flags & 67108864 && (isTypeParameterAtTopLevel(getTrueTypeFromConditionalType(type2), tp, depth + 1) || isTypeParameterAtTopLevel(getFalseTypeFromConditionalType(type2), tp, depth + 1)));
         }
         function isTypeParameterAtTopLevelInReturnType(signature, typeParameter) {
           const typePredicate = getTypePredicateOfSignature(signature);
@@ -115248,16 +115248,16 @@ ${lanes.join("\n")}
         }
         function createEmptyObjectTypeFromStringLiteral(type2) {
           const members = createSymbolTable();
-          forEachType(type2, (t) => {
-            if (!(t.flags & 1024)) {
+          forEachType(type2, (t2) => {
+            if (!(t2.flags & 1024)) {
               return;
             }
-            const name = escapeLeadingUnderscores(t.value);
+            const name = escapeLeadingUnderscores(t2.value);
             const literalProp = createSymbol(4, name);
             literalProp.links.type = anyType;
-            if (t.symbol) {
-              literalProp.declarations = t.symbol.declarations;
-              literalProp.valueDeclaration = t.symbol.valueDeclaration;
+            if (t2.symbol) {
+              literalProp.declarations = t2.symbol.declarations;
+              literalProp.valueDeclaration = t2.symbol.valueDeclaration;
             }
             members.set(name, literalProp);
           });
@@ -115300,8 +115300,8 @@ ${lanes.join("\n")}
             return createArrayType(elementType, isReadonlyArrayType(source));
           }
           if (isTupleType(source)) {
-            const elementTypes = map3(getElementTypes(source), (t) => inferReverseMappedType(t, target, constraint));
-            if (!every(elementTypes, (t) => !!t)) {
+            const elementTypes = map3(getElementTypes(source), (t2) => inferReverseMappedType(t2, target, constraint));
+            if (!every(elementTypes, (t2) => !!t2)) {
               return void 0;
             }
             const elementFlags = getMappedTypeModifiers(target) & 4 ? sameMap(source.target.elementFlags, (f) => f & 2 ? 1 : f) : source.target.elementFlags;
@@ -115446,7 +115446,7 @@ ${lanes.join("\n")}
         }
         function isValidTypeForTemplateLiteralPlaceholder(source, target) {
           if (target.flags & 268435456) {
-            return every(target.types, (t) => t === emptyTypeLiteralType || isValidTypeForTemplateLiteralPlaceholder(source, t));
+            return every(target.types, (t2) => t2 === emptyTypeLiteralType || isValidTypeForTemplateLiteralPlaceholder(source, t2));
           }
           if (target.flags & 32 || isTypeAssignableTo(source, target)) {
             return true;
@@ -115562,8 +115562,8 @@ ${lanes.join("\n")}
               return;
             }
             if (source === target && source.flags & 402653184) {
-              for (const t of source.types) {
-                inferFromTypes(t, t);
+              for (const t2 of source.types) {
+                inferFromTypes(t2, t2);
               }
               return;
             }
@@ -115775,18 +115775,18 @@ ${lanes.join("\n")}
           function inferFromMatchingTypes(sources, targets, matches) {
             let matchedSources;
             let matchedTargets;
-            for (const t of targets) {
+            for (const t2 of targets) {
               for (const s of sources) {
-                if (matches(s, t)) {
-                  inferFromTypes(s, t);
+                if (matches(s, t2)) {
+                  inferFromTypes(s, t2);
                   matchedSources = appendIfUnique(matchedSources, s);
-                  matchedTargets = appendIfUnique(matchedTargets, t);
+                  matchedTargets = appendIfUnique(matchedTargets, t2);
                 }
               }
             }
             return [
-              matchedSources ? filter(sources, (t) => !contains(matchedSources, t)) : sources,
-              matchedTargets ? filter(targets, (t) => !contains(matchedTargets, t)) : targets
+              matchedSources ? filter(sources, (t2) => !contains(matchedSources, t2)) : sources,
+              matchedTargets ? filter(targets, (t2) => !contains(matchedTargets, t2)) : targets
             ];
           }
           function inferFromTypeArguments(sourceTypes, targetTypes, variances) {
@@ -115824,11 +115824,11 @@ ${lanes.join("\n")}
           function getSingleTypeVariableFromIntersectionTypes(types2) {
             let typeVariable;
             for (const type2 of types2) {
-              const t = type2.flags & 268435456 && find(type2.types, (t2) => !!getInferenceInfoForType(t2));
-              if (!t || typeVariable && t !== typeVariable) {
+              const t2 = type2.flags & 268435456 && find(type2.types, (t22) => !!getInferenceInfoForType(t22));
+              if (!t2 || typeVariable && t2 !== typeVariable) {
                 return void 0;
               }
-              typeVariable = t;
+              typeVariable = t2;
             }
             return typeVariable;
           }
@@ -115839,15 +115839,15 @@ ${lanes.join("\n")}
               const sources = source.flags & 134217728 ? source.types : [source];
               const matched = new Array(sources.length);
               let inferenceCircularity = false;
-              for (const t of targets) {
-                if (getInferenceInfoForType(t)) {
-                  nakedTypeVariable = t;
+              for (const t2 of targets) {
+                if (getInferenceInfoForType(t2)) {
+                  nakedTypeVariable = t2;
                   typeVariableCount++;
                 } else {
                   for (let i = 0; i < sources.length; i++) {
                     const saveInferencePriority = inferencePriority;
                     inferencePriority = 2048;
-                    inferFromTypes(sources[i], t);
+                    inferFromTypes(sources[i], t2);
                     if (inferencePriority === priority) matched[i] = true;
                     inferenceCircularity = inferenceCircularity || inferencePriority === -1;
                     inferencePriority = Math.min(inferencePriority, saveInferencePriority);
@@ -115874,20 +115874,20 @@ ${lanes.join("\n")}
                 }
               }
             } else {
-              for (const t of targets) {
-                if (getInferenceInfoForType(t)) {
+              for (const t2 of targets) {
+                if (getInferenceInfoForType(t2)) {
                   typeVariableCount++;
                 } else {
-                  inferFromTypes(source, t);
+                  inferFromTypes(source, t2);
                 }
               }
             }
             if (targetFlags & 268435456 ? typeVariableCount === 1 : typeVariableCount > 0) {
-              for (const t of targets) {
-                if (getInferenceInfoForType(t)) {
+              for (const t2 of targets) {
+                if (getInferenceInfoForType(t2)) {
                   inferWithPriority(
                     source,
-                    t,
+                    t2,
                     1
                     /* NakedTypeVariable */
                   );
@@ -115964,7 +115964,7 @@ ${lanes.join("\n")}
                   const constraint = inferenceContext ? getBaseConstraintOfType(inferenceContext.typeParameter) : void 0;
                   if (constraint && !isTypeAny(constraint)) {
                     const constraintTypes = constraint.flags & 134217728 ? constraint.types : [constraint];
-                    let allTypeFlags = reduceLeft(constraintTypes, (flags, t) => flags | t.flags, 0);
+                    let allTypeFlags = reduceLeft(constraintTypes, (flags, t2) => flags | t2.flags, 0);
                     if (!(allTypeFlags & 32)) {
                       const str2 = source2.value;
                       if (allTypeFlags & 67648 && !isValidNumberString(
@@ -116190,11 +116190,11 @@ ${lanes.join("\n")}
             }
           }
         }
-        function isTypeOrBaseIdenticalTo(s, t) {
-          return t === missingType ? s === t : isTypeIdenticalTo(s, t) || !!(t.flags & 32 && s.flags & 1024 || t.flags & 64 && s.flags & 2048);
+        function isTypeOrBaseIdenticalTo(s, t2) {
+          return t2 === missingType ? s === t2 : isTypeIdenticalTo(s, t2) || !!(t2.flags & 32 && s.flags & 1024 || t2.flags & 64 && s.flags & 2048);
         }
-        function isTypeCloselyMatchedBy(s, t) {
-          return !!(s.flags & 1048576 && t.flags & 1048576 && s.symbol && s.symbol === t.symbol || s.aliasSymbol && s.aliasTypeArguments && s.aliasSymbol === t.aliasSymbol);
+        function isTypeCloselyMatchedBy(s, t2) {
+          return !!(s.flags & 1048576 && t2.flags & 1048576 && s.symbol && s.symbol === t2.symbol || s.aliasSymbol && s.aliasTypeArguments && s.aliasSymbol === t2.aliasSymbol);
         }
         function hasPrimitiveConstraint(type2) {
           const constraint = getConstraintOfTypeParameter(type2);
@@ -116219,7 +116219,7 @@ ${lanes.join("\n")}
                 2
                 /* Subtype */
               );
-              return concatenate(filter(candidates, (t) => !isObjectOrArrayLiteralType(t)), [literalsType]);
+              return concatenate(filter(candidates, (t2) => !isObjectOrArrayLiteralType(t2)), [literalsType]);
             }
           }
           return candidates;
@@ -116248,7 +116248,7 @@ ${lanes.join("\n")}
               const inferredCovariantType = inference.candidates ? getCovariantInference(inference, context5.signature) : void 0;
               const inferredContravariantType = inference.contraCandidates ? getContravariantInference(inference) : void 0;
               if (inferredCovariantType || inferredContravariantType) {
-                const preferCovariantType = inferredCovariantType && (!inferredContravariantType || !(inferredCovariantType.flags & (262144 | 1)) && some(inference.contraCandidates, (t) => isTypeAssignableTo(inferredCovariantType, t)) && every(context5.inferences, (other) => other !== inference && getConstraintOfTypeParameter(other.typeParameter) !== inference.typeParameter || every(other.candidates, (t) => isTypeAssignableTo(t, inferredCovariantType))));
+                const preferCovariantType = inferredCovariantType && (!inferredContravariantType || !(inferredCovariantType.flags & (262144 | 1)) && some(inference.contraCandidates, (t2) => isTypeAssignableTo(inferredCovariantType, t2)) && every(context5.inferences, (other) => other !== inference && getConstraintOfTypeParameter(other.typeParameter) !== inference.typeParameter || every(other.candidates, (t2) => isTypeAssignableTo(t2, inferredCovariantType))));
                 inferredType = preferCovariantType ? inferredCovariantType : inferredContravariantType;
                 fallbackType = preferCovariantType ? inferredContravariantType : inferredCovariantType;
               } else if (context5.flags & 1) {
@@ -116269,7 +116269,7 @@ ${lanes.join("\n")}
               if (inferredType) {
                 const constraintWithThis = getTypeWithThisArgument(instantiatedConstraint, inferredType);
                 if (!context5.compareTypes(inferredType, constraintWithThis)) {
-                  const filteredByConstraint = inference.priority === 128 ? filterType(inferredType, (t) => !!context5.compareTypes(t, constraintWithThis)) : neverType;
+                  const filteredByConstraint = inference.priority === 128 ? filterType(inferredType, (t2) => !!context5.compareTypes(t2, constraintWithThis)) : neverType;
                   inferredType = !(filteredByConstraint.flags & 262144) ? filteredByConstraint : void 0;
                 }
               }
@@ -116565,8 +116565,8 @@ ${lanes.join("\n")}
                 return void 0;
               }
               let duplicate = false;
-              forEachType(discriminant, (t) => {
-                const id = getTypeId(getRegularTypeOfLiteralType(t));
+              forEachType(discriminant, (t2) => {
+                const id = getTypeId(getRegularTypeOfLiteralType(t2));
                 const existing = map22.get(id);
                 if (!existing) {
                   map22.set(id, type2);
@@ -116582,11 +116582,11 @@ ${lanes.join("\n")}
         }
         function getKeyPropertyName(unionType) {
           const types2 = unionType.types;
-          if (types2.length < 10 || getObjectFlags(unionType) & 32768 || countWhere(types2, (t) => !!(t.flags & (1048576 | 117964800))) < 10) {
+          if (types2.length < 10 || getObjectFlags(unionType) & 32768 || countWhere(types2, (t2) => !!(t2.flags & (1048576 | 117964800))) < 10) {
             return void 0;
           }
           if (unionType.keyPropertyName === void 0) {
-            const keyPropertyName = forEach(types2, (t) => t.flags & (1048576 | 117964800) ? forEach(getPropertiesOfType(t), (p) => isUnitType(getTypeOfSymbol(p)) ? p.escapedName : void 0) : void 0);
+            const keyPropertyName = forEach(types2, (t2) => t2.flags & (1048576 | 117964800) ? forEach(getPropertiesOfType(t2), (p) => isUnitType(getTypeOfSymbol(p)) ? p.escapedName : void 0) : void 0);
             const mapByKeyProperty = keyPropertyName && mapTypesByKeyProperty(types2, keyPropertyName);
             unionType.keyPropertyName = mapByKeyProperty ? keyPropertyName : "";
             unionType.constituentMap = mapByKeyProperty;
@@ -116636,8 +116636,8 @@ ${lanes.join("\n")}
           if (!(source.flags & 134217728)) {
             return isTypeAssignableTo(source, target);
           }
-          for (const t of source.types) {
-            if (isTypeAssignableTo(t, target)) {
+          for (const t2 of source.types) {
+            if (isTypeAssignableTo(t2, target)) {
               return true;
             }
           }
@@ -116654,7 +116654,7 @@ ${lanes.join("\n")}
           return getCachedType(key) ?? setCachedType(key, getAssignmentReducedTypeWorker(declaredType, assignedType));
         }
         function getAssignmentReducedTypeWorker(declaredType, assignedType) {
-          const filteredType = filterType(declaredType, (t) => typeMaybeAssignableTo(assignedType, t));
+          const filteredType = filterType(declaredType, (t2) => typeMaybeAssignableTo(assignedType, t2));
           const reducedType = assignedType.flags & 8192 && isFreshLiteralType(assignedType) ? mapType(filteredType, getFreshTypeOfLiteralType) : filteredType;
           return isTypeAssignableTo(assignedType, reducedType) ? reducedType : declaredType;
         }
@@ -116731,7 +116731,7 @@ ${lanes.join("\n")}
           if (flags & 134217728) {
             return reduceLeft(
               type2.types,
-              (facts, t) => facts | getTypeFactsWorker(t, callerOnlyNeeds),
+              (facts, t2) => facts | getTypeFactsWorker(t2, callerOnlyNeeds),
               0
               /* None */
             );
@@ -116749,9 +116749,9 @@ ${lanes.join("\n")}
           );
           let oredFacts = 0;
           let andedFacts = 134217727;
-          for (const t of type2.types) {
-            if (!(ignoreObjects && t.flags & 1048576)) {
-              const f = getTypeFactsWorker(t, callerOnlyNeeds);
+          for (const t2 of type2.types) {
+            if (!(ignoreObjects && t2.flags & 1048576)) {
+              const f = getTypeFactsWorker(t2, callerOnlyNeeds);
               oredFacts |= f;
               andedFacts &= f;
             }
@@ -116759,7 +116759,7 @@ ${lanes.join("\n")}
           return oredFacts & 8256 | andedFacts & 134209471;
         }
         function getTypeWithFacts(type2, include2) {
-          return filterType(type2, (t) => hasTypeFacts(t, include2));
+          return filterType(type2, (t2) => hasTypeFacts(t2, include2));
         }
         function getAdjustedTypeWithFacts(type2, facts) {
           const reduced = recombineUnknownType(getTypeWithFacts(strictNullChecks && type2.flags & 2 ? unknownUnionType : type2, facts));
@@ -116771,11 +116771,11 @@ ${lanes.join("\n")}
                 return removeNullableByIntersection(reduced, 131072, 65536, 16777216, undefinedType);
               case 2097152:
               case 4194304:
-                return mapType(reduced, (t) => hasTypeFacts(
-                  t,
+                return mapType(reduced, (t2) => hasTypeFacts(
+                  t2,
                   262144
                   /* EQUndefinedOrNull */
-                ) ? getGlobalNonNullableTypeInstantiation(t) : t);
+                ) ? getGlobalNonNullableTypeInstantiation(t2) : t2);
             }
           }
           return reduced;
@@ -116790,7 +116790,7 @@ ${lanes.join("\n")}
             return type2;
           }
           const emptyAndOtherUnion = getUnionType([emptyObjectType, otherType]);
-          return mapType(type2, (t) => hasTypeFacts(t, targetFacts) ? getIntersectionType([t, !(facts & otherIncludesFacts) && hasTypeFacts(t, otherFacts) ? emptyAndOtherUnion : emptyObjectType]) : t);
+          return mapType(type2, (t2) => hasTypeFacts(t2, targetFacts) ? getIntersectionType([t2, !(facts & otherIncludesFacts) && hasTypeFacts(t2, otherFacts) ? emptyAndOtherUnion : emptyObjectType]) : t2);
         }
         function recombineUnknownType(type2) {
           return type2 === unknownUnionType ? unknownType : type2;
@@ -116945,15 +116945,15 @@ ${lanes.join("\n")}
           return witnesses;
         }
         function eachTypeContainedIn(source, types2) {
-          return source.flags & 134217728 ? !forEach(source.types, (t) => !contains(types2, t)) : contains(types2, source);
+          return source.flags & 134217728 ? !forEach(source.types, (t2) => !contains(types2, t2)) : contains(types2, source);
         }
         function isTypeSubsetOf(source, target) {
           return !!(source === target || source.flags & 262144 || target.flags & 134217728 && isTypeSubsetOfUnion(source, target));
         }
         function isTypeSubsetOfUnion(source, target) {
           if (source.flags & 134217728) {
-            for (const t of source.types) {
-              if (!containsType(target.types, t)) {
+            for (const t2 of source.types) {
+              if (!containsType(target.types, t2)) {
                 return false;
               }
             }
@@ -116987,7 +116987,7 @@ ${lanes.join("\n")}
             let newOrigin;
             if (origin && origin.flags & 134217728) {
               const originTypes = origin.types;
-              const originFiltered = filter(originTypes, (t) => !!(t.flags & 134217728) || f(t));
+              const originFiltered = filter(originTypes, (t2) => !!(t2.flags & 134217728) || f(t2));
               if (originTypes.length - originFiltered.length === types2.length - filtered2.length) {
                 if (originFiltered.length === 1) {
                   return originFiltered[0];
@@ -117008,7 +117008,7 @@ ${lanes.join("\n")}
           return type2.flags & 262144 || f(type2) ? type2 : neverType;
         }
         function removeType(type2, targetType) {
-          return filterType(type2, (t) => t !== targetType);
+          return filterType(type2, (t2) => t2 !== targetType);
         }
         function countTypes(type2) {
           return type2.flags & 134217728 ? type2.types.length : 1;
@@ -117024,9 +117024,9 @@ ${lanes.join("\n")}
           const types2 = origin && origin.flags & 134217728 ? origin.types : type2.types;
           let mappedTypes;
           let changed = false;
-          for (const t of types2) {
-            const mapped = t.flags & 134217728 ? mapType(t, mapper, noReductions) : mapper(t);
-            changed || (changed = t !== mapped);
+          for (const t2 of types2) {
+            const mapped = t2.flags & 134217728 ? mapType(t2, mapper, noReductions) : mapper(t2);
+            changed || (changed = t2 !== mapped);
             if (mapped) {
               if (!mappedTypes) {
                 mappedTypes = [mapped];
@@ -117045,7 +117045,7 @@ ${lanes.join("\n")}
           return type2.flags & 134217728 && aliasSymbol ? getUnionType(map3(type2.types, mapper), 1, aliasSymbol, aliasTypeArguments) : mapType(type2, mapper);
         }
         function extractTypesOfKind(type2, kind) {
-          return filterType(type2, (t) => (t.flags & kind) !== 0);
+          return filterType(type2, (t2) => (t2.flags & kind) !== 0);
         }
         function replacePrimitivesWithLiterals(typeWithPrimitives, typeWithLiterals) {
           if (maybeTypeOfKind(
@@ -117057,11 +117057,11 @@ ${lanes.join("\n")}
             1024 | 4194304 | 8388608 | 2048 | 4096
             /* BigIntLiteral */
           )) {
-            return mapType(typeWithPrimitives, (t) => t.flags & 32 ? extractTypesOfKind(
+            return mapType(typeWithPrimitives, (t2) => t2.flags & 32 ? extractTypesOfKind(
               typeWithLiterals,
               32 | 1024 | 4194304 | 8388608
               /* StringMapping */
-            ) : isPatternLiteralType(t) && !maybeTypeOfKind(
+            ) : isPatternLiteralType(t2) && !maybeTypeOfKind(
               typeWithLiterals,
               32 | 4194304 | 8388608
               /* StringMapping */
@@ -117069,15 +117069,15 @@ ${lanes.join("\n")}
               typeWithLiterals,
               1024
               /* StringLiteral */
-            ) : t.flags & 64 ? extractTypesOfKind(
+            ) : t2.flags & 64 ? extractTypesOfKind(
               typeWithLiterals,
               64 | 2048
               /* NumberLiteral */
-            ) : t.flags & 128 ? extractTypesOfKind(
+            ) : t2.flags & 128 ? extractTypesOfKind(
               typeWithLiterals,
               128 | 4096
               /* BigIntLiteral */
-            ) : t);
+            ) : t2);
           }
           return typeWithPrimitives;
         }
@@ -117125,9 +117125,9 @@ ${lanes.join("\n")}
         }
         function isEvolvingArrayTypeList(types2) {
           let hasEvolvingArrayType = false;
-          for (const t of types2) {
-            if (!(t.flags & 262144)) {
-              if (!(getObjectFlags(t) & 256)) {
+          for (const t2 of types2) {
+            if (!(t2.flags & 262144)) {
+              if (!(getObjectFlags(t2) & 256)) {
                 return false;
               }
               hasEvolvingArrayType = true;
@@ -117555,11 +117555,11 @@ ${lanes.join("\n")}
                 const assignedType = getWidenedLiteralType(getInitialOrAssignedType(flow));
                 return isTypeAssignableTo(assignedType, declaredType) ? assignedType : anyArrayType;
               }
-              const t = isInCompoundLikeAssignment(node) ? getBaseTypeOfLiteralType(declaredType) : declaredType;
-              if (t.flags & 134217728) {
-                return getAssignmentReducedType(t, getInitialOrAssignedType(flow));
+              const t2 = isInCompoundLikeAssignment(node) ? getBaseTypeOfLiteralType(declaredType) : declaredType;
+              if (t2.flags & 134217728) {
+                return getAssignmentReducedType(t2, getInitialOrAssignedType(flow));
               }
-              return t;
+              return t2;
             }
             if (containsMatchingReference(reference, node)) {
               if (!isReachableFlowNode(flow)) {
@@ -117681,9 +117681,9 @@ ${lanes.join("\n")}
             } else {
               if (strictNullChecks) {
                 if (optionalChainContainsReference(expr, reference)) {
-                  type2 = narrowTypeBySwitchOptionalChainContainment(type2, flow.node, (t) => !(t.flags & (4 | 262144)));
+                  type2 = narrowTypeBySwitchOptionalChainContainment(type2, flow.node, (t2) => !(t2.flags & (4 | 262144)));
                 } else if (expr.kind === 222 && optionalChainContainsReference(expr.expression, reference)) {
-                  type2 = narrowTypeBySwitchOptionalChainContainment(type2, flow.node, (t) => !(t.flags & 262144 || t.flags & 1024 && t.value === "undefined"));
+                  type2 = narrowTypeBySwitchOptionalChainContainment(type2, flow.node, (t2) => !(t2.flags & 262144 || t2.flags & 1024 && t2.value === "undefined"));
                 }
               }
               const access3 = getDiscriminantPropertyAccess(expr, type2);
@@ -117888,8 +117888,8 @@ ${lanes.join("\n")}
             }
             propType = removeNullable && optionalChain ? getOptionalType(propType) : propType;
             const narrowedPropType = narrowType2(propType);
-            return filterType(type2, (t) => {
-              const discriminantType = getTypeOfPropertyOrIndexSignatureOfType(t, propName3) || unknownType;
+            return filterType(type2, (t2) => {
+              const discriminantType = getTypeOfPropertyOrIndexSignatureOfType(t2, propName3) || unknownType;
               return !(discriminantType.flags & 262144) && !(narrowedPropType.flags & 262144) && areTypesComparable(narrowedPropType, discriminantType);
             });
           }
@@ -117903,17 +117903,17 @@ ${lanes.join("\n")}
                 }
               }
             }
-            return narrowTypeByDiscriminant(type2, access3, (t) => narrowTypeByEquality(t, operator, value, assumeTrue));
+            return narrowTypeByDiscriminant(type2, access3, (t2) => narrowTypeByEquality(t2, operator, value, assumeTrue));
           }
           function narrowTypeBySwitchOnDiscriminantProperty(type2, access3, data) {
             if (data.clauseStart < data.clauseEnd && type2.flags & 134217728 && getKeyPropertyName(type2) === getAccessedPropertyName(access3)) {
               const clauseTypes = getSwitchClauseTypes(data.switchStatement).slice(data.clauseStart, data.clauseEnd);
-              const candidate = getUnionType(map3(clauseTypes, (t) => getConstituentTypeForKeyType(type2, t) || unknownType));
+              const candidate = getUnionType(map3(clauseTypes, (t2) => getConstituentTypeForKeyType(type2, t2) || unknownType));
               if (candidate !== unknownType) {
                 return candidate;
               }
             }
-            return narrowTypeByDiscriminant(type2, access3, (t) => narrowTypeBySwitchOnDiscriminant(t, data));
+            return narrowTypeByDiscriminant(type2, access3, (t2) => narrowTypeBySwitchOnDiscriminant(t2, data));
           }
           function narrowTypeByTruthiness(type2, expr, assumeTrue) {
             if (isMatchingReference(reference, expr)) {
@@ -117932,8 +117932,8 @@ ${lanes.join("\n")}
             }
             const access3 = getDiscriminantPropertyAccess(expr, type2);
             if (access3) {
-              return narrowTypeByDiscriminant(type2, access3, (t) => getTypeWithFacts(
-                t,
+              return narrowTypeByDiscriminant(type2, access3, (t2) => getTypeWithFacts(
+                t2,
                 assumeTrue ? 4194304 : 8388608
                 /* Falsy */
               ));
@@ -117946,14 +117946,14 @@ ${lanes.join("\n")}
           }
           function narrowTypeByInKeyword(type2, nameType, assumeTrue) {
             const name = getPropertyNameFromType(nameType);
-            const isKnownProperty2 = someType(type2, (t) => isTypePresencePossible(
-              t,
+            const isKnownProperty2 = someType(type2, (t2) => isTypePresencePossible(
+              t2,
               name,
               /*assumeTrue*/
               true
             ));
             if (isKnownProperty2) {
-              return filterType(type2, (t) => isTypePresencePossible(t, name, assumeTrue));
+              return filterType(type2, (t2) => isTypePresencePossible(t2, name, assumeTrue));
             }
             if (assumeTrue) {
               const recordSymbol = getGlobalRecordSymbol();
@@ -118121,7 +118121,7 @@ ${lanes.join("\n")}
             const equalsOperator = operator === 35 || operator === 37;
             const nullableFlags = operator === 35 || operator === 36 ? 12 : 4;
             const valueType = getTypeOfExpression(value);
-            const removeNullable = equalsOperator !== assumeTrue && everyType(valueType, (t) => !!(t.flags & nullableFlags)) || equalsOperator === assumeTrue && everyType(valueType, (t) => !(t.flags & (3 | nullableFlags)));
+            const removeNullable = equalsOperator !== assumeTrue && everyType(valueType, (t2) => !!(t2.flags & nullableFlags)) || equalsOperator === assumeTrue && everyType(valueType, (t2) => !(t2.flags & (3 | nullableFlags)));
             return removeNullable ? getAdjustedTypeWithFacts(
               type2,
               2097152
@@ -118153,11 +118153,11 @@ ${lanes.join("\n")}
                   return nonPrimitiveType;
                 }
               }
-              const filteredType = filterType(type2, (t) => areTypesComparable(t, valueType) || doubleEquals && isCoercibleUnderDoubleEquals(t, valueType));
+              const filteredType = filterType(type2, (t2) => areTypesComparable(t2, valueType) || doubleEquals && isCoercibleUnderDoubleEquals(t2, valueType));
               return replacePrimitivesWithLiterals(filteredType, valueType);
             }
             if (isUnitType(valueType)) {
-              return filterType(type2, (t) => !(isUnitLikeType(t) && areTypesComparable(t, valueType)));
+              return filterType(type2, (t2) => !(isUnitLikeType(t2) && areTypesComparable(t2, valueType)));
             }
             return type2;
           }
@@ -118176,7 +118176,7 @@ ${lanes.join("\n")}
               }
               const propertyAccess = getDiscriminantPropertyAccess(target, type2);
               if (propertyAccess) {
-                return narrowTypeByDiscriminant(type2, propertyAccess, (t) => narrowTypeByLiteralExpression(t, literal2, assumeTrue));
+                return narrowTypeByDiscriminant(type2, propertyAccess, (t2) => narrowTypeByLiteralExpression(t2, literal2, assumeTrue));
               }
               return type2;
             }
@@ -118207,12 +118207,12 @@ ${lanes.join("\n")}
             if (type2.flags & 2 && !hasDefaultClause) {
               let groundClauseTypes;
               for (let i = 0; i < clauseTypes.length; i += 1) {
-                const t = clauseTypes[i];
-                if (t.flags & (12713980 | 131072)) {
+                const t2 = clauseTypes[i];
+                if (t2.flags & (12713980 | 131072)) {
                   if (groundClauseTypes !== void 0) {
-                    groundClauseTypes.push(t);
+                    groundClauseTypes.push(t2);
                   }
-                } else if (t.flags & 1048576) {
+                } else if (t2.flags & 1048576) {
                   if (groundClauseTypes === void 0) {
                     groundClauseTypes = clauseTypes.slice(0, i);
                   }
@@ -118224,11 +118224,11 @@ ${lanes.join("\n")}
               return getUnionType(groundClauseTypes === void 0 ? clauseTypes : groundClauseTypes);
             }
             const discriminantType = getUnionType(clauseTypes);
-            const caseType = discriminantType.flags & 262144 ? neverType : replacePrimitivesWithLiterals(filterType(type2, (t) => areTypesComparable(discriminantType, t)), discriminantType);
+            const caseType = discriminantType.flags & 262144 ? neverType : replacePrimitivesWithLiterals(filterType(type2, (t2) => areTypesComparable(discriminantType, t2)), discriminantType);
             if (!hasDefaultClause) {
               return caseType;
             }
-            const defaultType = filterType(type2, (t) => !(isUnitLikeType(t) && contains(switchTypes, t.flags & 4 ? undefinedType : getRegularTypeOfLiteralType(extractUnitType(t)), (t1, t2) => isUnitType(t1) && areTypesComparable(t1, t2))));
+            const defaultType = filterType(type2, (t2) => !(isUnitLikeType(t2) && contains(switchTypes, t2.flags & 4 ? undefinedType : getRegularTypeOfLiteralType(extractUnitType(t2)), (t1, t22) => isUnitType(t1) && areTypesComparable(t1, t22))));
             return caseType.flags & 262144 ? defaultType : getUnionType([caseType, defaultType]);
           }
           function narrowTypeByTypeName(type2, typeName) {
@@ -118303,19 +118303,19 @@ ${lanes.join("\n")}
             );
           }
           function narrowTypeByTypeFacts(type2, impliedType, facts) {
-            return mapType(type2, (t) => (
+            return mapType(type2, (t2) => (
               // We first check if a constituent is a subtype of the implied type. If so, we either keep or eliminate
               // the constituent based on its type facts. We use the strict subtype relation because it treats `object`
               // as a subtype of `{}`, and we need the type facts check because function types are subtypes of `object`,
               // but are classified as "function" according to `typeof`.
-              isTypeRelatedTo(t, impliedType, strictSubtypeRelation) ? hasTypeFacts(t, facts) ? t : neverType : (
+              isTypeRelatedTo(t2, impliedType, strictSubtypeRelation) ? hasTypeFacts(t2, facts) ? t2 : neverType : (
                 // We next check if the consituent is a supertype of the implied type. If so, we substitute the implied
                 // type. This handles top types like `unknown` and `{}`, and supertypes like `{ toString(): string }`.
-                isTypeSubtypeOf(impliedType, t) ? impliedType : (
+                isTypeSubtypeOf(impliedType, t2) ? impliedType : (
                   // Neither the constituent nor the implied type is a subtype of the other, however their domains may still
                   // overlap. For example, an unconstrained type parameter and type `string`. If the type facts indicate
                   // possible overlap, we form an intersection. Otherwise, we eliminate the constituent.
-                  hasTypeFacts(t, facts) ? getIntersectionType([t, impliedType]) : neverType
+                  hasTypeFacts(t2, facts) ? getIntersectionType([t2, impliedType]) : neverType
                 )
               )
             ));
@@ -118333,7 +118333,7 @@ ${lanes.join("\n")}
             const hasDefaultClause = clauseStart === clauseEnd || defaultIndex >= clauseStart && defaultIndex < clauseEnd;
             if (hasDefaultClause) {
               const notEqualFacts = getNotEqualFactsFromTypeofSwitch(clauseStart, clauseEnd, witnesses);
-              return filterType(type2, (t) => getTypeFacts(t, notEqualFacts) === notEqualFacts);
+              return filterType(type2, (t2) => getTypeFacts(t2, notEqualFacts) === notEqualFacts);
             }
             const clauseWitnesses = witnesses.slice(clauseStart, clauseEnd);
             return getUnionType(map3(clauseWitnesses, (text) => text ? narrowTypeByTypeName(type2, text) : neverType));
@@ -118401,7 +118401,7 @@ ${lanes.join("\n")}
             if (isTypeAny(type2)) {
               return candidate;
             }
-            return filterType(type2, (t) => isConstructedBy(t, candidate));
+            return filterType(type2, (t2) => isConstructedBy(t2, candidate));
             function isConstructedBy(source, target) {
               if (source.flags & 1048576 && getObjectFlags(source) & 1 || target.flags & 1048576 && getObjectFlags(target) & 1) {
                 return source.symbol === target.symbol;
@@ -118477,7 +118477,7 @@ ${lanes.join("\n")}
                 return neverType;
               }
               if (checkDerived) {
-                return filterType(type2, (t) => !isTypeDerivedFrom(t, candidate));
+                return filterType(type2, (t2) => !isTypeDerivedFrom(t2, candidate));
               }
               type2 = type2.flags & 2 ? unknownUnionType : type2;
               const trueType2 = getNarrowedType(
@@ -118488,7 +118488,7 @@ ${lanes.join("\n")}
                 /*checkDerived*/
                 false
               );
-              return recombineUnknownType(filterType(type2, (t) => !isTypeSubsetOf(t, trueType2)));
+              return recombineUnknownType(filterType(type2, (t2) => !isTypeSubsetOf(t2, trueType2)));
             }
             if (type2.flags & 3) {
               return candidate;
@@ -118503,13 +118503,13 @@ ${lanes.join("\n")}
               const matching = discriminant && getConstituentTypeForKeyType(type2, discriminant);
               const directlyRelated = mapType(
                 matching || type2,
-                checkDerived ? (t) => isTypeDerivedFrom(t, c) ? t : isTypeDerivedFrom(c, t) ? c : neverType : (t) => isTypeStrictSubtypeOf(t, c) ? t : isTypeStrictSubtypeOf(c, t) ? c : isTypeSubtypeOf(t, c) ? t : isTypeSubtypeOf(c, t) ? c : neverType
+                checkDerived ? (t2) => isTypeDerivedFrom(t2, c) ? t2 : isTypeDerivedFrom(c, t2) ? c : neverType : (t2) => isTypeStrictSubtypeOf(t2, c) ? t2 : isTypeStrictSubtypeOf(c, t2) ? c : isTypeSubtypeOf(t2, c) ? t2 : isTypeSubtypeOf(c, t2) ? c : neverType
               );
-              return directlyRelated.flags & 262144 ? mapType(type2, (t) => maybeTypeOfKind(
-                t,
+              return directlyRelated.flags & 262144 ? mapType(type2, (t2) => maybeTypeOfKind(
+                t2,
                 132644864
                 /* Instantiable */
-              ) && isRelated(c, getBaseConstraintOfType(t) || unknownType) ? getIntersectionType([t, c]) : neverType) : directlyRelated;
+              ) && isRelated(c, getBaseConstraintOfType(t2) || unknownType) ? getIntersectionType([t2, c]) : neverType) : directlyRelated;
             });
             return !(narrowedType.flags & 262144) ? narrowedType : isTypeSubtypeOf(candidate, type2) ? candidate : isTypeAssignableTo(type2, candidate) ? type2 : isTypeAssignableTo(candidate, type2) ? candidate : getIntersectionType([type2, candidate]);
           }
@@ -118562,8 +118562,8 @@ ${lanes.join("\n")}
                 }
                 const access3 = getDiscriminantPropertyAccess(predicateArgument, type2);
                 if (access3) {
-                  return narrowTypeByDiscriminant(type2, access3, (t) => getNarrowedType(
-                    t,
+                  return narrowTypeByDiscriminant(type2, access3, (t2) => getNarrowedType(
+                    t2,
                     predicate.type,
                     assumeTrue,
                     /*checkDerived*/
@@ -118624,8 +118624,8 @@ ${lanes.join("\n")}
             }
             const access3 = getDiscriminantPropertyAccess(expr, type2);
             if (access3) {
-              return narrowTypeByDiscriminant(type2, access3, (t) => getTypeWithFacts(
-                t,
+              return narrowTypeByDiscriminant(type2, access3, (t2) => getTypeWithFacts(
+                t2,
                 assumePresent ? 2097152 : 262144
                 /* EQUndefinedOrNull */
               ));
@@ -119874,8 +119874,8 @@ ${lanes.join("\n")}
           return getObjectFlags(type2) & 4 && type2.target === globalThisType ? getTypeArguments(type2)[0] : void 0;
         }
         function getThisTypeFromContextualType(type2) {
-          return mapType(type2, (t) => {
-            return t.flags & 268435456 ? forEach(t.types, getThisTypeArgument) : getThisTypeArgument(t);
+          return mapType(type2, (t2) => {
+            return t2.flags & 268435456 ? forEach(t2.types, getThisTypeArgument) : getThisTypeArgument(t2);
           });
         }
         function getThisTypeOfObjectLiteralFromContextualType(containingLiteral, contextualType) {
@@ -120144,9 +120144,9 @@ ${lanes.join("\n")}
             const returnType2 = getReturnTypeOfSignature(signature);
             const functionFlags = getFunctionFlags(functionDecl);
             if (functionFlags & 1) {
-              return filterType(returnType2, (t) => {
-                return !!(t.flags & (3 | 16 | 117964800)) || checkGeneratorInstantiationAssignabilityToReturnType(
-                  t,
+              return filterType(returnType2, (t2) => {
+                return !!(t2.flags & (3 | 16 | 117964800)) || checkGeneratorInstantiationAssignabilityToReturnType(
+                  t2,
                   functionFlags,
                   /*errorNode*/
                   void 0
@@ -120154,8 +120154,8 @@ ${lanes.join("\n")}
               });
             }
             if (functionFlags & 2) {
-              return filterType(returnType2, (t) => {
-                return !!(t.flags & (3 | 16 | 117964800)) || !!getAwaitedTypeOfPromise(t);
+              return filterType(returnType2, (t2) => {
+                return !!(t2.flags & (3 | 16 | 117964800)) || !!getAwaitedTypeOfPromise(t2);
               });
             }
             return returnType2;
@@ -120377,19 +120377,19 @@ ${lanes.join("\n")}
             return !!(getReducedType(getTrueTypeFromConditionalType(type2)).flags & 262144) && getActualTypeVariable(getFalseTypeFromConditionalType(type2)) === getActualTypeVariable(type2.checkType) && isTypeAssignableTo(propertyNameType, type2.extendsType);
           }
           if (constraint.flags & 268435456) {
-            return some(constraint.types, (t) => isExcludedMappedPropertyName(t, propertyNameType));
+            return some(constraint.types, (t2) => isExcludedMappedPropertyName(t2, propertyNameType));
           }
           return false;
         }
         function getTypeOfPropertyOfContextualType(type2, name, nameType) {
           return mapType(
             type2,
-            (t) => {
-              if (t.flags & 268435456) {
+            (t2) => {
+              if (t2.flags & 268435456) {
                 let types2;
                 let indexInfoCandidates;
                 let ignoreIndexInfos = false;
-                for (const constituentType of t.types) {
+                for (const constituentType of t2.types) {
                   if (!(constituentType.flags & 1048576)) {
                     continue;
                   }
@@ -120423,10 +120423,10 @@ ${lanes.join("\n")}
                 }
                 return getIntersectionType(types2);
               }
-              if (!(t.flags & 1048576)) {
+              if (!(t2.flags & 1048576)) {
                 return;
               }
-              return isGenericMappedType(t) && getMappedTypeNameTypeKind(t) !== 2 ? getIndexedMappedTypeSubstitutedTypeOfContextualType(t, name, nameType) : getTypeOfConcretePropertyOfContextualType(t, name) ?? getTypeFromIndexInfosOfContextualType(t, name, nameType);
+              return isGenericMappedType(t2) && getMappedTypeNameTypeKind(t2) !== 2 ? getIndexedMappedTypeSubstitutedTypeOfContextualType(t2, name, nameType) : getTypeOfConcretePropertyOfContextualType(t2, name) ?? getTypeFromIndexInfosOfContextualType(t2, name, nameType);
             },
             /*noReductions*/
             true
@@ -120506,9 +120506,9 @@ ${lanes.join("\n")}
               const nameType = getLiteralTypeFromPropertyName(element.name);
               return mapType(
                 type2,
-                (t) => {
+                (t2) => {
                   var _a3;
-                  return (_a3 = findApplicableIndexInfo(getIndexInfosOfStructuredType(t), nameType)) == null ? void 0 : _a3.type;
+                  return (_a3 = findApplicableIndexInfo(getIndexInfosOfStructuredType(t2), nameType)) == null ? void 0 : _a3.type;
                 },
                 /*noReductions*/
                 true
@@ -120530,23 +120530,23 @@ ${lanes.join("\n")}
         function getContextualTypeForElementExpression(type2, index, length2, firstSpreadIndex, lastSpreadIndex) {
           return type2 && mapType(
             type2,
-            (t) => {
-              if (isTupleType(t)) {
-                if ((firstSpreadIndex === void 0 || index < firstSpreadIndex) && index < t.target.fixedLength) {
-                  return removeMissingType(getTypeArguments(t)[index], !!(t.target.elementFlags[index] && 2));
+            (t2) => {
+              if (isTupleType(t2)) {
+                if ((firstSpreadIndex === void 0 || index < firstSpreadIndex) && index < t2.target.fixedLength) {
+                  return removeMissingType(getTypeArguments(t2)[index], !!(t2.target.elementFlags[index] && 2));
                 }
                 const offset = length2 !== void 0 && (lastSpreadIndex === void 0 || index > lastSpreadIndex) ? length2 - index : 0;
-                const fixedEndLength = offset > 0 && t.target.combinedFlags & 12 ? getEndElementCount(
-                  t.target,
+                const fixedEndLength = offset > 0 && t2.target.combinedFlags & 12 ? getEndElementCount(
+                  t2.target,
                   3
                   /* Fixed */
                 ) : 0;
                 if (offset > 0 && offset <= fixedEndLength) {
-                  return getTypeArguments(t)[getTypeReferenceArity(t) - offset];
+                  return getTypeArguments(t2)[getTypeReferenceArity(t2) - offset];
                 }
                 return getElementTypeOfSliceOfTupleType(
-                  t,
-                  firstSpreadIndex === void 0 ? t.target.fixedLength : Math.min(t.target.fixedLength, firstSpreadIndex),
+                  t2,
+                  firstSpreadIndex === void 0 ? t2.target.fixedLength : Math.min(t2.target.fixedLength, firstSpreadIndex),
                   length2 === void 0 || lastSpreadIndex === void 0 ? fixedEndLength : Math.min(fixedEndLength, length2 - lastSpreadIndex),
                   /*writing*/
                   false,
@@ -120554,9 +120554,9 @@ ${lanes.join("\n")}
                   true
                 );
               }
-              return (!firstSpreadIndex || index < firstSpreadIndex) && getTypeOfPropertyOfContextualType(t, "" + index) || getIteratedTypeOrElementType(
+              return (!firstSpreadIndex || index < firstSpreadIndex) && getTypeOfPropertyOfContextualType(t2, "" + index) || getIteratedTypeOrElementType(
                 1,
-                t,
+                t2,
                 undefinedType,
                 /*errorNode*/
                 void 0,
@@ -120583,11 +120583,11 @@ ${lanes.join("\n")}
           const childFieldType = getTypeOfPropertyOfContextualType(attributesType, jsxChildrenPropertyName);
           return childFieldType && (realChildren.length === 1 ? childFieldType : mapType(
             childFieldType,
-            (t) => {
-              if (isArrayLikeType(t)) {
-                return getIndexedAccessType(t, getNumberLiteralType(childIndex));
+            (t2) => {
+              if (isArrayLikeType(t2)) {
+                return getIndexedAccessType(t2, getNumberLiteralType(childIndex));
               } else {
-                return t;
+                return t2;
               }
             },
             /*noReductions*/
@@ -120707,7 +120707,7 @@ ${lanes.join("\n")}
               // That would evaluate mapped types with array or tuple type constraints too eagerly
               // and thus it would prevent `getTypeOfPropertyOfContextualType` from obtaining per-position contextual type for elements of array literal expressions.
               // Apparent type of other mapped types is already the mapped type itself so we can just avoid calling `getApparentType` here for all mapped types.
-              (t) => getObjectFlags(t) & 32 ? t : getApparentType(t),
+              (t2) => getObjectFlags(t2) & 32 ? t2 : getApparentType(t2),
               /*noReductions*/
               true
             );
@@ -120730,7 +120730,7 @@ ${lanes.join("\n")}
             if (inferenceContext == null ? void 0 : inferenceContext.returnMapper) {
               const type2 = instantiateInstantiableTypes(contextualType, inferenceContext.returnMapper);
               if (!(type2.flags & 3)) {
-                return type2.flags & 134217728 && containsType(type2.types, regularFalseType) && containsType(type2.types, regularTrueType) ? filterType(type2, (t) => t !== regularFalseType && t !== regularTrueType) : type2;
+                return type2.flags & 134217728 && containsType(type2.types, regularFalseType) && containsType(type2.types, regularTrueType) ? filterType(type2, (t2) => t2 !== regularFalseType && t2 !== regularTrueType) : type2;
               }
             }
           }
@@ -120742,13 +120742,13 @@ ${lanes.join("\n")}
           }
           if (type2.flags & 134217728) {
             return getUnionType(
-              map3(type2.types, (t) => instantiateInstantiableTypes(t, mapper)),
+              map3(type2.types, (t2) => instantiateInstantiableTypes(t2, mapper)),
               0
               /* None */
             );
           }
           if (type2.flags & 268435456) {
-            return getIntersectionType(map3(type2.types, (t) => instantiateInstantiableTypes(t, mapper)));
+            return getIntersectionType(map3(type2.types, (t2) => instantiateInstantiableTypes(t2, mapper)));
           }
           return type2;
         }
@@ -121270,7 +121270,7 @@ ${lanes.join("\n")}
             /*contextFlags*/
             void 0
           );
-          const inTupleContext = isSpreadIntoCallOrNew(node) || !!contextualType && someType(contextualType, (t) => isTupleLikeType(t) || isGenericMappedType(t) && !t.nameType && !!getHomomorphicTypeVariable(t.target || t));
+          const inTupleContext = isSpreadIntoCallOrNew(node) || !!contextualType && someType(contextualType, (t2) => isTupleLikeType(t2) || isGenericMappedType(t2) && !t2.nameType && !!getHomomorphicTypeVariable(t2.target || t2));
           let hasOmittedExpression = false;
           for (let i = 0; i < elementCount; i++) {
             const e = elements[i];
@@ -121351,7 +121351,7 @@ ${lanes.join("\n")}
           }
           return createArrayLiteralType(createArrayType(
             elementTypes.length ? getUnionType(
-              sameMap(elementTypes, (t, i) => elementFlags[i] & 8 ? getIndexedAccessTypeOrUndefined(t, numberType) || anyType : t),
+              sameMap(elementTypes, (t2, i) => elementFlags[i] & 8 ? getIndexedAccessTypeOrUndefined(t2, numberType) || anyType : t2),
               2
               /* Subtype */
             ) : strictNullChecks ? implicitNeverType : undefinedWideningType,
@@ -121633,7 +121633,7 @@ ${lanes.join("\n")}
               hasComputedStringProperty = false;
               hasComputedNumberProperty = false;
             }
-            return mapType(spread, (t) => t === emptyObjectType ? createObjectLiteralType() : t);
+            return mapType(spread, (t2) => t2 === emptyObjectType ? createObjectLiteralType() : t2);
           }
           return createObjectLiteralType();
           function createObjectLiteralType() {
@@ -121657,8 +121657,8 @@ ${lanes.join("\n")}
           }
         }
         function isValidSpreadType(type2) {
-          const t = removeDefinitelyFalsyTypes(mapType(type2, getBaseConstraintOrType));
-          return !!(t.flags & (1 | 131072 | 1048576 | 117964800) || t.flags & 402653184 && every(t.types, isValidSpreadType));
+          const t2 = removeDefinitelyFalsyTypes(mapType(type2, getBaseConstraintOrType));
+          return !!(t2.flags & (1 | 131072 | 1048576 | 117964800) || t2.flags & 402653184 && every(t2.types, isValidSpreadType));
         }
         function checkJsxSelfClosingElementDeferred(node) {
           checkJsxOpeningLikeElementOrOpeningFragment(node);
@@ -122078,7 +122078,7 @@ ${lanes.join("\n")}
             );
           }
           if (signatures.length === 0 && apparentElemType.flags & 134217728) {
-            signatures = getUnionSignatures(map3(apparentElemType.types, (t) => getUninstantiatedJsxSignaturesOfType(t, caller)));
+            signatures = getUnionSignatures(map3(apparentElemType.types, (t2) => getUninstantiatedJsxSignaturesOfType(t2, caller)));
           }
           return signatures;
         }
@@ -122236,8 +122236,8 @@ ${lanes.join("\n")}
             return isKnownProperty(targetType.baseType, name, isComparingJsxAttributes);
           }
           if (targetType.flags & 402653184 && isExcessPropertyCheckTarget(targetType)) {
-            for (const t of targetType.types) {
-              if (isKnownProperty(t, name, isComparingJsxAttributes)) {
+            for (const t2 of targetType.types) {
+              if (isKnownProperty(t2, name, isComparingJsxAttributes)) {
                 return true;
               }
             }
@@ -122451,8 +122451,8 @@ ${lanes.join("\n")}
           );
           if (facts & 50331648) {
             reportError(node, facts);
-            const t = getNonNullableType(type2);
-            return t.flags & (12 | 262144) ? errorType : t;
+            const t2 = getNonNullableType(type2);
+            return t2.flags & (12 | 262144) ? errorType : t2;
           }
           return type2;
         }
@@ -123248,11 +123248,11 @@ ${lanes.join("\n")}
         function getSpreadArgumentIndex(args) {
           return findIndex(args, isSpreadArgument);
         }
-        function acceptsVoid(t) {
-          return !!(t.flags & 16);
+        function acceptsVoid(t2) {
+          return !!(t2.flags & 16);
         }
-        function acceptsVoidUndefinedUnknownOrAny(t) {
-          return !!(t.flags & (16 | 4 | 2 | 1));
+        function acceptsVoidUndefinedUnknownOrAny(t2) {
+          return !!(t2.flags & (16 | 4 | 2 | 1));
         }
         function hasCorrectArity(node, args, signature, signatureHelpTrailingComma = false) {
           if (isJsxOpeningFragment(node)) return true;
@@ -123838,10 +123838,10 @@ ${lanes.join("\n")}
               const arg = args[i];
               const spreadType = arg.kind === 231 && (flowLoopCount ? checkExpression(arg.expression) : checkExpressionCached(arg.expression));
               if (spreadType && isTupleType(spreadType)) {
-                forEach(getElementTypes(spreadType), (t, i2) => {
+                forEach(getElementTypes(spreadType), (t2, i2) => {
                   var _a3;
                   const flags = spreadType.target.elementFlags[i2];
-                  const syntheticArg = createSyntheticExpression(arg, flags & 4 ? createArrayType(t) : t, !!(flags & 12), (_a3 = spreadType.target.labeledElementDeclarations) == null ? void 0 : _a3[i2]);
+                  const syntheticArg = createSyntheticExpression(arg, flags & 4 ? createArrayType(t2) : t2, !!(flags & 12), (_a3 = spreadType.target.labeledElementDeclarations) == null ? void 0 : _a3[i2]);
                   effectiveArgs.push(syntheticArg);
                 });
               } else {
@@ -126501,7 +126501,7 @@ ${lanes.join("\n")}
                 /*contextFlags*/
                 void 0
               );
-              const returnType2 = contextualReturnType && someType(unwrapReturnType(contextualReturnType, functionFlags) || voidType, (t) => !!(t.flags & 4)) ? undefinedType : voidType;
+              const returnType2 = contextualReturnType && someType(unwrapReturnType(contextualReturnType, functionFlags) || voidType, (t2) => !!(t2.flags & 4)) ? undefinedType : voidType;
               return functionFlags & 2 ? createPromiseReturnType(func, returnType2) : (
                 // Async function
                 returnType2
@@ -126669,7 +126669,7 @@ ${lanes.join("\n")}
             if (operandConstraint.flags & 3) {
               return (556800 & notEqualFacts) === 556800;
             }
-            return !someType(operandConstraint, (t) => getTypeFacts(t, notEqualFacts) === notEqualFacts);
+            return !someType(operandConstraint, (t2) => getTypeFacts(t2, notEqualFacts) === notEqualFacts);
           }
           const type2 = getBaseConstraintOrType(checkExpressionCached(node.expression));
           if (!isLiteralType(type2)) {
@@ -126733,7 +126733,7 @@ ${lanes.join("\n")}
           if (aggregatedTypes.length === 0 && !hasReturnWithNoExpression && (hasReturnOfTypeNever || mayReturnNever(func))) {
             return void 0;
           }
-          if (strictNullChecks && aggregatedTypes.length && hasReturnWithNoExpression && !(isJSConstructor(func) && aggregatedTypes.some((t) => t.symbol === func.symbol))) {
+          if (strictNullChecks && aggregatedTypes.length && hasReturnWithNoExpression && !(isJSConstructor(func) && aggregatedTypes.some((t2) => t2.symbol === func.symbol))) {
             pushIfUnique(aggregatedTypes, undefinedType);
           }
           return aggregatedTypes;
@@ -127290,8 +127290,8 @@ ${lanes.join("\n")}
           }
           if (type2.flags & 402653184) {
             const types2 = type2.types;
-            for (const t of types2) {
-              if (maybeTypeOfKind(t, kind)) {
+            for (const t2 of types2) {
+              if (maybeTypeOfKind(t2, kind)) {
                 return true;
               }
             }
@@ -127362,7 +127362,7 @@ ${lanes.join("\n")}
           return booleanType;
         }
         function hasEmptyObjectIntersection(type2) {
-          return someType(type2, (t) => t === unknownEmptyObjectType || !!(t.flags & 268435456) && isEmptyAnonymousObjectType(getBaseConstraintOrType(t)));
+          return someType(type2, (t2) => t2 === unknownEmptyObjectType || !!(t2.flags & 268435456) && isEmptyAnonymousObjectType(getBaseConstraintOrType(t2)));
         }
         function checkInExpression(left, right, leftType, rightType) {
           if (leftType === silentNeverType || rightType === silentNeverType) {
@@ -127504,7 +127504,7 @@ ${lanes.join("\n")}
                 error210(restExpression.operatorToken, Diagnostics.A_rest_element_cannot_have_an_initializer);
               } else {
                 checkGrammarForDisallowedTrailingComma(node.elements, Diagnostics.A_rest_parameter_or_binding_pattern_may_not_have_a_trailing_comma);
-                const type2 = everyType(sourceType, isTupleType) ? mapType(sourceType, (t) => sliceTupleType(t, elementIndex)) : createArrayType(elementType);
+                const type2 = everyType(sourceType, isTupleType) ? mapType(sourceType, (t2) => sliceTupleType(t2, elementIndex)) : createArrayType(elementType);
                 return checkDestructuringAssignment(restExpression, type2, checkMode);
               }
             }
@@ -128383,8 +128383,8 @@ ${lanes.join("\n")}
           }
           let returnType = getReturnTypeFromAnnotation(func);
           if (returnType && returnType.flags & 134217728) {
-            returnType = filterType(returnType, (t) => checkGeneratorInstantiationAssignabilityToReturnType(
-              t,
+            returnType = filterType(returnType, (t2) => checkGeneratorInstantiationAssignabilityToReturnType(
+              t2,
               functionFlags,
               /*errorNode*/
               void 0
@@ -128647,7 +128647,7 @@ ${lanes.join("\n")}
           if (contextualType) {
             if (contextualType.flags & 402653184) {
               const types2 = contextualType.types;
-              return some(types2, (t) => isLiteralOfContextualType(candidateType, t));
+              return some(types2, (t2) => isLiteralOfContextualType(candidateType, t2));
             }
             if (contextualType.flags & 117964800) {
               const constraint = getBaseConstraintOfType(contextualType) || unknownType;
@@ -129963,11 +129963,11 @@ ${lanes.join("\n")}
           const objectType = type2.objectType;
           const indexType = type2.indexType;
           const hasNumberIndexInfo = !!getIndexInfoOfType(objectType, numberType);
-          if (everyType(indexType, (t) => isTypeAssignableTo(t, getIndexType(
+          if (everyType(indexType, (t2) => isTypeAssignableTo(t2, getIndexType(
             objectType,
             0
             /* None */
-          )) || hasNumberIndexInfo && isApplicableIndexType(t, numberType))) {
+          )) || hasNumberIndexInfo && isApplicableIndexType(t2, numberType))) {
             if (accessNode.kind === 213 && isAssignmentTarget(accessNode) && getObjectFlags(objectType) & 32 && getMappedTypeModifiers(objectType) & 1) {
               error210(accessNode, Diagnostics.Index_signature_in_type_0_only_permits_reading, typeToString(objectType));
             }
@@ -129976,7 +129976,7 @@ ${lanes.join("\n")}
           if (isGenericObjectType(objectType)) {
             const propertyName = getPropertyNameFromIndex(indexType, accessNode);
             if (propertyName) {
-              const propertySymbol = forEachType(getApparentType(objectType), (t) => getPropertyOfType(t, propertyName));
+              const propertySymbol = forEachType(getApparentType(objectType), (t2) => getPropertyOfType(t2, propertyName));
               if (propertySymbol && getDeclarationModifierFlagsFromSymbol(propertySymbol) & 6) {
                 error210(accessNode, Diagnostics.Private_or_protected_member_0_cannot_be_accessed_on_a_type_parameter, unescapeLeadingUnderscores(propertyName));
                 return errorType;
@@ -132156,7 +132156,7 @@ ${lanes.join("\n")}
           if (use & 4) {
             if (arrayType.flags & 134217728) {
               const arrayTypes = inputType.types;
-              const filteredTypes = filter(arrayTypes, (t) => !(t.flags & 12583968));
+              const filteredTypes = filter(arrayTypes, (t2) => !(t2.flags & 12583968));
               if (filteredTypes !== arrayTypes) {
                 arrayType = getUnionType(
                   filteredTypes,
@@ -133374,11 +133374,11 @@ ${lanes.join("\n")}
           });
           function createImplementsDiagnostics(typeRefNode) {
             return () => {
-              const t = getReducedType(getTypeFromTypeNode(typeRefNode));
-              if (!isErrorType(t)) {
-                if (isValidBaseType(t)) {
-                  const genericDiag = t.symbol && t.symbol.flags & 32 ? Diagnostics.Class_0_incorrectly_implements_class_1_Did_you_mean_to_extend_1_and_inherit_its_members_as_a_subclass : Diagnostics.Class_0_incorrectly_implements_interface_1;
-                  const baseWithThis = getTypeWithThisArgument(t, type2.thisType);
+              const t2 = getReducedType(getTypeFromTypeNode(typeRefNode));
+              if (!isErrorType(t2)) {
+                if (isValidBaseType(t2)) {
+                  const genericDiag = t2.symbol && t2.symbol.flags & 32 ? Diagnostics.Class_0_incorrectly_implements_class_1_Did_you_mean_to_extend_1_and_inherit_its_members_as_a_subclass : Diagnostics.Class_0_incorrectly_implements_interface_1;
+                  const baseWithThis = getTypeWithThisArgument(t2, type2.thisType);
                   if (!checkTypeAssignableTo(
                     typeWithThis,
                     baseWithThis,
@@ -135936,8 +135936,8 @@ ${lanes.join("\n")}
           const right = isIdentifier(name) ? name.escapedText : name.right.escapedText;
           if (left) {
             const proto = left.flags & 111551 && getPropertyOfType(getTypeOfSymbol(left), "prototype");
-            const t = proto ? getTypeOfSymbol(proto) : getDeclaredTypeOfSymbol(left);
-            return getPropertyOfType(t, right);
+            const t2 = proto ? getTypeOfSymbol(proto) : getDeclaredTypeOfSymbol(left);
+            return getPropertyOfType(t2, right);
           }
         }
         function getSymbolAtLocation(node, ignoreErrors) {
@@ -136067,7 +136067,7 @@ ${lanes.join("\n")}
             const keyType = getLiteralTypeFromPropertyName(node);
             const objectType = getTypeOfExpression(node.parent.expression);
             const objectTypes = objectType.flags & 134217728 ? objectType.types : [objectType];
-            return flatMap(objectTypes, (t) => filter(getIndexInfosOfType(t), (info2) => isApplicableIndexType(keyType, info2.keyType)));
+            return flatMap(objectTypes, (t2) => filter(getIndexInfosOfType(t2), (info2) => isApplicableIndexType(keyType, info2.keyType)));
           }
           return void 0;
         }
@@ -138071,7 +138071,7 @@ ${lanes.join("\n")}
             return grammarErrorOnNode(parameter.name, Diagnostics.An_index_signature_parameter_must_have_a_type_annotation);
           }
           const type2 = getTypeFromTypeNode(parameter.type);
-          if (someType(type2, (t) => !!(t.flags & 19456)) || isGenericType(type2)) {
+          if (someType(type2, (t2) => !!(t2.flags & 19456)) || isGenericType(type2)) {
             return grammarErrorOnNode(parameter.name, Diagnostics.An_index_signature_parameter_type_cannot_be_a_literal_type_or_generic_type_Consider_using_a_mapped_object_type_instead);
           }
           if (!everyType(type2, isValidIndexKeyType)) {
@@ -139068,14 +139068,14 @@ ${lanes.join("\n")}
         }
         function findBestTypeForObjectLiteral(source, unionTarget) {
           if (getObjectFlags(source) & 128 && someType(unionTarget, isArrayLikeType)) {
-            return find(unionTarget.types, (t) => !isArrayLikeType(t));
+            return find(unionTarget.types, (t2) => !isArrayLikeType(t2));
           }
         }
         function findBestTypeForInvokable(source, unionTarget) {
           let signatureKind = 0;
           const hasSignatures2 = getSignaturesOfType(source, signatureKind).length > 0 || (signatureKind = 1, getSignaturesOfType(source, signatureKind).length > 0);
           if (hasSignatures2) {
-            return find(unionTarget.types, (t) => getSignaturesOfType(t, signatureKind).length > 0);
+            return find(unionTarget.types, (t2) => getSignaturesOfType(t2, signatureKind).length > 0);
           }
         }
         function findMostOverlappyType(source, unionTarget) {
@@ -139105,7 +139105,7 @@ ${lanes.join("\n")}
             131072
             /* NonPrimitive */
           )) {
-            const result = filterType(type2, (t) => !(t.flags & 12713980));
+            const result = filterType(type2, (t2) => !(t2.flags & 12713980));
             if (!(result.flags & 262144)) {
               return result;
             }
@@ -139374,11 +139374,11 @@ ${lanes.join("\n")}
             return 0;
           }
         }
-        function getSortOrderFlags(t) {
-          if (t.flags & (32768 | 65536) && !(t.flags & 134217728)) {
+        function getSortOrderFlags(t2) {
+          if (t2.flags & (32768 | 65536) && !(t2.flags & 134217728)) {
             return 65536;
           }
-          return t.flags;
+          return t2.flags;
         }
         function compareTypeNames(t1, t2) {
           const s1 = getTypeNameSymbol(t1);
@@ -139397,12 +139397,12 @@ ${lanes.join("\n")}
           }
           return compareComparableValues(s1.escapedName, s2.escapedName);
         }
-        function getTypeNameSymbol(t) {
-          if (t.aliasSymbol !== void 0) {
-            return t.aliasSymbol;
+        function getTypeNameSymbol(t2) {
+          if (t2.aliasSymbol !== void 0) {
+            return t2.aliasSymbol;
           }
-          if (t.flags & (524288 | 8388608) || getObjectFlags(t) & (3 | 4)) {
-            return t.symbol;
+          if (t2.flags & (524288 | 8388608) || getObjectFlags(t2) & (3 | 4)) {
+            return t2.symbol;
           }
           return void 0;
         }
@@ -166401,13 +166401,13 @@ ${lanes.join("\n")}
                   if (clause.token === 96) {
                     const oldDiag2 = getSymbolAccessibilityDiagnostic;
                     getSymbolAccessibilityDiagnostic = createGetSymbolAccessibilityDiagnosticForNode(clause.types[0]);
-                    const newClause = factory2.updateHeritageClause(clause, map3(clause.types, (t) => factory2.updateExpressionWithTypeArguments(t, newId, visitNodes2(t.typeArguments, visitDeclarationSubtree, isTypeNode))));
+                    const newClause = factory2.updateHeritageClause(clause, map3(clause.types, (t2) => factory2.updateExpressionWithTypeArguments(t2, newId, visitNodes2(t2.typeArguments, visitDeclarationSubtree, isTypeNode))));
                     getSymbolAccessibilityDiagnostic = oldDiag2;
                     return newClause;
                   }
                   return factory2.updateHeritageClause(clause, visitNodes2(factory2.createNodeArray(filter(
                     clause.types,
-                    (t) => isEntityNameExpression(t.expression) || t.expression.kind === 106
+                    (t2) => isEntityNameExpression(t2.expression) || t2.expression.kind === 106
                     /* NullKeyword */
                   )), visitDeclarationSubtree, isExpressionWithTypeArguments));
                 }));
@@ -166566,8 +166566,8 @@ ${lanes.join("\n")}
             map3(nodes, (clause) => factory2.updateHeritageClause(
               clause,
               visitNodes2(
-                factory2.createNodeArray(filter(clause.types, (t) => {
-                  return isEntityNameExpression(t.expression) || clause.token === 96 && t.expression.kind === 106;
+                factory2.createNodeArray(filter(clause.types, (t2) => {
+                  return isEntityNameExpression(t2.expression) || clause.token === 96 && t2.expression.kind === 106;
                 })),
                 visitDeclarationSubtree,
                 isExpressionWithTypeArguments
@@ -166827,7 +166827,7 @@ ${lanes.join("\n")}
           disposeEmitNodes(getSourceFileOfNode(getParseTreeNode(node)));
         }
         mark("beforeTransform");
-        const transformersWithContext = transformers.map((t) => t(context5));
+        const transformersWithContext = transformers.map((t2) => t2(context5));
         const transformation = (node) => {
           for (const transform22 of transformersWithContext) {
             node = transform22(node);
@@ -184950,18 +184950,18 @@ ${lanes.join("\n")}
               return factory.createArrayTypeNode(visitNode(node.type, visitExistingNodeTreeSymbols, isTypeNode));
             }
             if (isJSDocTypeLiteral(node)) {
-              return factory.createTypeLiteralNode(map3(node.jsDocPropertyTags, (t) => {
-                const name = visitNode(isIdentifier(t.name) ? t.name : t.name.right, visitExistingNodeTreeSymbols, isIdentifier);
-                const overrideTypeNode = resolver.getJsDocPropertyOverride(context5, node, t);
+              return factory.createTypeLiteralNode(map3(node.jsDocPropertyTags, (t2) => {
+                const name = visitNode(isIdentifier(t2.name) ? t2.name : t2.name.right, visitExistingNodeTreeSymbols, isIdentifier);
+                const overrideTypeNode = resolver.getJsDocPropertyOverride(context5, node, t2);
                 return factory.createPropertySignature(
                   /*modifiers*/
                   void 0,
                   name,
-                  t.isBracketed || t.typeExpression && isJSDocOptionalType(t.typeExpression.type) ? factory.createToken(
+                  t2.isBracketed || t2.typeExpression && isJSDocOptionalType(t2.typeExpression.type) ? factory.createToken(
                     58
                     /* QuestionToken */
                   ) : void 0,
-                  overrideTypeNode || t.typeExpression && visitNode(t.typeExpression.type, visitExistingNodeTreeSymbols, isTypeNode) || factory.createKeywordTypeNode(
+                  overrideTypeNode || t2.typeExpression && visitNode(t2.typeExpression.type, visitExistingNodeTreeSymbols, isTypeNode) || factory.createKeywordTypeNode(
                     133
                     /* AnyKeyword */
                   )
@@ -194089,7 +194089,7 @@ interface Symbol {
           Debug.assert(actionName2 === defaultToNamedAction.name || actionName2 === namedToDefaultAction.name, "Unexpected action name");
           const info2 = getInfo2(context5);
           Debug.assert(info2 && !isRefactorErrorInfo(info2), "Expected applicable refactor info");
-          const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange(context5.file, context5.program, info2, t, context5.cancellationToken));
+          const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange(context5.file, context5.program, info2, t2, context5.cancellationToken));
           return { edits, renameFilename: void 0, renameLocation: void 0 };
         }
       });
@@ -194354,7 +194354,7 @@ interface Symbol {
           Debug.assert(some(getOwnValues(actions), (action5) => action5.name === actionName2), "Unexpected action name");
           const info2 = getImportConversionInfo(context5);
           Debug.assert(info2 && !isRefactorErrorInfo(info2), "Expected applicable refactor info");
-          const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange2(context5.file, context5.program, t, info2));
+          const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange2(context5.file, context5.program, t2, info2));
           return { edits, renameFilename: void 0, renameLocation: void 0 };
         }
       });
@@ -194710,8 +194710,8 @@ interface Symbol {
         const result = [];
         const selectionArray = toArray2(selection);
         const selectionRange = { pos: selectionArray[0].getStart(file2), end: selectionArray[selectionArray.length - 1].end };
-        for (const t of selectionArray) {
-          if (visitor(t)) return { typeParameters: void 0, affectedTextRange: void 0 };
+        for (const t2 of selectionArray) {
+          if (visitor(t2)) return { typeParameters: void 0, affectedTextRange: void 0 };
         }
         return { typeParameters: result, affectedTextRange: selectionRange };
         function visitor(node) {
@@ -194959,7 +194959,7 @@ interface Symbol {
             if (host.fileExists(targetFile) && program.getSourceFile(targetFile) === void 0) {
               return error52(getLocaleSpecificMessage(Diagnostics.Cannot_move_statements_to_the_selected_file));
             }
-            const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange3(context5, context5.file, interactiveRefactorArguments.targetFile, context5.program, statements, t, context5.host, context5.preferences));
+            const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange3(context5, context5.file, interactiveRefactorArguments.targetFile, context5.program, statements, t2, context5.host, context5.preferences));
             return { edits, renameFilename: void 0, renameLocation: void 0 };
           }
           return error52(getLocaleSpecificMessage(Diagnostics.Cannot_move_to_file_selected_file_is_invalid));
@@ -195988,7 +195988,7 @@ interface Symbol {
         getEditsForAction: function getRefactorEditsToMoveToNewFile(context5, actionName2) {
           Debug.assert(actionName2 === refactorName5, "Wrong refactor invoked");
           const statements = Debug.checkDefined(getStatementsToMove(context5));
-          const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange4(context5.file, context5.program, statements, t, context5.host, context5, context5.preferences));
+          const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange4(context5.file, context5.program, statements, t2, context5.host, context5, context5.preferences));
           return { edits, renameFilename: void 0, renameLocation: void 0 };
         }
       });
@@ -196105,8 +196105,8 @@ interface Symbol {
         if (updated === lastDeclaration) {
           return;
         }
-        const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t) => {
-          t.replaceNodeRange(file2, signatureDecls[0], signatureDecls[signatureDecls.length - 1], updated);
+        const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => {
+          t2.replaceNodeRange(file2, signatureDecls[0], signatureDecls[signatureDecls.length - 1], updated);
         });
         return { renameFilename: void 0, renameLocation: void 0, edits };
         function getNewParametersForCombinedSignature(signatureDeclarations) {
@@ -196317,8 +196317,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         } else {
           Debug.fail("invalid action");
         }
-        const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t) => {
-          t.replaceNode(file2, func.body, body2);
+        const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => {
+          t2.replaceNode(file2, func.body, body2);
         });
         return { renameFilename: void 0, renameLocation: void 0, edits };
       }
@@ -196527,7 +196527,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           func.type,
           body2
         );
-        return ts_textChanges_exports.ChangeTracker.with(context5, (t) => t.replaceNode(file2, func, newNode));
+        return ts_textChanges_exports.ChangeTracker.with(context5, (t2) => t2.replaceNode(file2, func, newNode));
       }
       function getEditInfoForConvertToNamedFunction(context5, func, variableInfo) {
         const { file: file2 } = context5;
@@ -196538,11 +196538,11 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const modifiers = factory.createModifiersFromModifierFlags(modifiersFlags);
         const newNode = factory.createFunctionDeclaration(length(modifiers) ? modifiers : void 0, func.asteriskToken, name, func.typeParameters, func.parameters, func.type, body2);
         if (variableDeclarationList.declarations.length === 1) {
-          return ts_textChanges_exports.ChangeTracker.with(context5, (t) => t.replaceNode(file2, statement, newNode));
+          return ts_textChanges_exports.ChangeTracker.with(context5, (t2) => t2.replaceNode(file2, statement, newNode));
         } else {
-          return ts_textChanges_exports.ChangeTracker.with(context5, (t) => {
-            t.delete(file2, variableDeclaration);
-            t.insertNodeAfter(file2, statement, newNode);
+          return ts_textChanges_exports.ChangeTracker.with(context5, (t2) => {
+            t2.delete(file2, variableDeclaration);
+            t2.insertNodeAfter(file2, statement, newNode);
           });
         }
       }
@@ -196562,7 +196562,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           39
           /* EqualsGreaterThanToken */
         ), body2);
-        return ts_textChanges_exports.ChangeTracker.with(context5, (t) => t.replaceNode(file2, func, newNode));
+        return ts_textChanges_exports.ChangeTracker.with(context5, (t2) => t2.replaceNode(file2, func, newNode));
       }
       function canBeConvertedToExpression(body2, head) {
         return body2.statements.length === 1 && (isReturnStatement(head) && !!head.expression);
@@ -196603,7 +196603,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         if (!functionDeclaration || !cancellationToken) return void 0;
         const groupedReferences = getGroupedReferences(functionDeclaration, program, cancellationToken);
         if (groupedReferences.valid) {
-          const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange5(file2, program, host, t, functionDeclaration, groupedReferences));
+          const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange5(file2, program, host, t2, functionDeclaration, groupedReferences));
           return { renameFilename: void 0, renameLocation: void 0, edits };
         }
         return { edits: [] };
@@ -197179,12 +197179,12 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         if (trailingCommentRanges) {
           const lastComment = trailingCommentRanges[trailingCommentRanges.length - 1];
           const trailingRange = { pos: trailingCommentRanges[0].pos, end: lastComment.end };
-          return ts_textChanges_exports.ChangeTracker.with(context5, (t) => {
-            t.deleteRange(file2, trailingRange);
-            t.replaceNode(file2, maybeBinary, templateLiteral2);
+          return ts_textChanges_exports.ChangeTracker.with(context5, (t2) => {
+            t2.deleteRange(file2, trailingRange);
+            t2.replaceNode(file2, maybeBinary, templateLiteral2);
           });
         } else {
-          return ts_textChanges_exports.ChangeTracker.with(context5, (t) => t.replaceNode(file2, maybeBinary, templateLiteral2));
+          return ts_textChanges_exports.ChangeTracker.with(context5, (t2) => t2.replaceNode(file2, maybeBinary, templateLiteral2));
         }
       }
       function isNotEqualsOperator(node) {
@@ -197375,7 +197375,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       function getRefactorEditsToConvertToOptionalChain(context5, actionName2) {
         const info2 = getInfo3(context5);
         Debug.assert(info2 && !isRefactorErrorInfo(info2), "Expected applicable refactor info");
-        const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange6(context5.file, context5.program.getTypeChecker(), t, info2, actionName2));
+        const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange6(context5.file, context5.program.getTypeChecker(), t2, info2, actionName2));
         return { edits, renameFilename: void 0, renameLocation: void 0 };
       }
       function isValidExpression(node) {
@@ -198524,7 +198524,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           }
           return isUnionTypeNode(withoutParens) && find(
             withoutParens.types,
-            (t) => t.kind === 157
+            (t2) => t2.kind === 157
             /* UndefinedKeyword */
           ) ? clone22 : factory.createUnionTypeNode([clone22, factory.createKeywordTypeNode(
             157
@@ -199304,7 +199304,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       function getRefactorEditsToInferReturnType(context5) {
         const info2 = getInfo4(context5);
         if (info2 && !isRefactorErrorInfo(info2)) {
-          const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange7(context5.file, t, info2.declaration, info2.returnTypeNode));
+          const edits = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange7(context5.file, t2, info2.declaration, info2.returnTypeNode));
           return { renameFilename: void 0, renameLocation: void 0, edits };
         }
         return void 0;
@@ -199569,10 +199569,10 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             const test = (condition) => {
               return condition(type2) || type2.isUnion() && type2.types.some(condition);
             };
-            if (typeIdx !== 6 && test((t) => t.getConstructSignatures().length > 0)) {
+            if (typeIdx !== 6 && test((t2) => t2.getConstructSignatures().length > 0)) {
               return 0;
             }
-            if (test((t) => t.getCallSignatures().length > 0) && !test((t) => t.getProperties().length > 0) || isExpressionInCallExpression(node)) {
+            if (test((t2) => t2.getCallSignatures().length > 0) && !test((t2) => t2.getProperties().length > 0) || isExpressionInCallExpression(node)) {
               return typeIdx === 9 ? 11 : 10;
             }
           }
@@ -202088,14 +202088,14 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const symbol2 = contextualType.getProperty(name);
           return symbol2 ? [symbol2] : emptyArray;
         }
-        const filteredTypes = isObjectLiteralExpression(node.parent) || isJsxAttributes(node.parent) ? filter(contextualType.types, (t) => !checker.isTypeInvalidDueToUnionDiscriminant(t, node.parent)) : contextualType.types;
-        const discriminatedPropertySymbols = mapDefined(filteredTypes, (t) => t.getProperty(name));
+        const filteredTypes = isObjectLiteralExpression(node.parent) || isJsxAttributes(node.parent) ? filter(contextualType.types, (t2) => !checker.isTypeInvalidDueToUnionDiscriminant(t2, node.parent)) : contextualType.types;
+        const discriminatedPropertySymbols = mapDefined(filteredTypes, (t2) => t2.getProperty(name));
         if (unionSymbolOk && (discriminatedPropertySymbols.length === 0 || discriminatedPropertySymbols.length === contextualType.types.length)) {
           const symbol2 = contextualType.getProperty(name);
           if (symbol2) return [symbol2];
         }
         if (!filteredTypes.length && !discriminatedPropertySymbols.length) {
-          return mapDefined(contextualType.types, (t) => t.getProperty(name));
+          return mapDefined(contextualType.types, (t2) => t2.getProperty(name));
         }
         return deduplicate(discriminatedPropertySymbols, equateValues);
       }
@@ -203201,7 +203201,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       }
       function codeFixAll(context5, errorCodes68, use) {
         const commands = [];
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => eachDiagnostic(context5, errorCodes68, (diag2) => use(t, diag2, commands)));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => eachDiagnostic(context5, errorCodes68, (diag2) => use(t2, diag2, commands)));
         return createCombinedCodeActions(changes, commands.length === 0 ? void 0 : commands);
       }
       function eachDiagnostic(context5, errorCodes68, cb) {
@@ -203231,7 +203231,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions: function getCodeActionsToAddConvertToUnknownForNonOverlappingTypes(context5) {
           const assertion = getAssertion(context5.sourceFile, context5.span.start);
           if (assertion === void 0) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => makeChange(t, context5.sourceFile, assertion));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => makeChange(t2, context5.sourceFile, assertion));
           return [createCodeFixAction(fixId, changes, Diagnostics.Add_unknown_conversion_for_non_overlapping_types, fixId, Diagnostics.Add_unknown_to_all_conversions_of_non_overlapping_types)];
         },
         fixIds: [fixId],
@@ -203302,19 +203302,19 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getAllCodeActions: (context5) => {
           const { sourceFile } = context5;
           const fixedDeclarations = /* @__PURE__ */ new Set();
-          return codeFixAll(context5, errorCodes2, (t, diagnostic) => {
+          return codeFixAll(context5, errorCodes2, (t2, diagnostic) => {
             const span = diagnostic.relatedInformation && find(diagnostic.relatedInformation, (r) => r.code === Diagnostics.Did_you_mean_to_mark_this_function_as_async.code);
             const decl = getFixableErrorSpanDeclaration(sourceFile, span);
             if (!decl) {
               return;
             }
-            const trackChanges = (cb) => (cb(t), []);
+            const trackChanges = (cb) => (cb(t2), []);
             return getFix(context5, decl, trackChanges, fixedDeclarations);
           });
         }
       });
       function getFix(context5, decl, trackChanges, fixedDeclarations) {
-        const changes = trackChanges((t) => makeChange2(t, context5.sourceFile, decl, fixedDeclarations));
+        const changes = trackChanges((t2) => makeChange2(t2, context5.sourceFile, decl, fixedDeclarations));
         return createCodeFixAction(fixId2, changes, Diagnostics.Add_async_modifier_to_containing_function, fixId2, Diagnostics.Add_all_missing_async_modifiers);
       }
       function makeChange2(changeTracker, sourceFile, insertionSite, fixedDeclarations) {
@@ -203400,12 +203400,12 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, program, cancellationToken } = context5;
           const checker = context5.program.getTypeChecker();
           const fixedDeclarations = /* @__PURE__ */ new Set();
-          return codeFixAll(context5, errorCodes3, (t, diagnostic) => {
+          return codeFixAll(context5, errorCodes3, (t2, diagnostic) => {
             const expression = getAwaitErrorSpanExpression(sourceFile, diagnostic.code, diagnostic, cancellationToken, program);
             if (!expression) {
               return;
             }
-            const trackChanges = (cb) => (cb(t), []);
+            const trackChanges = (cb) => (cb(t2), []);
             return getDeclarationSiteFix(context5, expression, diagnostic.code, checker, trackChanges, fixedDeclarations) || getUseSiteFix(context5, expression, diagnostic.code, checker, trackChanges, fixedDeclarations);
           });
         }
@@ -203418,10 +203418,10 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const { sourceFile, program, cancellationToken } = context5;
         const awaitableInitializers = findAwaitableInitializers(expression, sourceFile, cancellationToken, program, checker);
         if (awaitableInitializers) {
-          const initializerChanges = trackChanges((t) => {
-            forEach(awaitableInitializers.initializers, ({ expression: expression2 }) => makeChange3(t, errorCode, sourceFile, checker, expression2, fixedDeclarations));
+          const initializerChanges = trackChanges((t2) => {
+            forEach(awaitableInitializers.initializers, ({ expression: expression2 }) => makeChange3(t2, errorCode, sourceFile, checker, expression2, fixedDeclarations));
             if (fixedDeclarations && awaitableInitializers.needsSecondPassForFixAll) {
-              makeChange3(t, errorCode, sourceFile, checker, expression, fixedDeclarations);
+              makeChange3(t2, errorCode, sourceFile, checker, expression, fixedDeclarations);
             }
           });
           return createCodeFixActionWithoutFixAll(
@@ -203432,7 +203432,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         }
       }
       function getUseSiteFix(context5, expression, errorCode, checker, trackChanges, fixedDeclarations) {
-        const changes = trackChanges((t) => makeChange3(t, errorCode, context5.sourceFile, checker, expression, fixedDeclarations));
+        const changes = trackChanges((t2) => makeChange3(t2, errorCode, context5.sourceFile, checker, expression, fixedDeclarations));
         return createCodeFixAction(fixId3, changes, Diagnostics.Add_await, fixId3, Diagnostics.Fix_all_expressions_possibly_missing_await);
       }
       function isMissingAwaitError(sourceFile, errorCode, span, cancellationToken, program) {
@@ -203594,7 +203594,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes4,
         getCodeActions: function getCodeActionsToAddMissingConst(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => makeChange4(t, context5.sourceFile, context5.span.start, context5.program));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => makeChange4(t2, context5.sourceFile, context5.span.start, context5.program));
           if (changes.length > 0) {
             return [createCodeFixAction(fixId4, changes, Diagnostics.Add_const_to_unresolved_variable, fixId4, Diagnostics.Add_const_to_all_unresolved_variables)];
           }
@@ -203680,7 +203680,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes5,
         getCodeActions: function getCodeActionsToAddMissingDeclareOnProperty(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => makeChange5(t, context5.sourceFile, context5.span.start));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => makeChange5(t2, context5.sourceFile, context5.span.start));
           if (changes.length > 0) {
             return [createCodeFixAction(fixId5, changes, Diagnostics.Prefix_with_declare, fixId5, Diagnostics.Prefix_all_incorrect_property_declarations_with_declare)];
           }
@@ -203706,7 +203706,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes6,
         getCodeActions: function getCodeActionsToAddMissingInvocationForDecorator(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => makeChange6(t, context5.sourceFile, context5.span.start));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => makeChange6(t2, context5.sourceFile, context5.span.start));
           return [createCodeFixAction(fixId6, changes, Diagnostics.Call_decorator_expression, fixId6, Diagnostics.Add_to_all_uncalled_decorators)];
         },
         fixIds: [fixId6],
@@ -203733,7 +203733,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes7,
         getCodeActions: function getCodeActionsToAddMissingResolutionModeImportAttribute(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => makeChange7(t, context5.sourceFile, context5.span.start, context5.program, context5.host, context5.preferences));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => makeChange7(t2, context5.sourceFile, context5.span.start, context5.program, context5.host, context5.preferences));
           return [createCodeFixAction(fixId7, changes, Diagnostics.Add_resolution_mode_import_attribute, fixId7, Diagnostics.Add_resolution_mode_import_attribute_to_all_type_only_imports_that_need_it)];
         },
         fixIds: [fixId7],
@@ -203809,7 +203809,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes8,
         getCodeActions: function getCodeActionsToAddNameToNamelessParameter(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => makeChange8(t, context5.sourceFile, context5.span.start));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => makeChange8(t2, context5.sourceFile, context5.span.start));
           return [createCodeFixAction(fixId8, changes, Diagnostics.Add_parameter_name, fixId8, Diagnostics.Add_names_to_all_parameters_without_names)];
         },
         fixIds: [fixId8],
@@ -203867,7 +203867,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (!toAdd.length) {
             return void 0;
           }
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addUndefinedToOptionalProperty(t, toAdd));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addUndefinedToOptionalProperty(t2, toAdd));
           return [createCodeFixActionWithoutFixAll(addOptionalPropertyUndefined, changes, Diagnostics.Add_undefined_to_optional_property_type)];
         },
         fixIds: [addOptionalPropertyUndefined]
@@ -203921,11 +203921,11 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         for (const add of toAdd) {
           const d = add.valueDeclaration;
           if (d && (isPropertySignature(d) || isPropertyDeclaration(d)) && d.type) {
-            const t = factory.createUnionTypeNode([
+            const t2 = factory.createUnionTypeNode([
               ...d.type.kind === 193 ? d.type.types : [d.type],
               factory.createTypeReferenceNode("undefined")
             ]);
-            changes.replaceNode(d.getSourceFile(), d.type, t);
+            changes.replaceNode(d.getSourceFile(), d.type, t2);
           }
         }
       }
@@ -203936,7 +203936,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context5) {
           const decl = getDeclaration(context5.sourceFile, context5.span.start);
           if (!decl) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange8(t, context5.sourceFile, decl));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange8(t2, context5.sourceFile, decl));
           return [createCodeFixAction(fixId9, changes, Diagnostics.Annotate_with_type_from_JSDoc, fixId9, Diagnostics.Annotate_everything_with_types_from_JSDoc)];
         },
         fixIds: [fixId9],
@@ -204130,7 +204130,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes11,
         getCodeActions(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange9(t, context5.sourceFile, context5.span.start, context5.program.getTypeChecker(), context5.preferences, context5.program.getCompilerOptions()));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange9(t2, context5.sourceFile, context5.span.start, context5.program.getTypeChecker(), context5.preferences, context5.program.getCompilerOptions()));
           return [createCodeFixAction(fixId10, changes, Diagnostics.Convert_function_to_an_ES2015_class, fixId10, Diagnostics.Convert_all_constructor_functions_to_classes)];
         },
         fixIds: [fixId10],
@@ -204434,7 +204434,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         errorCodes: errorCodes12,
         getCodeActions(context5) {
           codeActionSucceeded = true;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => convertToAsyncFunction(t, context5.sourceFile, context5.span.start, context5.program.getTypeChecker()));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => convertToAsyncFunction(t2, context5.sourceFile, context5.span.start, context5.program.getTypeChecker()));
           return codeActionSucceeded ? [createCodeFixAction(fixId11, changes, Diagnostics.Convert_to_async_function, fixId11, Diagnostics.Convert_all_to_async_functions)] : [];
         },
         fixIds: [fixId11],
@@ -205720,7 +205720,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context5) {
           const qualifiedName = getQualifiedName(context5.sourceFile, context5.span.start);
           if (!qualifiedName) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange10(t, context5.sourceFile, qualifiedName));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange10(t2, context5.sourceFile, qualifiedName));
           const newText = `${qualifiedName.left.text}["${qualifiedName.right.text}"]`;
           return [createCodeFixAction(fixId12, changes, [Diagnostics.Rewrite_as_the_indexed_access_type_0, newText], fixId12, Diagnostics.Rewrite_all_as_indexed_access_types)];
         },
@@ -205754,7 +205754,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes14,
         getCodeActions: function getCodeActionsToConvertToTypeOnlyExport(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => fixSingleExportDeclaration(t, getExportSpecifierForDiagnosticSpan(context5.span, context5.sourceFile), context5));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => fixSingleExportDeclaration(t2, getExportSpecifierForDiagnosticSpan(context5.span, context5.sourceFile), context5));
           if (changes.length) {
             return [createCodeFixAction(fixId13, changes, Diagnostics.Convert_to_type_only_export, fixId13, Diagnostics.Convert_all_re_exported_types_to_type_only_exports)];
           }
@@ -205835,8 +205835,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           var _a3;
           const declaration = getDeclaration2(context5.sourceFile, context5.span.start);
           if (declaration) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange11(t, context5.sourceFile, declaration));
-            const importDeclarationChanges = declaration.kind === 277 && isImportDeclaration(declaration.parent.parent.parent) && canConvertImportDeclarationForSpecifier(declaration, context5.sourceFile, context5.program) ? ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange11(t, context5.sourceFile, declaration.parent.parent.parent)) : void 0;
+            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange11(t2, context5.sourceFile, declaration));
+            const importDeclarationChanges = declaration.kind === 277 && isImportDeclaration(declaration.parent.parent.parent) && canConvertImportDeclarationForSpecifier(declaration, context5.sourceFile, context5.program) ? ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange11(t2, context5.sourceFile, declaration.parent.parent.parent)) : void 0;
             const mainAction = createCodeFixAction(
               fixId14,
               changes,
@@ -205992,7 +205992,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             context5.span.start
           );
           if (!node) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange12(t, node, context5.sourceFile, newLineCharacter));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange12(t2, node, context5.sourceFile, newLineCharacter));
           if (changes.length > 0) {
             return [
               createCodeFixAction(
@@ -206162,7 +206162,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             return void 0;
           }
           const { name, constraint } = info2;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange13(t, sourceFile, info2));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange13(t2, sourceFile, info2));
           return [createCodeFixAction(fixId16, changes, [Diagnostics.Convert_0_to_1_in_0, constraint, name], fixId16, Diagnostics.Convert_all_type_literals_to_mapped_type)];
         },
         fixIds: [fixId16],
@@ -206221,7 +206221,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span } = context5;
           const classDeclaration = getClass(sourceFile, span.start);
           return mapDefined(getEffectiveImplementsTypeNodes(classDeclaration), (implementedTypeNode) => {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addMissingDeclarations(context5, implementedTypeNode, sourceFile, classDeclaration, t, context5.preferences));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addMissingDeclarations(context5, implementedTypeNode, sourceFile, classDeclaration, t2, context5.preferences));
             return changes.length === 0 ? void 0 : createCodeFixAction(fixId17, changes, [Diagnostics.Implement_interface_0, implementedTypeNode.getText(sourceFile)], fixId17, Diagnostics.Implement_all_unimplemented_interfaces);
           });
         },
@@ -207951,7 +207951,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span, program, preferences, host } = context5;
           const info2 = getInfo6(program, sourceFile, span);
           if (info2 === void 0) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addMissingConstraint(t, program, preferences, host, sourceFile, info2));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addMissingConstraint(t2, program, preferences, host, sourceFile, info2));
           return [createCodeFixAction(fixId18, changes, Diagnostics.Add_extends_constraint, fixId18, Diagnostics.Add_extends_constraint_to_all_type_parameters)];
         },
         fixIds: [fixId18],
@@ -208199,7 +208199,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context5) {
           const { sourceFile, span, preferences } = context5;
           const property = getPropertyAccessExpression(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange14(t, context5.sourceFile, property, preferences));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange14(t2, context5.sourceFile, property, preferences));
           return [createCodeFixAction(fixId19, changes, [Diagnostics.Use_element_access_for_0, property.name.text], fixId19, Diagnostics.Use_element_access_for_all_undeclared_properties)];
         },
         getAllCodeActions: (context5) => codeFixAll(context5, errorCodes22, (changes, diag2) => doChange14(changes, diag2.file, getPropertyAccessExpression(diag2.file, diag2.start), context5.preferences))
@@ -208227,8 +208227,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions: function getCodeActionsToFixImplicitThis(context5) {
           const { sourceFile, program, span } = context5;
           let diagnostic;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => {
-            diagnostic = doChange15(t, sourceFile, span.start, program.getTypeChecker());
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => {
+            diagnostic = doChange15(t2, sourceFile, span.start, program.getTypeChecker());
           });
           return diagnostic ? [createCodeFixAction(fixId20, changes, diagnostic, fixId20, Diagnostics.Fix_all_implicit_this_errors)] : emptyArray;
         },
@@ -208290,7 +208290,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span, program } = context5;
           const info2 = getInfo7(sourceFile, span.start, program);
           if (info2 === void 0) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange16(t, program, info2));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange16(t2, program, info2));
           return [createCodeFixAction(fixId21, changes, [Diagnostics.Export_0_from_module_1, info2.exportName.node.text, info2.moduleSpecifier], fixId21, Diagnostics.Export_all_referenced_locals)];
         },
         getAllCodeActions(context5) {
@@ -208445,7 +208445,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions: function getCodeActionsToFixIncorrectNamedTupleSyntax(context5) {
           const { sourceFile, span } = context5;
           const namedTupleMember = getNamedTupleMember(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange17(t, sourceFile, namedTupleMember));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange17(t2, sourceFile, namedTupleMember));
           return [createCodeFixAction(fixId22, changes, Diagnostics.Move_labeled_tuple_element_modifiers_to_labels, fixId22, Diagnostics.Move_labeled_tuple_element_modifiers_to_labels)];
         },
         fixIds: [fixId22]
@@ -208454,7 +208454,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const token = getTokenAtPosition(sourceFile, pos);
         return findAncestor(
           token,
-          (t) => t.kind === 203
+          (t2) => t2.kind === 203
           /* NamedTupleMember */
         );
       }
@@ -208516,7 +208516,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (!info2) return void 0;
           const { node, suggestedSymbol } = info2;
           const target = getEmitScriptTarget(context5.host.getCompilationSettings());
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange18(t, sourceFile, node, suggestedSymbol, target));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange18(t2, sourceFile, node, suggestedSymbol, target));
           return [createCodeFixAction("spelling", changes, [Diagnostics.Change_spelling_to_0, symbolName(suggestedSymbol)], fixId23, Diagnostics.Fix_all_detected_spelling_errors)];
         },
         fixIds: [fixId23],
@@ -208834,12 +208834,12 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         changes.replaceNode(sourceFile, declaration.body, factory.createParenthesizedExpression(expression));
       }
       function getActionForfixAddReturnStatement(context5, expression, statement) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addReturnStatement(t, context5.sourceFile, expression, statement));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addReturnStatement(t2, context5.sourceFile, expression, statement));
         return createCodeFixAction(fixId24, changes, Diagnostics.Add_a_return_statement, fixIdAddReturnStatement, Diagnostics.Add_all_missing_return_statement);
       }
       function getActionForFixRemoveBracesFromArrowFunctionBody(context5, declaration, expression, commentSource) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => removeBlockBodyBrace(
-          t,
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => removeBlockBodyBrace(
+          t2,
           context5.sourceFile,
           declaration,
           expression,
@@ -208850,7 +208850,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         return createCodeFixAction(fixId24, changes, Diagnostics.Remove_braces_from_arrow_function_body, fixRemoveBracesFromArrowFunctionBody, Diagnostics.Remove_braces_from_all_arrow_function_bodies_with_relevant_issues);
       }
       function getActionForfixWrapTheBlockWithParen(context5, declaration, expression) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => wrapBlockWithParen(t, context5.sourceFile, declaration, expression));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => wrapBlockWithParen(t2, context5.sourceFile, declaration, expression));
         return createCodeFixAction(fixId24, changes, Diagnostics.Wrap_the_following_body_with_parentheses_which_should_be_an_object_literal, fixIdWrapTheBlockWithParen, Diagnostics.Wrap_all_object_literal_with_parentheses);
       }
       var fixMissingMember = "fixMissingMember";
@@ -208876,19 +208876,19 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             return void 0;
           }
           if (info2.kind === 3) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addObjectLiteralProperties(t, context5, info2));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addObjectLiteralProperties(t2, context5, info2));
             return [createCodeFixAction(fixMissingProperties, changes, Diagnostics.Add_missing_properties, fixMissingProperties, Diagnostics.Add_all_missing_properties)];
           }
           if (info2.kind === 4) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addJsxAttributes(t, context5, info2));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addJsxAttributes(t2, context5, info2));
             return [createCodeFixAction(fixMissingAttributes, changes, Diagnostics.Add_missing_attributes, fixMissingAttributes, Diagnostics.Add_all_missing_attributes)];
           }
           if (info2.kind === 2 || info2.kind === 5) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addFunctionDeclaration(t, context5, info2));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addFunctionDeclaration(t2, context5, info2));
             return [createCodeFixAction(fixMissingFunctionDeclaration, changes, [Diagnostics.Add_missing_function_declaration_0, info2.token.text], fixMissingFunctionDeclaration, Diagnostics.Add_all_missing_function_declarations)];
           }
           if (info2.kind === 1) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addEnumMemberDeclaration(t, context5.program.getTypeChecker(), info2));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addEnumMemberDeclaration(t2, context5.program.getTypeChecker(), info2));
             return [createCodeFixAction(fixMissingMember, changes, [Diagnostics.Add_missing_enum_member_0, info2.token.text], fixMissingMember, Diagnostics.Add_all_missing_members)];
           }
           return concatenate(getActionsForMissingMethodDeclaration(context5, info2), getActionsForMissingMemberDeclaration(context5, info2));
@@ -209070,7 +209070,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         if (isInterfaceDeclaration(parentDeclaration) || isTypeLiteralNode(parentDeclaration)) {
           return void 0;
         }
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addMissingMemberInJs(t, declSourceFile, parentDeclaration, token, !!(modifierFlags & 256)));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addMissingMemberInJs(t2, declSourceFile, parentDeclaration, token, !!(modifierFlags & 256)));
         if (changes.length === 0) {
           return void 0;
         }
@@ -209120,7 +209120,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const memberName = token.text;
         const isStatic2 = modifierFlags & 256;
         const typeNode = getTypeNode2(context5.program.getTypeChecker(), parentDeclaration, token);
-        const addPropertyDeclarationChanges = (modifierFlags2) => ts_textChanges_exports.ChangeTracker.with(context5, (t) => addPropertyDeclaration(t, declSourceFile, parentDeclaration, memberName, typeNode, modifierFlags2));
+        const addPropertyDeclarationChanges = (modifierFlags2) => ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addPropertyDeclaration(t2, declSourceFile, parentDeclaration, memberName, typeNode, modifierFlags2));
         const actions2 = [createCodeFixAction(fixMissingMember, addPropertyDeclarationChanges(
           modifierFlags & 256
           /* Static */
@@ -209222,7 +209222,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           [indexingParameter],
           typeNode
         );
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => t.insertMemberAtStart(sourceFile, node, indexSignature));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => t2.insertMemberAtStart(sourceFile, node, indexSignature));
         return createCodeFixActionWithoutFixAll(fixMissingMember, changes, [Diagnostics.Add_index_signature_for_property_0, tokenName]);
       }
       function getActionsForMissingMethodDeclaration(context5, info2) {
@@ -209231,7 +209231,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           return void 0;
         }
         const methodName = token.text;
-        const addMethodDeclarationChanges = (modifierFlags2) => ts_textChanges_exports.ChangeTracker.with(context5, (t) => addMethodDeclaration(context5, t, call, token, modifierFlags2, parentDeclaration, declSourceFile));
+        const addMethodDeclarationChanges = (modifierFlags2) => ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addMethodDeclaration(context5, t2, call, token, modifierFlags2, parentDeclaration, declSourceFile));
         const actions2 = [createCodeFixAction(fixMissingMember, addMethodDeclarationChanges(
           modifierFlags & 256
           /* Static */
@@ -209402,7 +209402,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           return factory.createNull();
         }
         if (type2.flags & 134217728) {
-          const expression = firstDefined(type2.types, (t) => tryGetValueFromType(context5, checker, importAdder, quotePreference, t, enclosingDeclaration));
+          const expression = firstDefined(type2.types, (t2) => tryGetValueFromType(context5, checker, importAdder, quotePreference, t2, enclosingDeclaration));
           return expression ?? createUndefined();
         }
         if (checker.isArrayLikeType(type2)) {
@@ -209549,7 +209549,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         errorCodes: errorCodes29,
         getCodeActions(context5) {
           const { sourceFile, span } = context5;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addMissingNewOperator(t, sourceFile, span));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addMissingNewOperator(t2, sourceFile, span));
           return [createCodeFixAction(fixId25, changes, Diagnostics.Add_missing_new_operator_to_call, fixId25, Diagnostics.Add_missing_new_operator_to_all_calls)];
         },
         fixIds: [fixId25],
@@ -209584,7 +209584,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
               actions2,
               createCodeFixAction(
                 addMissingParamFixId,
-                ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange19(t, context5.program, context5.preferences, context5.host, declarations, newParameters)),
+                ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange19(t2, context5.program, context5.preferences, context5.host, declarations, newParameters)),
                 [length(newParameters) > 1 ? Diagnostics.Add_missing_parameters_to_0 : Diagnostics.Add_missing_parameter_to_0, name],
                 addMissingParamFixId,
                 Diagnostics.Add_all_missing_parameters
@@ -209596,7 +209596,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
               actions2,
               createCodeFixAction(
                 addOptionalParamFixId,
-                ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange19(t, context5.program, context5.preferences, context5.host, declarations, newOptionalParameters)),
+                ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange19(t2, context5.program, context5.preferences, context5.host, declarations, newOptionalParameters)),
                 [length(newOptionalParameters) > 1 ? Diagnostics.Add_optional_parameters_to_0 : Diagnostics.Add_optional_parameter_to_0, name],
                 addOptionalParamFixId,
                 Diagnostics.Add_all_optional_parameters
@@ -209898,7 +209898,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         errorCodes: errorCodes32,
         getCodeActions: function getCodeActionsToFixClassNotImplementingInheritedMembers(context5) {
           const { sourceFile, span } = context5;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addMissingMembers(getClass2(sourceFile, span.start), sourceFile, context5, t, context5.preferences));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addMissingMembers(getClass2(sourceFile, span.start), sourceFile, context5, t2, context5.preferences));
           return changes.length === 0 ? void 0 : [createCodeFixAction(fixId26, changes, Diagnostics.Implement_inherited_abstract_class, fixId26, Diagnostics.Implement_all_inherited_abstract_classes)];
         },
         fixIds: [fixId26],
@@ -209938,7 +209938,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const nodes = getNodes(sourceFile, span.start);
           if (!nodes) return void 0;
           const { constructor, superCall } = nodes;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange20(t, sourceFile, constructor, superCall));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange20(t2, sourceFile, constructor, superCall));
           return [createCodeFixAction(fixId27, changes, Diagnostics.Make_super_call_the_first_statement_in_the_constructor, fixId27, Diagnostics.Make_all_super_calls_the_first_statement_in_their_constructor)];
         },
         fixIds: [fixId27],
@@ -209976,7 +209976,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context5) {
           const { sourceFile, span } = context5;
           const ctr = getNode(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange21(t, sourceFile, ctr));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange21(t2, sourceFile, ctr));
           return [createCodeFixAction(fixId28, changes, Diagnostics.Add_missing_super_call, fixId28, Diagnostics.Add_all_missing_super_calls)];
         },
         fixIds: [fixId28],
@@ -210034,7 +210034,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const info2 = getInfo12(program, sourceFile, span);
           if (info2 === void 0) return;
           const { suggestion, expression, arg } = info2;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange23(t, sourceFile, arg, expression));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange23(t2, sourceFile, arg, expression));
           return [createCodeFixAction(fixId29, changes, [Diagnostics.Use_0, suggestion], fixId29, Diagnostics.Use_Number_isNaN_in_all_conditions)];
         },
         fixIds: [fixId29],
@@ -210125,7 +210125,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context5) {
           const { sourceFile, span } = context5;
           const property = getProperty2(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange24(t, context5.sourceFile, property));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange24(t2, context5.sourceFile, property));
           return [createCodeFixAction(fixId30, changes, [Diagnostics.Change_0_to_1, "=", ":"], fixId30, [Diagnostics.Switch_each_misused_0_to_1, "=", ":"])];
         },
         getAllCodeActions: (context5) => codeFixAll(context5, errorCodes37, (changes, diag2) => doChange24(changes, diag2.file, getProperty2(diag2.file, diag2.start)))
@@ -210145,7 +210145,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const nodes = getNodes2(sourceFile, context5.span.start);
           if (!nodes) return void 0;
           const { extendsToken, heritageClauses } = nodes;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChanges2(t, sourceFile, extendsToken, heritageClauses));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChanges2(t2, sourceFile, extendsToken, heritageClauses));
           return [createCodeFixAction(fixId31, changes, Diagnostics.Change_extends_to_implements, fixId31, Diagnostics.Change_all_extended_interfaces_to_implements)];
         },
         fixIds: [fixId31],
@@ -210195,7 +210195,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (!info2) {
             return void 0;
           }
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange25(t, sourceFile, info2));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange25(t2, sourceFile, info2));
           return [createCodeFixAction(fixId32, changes, [Diagnostics.Add_0_to_unresolved_variable, info2.className || "this"], fixId32, Diagnostics.Add_qualifier_to_all_unresolved_variables_matching_a_member_name)];
         },
         fixIds: [fixId32],
@@ -210225,16 +210225,16 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         fixIds: [fixIdExpression, fixIdHtmlEntity],
         getCodeActions(context5) {
           const { sourceFile, preferences, span } = context5;
-          const changeToExpression = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange26(
-            t,
+          const changeToExpression = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange26(
+            t2,
             preferences,
             sourceFile,
             span.start,
             /*useHtmlEntity*/
             false
           ));
-          const changeToHtmlEntity = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange26(
-            t,
+          const changeToHtmlEntity = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange26(
+            t2,
             preferences,
             sourceFile,
             span.start,
@@ -210296,14 +210296,14 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             tagsToSignature.forEach((tags2, signature) => {
               if (context5.fixId === deleteUnmatchedParameter) {
                 const tagsSet = new Set(tags2);
-                changes.filterJSDocTags(signature.getSourceFile(), signature, (t) => !tagsSet.has(t));
+                changes.filterJSDocTags(signature.getSourceFile(), signature, (t2) => !tagsSet.has(t2));
               }
             });
           }));
         }
       });
       function getDeleteAction(context5, { name, jsDocHost, jsDocParameterTag }) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (changeTracker) => changeTracker.filterJSDocTags(context5.sourceFile, jsDocHost, (t) => t !== jsDocParameterTag));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (changeTracker) => changeTracker.filterJSDocTags(context5.sourceFile, jsDocHost, (t2) => t2 !== jsDocParameterTag));
         return createCodeFixAction(
           deleteUnmatchedParameter,
           changes,
@@ -210333,7 +210333,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           jsDocParameterTag.isNameFirst,
           jsDocParameterTag.comment
         );
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (changeTracker) => changeTracker.replaceJSDocComment(sourceFile, jsDocHost, map3(tags2, (t) => t === jsDocParameterTag ? newJSDocParameterTag : t)));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (changeTracker) => changeTracker.replaceJSDocComment(sourceFile, jsDocHost, map3(tags2, (t2) => t2 === jsDocParameterTag ? newJSDocParameterTag : t2)));
         return createCodeFixActionWithoutFixAll(renameUnmatchedParameter, changes, [Diagnostics.Rename_param_tag_name_0_to_1, name.getText(sourceFile), parameterName]);
       }
       function getInfo14(sourceFile, pos) {
@@ -210355,8 +210355,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions: (context5) => {
           const importDeclaration = getImportDeclaration(context5.sourceFile, context5.program, context5.span.start);
           if (!importDeclaration) return;
-          const namespaceChanges = ts_textChanges_exports.ChangeTracker.with(context5, (t) => importDeclaration.kind === 277 && doNamespaceImportChange(t, context5.sourceFile, importDeclaration, context5.program));
-          const typeOnlyChanges = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doTypeOnlyImportChange(t, context5.sourceFile, importDeclaration, context5.program));
+          const namespaceChanges = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => importDeclaration.kind === 277 && doNamespaceImportChange(t2, context5.sourceFile, importDeclaration, context5.program));
+          const typeOnlyChanges = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doTypeOnlyImportChange(t2, context5.sourceFile, importDeclaration, context5.program));
           let actions2;
           if (namespaceChanges.length) {
             actions2 = append(actions2, createCodeFixActionWithoutFixAll(fixId33, namespaceChanges, Diagnostics.Convert_named_imports_to_namespace_import));
@@ -210418,21 +210418,21 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const sourceFiles = program.getSourceFiles();
           const token = getTokenAtPosition(sourceFile, context5.span.start);
           if (isJSDocTemplateTag(token)) {
-            return [createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context5, (t) => t.delete(sourceFile, token)), Diagnostics.Remove_template_tag)];
+            return [createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context5, (t2) => t2.delete(sourceFile, token)), Diagnostics.Remove_template_tag)];
           }
           if (token.kind === 30) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => deleteTypeParameters(t, sourceFile, token));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => deleteTypeParameters(t2, sourceFile, token));
             return [createDeleteFix(changes, Diagnostics.Remove_type_parameters)];
           }
           const importDecl = tryGetFullImport(token);
           if (importDecl) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => t.delete(sourceFile, importDecl));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => t2.delete(sourceFile, importDecl));
             return [createCodeFixAction(fixName3, changes, [Diagnostics.Remove_import_from_0, showModuleSpecifier(importDecl)], fixIdDeleteImports, Diagnostics.Delete_all_unused_imports)];
           } else if (isImport(token)) {
-            const deletion = ts_textChanges_exports.ChangeTracker.with(context5, (t) => tryDeleteDeclaration(
+            const deletion = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => tryDeleteDeclaration(
               sourceFile,
               token,
-              t,
+              t2,
               checker,
               sourceFiles,
               program,
@@ -210452,31 +210452,31 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
                 map3(elements, (e) => e.getText(sourceFile)).join(", ")
               ];
               return [
-                createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context5, (t) => deleteDestructuringElements(t, sourceFile, token.parent)), diagnostic)
+                createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context5, (t2) => deleteDestructuringElements(t2, sourceFile, token.parent)), diagnostic)
               ];
             }
             return [
-              createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context5, (t) => deleteDestructuring(context5, t, sourceFile, token.parent)), Diagnostics.Remove_unused_destructuring_declaration)
+              createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context5, (t2) => deleteDestructuring(context5, t2, sourceFile, token.parent)), Diagnostics.Remove_unused_destructuring_declaration)
             ];
           }
           if (canDeleteEntireVariableStatement(sourceFile, token)) {
             return [
-              createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context5, (t) => deleteEntireVariableStatement(t, sourceFile, token.parent)), Diagnostics.Remove_variable_statement)
+              createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context5, (t2) => deleteEntireVariableStatement(t2, sourceFile, token.parent)), Diagnostics.Remove_variable_statement)
             ];
           }
           if (isIdentifier(token) && isFunctionDeclaration(token.parent)) {
-            return [createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context5, (t) => deleteFunctionLikeDeclaration(t, sourceFile, token.parent)), [Diagnostics.Remove_unused_declaration_for_Colon_0, token.getText(sourceFile)])];
+            return [createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context5, (t2) => deleteFunctionLikeDeclaration(t2, sourceFile, token.parent)), [Diagnostics.Remove_unused_declaration_for_Colon_0, token.getText(sourceFile)])];
           }
           const result = [];
           if (token.kind === 140) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => changeInferToUnknown(t, sourceFile, token));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => changeInferToUnknown(t2, sourceFile, token));
             const name = cast(token.parent, isInferTypeNode).typeParameter.name.text;
             result.push(createCodeFixAction(fixName3, changes, [Diagnostics.Replace_infer_0_with_unknown, name], fixIdInfer, Diagnostics.Replace_all_unused_infer_with_unknown));
           } else {
-            const deletion = ts_textChanges_exports.ChangeTracker.with(context5, (t) => tryDeleteDeclaration(
+            const deletion = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => tryDeleteDeclaration(
               sourceFile,
               token,
-              t,
+              t2,
               checker,
               sourceFiles,
               program,
@@ -210489,7 +210489,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
               result.push(createDeleteFix(deletion, [Diagnostics.Remove_unused_declaration_for_Colon_0, name.getText(sourceFile)]));
             }
           }
-          const prefix2 = ts_textChanges_exports.ChangeTracker.with(context5, (t) => tryPrefixDeclaration(t, errorCode, sourceFile, token));
+          const prefix2 = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => tryPrefixDeclaration(t2, errorCode, sourceFile, token));
           if (prefix2.length) {
             result.push(createCodeFixAction(fixName3, prefix2, [Diagnostics.Prefix_0_with_an_underscore, token.getText(sourceFile)], fixIdPrefix, Diagnostics.Prefix_all_unused_declarations_with_where_possible));
           }
@@ -210750,7 +210750,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context5) {
           const syntacticDiagnostics = context5.program.getSyntacticDiagnostics(context5.sourceFile, context5.cancellationToken);
           if (syntacticDiagnostics.length) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange27(t, context5.sourceFile, context5.span.start, context5.span.length, context5.errorCode));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange27(t2, context5.sourceFile, context5.span.start, context5.span.length, context5.errorCode));
           return [createCodeFixAction(fixId34, changes, Diagnostics.Remove_unreachable_code, fixId34, Diagnostics.Remove_all_unreachable_code)];
         },
         fixIds: [fixId34],
@@ -210809,7 +210809,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes45,
         getCodeActions(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange28(t, context5.sourceFile, context5.span.start));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange28(t2, context5.sourceFile, context5.span.start));
           return [createCodeFixAction(fixId35, changes, Diagnostics.Remove_unused_label, fixId35, Diagnostics.Remove_all_unused_labels)];
         },
         fixIds: [fixId35],
@@ -210850,7 +210850,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           }
           return actions2;
           function fix(type22, fixId56, fixAllDescription) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange29(t, sourceFile, typeNode, type22, checker));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange29(t2, sourceFile, typeNode, type22, checker));
             return createCodeFixAction("jdocTypes", changes, [Diagnostics.Change_0_to_1, original, checker.typeToString(type22)], fixId56, fixAllDescription);
           }
         },
@@ -210931,7 +210931,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span } = context5;
           const callName = getCallName(sourceFile, span.start);
           if (!callName) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange30(t, context5.sourceFile, callName));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange30(t2, context5.sourceFile, callName));
           return [createCodeFixAction(fixId36, changes, Diagnostics.Add_missing_call_parentheses, fixId36, Diagnostics.Add_all_missing_call_parentheses)];
         },
         getAllCodeActions: (context5) => codeFixAll(context5, errorCodes47, (changes, diag2) => {
@@ -211944,7 +211944,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span } = context5;
           const nodes = getNodes3(sourceFile, span.start);
           if (!nodes) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange31(t, sourceFile, nodes));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange31(t2, sourceFile, nodes));
           return [createCodeFixAction(fixId38, changes, Diagnostics.Add_async_modifier_to_containing_function, fixId38, Diagnostics.Add_all_missing_async_modifiers)];
         },
         fixIds: [fixId38],
@@ -212466,8 +212466,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const builtinConstructors = {
           string: () => checker.getStringType(),
           number: () => checker.getNumberType(),
-          Array: (t) => checker.createArrayType(t),
-          Promise: (t) => checker.createPromiseType(t)
+          Array: (t2) => checker.createArrayType(t2),
+          Promise: (t2) => checker.createPromiseType(t2)
         };
         const builtins = [
           checker.getStringType(),
@@ -212826,16 +212826,16 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const stringNumber = checker.getUnionType([checker.getStringType(), checker.getNumberType()]);
           const priorities = [
             {
-              high: (t) => t === checker.getStringType() || t === checker.getNumberType(),
-              low: (t) => t === stringNumber
+              high: (t2) => t2 === checker.getStringType() || t2 === checker.getNumberType(),
+              low: (t2) => t2 === stringNumber
             },
             {
-              high: (t) => !(t.flags & (1 | 16)),
-              low: (t) => !!(t.flags & (1 | 16))
+              high: (t2) => !(t2.flags & (1 | 16)),
+              low: (t2) => !!(t2.flags & (1 | 16))
             },
             {
-              high: (t) => !(t.flags & (12 | 1 | 16)) && !(getObjectFlags(t) & 16),
-              low: (t) => !!(getObjectFlags(t) & 16)
+              high: (t2) => !(t2.flags & (12 | 1 | 16)) && !(getObjectFlags(t2) & 16),
+              low: (t2) => !!(getObjectFlags(t2) & 16)
             }
           ];
           let good = removeLowPriorityInferences(inferences, priorities);
@@ -212932,7 +212932,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (((_a3 = usage.properties) == null ? void 0 : _a3.size) || ((_b = usage.constructs) == null ? void 0 : _b.length) || usage.stringIndex) {
             types2.push(inferStructuralType(usage));
           }
-          const candidateTypes = (usage.candidateTypes || []).map((t) => checker.getBaseTypeOfLiteralType(t));
+          const candidateTypes = (usage.candidateTypes || []).map((t2) => checker.getBaseTypeOfLiteralType(t2));
           const callsType = ((_c = usage.calls) == null ? void 0 : _c.length) ? inferStructuralType(usage) : void 0;
           if (callsType && candidateTypes) {
             types2.push(checker.getUnionType(
@@ -212979,9 +212979,9 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         }
         function inferNamedTypesFromProperties(usage) {
           if (!usage.properties || !usage.properties.size) return [];
-          const types2 = builtins.filter((t) => allPropertiesAreAssignableToUsage(t, usage));
+          const types2 = builtins.filter((t2) => allPropertiesAreAssignableToUsage(t2, usage));
           if (0 < types2.length && types2.length < 3) {
-            return types2.map((t) => inferInstantiationFromUsage(t, usage));
+            return types2.map((t2) => inferInstantiationFromUsage(t2, usage));
           }
           return [];
         }
@@ -213023,7 +213023,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (genericType === typeParameter) {
             return [usageType];
           } else if (genericType.flags & 402653184) {
-            return flatMap(genericType.types, (t) => inferTypeParameters(t, usageType, typeParameter));
+            return flatMap(genericType.types, (t2) => inferTypeParameters(t2, usageType, typeParameter));
           } else if (getObjectFlags(genericType) & 4 && getObjectFlags(usageType) & 4) {
             const genericArgs = checker.getTypeArguments(genericType);
             const usageArgs = checker.getTypeArguments(usageType);
@@ -213139,7 +213139,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             return void 0;
           }
           const { returnTypeNode, returnType, promisedTypeNode, promisedType } = info2;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange34(t, sourceFile, returnTypeNode, promisedTypeNode));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange34(t2, sourceFile, returnTypeNode, promisedTypeNode));
           return [createCodeFixAction(
             fixId41,
             changes,
@@ -213209,7 +213209,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             )
           ];
           if (ts_textChanges_exports.isValidLocationToAddComment(sourceFile, span.start)) {
-            fixes.unshift(createCodeFixAction(fixName4, ts_textChanges_exports.ChangeTracker.with(context5, (t) => makeChange9(t, sourceFile, span.start)), Diagnostics.Ignore_this_error_message, fixId42, Diagnostics.Add_ts_ignore_to_all_error_messages));
+            fixes.unshift(createCodeFixAction(fixName4, ts_textChanges_exports.ChangeTracker.with(context5, (t2) => makeChange9(t2, sourceFile, span.start)), Diagnostics.Ignore_this_error_message, fixId42, Diagnostics.Add_ts_ignore_to_all_error_messages));
           }
           return fixes;
         },
@@ -213354,7 +213354,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           case 174:
           case 175:
             Debug.assertIsDefined(declarations);
-            const signatures = type2.isUnion() ? flatMap(type2.types, (t) => t.getCallSignatures()) : type2.getCallSignatures();
+            const signatures = type2.isUnion() ? flatMap(type2.types, (t2) => t2.getCallSignatures()) : type2.getCallSignatures();
             if (!some(signatures)) {
               break;
             }
@@ -214231,7 +214231,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         return variations;
       }
       function createAction(context5, sourceFile, node, replacement) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => t.replaceNode(sourceFile, node, replacement));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => t2.replaceNode(sourceFile, node, replacement));
         return createCodeFixActionWithoutFixAll(fixName5, changes, [Diagnostics.Replace_import_with_0, changes[0].textChanges[0].newText]);
       }
       registerCodeFix({
@@ -214288,7 +214288,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         }
         if (isExpression(expr) && !(isNamedDeclaration(expr.parent) && expr.parent.name === expr)) {
           const sourceFile = context5.sourceFile;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => t.replaceNode(sourceFile, expr, factory.createPropertyAccessExpression(expr, "default"), {}));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => t2.replaceNode(sourceFile, expr, factory.createPropertyAccessExpression(expr, "default"), {}));
           fixes.push(createCodeFixActionWithoutFixAll(fixName5, changes, Diagnostics.Use_synthetic_default_member));
         }
         return fixes;
@@ -214345,7 +214345,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       }
       function getActionForAddMissingDefiniteAssignmentAssertion(context5, info2) {
         if (info2.isJs) return void 0;
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addDefiniteAssignmentAssertion(t, context5.sourceFile, info2.prop));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addDefiniteAssignmentAssertion(t2, context5.sourceFile, info2.prop));
         return createCodeFixAction(fixName6, changes, [Diagnostics.Add_definite_assignment_assertion_to_property_0, info2.prop.getText()], fixIdAddDefiniteAssignmentAssertions, Diagnostics.Add_definite_assignment_assertions_to_all_uninitialized_properties);
       }
       function addDefiniteAssignmentAssertion(changeTracker, propertyDeclarationSourceFile, propertyDeclaration) {
@@ -214364,7 +214364,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         changeTracker.replaceNode(propertyDeclarationSourceFile, propertyDeclaration, property);
       }
       function getActionForAddMissingUndefinedType(context5, info2) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addUndefinedType(t, context5.sourceFile, info2));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addUndefinedType(t2, context5.sourceFile, info2));
         return createCodeFixAction(fixName6, changes, [Diagnostics.Add_undefined_type_to_property_0, info2.prop.name.getText()], fixIdAddUndefinedType, Diagnostics.Add_undefined_type_to_all_uninitialized_properties);
       }
       function addUndefinedType(changeTracker, sourceFile, info2) {
@@ -214389,7 +214389,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const checker = context5.program.getTypeChecker();
         const initializer3 = getInitializer(checker, info2.prop);
         if (!initializer3) return void 0;
-        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => addInitializer(t, context5.sourceFile, info2.prop, initializer3));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addInitializer(t2, context5.sourceFile, info2.prop, initializer3));
         return createCodeFixAction(fixName6, changes, [Diagnostics.Add_initializer_to_property_0, info2.prop.name.getText()], fixIdAddInitializer, Diagnostics.Add_initializers_to_all_uninitialized_properties);
       }
       function addInitializer(changeTracker, propertyDeclarationSourceFile, propertyDeclaration, initializer3) {
@@ -214420,7 +214420,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         } else if (type2.flags & 4096) {
           return factory.createBigIntLiteral(type2.value);
         } else if (type2.isUnion()) {
-          return firstDefined(type2.types, (t) => getDefaultValueFromType(checker, t));
+          return firstDefined(type2.types, (t2) => getDefaultValueFromType(checker, t2));
         } else if (type2.isClass()) {
           const classDeclaration = getClassLikeDeclarationOfSymbol(type2.symbol);
           if (!classDeclaration || hasSyntacticModifier(
@@ -214451,7 +214451,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (!info2) {
             return void 0;
           }
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange35(t, context5.sourceFile, info2));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange35(t2, context5.sourceFile, info2));
           return [createCodeFixAction(fixId43, changes, Diagnostics.Convert_require_to_import, fixId43, Diagnostics.Convert_all_require_to_import)];
         },
         fixIds: [fixId43],
@@ -214542,7 +214542,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span: { start } } = context5;
           const info2 = getInfo19(sourceFile, start);
           if (!info2) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange36(t, sourceFile, info2, context5.preferences));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange36(t2, sourceFile, info2, context5.preferences));
           return [createCodeFixAction(fixId44, changes, Diagnostics.Convert_to_default_import, fixId44, Diagnostics.Convert_all_to_default_imports)];
         },
         fixIds: [fixId44],
@@ -214578,7 +214578,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes57,
         getCodeActions: function getCodeActionsToUseBigintLiteral(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => makeChange10(t, context5.sourceFile, context5.span));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => makeChange10(t2, context5.sourceFile, context5.span));
           if (changes.length > 0) {
             return [createCodeFixAction(fixId45, changes, Diagnostics.Convert_to_a_bigint_numeric_literal, fixId45, Diagnostics.Convert_all_to_bigint_numeric_literals)];
           }
@@ -214604,7 +214604,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions: function getCodeActionsToAddMissingTypeof(context5) {
           const { sourceFile, span } = context5;
           const importType = getImportTypeNode(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange37(t, sourceFile, importType));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange37(t2, sourceFile, importType));
           return [createCodeFixAction(fixId46, changes, Diagnostics.Add_missing_typeof, fixId46, Diagnostics.Add_missing_typeof)];
         },
         fixIds: [fixId46],
@@ -214636,7 +214636,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span } = context5;
           const node = findNodeToFix(sourceFile, span.start);
           if (!node) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange38(t, sourceFile, node));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange38(t2, sourceFile, node));
           return [createCodeFixAction(fixID2, changes, Diagnostics.Wrap_in_JSX_fragment, fixID2, Diagnostics.Wrap_all_unparented_JSX_in_JSX_fragment)];
         },
         fixIds: [fixID2],
@@ -214682,7 +214682,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes60,
         getCodeActions: function getCodeActionsToWrapDecoratorExpressionInParentheses(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => makeChange11(t, context5.sourceFile, context5.span.start));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => makeChange11(t2, context5.sourceFile, context5.span.start));
           return [createCodeFixAction(fixId47, changes, Diagnostics.Wrap_in_parentheses, fixId47, Diagnostics.Wrap_all_invalid_decorator_expressions_in_parentheses)];
         },
         fixIds: [fixId47],
@@ -214703,7 +214703,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span } = context5;
           const info2 = getInfo20(sourceFile, span.start);
           if (!info2) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange39(t, sourceFile, info2));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange39(t2, sourceFile, info2));
           const name = idText(info2.container.name);
           return [createCodeFixAction(fixId48, changes, [Diagnostics.Convert_0_to_mapped_object_type, name], fixId48, [Diagnostics.Convert_0_to_mapped_object_type, name])];
         },
@@ -214765,8 +214765,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (!callExpression) {
             return void 0;
           }
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => {
-            t.deleteRange(context5.sourceFile, { pos: callExpression.expression.end, end: callExpression.end });
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => {
+            t2.deleteRange(context5.sourceFile, { pos: callExpression.expression.end, end: callExpression.end });
           });
           return [createCodeFixActionWithoutFixAll(fixId49, changes, Diagnostics.Remove_parentheses)];
         },
@@ -214779,7 +214779,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes63,
         getCodeActions: function getCodeActionsToRemoveUnnecessaryAwait(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => makeChange12(t, context5.sourceFile, context5.span));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => makeChange12(t2, context5.sourceFile, context5.span));
           if (changes.length > 0) {
             return [createCodeFixAction(fixId50, changes, Diagnostics.Remove_unnecessary_await, fixId50, Diagnostics.Remove_all_unnecessary_uses_of_await)];
           }
@@ -214822,8 +214822,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         errorCodes: errorCodes64,
         fixIds: [fixId51],
         getCodeActions: function getCodeActionsToSplitTypeOnlyImport(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => {
-            return splitTypeOnlyImport(t, getImportDeclaration2(context5.sourceFile, context5.span), context5);
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => {
+            return splitTypeOnlyImport(t2, getImportDeclaration2(context5.sourceFile, context5.span), context5);
           });
           if (changes.length) {
             return [createCodeFixAction(fixId51, changes, Diagnostics.Split_into_two_separate_import_declarations, fixId51, Diagnostics.Split_all_invalid_type_only_imports)];
@@ -214884,7 +214884,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span, program } = context5;
           const info2 = getInfo21(sourceFile, span.start, program);
           if (info2 === void 0) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange40(t, sourceFile, info2.token));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange40(t2, sourceFile, info2.token));
           return [createCodeFixActionMaybeFixAll(fixId52, changes, Diagnostics.Convert_const_to_let, fixId52, Diagnostics.Convert_all_const_to_let)];
         },
         getAllCodeActions: (context5) => {
@@ -214930,7 +214930,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile } = context5;
           const info2 = getInfo22(sourceFile, context5.span.start, context5.errorCode);
           if (!info2) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => doChange41(t, sourceFile, info2));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange41(t2, sourceFile, info2));
           return [createCodeFixAction(
             fixId53,
             changes,
@@ -214966,7 +214966,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         errorCodes: errorCodes67,
         fixIds: [fixId54],
         getCodeActions(context5) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t) => makeChange13(t, context5.sourceFile, context5.span, context5.program));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => makeChange13(t2, context5.sourceFile, context5.span, context5.program));
           if (changes.length > 0) {
             return [createCodeFixAction(fixName7, changes, Diagnostics.Add_void_to_Promise_resolved_without_a_value, fixId54, Diagnostics.Add_void_to_all_Promises_resolved_without_a_value)];
           }
@@ -217449,7 +217449,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const isLiteralExpected = !tryCast(previousToken, isStringLiteralLike) && !isJsxIdentifierExpected;
         const literals = !isLiteralExpected ? [] : mapDefined(
           contextualTypeOrConstraint && (contextualTypeOrConstraint.isUnion() ? contextualTypeOrConstraint.types : [contextualTypeOrConstraint]),
-          (t) => t.isLiteral() && !(t.flags & 32768) ? t.value : void 0
+          (t2) => t2.isLiteral() && !(t2.flags & 32768) ? t2.value : void 0
         );
         const recommendedCompletion = previousToken && contextualTypeOrConstraint && getRecommendedCompletion(previousToken, contextualTypeOrConstraint, typeChecker);
         return {
@@ -218908,7 +218908,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const promiseFilteredContextualType = checker.getUnionType(
           filter(
             contextualType.flags & 134217728 ? contextualType.types : [contextualType],
-            (t) => !checker.getPromisedTypeOfPromise(t)
+            (t2) => !checker.getPromisedTypeOfPromise(t2)
           )
         );
         const type2 = hasCompletionsType && !(completionsType.flags & 3) ? checker.getUnionType([promiseFilteredContextualType, completionsType]) : promiseFilteredContextualType;
@@ -219011,22 +219011,22 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const constraint = checker.getTypeArgumentConstraint(node);
           if (constraint) return constraint;
         }
-        const t = getConstraintOfTypeArgumentProperty(node.parent, checker);
-        if (!t) return void 0;
+        const t2 = getConstraintOfTypeArgumentProperty(node.parent, checker);
+        if (!t2) return void 0;
         switch (node.kind) {
           case 172:
-            return checker.getTypeOfPropertyOfContextualType(t, node.symbol.escapedName);
+            return checker.getTypeOfPropertyOfContextualType(t2, node.symbol.escapedName);
           case 59:
             if (node.parent.kind === 172) {
-              return t;
+              return t2;
             }
             break;
           case 194:
           case 188:
           case 193:
-            return t;
+            return t2;
           case 23:
-            return checker.getElementTypeOfArrayType(t);
+            return checker.getElementTypeOfArrayType(t2);
         }
       }
       function isFromObjectTypeDeclaration(node) {
@@ -219430,7 +219430,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             return match && createCompletionDetailsForSymbol(match, match.name, checker, sourceFile, location, cancellationToken);
           }
           case 2:
-            return find(completion.types, (t) => t.value === name) ? createCompletionDetails(name, "", "string", [textPart(name)]) : void 0;
+            return find(completion.types, (t2) => t2.value === name) ? createCompletionDetails(name, "", "string", [textPart(name)]) : void 0;
           default:
             return Debug.assertNever(completion);
         }
@@ -219614,7 +219614,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
               if (result.kind === 1) {
                 return { kind: 1, symbols: result.symbols.filter((sym) => !contains(alreadyUsedTypes, sym.name)), hasIndexSignature: result.hasIndexSignature };
               }
-              return { kind: 2, types: result.types.filter((t) => !contains(alreadyUsedTypes, t.value)), isNewIdentifier: false };
+              return { kind: 2, types: result.types.filter((t2) => !contains(alreadyUsedTypes, t2.value)), isNewIdentifier: false };
             }
             default:
               return void 0;
@@ -219689,7 +219689,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       function getStringLiteralTypes(type2, uniques = /* @__PURE__ */ new Set()) {
         if (!type2) return emptyArray;
         type2 = skipConstraint(type2);
-        return type2.isUnion() ? flatMap(type2.types, (t) => getStringLiteralTypes(t, uniques)) : type2.isStringLiteral() && !(type2.flags & 32768) && addToSeen(uniques, type2.value) ? [type2] : emptyArray;
+        return type2.isUnion() ? flatMap(type2.types, (t2) => getStringLiteralTypes(t2, uniques)) : type2.isStringLiteral() && !(type2.flags & 32768) && addToSeen(uniques, type2.value) ? [type2] : emptyArray;
       }
       function nameAndKind(name, kind, extension) {
         return { name, kind, extension };
@@ -222958,7 +222958,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         function getParentSymbolsOfPropertyAccess(location, symbol2, checker) {
           const propertyAccessExpression = isRightSideOfPropertyAccess(location) ? location.parent : void 0;
           const lhsType = propertyAccessExpression && checker.getTypeAtLocation(propertyAccessExpression.expression);
-          const res = mapDefined(lhsType && (lhsType.isUnionOrIntersection() ? lhsType.types : lhsType.symbol === symbol2.parent ? void 0 : [lhsType]), (t) => t.symbol && t.symbol.flags & (32 | 64) ? t.symbol : void 0);
+          const res = mapDefined(lhsType && (lhsType.isUnionOrIntersection() ? lhsType.types : lhsType.symbol === symbol2.parent ? void 0 : [lhsType]), (t2) => t2.symbol && t2.symbol.flags & (32 | 64) ? t2.symbol : void 0);
           return res.length === 0 ? void 0 : res;
         }
         function isForRenameWithPrefixAndSuffixText(options) {
@@ -223107,8 +223107,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         if (isPropertyName(node) && isBindingElement(parent2) && isObjectBindingPattern(parent2.parent) && node === (parent2.propertyName || parent2.name)) {
           const name = getNameFromPropertyName(node);
           const type2 = typeChecker.getTypeAtLocation(parent2.parent);
-          return name === void 0 ? emptyArray : flatMap(type2.isUnion() ? type2.types : [type2], (t) => {
-            const prop = t.getProperty(name);
+          return name === void 0 ? emptyArray : flatMap(type2.isUnion() ? type2.types : [type2], (t2) => {
+            const prop = t2.getProperty(name);
             return prop && getDefinitionFromSymbol(typeChecker, prop, node);
           });
         }
@@ -223323,7 +223323,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         return typeDefinitions.length ? [...getFirstTypeArgumentDefinitions(typeChecker, resolvedType, node, failedAliasResolution), ...typeDefinitions] : !(symbol2.flags & 111551) && symbol2.flags & 788968 ? getDefinitionFromSymbol(typeChecker, skipAlias(symbol2, typeChecker), node, failedAliasResolution) : void 0;
       }
       function definitionFromType(type2, checker, node, failedAliasResolution) {
-        return flatMap(type2.isUnion() && !(type2.flags & 65536) ? type2.types : [type2], (t) => t.symbol && getDefinitionFromSymbol(checker, t.symbol, node, failedAliasResolution));
+        return flatMap(type2.isUnion() && !(type2.flags & 65536) ? type2.types : [type2], (t2) => t2.symbol && getDefinitionFromSymbol(checker, t2.symbol, node, failedAliasResolution));
       }
       function tryGetReturnTypeOfFunction(symbol2, type2, checker) {
         if (type2.symbol === symbol2 || // At `const f = () => {}`, the symbol is `f` and the type symbol is at `() => {}`
@@ -224464,12 +224464,12 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const parts = [];
         forEachUnique(declarations, (declaration) => {
           for (const jsdoc of getCommentHavingNodes(declaration)) {
-            const inheritDoc = isJSDoc(jsdoc) && jsdoc.tags && find(jsdoc.tags, (t) => t.kind === 328 && (t.tagName.escapedText === "inheritDoc" || t.tagName.escapedText === "inheritdoc"));
+            const inheritDoc = isJSDoc(jsdoc) && jsdoc.tags && find(jsdoc.tags, (t2) => t2.kind === 328 && (t2.tagName.escapedText === "inheritDoc" || t2.tagName.escapedText === "inheritdoc"));
             if (jsdoc.comment === void 0 && !inheritDoc || isJSDoc(jsdoc) && declaration.kind !== 347 && declaration.kind !== 339 && jsdoc.tags && jsdoc.tags.some(
-              (t) => t.kind === 347 || t.kind === 339
+              (t2) => t2.kind === 347 || t2.kind === 339
               /* JSDocCallbackTag */
             ) && !jsdoc.tags.some(
-              (t) => t.kind === 342 || t.kind === 343
+              (t2) => t2.kind === 342 || t2.kind === 343
               /* JSDocReturnTag */
             )) {
               continue;
@@ -224510,10 +224510,10 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         forEachUnique(declarations, (declaration) => {
           const tags2 = getJSDocTags(declaration);
           if (tags2.some(
-            (t) => t.kind === 347 || t.kind === 339
+            (t2) => t2.kind === 347 || t2.kind === 339
             /* JSDocCallbackTag */
           ) && !tags2.some(
-            (t) => t.kind === 342 || t.kind === 343
+            (t2) => t2.kind === 342 || t2.kind === 343
             /* JSDocReturnTag */
           )) {
             return;
@@ -224663,7 +224663,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         return mapDefined(fn.parameters, (param) => {
           if (!isIdentifier(param.name)) return void 0;
           const name = param.name.text;
-          if (jsdoc.tags.some((t) => t !== tag && isJSDocParameterTag(t) && isIdentifier(t.name) && t.name.escapedText === name) || nameThusFar !== void 0 && !startsWith(name, nameThusFar)) {
+          if (jsdoc.tags.some((t2) => t2 !== tag && isJSDocParameterTag(t2) && isIdentifier(t2.name) && t2.name.escapedText === name) || nameThusFar !== void 0 && !startsWith(name, nameThusFar)) {
             return void 0;
           }
           return { name, kind: "parameter", kindModifiers: "", sortText: ts_Completions_exports.SortText.LocationPriority };
@@ -226671,7 +226671,7 @@ ${content}
       function getTypeHelpItem(symbol2, typeParameters, checker, enclosingDeclaration, sourceFile) {
         const typeSymbolDisplay = symbolToDisplayParts(checker, symbol2);
         const printer = createPrinterWithRemoveComments();
-        const parameters = typeParameters.map((t) => createSignatureHelpParameterForTypeParameter(t, checker, enclosingDeclaration, sourceFile, printer));
+        const parameters = typeParameters.map((t2) => createSignatureHelpParameterForTypeParameter(t2, checker, enclosingDeclaration, sourceFile, printer));
         const documentation = symbol2.getDocumentationComment(checker);
         const tags2 = symbol2.getJsDocTags(checker);
         const prefixDisplayParts = [...typeSymbolDisplay, punctuationPart(
@@ -226724,7 +226724,7 @@ ${content}
       function itemInfoForTypeParameters(candidateSignature, checker, enclosingDeclaration, sourceFile) {
         const typeParameters = (candidateSignature.target || candidateSignature).typeParameters;
         const printer = createPrinterWithRemoveComments();
-        const parameters = (typeParameters || emptyArray).map((t) => createSignatureHelpParameterForTypeParameter(t, checker, enclosingDeclaration, sourceFile, printer));
+        const parameters = (typeParameters || emptyArray).map((t2) => createSignatureHelpParameterForTypeParameter(t2, checker, enclosingDeclaration, sourceFile, printer));
         const thisParameter = candidateSignature.thisParameter ? [checker.symbolToParameterDeclaration(candidateSignature.thisParameter, enclosingDeclaration, signatureHelpNodeBuilderFlags)] : [];
         return checker.getExpandedParameters(candidateSignature).map((paramList) => {
           const params = factory.createNodeArray([...thisParameter, ...map3(paramList, (param) => checker.symbolToParameterDeclaration(param, enclosingDeclaration, signatureHelpNodeBuilderFlags))]);
@@ -227717,8 +227717,8 @@ ${content}
           if (isIdentifier(name) && isObjectBindingPattern(parent2)) {
             const propertyName = getTextOfIdentifierOrLiteral(name);
             const objectType = typeChecker.getTypeAtLocation(parent2);
-            documentation = firstDefined(objectType.isUnion() ? objectType.types : [objectType], (t) => {
-              const prop = t.getProperty(propertyName);
+            documentation = firstDefined(objectType.isUnion() ? objectType.types : [objectType], (t2) => {
+              const prop = t2.getProperty(propertyName);
               return prop ? prop.getDocumentationComment(typeChecker) : void 0;
             }) || emptyArray;
           }
@@ -229547,15 +229547,15 @@ ${options.prefix}` : "\n" : options.prefix
           trailingTrivia = void 0;
           let pos = scanner2.getTokenFullStart();
           while (pos < endPos) {
-            const t = scanner2.getToken();
-            if (!isTrivia(t)) {
+            const t2 = scanner2.getToken();
+            if (!isTrivia(t2)) {
               break;
             }
             scanner2.scan();
             const item = {
               pos,
               end: scanner2.getTokenFullStart(),
-              kind: t
+              kind: t2
             };
             pos = scanner2.getTokenFullStart();
             leadingTrivia = append(leadingTrivia, item);
@@ -229597,8 +229597,8 @@ ${options.prefix}` : "\n" : options.prefix
         function shouldRescanJsxAttributeValue(node) {
           return node.parent && isJsxAttribute(node.parent) && node.parent.initializer === node;
         }
-        function startsWithSlashToken(t) {
-          return t === 44 || t === 69;
+        function startsWithSlashToken(t2) {
+          return t2 === 44 || t2 === 69;
         }
         function readTokenInfo(n) {
           Debug.assert(isOnToken());
@@ -229760,7 +229760,7 @@ ${options.prefix}` : "\n" : options.prefix
           }
         }
         function anyTokenExcept(...tokens) {
-          return { tokens: allTokens.filter((t) => !tokens.some((t2) => t2 === t)), isSpecific: false };
+          return { tokens: allTokens.filter((t2) => !tokens.some((t22) => t22 === t2)), isSpecific: false };
         }
         const anyToken = { tokens: allTokens, isSpecific: false };
         const anyTokenIncludingMultilineComments = tokenRangeFrom([
@@ -252361,8 +252361,8 @@ var require_parse3 = __commonJS({
             brace.value = brace.output = "\\{";
             value = output = "\\}";
             state3.output = out;
-            for (const t of toks) {
-              state3.output += t.output || t.value;
+            for (const t2 of toks) {
+              state3.output += t2.output || t2.value;
             }
           }
           push2({ type: "brace", value, output });
@@ -256398,14 +256398,14 @@ var require_json_typings = __commonJS({
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.isJsonObject = exports2.typeofJsonValue = void 0;
     function typeofJsonValue2(value) {
-      let t = typeof value;
-      if (t == "object") {
+      let t2 = typeof value;
+      if (t2 == "object") {
         if (Array.isArray(value))
           return "array";
         if (value === null)
           return "null";
       }
-      return t;
+      return t2;
     }
     exports2.typeofJsonValue = typeofJsonValue2;
     function isJsonObject(value) {
@@ -256521,20 +256521,20 @@ var require_protobufjs_utf8 = __commonJS({
     function utf8read(bytes) {
       if (bytes.length < 1)
         return "";
-      let pos = 0, parts = [], chunk = [], i = 0, t;
+      let pos = 0, parts = [], chunk = [], i = 0, t2;
       let len = bytes.length;
       while (pos < len) {
-        t = bytes[pos++];
-        if (t < 128)
-          chunk[i++] = t;
-        else if (t > 191 && t < 224)
-          chunk[i++] = (t & 31) << 6 | bytes[pos++] & 63;
-        else if (t > 239 && t < 365) {
-          t = ((t & 7) << 18 | (bytes[pos++] & 63) << 12 | (bytes[pos++] & 63) << 6 | bytes[pos++] & 63) - 65536;
-          chunk[i++] = 55296 + (t >> 10);
-          chunk[i++] = 56320 + (t & 1023);
+        t2 = bytes[pos++];
+        if (t2 < 128)
+          chunk[i++] = t2;
+        else if (t2 > 191 && t2 < 224)
+          chunk[i++] = (t2 & 31) << 6 | bytes[pos++] & 63;
+        else if (t2 > 239 && t2 < 365) {
+          t2 = ((t2 & 7) << 18 | (bytes[pos++] & 63) << 12 | (bytes[pos++] & 63) << 6 | bytes[pos++] & 63) - 65536;
+          chunk[i++] = 55296 + (t2 >> 10);
+          chunk[i++] = 56320 + (t2 & 1023);
         } else
-          chunk[i++] = (t & 15) << 12 | (bytes[pos++] & 63) << 6 | bytes[pos++] & 63;
+          chunk[i++] = (t2 & 15) << 12 | (bytes[pos++] & 63) << 6 | bytes[pos++] & 63;
         if (i > 8191) {
           parts.push(fromCharCodes(chunk));
           i = 0;
@@ -257056,9 +257056,9 @@ var require_binary_reader = __commonJS({
             this.pos += len;
             break;
           case binary_format_contract_1.WireType.StartGroup:
-            let t;
-            while ((t = this.tag()[1]) !== binary_format_contract_1.WireType.EndGroup) {
-              this.skip(t);
+            let t2;
+            while ((t2 = this.tag()[1]) !== binary_format_contract_1.WireType.EndGroup) {
+              this.skip(t2);
             }
             break;
           default:
@@ -258776,7 +258776,7 @@ var require_reflection_binary_writer = __commonJS({
        * If argument `value` is omitted, [2] is always false.
        */
       scalarInfo(type2, value) {
-        let t = binary_format_contract_1.WireType.Varint;
+        let t2 = binary_format_contract_1.WireType.Varint;
         let m;
         let i = value === void 0;
         let d = value === 0;
@@ -258786,7 +258786,7 @@ var require_reflection_binary_writer = __commonJS({
             break;
           case reflection_info_1.ScalarType.STRING:
             d = i || !value.length;
-            t = binary_format_contract_1.WireType.LengthDelimited;
+            t2 = binary_format_contract_1.WireType.LengthDelimited;
             m = "string";
             break;
           case reflection_info_1.ScalarType.BOOL:
@@ -258797,11 +258797,11 @@ var require_reflection_binary_writer = __commonJS({
             m = "uint32";
             break;
           case reflection_info_1.ScalarType.DOUBLE:
-            t = binary_format_contract_1.WireType.Bit64;
+            t2 = binary_format_contract_1.WireType.Bit64;
             m = "double";
             break;
           case reflection_info_1.ScalarType.FLOAT:
-            t = binary_format_contract_1.WireType.Bit32;
+            t2 = binary_format_contract_1.WireType.Bit32;
             m = "float";
             break;
           case reflection_info_1.ScalarType.INT64:
@@ -258814,25 +258814,25 @@ var require_reflection_binary_writer = __commonJS({
             break;
           case reflection_info_1.ScalarType.FIXED64:
             d = i || pb_long_1.PbULong.from(value).isZero();
-            t = binary_format_contract_1.WireType.Bit64;
+            t2 = binary_format_contract_1.WireType.Bit64;
             m = "fixed64";
             break;
           case reflection_info_1.ScalarType.BYTES:
             d = i || !value.byteLength;
-            t = binary_format_contract_1.WireType.LengthDelimited;
+            t2 = binary_format_contract_1.WireType.LengthDelimited;
             m = "bytes";
             break;
           case reflection_info_1.ScalarType.FIXED32:
-            t = binary_format_contract_1.WireType.Bit32;
+            t2 = binary_format_contract_1.WireType.Bit32;
             m = "fixed32";
             break;
           case reflection_info_1.ScalarType.SFIXED32:
-            t = binary_format_contract_1.WireType.Bit32;
+            t2 = binary_format_contract_1.WireType.Bit32;
             m = "sfixed32";
             break;
           case reflection_info_1.ScalarType.SFIXED64:
             d = i || pb_long_1.PbLong.from(value).isZero();
-            t = binary_format_contract_1.WireType.Bit64;
+            t2 = binary_format_contract_1.WireType.Bit64;
             m = "sfixed64";
             break;
           case reflection_info_1.ScalarType.SINT32:
@@ -258843,7 +258843,7 @@ var require_reflection_binary_writer = __commonJS({
             m = "sint64";
             break;
         }
-        return [t, m, i || d];
+        return [t2, m, i || d];
       }
     };
     exports2.ReflectionBinaryWriter = ReflectionBinaryWriter;
@@ -258976,8 +258976,8 @@ var require_reflection_equals = __commonJS({
         switch (field.kind) {
           case "enum":
           case "scalar":
-            let t = field.kind == "enum" ? reflection_info_1.ScalarType.INT32 : field.T;
-            if (!(field.repeat ? repeatedPrimitiveEq(t, val_a, val_b) : primitiveEq(t, val_a, val_b)))
+            let t2 = field.kind == "enum" ? reflection_info_1.ScalarType.INT32 : field.T;
+            if (!(field.repeat ? repeatedPrimitiveEq(t2, val_a, val_b) : primitiveEq(t2, val_a, val_b)))
               return false;
             break;
           case "map":
@@ -262350,10 +262350,10 @@ var require_minimatch = __commonJS({
     var slashSplit = /\/+/;
     minimatch.filter = (pattern, options = {}) => (p, i, list) => minimatch(p, pattern, options);
     var ext = (a, b = {}) => {
-      const t = {};
-      Object.keys(a).forEach((k) => t[k] = a[k]);
-      Object.keys(b).forEach((k) => t[k] = b[k]);
-      return t;
+      const t2 = {};
+      Object.keys(a).forEach((k) => t2[k] = a[k]);
+      Object.keys(b).forEach((k) => t2[k] = b[k]);
+      return t2;
     };
     minimatch.defaults = (def) => {
       if (!def || typeof def !== "object" || !Object.keys(def).length) {
@@ -262829,9 +262829,9 @@ var require_minimatch = __commonJS({
             return $1 + $1 + $2 + "|";
           });
           this.debug("tail=%j\n   %s", tail, tail, pl, re);
-          const t = pl.type === "*" ? star : pl.type === "?" ? qmark : "\\" + pl.type;
+          const t2 = pl.type === "*" ? star : pl.type === "?" ? qmark : "\\" + pl.type;
           hasMagic = true;
-          re = re.slice(0, pl.reStart) + t + "\\(" + tail;
+          re = re.slice(0, pl.reStart) + t2 + "\\(" + tail;
         }
         clearStateChar();
         if (escaping) {
@@ -264442,9 +264442,9 @@ var require_async7 = __commonJS({
         percUp(index2) {
           let p;
           while (index2 > 0 && smaller(this.heap[index2], this.heap[p = parent(index2)])) {
-            let t = this.heap[index2];
+            let t2 = this.heap[index2];
             this.heap[index2] = this.heap[p];
-            this.heap[p] = t;
+            this.heap[p] = t2;
             index2 = p;
           }
         }
@@ -264457,9 +264457,9 @@ var require_async7 = __commonJS({
             if (smaller(this.heap[index2], this.heap[l])) {
               break;
             }
-            let t = this.heap[index2];
+            let t2 = this.heap[index2];
             this.heap[index2] = this.heap[l];
-            this.heap[l] = t;
+            this.heap[l] = t2;
             index2 = l;
           }
         }
@@ -264648,13 +264648,13 @@ var require_async7 = __commonJS({
         retryAttempt();
         return callback[PROMISE_SYMBOL];
       }
-      function parseTimes(acc, t) {
-        if (typeof t === "object") {
-          acc.times = +t.times || DEFAULT_TIMES;
-          acc.intervalFunc = typeof t.interval === "function" ? t.interval : constant(+t.interval || DEFAULT_INTERVAL);
-          acc.errorFilter = t.errorFilter;
-        } else if (typeof t === "number" || typeof t === "string") {
-          acc.times = +t || DEFAULT_TIMES;
+      function parseTimes(acc, t2) {
+        if (typeof t2 === "object") {
+          acc.times = +t2.times || DEFAULT_TIMES;
+          acc.intervalFunc = typeof t2.interval === "function" ? t2.interval : constant(+t2.interval || DEFAULT_INTERVAL);
+          acc.errorFilter = t2.errorFilter;
+        } else if (typeof t2 === "number" || typeof t2 === "string") {
+          acc.times = +t2 || DEFAULT_TIMES;
         } else {
           throw new Error("Invalid arguments for async.retry");
         }
@@ -275864,29 +275864,29 @@ var require_isPlainObject = __commonJS({
 var require_index_min = __commonJS({
   "node_modules/glob/dist/commonjs/index.min.js"(exports2) {
     "use strict";
-    var R = (n, t) => () => (t || n((t = { exports: {} }).exports, t), t.exports);
+    var R = (n, t2) => () => (t2 || n((t2 = { exports: {} }).exports, t2), t2.exports);
     var Ge = R((Y) => {
       "use strict";
       Object.defineProperty(Y, "__esModule", { value: true });
       Y.range = Y.balanced = void 0;
-      var Gs = (n, t, e) => {
-        let s = n instanceof RegExp ? Ie(n, e) : n, i = t instanceof RegExp ? Ie(t, e) : t, r = s !== null && i != null && (0, Y.range)(s, i, e);
+      var Gs = (n, t2, e) => {
+        let s = n instanceof RegExp ? Ie(n, e) : n, i = t2 instanceof RegExp ? Ie(t2, e) : t2, r = s !== null && i != null && (0, Y.range)(s, i, e);
         return r && { start: r[0], end: r[1], pre: e.slice(0, r[0]), body: e.slice(r[0] + s.length, r[1]), post: e.slice(r[1] + i.length) };
       };
       Y.balanced = Gs;
-      var Ie = (n, t) => {
-        let e = t.match(n);
+      var Ie = (n, t2) => {
+        let e = t2.match(n);
         return e ? e[0] : null;
-      }, zs = (n, t, e) => {
-        let s, i, r, h, o, a = e.indexOf(n), l = e.indexOf(t, a + 1), f = a;
+      }, zs = (n, t2, e) => {
+        let s, i, r, h, o, a = e.indexOf(n), l = e.indexOf(t2, a + 1), f = a;
         if (a >= 0 && l > 0) {
-          if (n === t) return [a, l];
+          if (n === t2) return [a, l];
           for (s = [], r = e.length; f >= 0 && !o; ) {
             if (f === a) s.push(f), a = e.indexOf(n, f + 1);
             else if (s.length === 1) {
               let c = s.pop();
               c !== void 0 && (o = [c, l]);
-            } else i = s.pop(), i !== void 0 && i < r && (r = i, h = l), l = e.indexOf(t, f + 1);
+            } else i = s.pop(), i !== void 0 && i < r && (r = i, h = l), l = e.indexOf(t2, f + 1);
             f = a < l && a >= 0 ? a : l;
           }
           s.length && h !== void 0 && (o = [r, h]);
@@ -275913,16 +275913,16 @@ var require_index_min = __commonJS({
       }
       function Ve(n) {
         if (!n) return [""];
-        let t = [], e = (0, ze.balanced)("{", "}", n);
+        let t2 = [], e = (0, ze.balanced)("{", "}", n);
         if (!e) return n.split(",");
         let { pre: s, body: i, post: r } = e, h = s.split(",");
         h[h.length - 1] += "{" + i + "}";
         let o = Ve(r);
-        return r.length && (h[h.length - 1] += o.shift(), h.push.apply(h, o)), t.push.apply(t, h), t;
+        return r.length && (h[h.length - 1] += o.shift(), h.push.apply(h, o)), t2.push.apply(t2, h), t2;
       }
-      function ei(n, t = {}) {
+      function ei(n, t2 = {}) {
         if (!n) return [];
-        let { max: e = it.EXPANSION_MAX } = t;
+        let { max: e = it.EXPANSION_MAX } = t2;
         return n.slice(0, 2) === "{}" && (n = "\\{\\}" + n.slice(2)), ht(Qs(n), e, true).map(ti);
       }
       function si(n) {
@@ -275931,26 +275931,26 @@ var require_index_min = __commonJS({
       function ii(n) {
         return /^-?0\d/.test(n);
       }
-      function ri(n, t) {
-        return n <= t;
+      function ri(n, t2) {
+        return n <= t2;
       }
-      function ni(n, t) {
-        return n >= t;
+      function ni(n, t2) {
+        return n >= t2;
       }
-      function ht(n, t, e) {
+      function ht(n, t2, e) {
         let s = [], i = (0, ze.balanced)("{", "}", n);
         if (!i) return [n];
-        let r = i.pre, h = i.post.length ? ht(i.post, t, false) : [""];
-        if (/\$$/.test(i.pre)) for (let o = 0; o < h.length && o < t; o++) {
+        let r = i.pre, h = i.post.length ? ht(i.post, t2, false) : [""];
+        if (/\$$/.test(i.pre)) for (let o = 0; o < h.length && o < t2; o++) {
           let a = r + "{" + i.body + "}" + h[o];
           s.push(a);
         }
         else {
           let o = /^-?\d+\.\.-?\d+(?:\.\.-?\d+)?$/.test(i.body), a = /^[a-zA-Z]\.\.[a-zA-Z](?:\.\.-?\d+)?$/.test(i.body), l = o || a, f = i.body.indexOf(",") >= 0;
-          if (!l && !f) return i.post.match(/,(?!,).*\}/) ? (n = i.pre + "{" + i.body + ue + i.post, ht(n, t, true)) : [n];
+          if (!l && !f) return i.post.match(/,(?!,).*\}/) ? (n = i.pre + "{" + i.body + ue + i.post, ht(n, t2, true)) : [n];
           let c;
           if (l) c = i.body.split(/\.\./);
-          else if (c = Ve(i.body), c.length === 1 && c[0] !== void 0 && (c = ht(c[0], t, false).map(si), c.length === 1)) return h.map((u) => i.pre + c[0] + u);
+          else if (c = Ve(i.body), c.length === 1 && c[0] !== void 0 && (c = ht(c[0], t2, false).map(si), c.length === 1)) return h.map((u) => i.pre + c[0] + u);
           let d;
           if (l && c[0] !== void 0 && c[1] !== void 0) {
             let u = ce(c[0]), m = ce(c[1]), p = Math.max(c[0].length, c[1].length), b = c.length === 3 && c[2] !== void 0 ? Math.abs(ce(c[2])) : 1, w = ri;
@@ -275971,9 +275971,9 @@ var require_index_min = __commonJS({
             }
           } else {
             d = [];
-            for (let u = 0; u < c.length; u++) d.push.apply(d, ht(c[u], t, false));
+            for (let u = 0; u < c.length; u++) d.push.apply(d, ht(c[u], t2, false));
           }
-          for (let u = 0; u < d.length; u++) for (let m = 0; m < h.length && s.length < t; m++) {
+          for (let u = 0; u < d.length; u++) for (let m = 0; m < h.length && s.length < t2; m++) {
             let p = r + d[u] + h[m];
             (!e || l || p) && s.push(p);
           }
@@ -275995,8 +275995,8 @@ var require_index_min = __commonJS({
       "use strict";
       Object.defineProperty(Rt, "__esModule", { value: true });
       Rt.parseClass = void 0;
-      var ai = { "[:alnum:]": ["\\p{L}\\p{Nl}\\p{Nd}", true], "[:alpha:]": ["\\p{L}\\p{Nl}", true], "[:ascii:]": ["\\x00-\\x7f", false], "[:blank:]": ["\\p{Zs}\\t", true], "[:cntrl:]": ["\\p{Cc}", true], "[:digit:]": ["\\p{Nd}", true], "[:graph:]": ["\\p{Z}\\p{C}", true, true], "[:lower:]": ["\\p{Ll}", true], "[:print:]": ["\\p{C}", true], "[:punct:]": ["\\p{P}", true], "[:space:]": ["\\p{Z}\\t\\r\\n\\v\\f", true], "[:upper:]": ["\\p{Lu}", true], "[:word:]": ["\\p{L}\\p{Nl}\\p{Nd}\\p{Pc}", true], "[:xdigit:]": ["A-Fa-f0-9", false] }, ot = (n) => n.replace(/[[\]\\-]/g, "\\$&"), li = (n) => n.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), Ye = (n) => n.join(""), ci = (n, t) => {
-        let e = t;
+      var ai = { "[:alnum:]": ["\\p{L}\\p{Nl}\\p{Nd}", true], "[:alpha:]": ["\\p{L}\\p{Nl}", true], "[:ascii:]": ["\\x00-\\x7f", false], "[:blank:]": ["\\p{Zs}\\t", true], "[:cntrl:]": ["\\p{Cc}", true], "[:digit:]": ["\\p{Nd}", true], "[:graph:]": ["\\p{Z}\\p{C}", true, true], "[:lower:]": ["\\p{Ll}", true], "[:print:]": ["\\p{C}", true], "[:punct:]": ["\\p{P}", true], "[:space:]": ["\\p{Z}\\t\\r\\n\\v\\f", true], "[:upper:]": ["\\p{Lu}", true], "[:word:]": ["\\p{L}\\p{Nl}\\p{Nd}\\p{Pc}", true], "[:xdigit:]": ["A-Fa-f0-9", false] }, ot = (n) => n.replace(/[[\]\\-]/g, "\\$&"), li = (n) => n.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), Ye = (n) => n.join(""), ci = (n, t2) => {
+        let e = t2;
         if (n.charAt(e) !== "[") throw new Error("not in a brace expression");
         let s = [], i = [], r = e + 1, h = false, o = false, a = false, l = false, f = e, c = "";
         t: for (; r < n.length; ) {
@@ -276049,7 +276049,7 @@ var require_index_min = __commonJS({
       "use strict";
       Object.defineProperty(At, "__esModule", { value: true });
       At.unescape = void 0;
-      var ui = (n, { windowsPathsNoEscape: t = false, magicalBraces: e = true } = {}) => e ? t ? n.replace(/\[([^\/\\])\]/g, "$1") : n.replace(/((?!\\).|^)\[([^\/\\])\]/g, "$1$2").replace(/\\([^\/])/g, "$1") : t ? n.replace(/\[([^\/\\{}])\]/g, "$1") : n.replace(/((?!\\).|^)\[([^\/\\{}])\]/g, "$1$2").replace(/\\([^\/{}])/g, "$1");
+      var ui = (n, { windowsPathsNoEscape: t2 = false, magicalBraces: e = true } = {}) => e ? t2 ? n.replace(/\[([^\/\\])\]/g, "$1") : n.replace(/((?!\\).|^)\[([^\/\\])\]/g, "$1$2").replace(/\\([^\/])/g, "$1") : t2 ? n.replace(/\[([^\/\\{}])\]/g, "$1") : n.replace(/((?!\\).|^)\[([^\/\\{}])\]/g, "$1$2").replace(/\\([^\/{}])/g, "$1");
       At.unescape = ui;
     });
     var pe = R((Dt) => {
@@ -276069,27 +276069,27 @@ var require_index_min = __commonJS({
         #o;
         #f;
         #u = false;
-        constructor(t, e, s = {}) {
-          this.type = t, t && (this.#s = true), this.#h = e, this.#t = this.#h ? this.#h.#t : this, this.#o = this.#t === this ? s : this.#t.#o, this.#w = this.#t === this ? [] : this.#t.#w, t === "!" && !this.#t.#c && this.#w.push(this), this.#S = this.#h ? this.#h.#r.length : 0;
+        constructor(t2, e, s = {}) {
+          this.type = t2, t2 && (this.#s = true), this.#h = e, this.#t = this.#h ? this.#h.#t : this, this.#o = this.#t === this ? s : this.#t.#o, this.#w = this.#t === this ? [] : this.#t.#w, t2 === "!" && !this.#t.#c && this.#w.push(this), this.#S = this.#h ? this.#h.#r.length : 0;
         }
         get hasMagic() {
           if (this.#s !== void 0) return this.#s;
-          for (let t of this.#r) if (typeof t != "string" && (t.type || t.hasMagic)) return this.#s = true;
+          for (let t2 of this.#r) if (typeof t2 != "string" && (t2.type || t2.hasMagic)) return this.#s = true;
           return this.#s;
         }
         toString() {
-          return this.#f !== void 0 ? this.#f : this.type ? this.#f = this.type + "(" + this.#r.map((t) => String(t)).join("|") + ")" : this.#f = this.#r.map((t) => String(t)).join("");
+          return this.#f !== void 0 ? this.#f : this.type ? this.#f = this.type + "(" + this.#r.map((t2) => String(t2)).join("|") + ")" : this.#f = this.#r.map((t2) => String(t2)).join("");
         }
         #a() {
           if (this !== this.#t) throw new Error("should only call on root");
           if (this.#c) return this;
           this.toString(), this.#c = true;
-          let t;
-          for (; t = this.#w.pop(); ) {
-            if (t.type !== "!") continue;
-            let e = t, s = e.#h;
+          let t2;
+          for (; t2 = this.#w.pop(); ) {
+            if (t2.type !== "!") continue;
+            let e = t2, s = e.#h;
             for (; s; ) {
-              for (let i = e.#S + 1; !s.type && i < s.#r.length; i++) for (let r of t.#r) {
+              for (let i = e.#S + 1; !s.type && i < s.#r.length; i++) for (let r of t2.#r) {
                 if (typeof r == "string") throw new Error("string part in extglob AST??");
                 r.copyIn(s.#r[i]);
               }
@@ -276098,23 +276098,23 @@ var require_index_min = __commonJS({
           }
           return this;
         }
-        push(...t) {
-          for (let e of t) if (e !== "") {
+        push(...t2) {
+          for (let e of t2) if (e !== "") {
             if (typeof e != "string" && !(e instanceof n && e.#h === this)) throw new Error("invalid part: " + e);
             this.#r.push(e);
           }
         }
         toJSON() {
-          let t = this.type === null ? this.#r.slice().map((e) => typeof e == "string" ? e : e.toJSON()) : [this.type, ...this.#r.map((e) => e.toJSON())];
-          return this.isStart() && !this.type && t.unshift([]), this.isEnd() && (this === this.#t || this.#t.#c && this.#h?.type === "!") && t.push({}), t;
+          let t2 = this.type === null ? this.#r.slice().map((e) => typeof e == "string" ? e : e.toJSON()) : [this.type, ...this.#r.map((e) => e.toJSON())];
+          return this.isStart() && !this.type && t2.unshift([]), this.isEnd() && (this === this.#t || this.#t.#c && this.#h?.type === "!") && t2.push({}), t2;
         }
         isStart() {
           if (this.#t === this) return true;
           if (!this.#h?.isStart()) return false;
           if (this.#S === 0) return true;
-          let t = this.#h;
+          let t2 = this.#h;
           for (let e = 0; e < this.#S; e++) {
-            let s = t.#r[e];
+            let s = t2.#r[e];
             if (!(s instanceof n && s.type === "!")) return false;
           }
           return true;
@@ -276123,23 +276123,23 @@ var require_index_min = __commonJS({
           if (this.#t === this || this.#h?.type === "!") return true;
           if (!this.#h?.isEnd()) return false;
           if (!this.type) return this.#h?.isEnd();
-          let t = this.#h ? this.#h.#r.length : 0;
-          return this.#S === t - 1;
+          let t2 = this.#h ? this.#h.#r.length : 0;
+          return this.#S === t2 - 1;
         }
-        copyIn(t) {
-          typeof t == "string" ? this.push(t) : this.push(t.clone(this));
+        copyIn(t2) {
+          typeof t2 == "string" ? this.push(t2) : this.push(t2.clone(this));
         }
-        clone(t) {
-          let e = new n(this.type, t);
+        clone(t2) {
+          let e = new n(this.type, t2);
           for (let s of this.#r) e.copyIn(s);
           return e;
         }
-        static #i(t, e, s, i) {
+        static #i(t2, e, s, i) {
           let r = false, h = false, o = -1, a = false;
           if (e.type === null) {
             let u = s, m = "";
-            for (; u < t.length; ) {
-              let p = t.charAt(u++);
+            for (; u < t2.length; ) {
+              let p = t2.charAt(u++);
               if (r || p === "\\") {
                 r = !r, m += p;
                 continue;
@@ -276151,10 +276151,10 @@ var require_index_min = __commonJS({
                 h = true, o = u, a = false, m += p;
                 continue;
               }
-              if (!i.noext && Ze(p) && t.charAt(u) === "(") {
+              if (!i.noext && Ze(p) && t2.charAt(u) === "(") {
                 e.push(m), m = "";
                 let b = new n(p, e);
-                u = n.#i(t, b, u, i), e.push(b);
+                u = n.#i(t2, b, u, i), e.push(b);
                 continue;
               }
               m += p;
@@ -276162,8 +276162,8 @@ var require_index_min = __commonJS({
             return e.push(m), u;
           }
           let l = s + 1, f = new n(null, e), c = [], d = "";
-          for (; l < t.length; ) {
-            let u = t.charAt(l++);
+          for (; l < t2.length; ) {
+            let u = t2.charAt(l++);
             if (r || u === "\\") {
               r = !r, d += u;
               continue;
@@ -276175,10 +276175,10 @@ var require_index_min = __commonJS({
               h = true, o = l, a = false, d += u;
               continue;
             }
-            if (Ze(u) && t.charAt(l) === "(") {
+            if (Ze(u) && t2.charAt(l) === "(") {
               f.push(d), d = "";
               let m = new n(u, f);
-              f.push(m), l = n.#i(t, m, l, i);
+              f.push(m), l = n.#i(t2, m, l, i);
               continue;
             }
             if (u === "|") {
@@ -276188,31 +276188,31 @@ var require_index_min = __commonJS({
             if (u === ")") return d === "" && e.#r.length === 0 && (e.#u = true), f.push(d), d = "", e.push(...c, f), l;
             d += u;
           }
-          return e.type = null, e.#s = void 0, e.#r = [t.substring(s - 1)], l;
+          return e.type = null, e.#s = void 0, e.#r = [t2.substring(s - 1)], l;
         }
-        static fromGlob(t, e = {}) {
+        static fromGlob(t2, e = {}) {
           let s = new n(null, void 0, e);
-          return n.#i(t, s, 0, e), s;
+          return n.#i(t2, s, 0, e), s;
         }
         toMMPattern() {
           if (this !== this.#t) return this.#t.toMMPattern();
-          let t = this.toString(), [e, s, i, r] = this.toRegExpSource();
-          if (!(i || this.#s || this.#o.nocase && !this.#o.nocaseMagicOnly && t.toUpperCase() !== t.toLowerCase())) return s;
+          let t2 = this.toString(), [e, s, i, r] = this.toRegExpSource();
+          if (!(i || this.#s || this.#o.nocase && !this.#o.nocaseMagicOnly && t2.toUpperCase() !== t2.toLowerCase())) return s;
           let o = (this.#o.nocase ? "i" : "") + (r ? "u" : "");
-          return Object.assign(new RegExp(`^${e}$`, o), { _src: e, _glob: t });
+          return Object.assign(new RegExp(`^${e}$`, o), { _src: e, _glob: t2 });
         }
         get options() {
           return this.#o;
         }
-        toRegExpSource(t) {
-          let e = t ?? !!this.#o.dot;
+        toRegExpSource(t2) {
+          let e = t2 ?? !!this.#o.dot;
           if (this.#t === this && this.#a(), !this.type) {
             let a = this.isStart() && this.isEnd() && !this.#r.some((u) => typeof u != "string"), l = this.#r.map((u) => {
-              let [m, p, b, w] = typeof u == "string" ? n.#v(u, this.#s, a) : u.toRegExpSource(t);
+              let [m, p, b, w] = typeof u == "string" ? n.#v(u, this.#s, a) : u.toRegExpSource(t2);
               return this.#s = this.#s || b, this.#n = this.#n || w, m;
             }).join(""), f = "";
             if (this.isStart() && typeof this.#r[0] == "string" && !(this.#r.length === 1 && gi.has(this.#r[0]))) {
-              let m = mi, p = e && m.has(l.charAt(0)) || l.startsWith("\\.") && m.has(l.charAt(2)) || l.startsWith("\\.\\.") && m.has(l.charAt(4)), b = !e && !t && m.has(l.charAt(0));
+              let m = mi, p = e && m.has(l.charAt(0)) || l.startsWith("\\.") && m.has(l.charAt(2)) || l.startsWith("\\.\\.") && m.has(l.charAt(4)), b = !e && !t2 && m.has(l.charAt(0));
               f = p ? pi : b ? Pt : "";
             }
             let c = "";
@@ -276223,42 +276223,42 @@ var require_index_min = __commonJS({
             let a = this.toString();
             return this.#r = [a], this.type = null, this.#s = void 0, [a, (0, Mt.unescape)(this.toString()), false, false];
           }
-          let h = !s || t || e || !Pt ? "" : this.#d(true);
+          let h = !s || t2 || e || !Pt ? "" : this.#d(true);
           h === r && (h = ""), h && (r = `(?:${r})(?:${h})*?`);
           let o = "";
           if (this.type === "!" && this.#u) o = (this.isStart() && !e ? Pt : "") + ts;
           else {
-            let a = this.type === "!" ? "))" + (this.isStart() && !e && !t ? Pt : "") + Qe + ")" : this.type === "@" ? ")" : this.type === "?" ? ")?" : this.type === "+" && h ? ")" : this.type === "*" && h ? ")?" : `)${this.type}`;
+            let a = this.type === "!" ? "))" + (this.isStart() && !e && !t2 ? Pt : "") + Qe + ")" : this.type === "@" ? ")" : this.type === "?" ? ")?" : this.type === "+" && h ? ")" : this.type === "*" && h ? ")?" : `)${this.type}`;
             o = i + r + a;
           }
           return [o, (0, Mt.unescape)(r), this.#s = !!this.#s, this.#n];
         }
-        #d(t) {
+        #d(t2) {
           return this.#r.map((e) => {
             if (typeof e == "string") throw new Error("string type in extglob ast??");
-            let [s, i, r, h] = e.toRegExpSource(t);
+            let [s, i, r, h] = e.toRegExpSource(t2);
             return this.#n = this.#n || h, s;
           }).filter((e) => !(this.isStart() && this.isEnd()) || !!e).join("|");
         }
-        static #v(t, e, s = false) {
+        static #v(t2, e, s = false) {
           let i = false, r = "", h = false, o = false;
-          for (let a = 0; a < t.length; a++) {
-            let l = t.charAt(a);
+          for (let a = 0; a < t2.length; a++) {
+            let l = t2.charAt(a);
             if (i) {
               i = false, r += (wi.has(l) ? "\\" : "") + l;
               continue;
             }
             if (l === "*") {
               if (o) continue;
-              o = true, r += s && /^[*]+$/.test(t) ? ts : Qe, e = true;
+              o = true, r += s && /^[*]+$/.test(t2) ? ts : Qe, e = true;
               continue;
             } else o = false;
             if (l === "\\") {
-              a === t.length - 1 ? r += "\\\\" : i = true;
+              a === t2.length - 1 ? r += "\\\\" : i = true;
               continue;
             }
             if (l === "[") {
-              let [f, c, d, u] = (0, fi.parseClass)(t, a);
+              let [f, c, d, u] = (0, fi.parseClass)(t2, a);
               if (d) {
                 r += f, h = h || c, a += d - 1, e = e || u;
                 continue;
@@ -276270,7 +276270,7 @@ var require_index_min = __commonJS({
             }
             r += bi(l);
           }
-          return [r, (0, Mt.unescape)(t), !!e, h];
+          return [r, (0, Mt.unescape)(t2), !!e, h];
         }
       };
       Dt.AST = fe;
@@ -276279,71 +276279,71 @@ var require_index_min = __commonJS({
       "use strict";
       Object.defineProperty(Ft, "__esModule", { value: true });
       Ft.escape = void 0;
-      var yi = (n, { windowsPathsNoEscape: t = false, magicalBraces: e = false } = {}) => e ? t ? n.replace(/[?*()[\]{}]/g, "[$&]") : n.replace(/[?*()[\]\\{}]/g, "\\$&") : t ? n.replace(/[?*()[\]]/g, "[$&]") : n.replace(/[?*()[\]\\]/g, "\\$&");
+      var yi = (n, { windowsPathsNoEscape: t2 = false, magicalBraces: e = false } = {}) => e ? t2 ? n.replace(/[?*()[\]{}]/g, "[$&]") : n.replace(/[?*()[\]\\{}]/g, "\\$&") : t2 ? n.replace(/[?*()[\]]/g, "[$&]") : n.replace(/[?*()[\]\\]/g, "\\$&");
       Ft.escape = yi;
     });
     var H = R((g) => {
       "use strict";
       Object.defineProperty(g, "__esModule", { value: true });
       g.unescape = g.escape = g.AST = g.Minimatch = g.match = g.makeRe = g.braceExpand = g.defaults = g.filter = g.GLOBSTAR = g.sep = g.minimatch = void 0;
-      var Si = Ke(), jt = Xe(), is = pe(), vi = me(), Ei = kt(), _i = (n, t, e = {}) => ((0, jt.assertValidPattern)(t), !e.nocomment && t.charAt(0) === "#" ? false : new J(t, e).match(n));
+      var Si = Ke(), jt = Xe(), is = pe(), vi = me(), Ei = kt(), _i = (n, t2, e = {}) => ((0, jt.assertValidPattern)(t2), !e.nocomment && t2.charAt(0) === "#" ? false : new J(t2, e).match(n));
       g.minimatch = _i;
-      var Oi = /^\*+([^+@!?\*\[\(]*)$/, xi = (n) => (t) => !t.startsWith(".") && t.endsWith(n), Ti = (n) => (t) => t.endsWith(n), Ci = (n) => (n = n.toLowerCase(), (t) => !t.startsWith(".") && t.toLowerCase().endsWith(n)), Ri = (n) => (n = n.toLowerCase(), (t) => t.toLowerCase().endsWith(n)), Ai = /^\*+\.\*+$/, ki = (n) => !n.startsWith(".") && n.includes("."), Mi = (n) => n !== "." && n !== ".." && n.includes("."), Pi = /^\.\*+$/, Di = (n) => n !== "." && n !== ".." && n.startsWith("."), Fi = /^\*+$/, ji = (n) => n.length !== 0 && !n.startsWith("."), Ni = (n) => n.length !== 0 && n !== "." && n !== "..", Li = /^\?+([^+@!?\*\[\(]*)?$/, Wi = ([n, t = ""]) => {
+      var Oi = /^\*+([^+@!?\*\[\(]*)$/, xi = (n) => (t2) => !t2.startsWith(".") && t2.endsWith(n), Ti = (n) => (t2) => t2.endsWith(n), Ci = (n) => (n = n.toLowerCase(), (t2) => !t2.startsWith(".") && t2.toLowerCase().endsWith(n)), Ri = (n) => (n = n.toLowerCase(), (t2) => t2.toLowerCase().endsWith(n)), Ai = /^\*+\.\*+$/, ki = (n) => !n.startsWith(".") && n.includes("."), Mi = (n) => n !== "." && n !== ".." && n.includes("."), Pi = /^\.\*+$/, Di = (n) => n !== "." && n !== ".." && n.startsWith("."), Fi = /^\*+$/, ji = (n) => n.length !== 0 && !n.startsWith("."), Ni = (n) => n.length !== 0 && n !== "." && n !== "..", Li = /^\?+([^+@!?\*\[\(]*)?$/, Wi = ([n, t2 = ""]) => {
         let e = rs([n]);
-        return t ? (t = t.toLowerCase(), (s) => e(s) && s.toLowerCase().endsWith(t)) : e;
-      }, Bi = ([n, t = ""]) => {
+        return t2 ? (t2 = t2.toLowerCase(), (s) => e(s) && s.toLowerCase().endsWith(t2)) : e;
+      }, Bi = ([n, t2 = ""]) => {
         let e = ns([n]);
-        return t ? (t = t.toLowerCase(), (s) => e(s) && s.toLowerCase().endsWith(t)) : e;
-      }, Ii = ([n, t = ""]) => {
+        return t2 ? (t2 = t2.toLowerCase(), (s) => e(s) && s.toLowerCase().endsWith(t2)) : e;
+      }, Ii = ([n, t2 = ""]) => {
         let e = ns([n]);
-        return t ? (s) => e(s) && s.endsWith(t) : e;
-      }, Gi = ([n, t = ""]) => {
+        return t2 ? (s) => e(s) && s.endsWith(t2) : e;
+      }, Gi = ([n, t2 = ""]) => {
         let e = rs([n]);
-        return t ? (s) => e(s) && s.endsWith(t) : e;
+        return t2 ? (s) => e(s) && s.endsWith(t2) : e;
       }, rs = ([n]) => {
-        let t = n.length;
-        return (e) => e.length === t && !e.startsWith(".");
+        let t2 = n.length;
+        return (e) => e.length === t2 && !e.startsWith(".");
       }, ns = ([n]) => {
-        let t = n.length;
-        return (e) => e.length === t && e !== "." && e !== "..";
+        let t2 = n.length;
+        return (e) => e.length === t2 && e !== "." && e !== "..";
       }, hs = typeof process == "object" && process ? typeof process.env == "object" && process.env && process.env.__MINIMATCH_TESTING_PLATFORM__ || process.platform : "posix", es = { win32: { sep: "\\" }, posix: { sep: "/" } };
       g.sep = hs === "win32" ? es.win32.sep : es.posix.sep;
       g.minimatch.sep = g.sep;
       g.GLOBSTAR = /* @__PURE__ */ Symbol("globstar **");
       g.minimatch.GLOBSTAR = g.GLOBSTAR;
-      var zi = "[^/]", Ui = zi + "*?", $i = "(?:(?!(?:\\/|^)(?:\\.{1,2})($|\\/)).)*?", qi = "(?:(?!(?:\\/|^)\\.).)*?", Hi = (n, t = {}) => (e) => (0, g.minimatch)(e, n, t);
+      var zi = "[^/]", Ui = zi + "*?", $i = "(?:(?!(?:\\/|^)(?:\\.{1,2})($|\\/)).)*?", qi = "(?:(?!(?:\\/|^)\\.).)*?", Hi = (n, t2 = {}) => (e) => (0, g.minimatch)(e, n, t2);
       g.filter = Hi;
       g.minimatch.filter = g.filter;
-      var F = (n, t = {}) => Object.assign({}, n, t), Vi = (n) => {
+      var F = (n, t2 = {}) => Object.assign({}, n, t2), Vi = (n) => {
         if (!n || typeof n != "object" || !Object.keys(n).length) return g.minimatch;
-        let t = g.minimatch;
-        return Object.assign((s, i, r = {}) => t(s, i, F(n, r)), { Minimatch: class extends t.Minimatch {
+        let t2 = g.minimatch;
+        return Object.assign((s, i, r = {}) => t2(s, i, F(n, r)), { Minimatch: class extends t2.Minimatch {
           constructor(i, r = {}) {
             super(i, F(n, r));
           }
           static defaults(i) {
-            return t.defaults(F(n, i)).Minimatch;
+            return t2.defaults(F(n, i)).Minimatch;
           }
-        }, AST: class extends t.AST {
+        }, AST: class extends t2.AST {
           constructor(i, r, h = {}) {
             super(i, r, F(n, h));
           }
           static fromGlob(i, r = {}) {
-            return t.AST.fromGlob(i, F(n, r));
+            return t2.AST.fromGlob(i, F(n, r));
           }
-        }, unescape: (s, i = {}) => t.unescape(s, F(n, i)), escape: (s, i = {}) => t.escape(s, F(n, i)), filter: (s, i = {}) => t.filter(s, F(n, i)), defaults: (s) => t.defaults(F(n, s)), makeRe: (s, i = {}) => t.makeRe(s, F(n, i)), braceExpand: (s, i = {}) => t.braceExpand(s, F(n, i)), match: (s, i, r = {}) => t.match(s, i, F(n, r)), sep: t.sep, GLOBSTAR: g.GLOBSTAR });
+        }, unescape: (s, i = {}) => t2.unescape(s, F(n, i)), escape: (s, i = {}) => t2.escape(s, F(n, i)), filter: (s, i = {}) => t2.filter(s, F(n, i)), defaults: (s) => t2.defaults(F(n, s)), makeRe: (s, i = {}) => t2.makeRe(s, F(n, i)), braceExpand: (s, i = {}) => t2.braceExpand(s, F(n, i)), match: (s, i, r = {}) => t2.match(s, i, F(n, r)), sep: t2.sep, GLOBSTAR: g.GLOBSTAR });
       };
       g.defaults = Vi;
       g.minimatch.defaults = g.defaults;
-      var Ki = (n, t = {}) => ((0, jt.assertValidPattern)(n), t.nobrace || !/\{(?:(?!\{).)*\}/.test(n) ? [n] : (0, Si.expand)(n, { max: t.braceExpandMax }));
+      var Ki = (n, t2 = {}) => ((0, jt.assertValidPattern)(n), t2.nobrace || !/\{(?:(?!\{).)*\}/.test(n) ? [n] : (0, Si.expand)(n, { max: t2.braceExpandMax }));
       g.braceExpand = Ki;
       g.minimatch.braceExpand = g.braceExpand;
-      var Xi = (n, t = {}) => new J(n, t).makeRe();
+      var Xi = (n, t2 = {}) => new J(n, t2).makeRe();
       g.makeRe = Xi;
       g.minimatch.makeRe = g.makeRe;
-      var Yi = (n, t, e = {}) => {
-        let s = new J(t, e);
-        return n = n.filter((i) => s.match(i)), s.options.nonull && !n.length && n.push(t), n;
+      var Yi = (n, t2, e = {}) => {
+        let s = new J(t2, e);
+        return n = n.filter((i) => s.match(i)), s.options.nonull && !n.length && n.push(t2), n;
       };
       g.match = Yi;
       g.minimatch.match = g.match;
@@ -276365,25 +276365,25 @@ var require_index_min = __commonJS({
         platform;
         windowsNoMagicRoot;
         regexp;
-        constructor(t, e = {}) {
-          (0, jt.assertValidPattern)(t), e = e || {}, this.options = e, this.pattern = t, this.platform = e.platform || hs, this.isWindows = this.platform === "win32";
+        constructor(t2, e = {}) {
+          (0, jt.assertValidPattern)(t2), e = e || {}, this.options = e, this.pattern = t2, this.platform = e.platform || hs, this.isWindows = this.platform === "win32";
           let s = "allowWindowsEscape";
           this.windowsPathsNoEscape = !!e.windowsPathsNoEscape || e[s] === false, this.windowsPathsNoEscape && (this.pattern = this.pattern.replace(/\\/g, "/")), this.preserveMultipleSlashes = !!e.preserveMultipleSlashes, this.regexp = null, this.negate = false, this.nonegate = !!e.nonegate, this.comment = false, this.empty = false, this.partial = !!e.partial, this.nocase = !!this.options.nocase, this.windowsNoMagicRoot = e.windowsNoMagicRoot !== void 0 ? e.windowsNoMagicRoot : !!(this.isWindows && this.nocase), this.globSet = [], this.globParts = [], this.set = [], this.make();
         }
         hasMagic() {
           if (this.options.magicalBraces && this.set.length > 1) return true;
-          for (let t of this.set) for (let e of t) if (typeof e != "string") return true;
+          for (let t2 of this.set) for (let e of t2) if (typeof e != "string") return true;
           return false;
         }
-        debug(...t) {
+        debug(...t2) {
         }
         make() {
-          let t = this.pattern, e = this.options;
-          if (!e.nocomment && t.charAt(0) === "#") {
+          let t2 = this.pattern, e = this.options;
+          if (!e.nocomment && t2.charAt(0) === "#") {
             this.comment = true;
             return;
           }
-          if (!t) {
+          if (!t2) {
             this.empty = true;
             return;
           }
@@ -276404,13 +276404,13 @@ var require_index_min = __commonJS({
           }
           this.debug(this.pattern, this.set);
         }
-        preprocess(t) {
-          if (this.options.noglobstar) for (let s = 0; s < t.length; s++) for (let i = 0; i < t[s].length; i++) t[s][i] === "**" && (t[s][i] = "*");
+        preprocess(t2) {
+          if (this.options.noglobstar) for (let s = 0; s < t2.length; s++) for (let i = 0; i < t2[s].length; i++) t2[s][i] === "**" && (t2[s][i] = "*");
           let { optimizationLevel: e = 1 } = this.options;
-          return e >= 2 ? (t = this.firstPhasePreProcess(t), t = this.secondPhasePreProcess(t)) : e >= 1 ? t = this.levelOneOptimize(t) : t = this.adjascentGlobstarOptimize(t), t;
+          return e >= 2 ? (t2 = this.firstPhasePreProcess(t2), t2 = this.secondPhasePreProcess(t2)) : e >= 1 ? t2 = this.levelOneOptimize(t2) : t2 = this.adjascentGlobstarOptimize(t2), t2;
         }
-        adjascentGlobstarOptimize(t) {
-          return t.map((e) => {
+        adjascentGlobstarOptimize(t2) {
+          return t2.map((e) => {
             let s = -1;
             for (; (s = e.indexOf("**", s + 1)) !== -1; ) {
               let i = s;
@@ -276420,36 +276420,36 @@ var require_index_min = __commonJS({
             return e;
           });
         }
-        levelOneOptimize(t) {
-          return t.map((e) => (e = e.reduce((s, i) => {
+        levelOneOptimize(t2) {
+          return t2.map((e) => (e = e.reduce((s, i) => {
             let r = s[s.length - 1];
             return i === "**" && r === "**" ? s : i === ".." && r && r !== ".." && r !== "." && r !== "**" ? (s.pop(), s) : (s.push(i), s);
           }, []), e.length === 0 ? [""] : e));
         }
-        levelTwoFileOptimize(t) {
-          Array.isArray(t) || (t = this.slashSplit(t));
+        levelTwoFileOptimize(t2) {
+          Array.isArray(t2) || (t2 = this.slashSplit(t2));
           let e = false;
           do {
             if (e = false, !this.preserveMultipleSlashes) {
-              for (let i = 1; i < t.length - 1; i++) {
-                let r = t[i];
-                i === 1 && r === "" && t[0] === "" || (r === "." || r === "") && (e = true, t.splice(i, 1), i--);
+              for (let i = 1; i < t2.length - 1; i++) {
+                let r = t2[i];
+                i === 1 && r === "" && t2[0] === "" || (r === "." || r === "") && (e = true, t2.splice(i, 1), i--);
               }
-              t[0] === "." && t.length === 2 && (t[1] === "." || t[1] === "") && (e = true, t.pop());
+              t2[0] === "." && t2.length === 2 && (t2[1] === "." || t2[1] === "") && (e = true, t2.pop());
             }
             let s = 0;
-            for (; (s = t.indexOf("..", s + 1)) !== -1; ) {
-              let i = t[s - 1];
-              i && i !== "." && i !== ".." && i !== "**" && (e = true, t.splice(s - 1, 2), s -= 2);
+            for (; (s = t2.indexOf("..", s + 1)) !== -1; ) {
+              let i = t2[s - 1];
+              i && i !== "." && i !== ".." && i !== "**" && (e = true, t2.splice(s - 1, 2), s -= 2);
             }
           } while (e);
-          return t.length === 0 ? [""] : t;
+          return t2.length === 0 ? [""] : t2;
         }
-        firstPhasePreProcess(t) {
+        firstPhasePreProcess(t2) {
           let e = false;
           do {
             e = false;
-            for (let s of t) {
+            for (let s of t2) {
               let i = -1;
               for (; (i = s.indexOf("**", i + 1)) !== -1; ) {
                 let h = i;
@@ -276459,7 +276459,7 @@ var require_index_min = __commonJS({
                 if (o !== ".." || !a || a === "." || a === ".." || !l || l === "." || l === "..") continue;
                 e = true, s.splice(i, 1);
                 let f = s.slice(0);
-                f[i] = "**", t.push(f), i--;
+                f[i] = "**", t2.push(f), i--;
               }
               if (!this.preserveMultipleSlashes) {
                 for (let h = 1; h < s.length - 1; h++) {
@@ -276479,99 +276479,99 @@ var require_index_min = __commonJS({
               }
             }
           } while (e);
-          return t;
+          return t2;
         }
-        secondPhasePreProcess(t) {
-          for (let e = 0; e < t.length - 1; e++) for (let s = e + 1; s < t.length; s++) {
-            let i = this.partsMatch(t[e], t[s], !this.preserveMultipleSlashes);
+        secondPhasePreProcess(t2) {
+          for (let e = 0; e < t2.length - 1; e++) for (let s = e + 1; s < t2.length; s++) {
+            let i = this.partsMatch(t2[e], t2[s], !this.preserveMultipleSlashes);
             if (i) {
-              t[e] = [], t[s] = i;
+              t2[e] = [], t2[s] = i;
               break;
             }
           }
-          return t.filter((e) => e.length);
+          return t2.filter((e) => e.length);
         }
-        partsMatch(t, e, s = false) {
+        partsMatch(t2, e, s = false) {
           let i = 0, r = 0, h = [], o = "";
-          for (; i < t.length && r < e.length; ) if (t[i] === e[r]) h.push(o === "b" ? e[r] : t[i]), i++, r++;
-          else if (s && t[i] === "**" && e[r] === t[i + 1]) h.push(t[i]), i++;
-          else if (s && e[r] === "**" && t[i] === e[r + 1]) h.push(e[r]), r++;
-          else if (t[i] === "*" && e[r] && (this.options.dot || !e[r].startsWith(".")) && e[r] !== "**") {
+          for (; i < t2.length && r < e.length; ) if (t2[i] === e[r]) h.push(o === "b" ? e[r] : t2[i]), i++, r++;
+          else if (s && t2[i] === "**" && e[r] === t2[i + 1]) h.push(t2[i]), i++;
+          else if (s && e[r] === "**" && t2[i] === e[r + 1]) h.push(e[r]), r++;
+          else if (t2[i] === "*" && e[r] && (this.options.dot || !e[r].startsWith(".")) && e[r] !== "**") {
             if (o === "b") return false;
-            o = "a", h.push(t[i]), i++, r++;
-          } else if (e[r] === "*" && t[i] && (this.options.dot || !t[i].startsWith(".")) && t[i] !== "**") {
+            o = "a", h.push(t2[i]), i++, r++;
+          } else if (e[r] === "*" && t2[i] && (this.options.dot || !t2[i].startsWith(".")) && t2[i] !== "**") {
             if (o === "a") return false;
             o = "b", h.push(e[r]), i++, r++;
           } else return false;
-          return t.length === e.length && h;
+          return t2.length === e.length && h;
         }
         parseNegate() {
           if (this.nonegate) return;
-          let t = this.pattern, e = false, s = 0;
-          for (let i = 0; i < t.length && t.charAt(i) === "!"; i++) e = !e, s++;
-          s && (this.pattern = t.slice(s)), this.negate = e;
+          let t2 = this.pattern, e = false, s = 0;
+          for (let i = 0; i < t2.length && t2.charAt(i) === "!"; i++) e = !e, s++;
+          s && (this.pattern = t2.slice(s)), this.negate = e;
         }
-        matchOne(t, e, s = false) {
+        matchOne(t2, e, s = false) {
           let i = this.options;
           if (this.isWindows) {
-            let p = typeof t[0] == "string" && /^[a-z]:$/i.test(t[0]), b = !p && t[0] === "" && t[1] === "" && t[2] === "?" && /^[a-z]:$/i.test(t[3]), w = typeof e[0] == "string" && /^[a-z]:$/i.test(e[0]), v = !w && e[0] === "" && e[1] === "" && e[2] === "?" && typeof e[3] == "string" && /^[a-z]:$/i.test(e[3]), E = b ? 3 : p ? 0 : void 0, y = v ? 3 : w ? 0 : void 0;
+            let p = typeof t2[0] == "string" && /^[a-z]:$/i.test(t2[0]), b = !p && t2[0] === "" && t2[1] === "" && t2[2] === "?" && /^[a-z]:$/i.test(t2[3]), w = typeof e[0] == "string" && /^[a-z]:$/i.test(e[0]), v = !w && e[0] === "" && e[1] === "" && e[2] === "?" && typeof e[3] == "string" && /^[a-z]:$/i.test(e[3]), E = b ? 3 : p ? 0 : void 0, y = v ? 3 : w ? 0 : void 0;
             if (typeof E == "number" && typeof y == "number") {
-              let [S, B] = [t[E], e[y]];
-              S.toLowerCase() === B.toLowerCase() && (e[y] = S, y > E ? e = e.slice(y) : E > y && (t = t.slice(E)));
+              let [S, B] = [t2[E], e[y]];
+              S.toLowerCase() === B.toLowerCase() && (e[y] = S, y > E ? e = e.slice(y) : E > y && (t2 = t2.slice(E)));
             }
           }
           let { optimizationLevel: r = 1 } = this.options;
-          r >= 2 && (t = this.levelTwoFileOptimize(t)), this.debug("matchOne", this, { file: t, pattern: e }), this.debug("matchOne", t.length, e.length);
-          for (var h = 0, o = 0, a = t.length, l = e.length; h < a && o < l; h++, o++) {
+          r >= 2 && (t2 = this.levelTwoFileOptimize(t2)), this.debug("matchOne", this, { file: t2, pattern: e }), this.debug("matchOne", t2.length, e.length);
+          for (var h = 0, o = 0, a = t2.length, l = e.length; h < a && o < l; h++, o++) {
             this.debug("matchOne loop");
-            var f = e[o], c = t[h];
+            var f = e[o], c = t2[h];
             if (this.debug(e, f, c), f === false) return false;
             if (f === g.GLOBSTAR) {
               this.debug("GLOBSTAR", [e, f, c]);
               var d = h, u = o + 1;
               if (u === l) {
-                for (this.debug("** at the end"); h < a; h++) if (t[h] === "." || t[h] === ".." || !i.dot && t[h].charAt(0) === ".") return false;
+                for (this.debug("** at the end"); h < a; h++) if (t2[h] === "." || t2[h] === ".." || !i.dot && t2[h].charAt(0) === ".") return false;
                 return true;
               }
               for (; d < a; ) {
-                var m = t[d];
+                var m = t2[d];
                 if (this.debug(`
-globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) return this.debug("globstar found match!", d, a, m), true;
+globstar while`, t2, d, e, u, m), this.matchOne(t2.slice(d), e.slice(u), s)) return this.debug("globstar found match!", d, a, m), true;
                 if (m === "." || m === ".." || !i.dot && m.charAt(0) === ".") {
-                  this.debug("dot detected!", t, d, e, u);
+                  this.debug("dot detected!", t2, d, e, u);
                   break;
                 }
                 this.debug("globstar swallow a segment, and continue"), d++;
               }
               return !!(s && (this.debug(`
->>> no match, partial?`, t, d, e, u), d === a));
+>>> no match, partial?`, t2, d, e, u), d === a));
             }
             let p;
             if (typeof f == "string" ? (p = c === f, this.debug("string match", f, c, p)) : (p = f.test(c), this.debug("pattern match", f, c, p)), !p) return false;
           }
           if (h === a && o === l) return true;
           if (h === a) return s;
-          if (o === l) return h === a - 1 && t[h] === "";
+          if (o === l) return h === a - 1 && t2[h] === "";
           throw new Error("wtf?");
         }
         braceExpand() {
           return (0, g.braceExpand)(this.pattern, this.options);
         }
-        parse(t) {
-          (0, jt.assertValidPattern)(t);
+        parse(t2) {
+          (0, jt.assertValidPattern)(t2);
           let e = this.options;
-          if (t === "**") return g.GLOBSTAR;
-          if (t === "") return "";
+          if (t2 === "**") return g.GLOBSTAR;
+          if (t2 === "") return "";
           let s, i = null;
-          (s = t.match(Fi)) ? i = e.dot ? Ni : ji : (s = t.match(Oi)) ? i = (e.nocase ? e.dot ? Ri : Ci : e.dot ? Ti : xi)(s[1]) : (s = t.match(Li)) ? i = (e.nocase ? e.dot ? Bi : Wi : e.dot ? Ii : Gi)(s) : (s = t.match(Ai)) ? i = e.dot ? Mi : ki : (s = t.match(Pi)) && (i = Di);
-          let r = is.AST.fromGlob(t, this.options).toMMPattern();
+          (s = t2.match(Fi)) ? i = e.dot ? Ni : ji : (s = t2.match(Oi)) ? i = (e.nocase ? e.dot ? Ri : Ci : e.dot ? Ti : xi)(s[1]) : (s = t2.match(Li)) ? i = (e.nocase ? e.dot ? Bi : Wi : e.dot ? Ii : Gi)(s) : (s = t2.match(Ai)) ? i = e.dot ? Mi : ki : (s = t2.match(Pi)) && (i = Di);
+          let r = is.AST.fromGlob(t2, this.options).toMMPattern();
           return i && typeof r == "object" && Reflect.defineProperty(r, "test", { value: i }), r;
         }
         makeRe() {
           if (this.regexp || this.regexp === false) return this.regexp;
-          let t = this.set;
-          if (!t.length) return this.regexp = false, this.regexp;
-          let e = this.options, s = e.noglobstar ? Ui : e.dot ? $i : qi, i = new Set(e.nocase ? ["i"] : []), r = t.map((a) => {
+          let t2 = this.set;
+          if (!t2.length) return this.regexp = false, this.regexp;
+          let e = this.options, s = e.noglobstar ? Ui : e.dot ? $i : qi, i = new Set(e.nocase ? ["i"] : []), r = t2.map((a) => {
             let l = a.map((c) => {
               if (c instanceof RegExp) for (let d of c.flags.split("")) i.add(d);
               return typeof c == "string" ? Ji(c) : c === g.GLOBSTAR ? g.GLOBSTAR : c._src;
@@ -276587,7 +276587,7 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
               return "(?:" + c.join("|") + ")";
             }
             return f.join("/");
-          }).join("|"), [h, o] = t.length > 1 ? ["(?:", ")"] : ["", ""];
+          }).join("|"), [h, o] = t2.length > 1 ? ["(?:", ")"] : ["", ""];
           r = "^" + h + r + o + "$", this.partial && (r = "^(?:\\/|" + h + r.slice(1, -1) + o + ")$"), this.negate && (r = "^(?!" + r + ").+$");
           try {
             this.regexp = new RegExp(r, [...i].join(""));
@@ -276596,16 +276596,16 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           }
           return this.regexp;
         }
-        slashSplit(t) {
-          return this.preserveMultipleSlashes ? t.split("/") : this.isWindows && /^\/\/[^\/]+/.test(t) ? ["", ...t.split(/\/+/)] : t.split(/\/+/);
+        slashSplit(t2) {
+          return this.preserveMultipleSlashes ? t2.split("/") : this.isWindows && /^\/\/[^\/]+/.test(t2) ? ["", ...t2.split(/\/+/)] : t2.split(/\/+/);
         }
-        match(t, e = this.partial) {
-          if (this.debug("match", t, this.pattern), this.comment) return false;
-          if (this.empty) return t === "";
-          if (t === "/" && e) return true;
+        match(t2, e = this.partial) {
+          if (this.debug("match", t2, this.pattern), this.comment) return false;
+          if (this.empty) return t2 === "";
+          if (t2 === "/" && e) return true;
           let s = this.options;
-          this.isWindows && (t = t.split("\\").join("/"));
-          let i = this.slashSplit(t);
+          this.isWindows && (t2 = t2.split("\\").join("/"));
+          let i = this.slashSplit(t2);
           this.debug(this.pattern, "split", i);
           let r = this.set;
           this.debug(this.pattern, "set", r);
@@ -276617,8 +276617,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           }
           return s.flipNegate ? false : this.negate;
         }
-        static defaults(t) {
-          return g.minimatch.defaults(t).Minimatch;
+        static defaults(t2) {
+          return g.minimatch.defaults(t2).Minimatch;
         }
       };
       g.Minimatch = J;
@@ -276630,9 +276630,9 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
       Object.defineProperty(g, "escape", { enumerable: true, get: function() {
         return Qi.escape;
       } });
-      var tr = kt();
+      var tr2 = kt();
       Object.defineProperty(g, "unescape", { enumerable: true, get: function() {
-        return tr.unescape;
+        return tr2.unescape;
       } });
       g.minimatch.AST = is.AST;
       g.minimatch.Minimatch = J;
@@ -276643,8 +276643,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
       "use strict";
       Object.defineProperty(Wt, "__esModule", { value: true });
       Wt.LRUCache = void 0;
-      var er = typeof performance == "object" && performance && typeof performance.now == "function" ? performance : Date, as = /* @__PURE__ */ new Set(), ge = typeof process == "object" && process ? process : {}, ls = (n, t, e, s) => {
-        typeof ge.emitWarning == "function" ? ge.emitWarning(n, t, e, s) : console.error(`[${e}] ${t}: ${n}`);
+      var er = typeof performance == "object" && performance && typeof performance.now == "function" ? performance : Date, as = /* @__PURE__ */ new Set(), ge = typeof process == "object" && process ? process : {}, ls = (n, t2, e, s) => {
+        typeof ge.emitWarning == "function" ? ge.emitWarning(n, t2, e, s) : console.error(`[${e}] ${t2}: ${n}`);
       }, Lt = globalThis.AbortController, os10 = globalThis.AbortSignal;
       if (typeof Lt > "u") {
         os10 = class {
@@ -276657,7 +276657,7 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           }
         }, Lt = class {
           constructor() {
-            t();
+            t2();
           }
           signal = new os10();
           abort(e) {
@@ -276668,8 +276668,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             }
           }
         };
-        let n = ge.env?.LRU_CACHE_IGNORE_AC_WARNING !== "1", t = () => {
-          n && (n = false, ls("AbortController is not defined. If using lru-cache in node 14, load an AbortController polyfill from the `node-abort-controller` package. A minimal polyfill is provided for use by LRUCache.fetch(), but it should not be relied upon in other contexts (eg, passing it to other APIs that use AbortController/AbortSignal might have undesirable effects). You may disable this with LRU_CACHE_IGNORE_AC_WARNING=1 in the env.", "NO_ABORT_CONTROLLER", "ENOTSUP", t));
+        let n = ge.env?.LRU_CACHE_IGNORE_AC_WARNING !== "1", t2 = () => {
+          n && (n = false, ls("AbortController is not defined. If using lru-cache in node 14, load an AbortController polyfill from the `node-abort-controller` package. A minimal polyfill is provided for use by LRUCache.fetch(), but it should not be relied upon in other contexts (eg, passing it to other APIs that use AbortController/AbortSignal might have undesirable effects). You may disable this with LRU_CACHE_IGNORE_AC_WARNING=1 in the env.", "NO_ABORT_CONTROLLER", "ENOTSUP", t2));
         };
       }
       var sr = (n) => !as.has(n), V = (n) => n && n === Math.floor(n) && n > 0 && isFinite(n), cs = (n) => V(n) ? n <= Math.pow(2, 8) ? Uint8Array : n <= Math.pow(2, 16) ? Uint16Array : n <= Math.pow(2, 32) ? Uint32Array : n <= Number.MAX_SAFE_INTEGER ? Nt : null : null, Nt = class extends Array {
@@ -276680,19 +276680,19 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         heap;
         length;
         static #t = false;
-        static create(t) {
-          let e = cs(t);
+        static create(t2) {
+          let e = cs(t2);
           if (!e) return [];
           at.#t = true;
-          let s = new at(t, e);
+          let s = new at(t2, e);
           return at.#t = false, s;
         }
-        constructor(t, e) {
+        constructor(t2, e) {
           if (!at.#t) throw new TypeError("instantiate Stack using Stack.create(n)");
-          this.heap = new e(t), this.length = 0;
+          this.heap = new e(t2), this.length = 0;
         }
-        push(t) {
-          this.heap[this.length++] = t;
+        push(t2) {
+          this.heap[this.length++] = t2;
         }
         pop() {
           return this.heap[--this.length];
@@ -276743,12 +276743,12 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         #T;
         #e;
         #F;
-        static unsafeExposeInternals(t) {
-          return { starts: t.#x, ttls: t.#g, autopurgeTimers: t.#b, sizes: t.#O, keyMap: t.#u, keyList: t.#a, valList: t.#i, next: t.#d, prev: t.#v, get head() {
-            return t.#y;
+        static unsafeExposeInternals(t2) {
+          return { starts: t2.#x, ttls: t2.#g, autopurgeTimers: t2.#b, sizes: t2.#O, keyMap: t2.#u, keyList: t2.#a, valList: t2.#i, next: t2.#d, prev: t2.#v, get head() {
+            return t2.#y;
           }, get tail() {
-            return t.#p;
-          }, free: t.#R, isBackgroundFetch: (e) => t.#l(e), backgroundFetch: (e, s, i, r) => t.#z(e, s, i, r), moveToTail: (e) => t.#N(e), indexes: (e) => t.#k(e), rindexes: (e) => t.#M(e), isStale: (e) => t.#_(e) };
+            return t2.#p;
+          }, free: t2.#R, isBackgroundFetch: (e) => t2.#l(e), backgroundFetch: (e, s, i, r) => t2.#z(e, s, i, r), moveToTail: (e) => t2.#N(e), indexes: (e) => t2.#k(e), rindexes: (e) => t2.#M(e), isStale: (e) => t2.#_(e) };
         }
         get max() {
           return this.#t;
@@ -276777,8 +276777,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         get disposeAfter() {
           return this.#h;
         }
-        constructor(t) {
-          let { max: e = 0, ttl: s, ttlResolution: i = 1, ttlAutopurge: r, updateAgeOnGet: h, updateAgeOnHas: o, allowStale: a, dispose: l, onInsert: f, disposeAfter: c, noDisposeOnSet: d, noUpdateTTL: u, maxSize: m = 0, maxEntrySize: p = 0, sizeCalculation: b, fetchMethod: w, memoMethod: v, noDeleteOnFetchRejection: E, noDeleteOnStaleGet: y, allowStaleOnFetchRejection: S, allowStaleOnFetchAbort: B, ignoreFetchAbort: U, perf: et } = t;
+        constructor(t2) {
+          let { max: e = 0, ttl: s, ttlResolution: i = 1, ttlAutopurge: r, updateAgeOnGet: h, updateAgeOnHas: o, allowStale: a, dispose: l, onInsert: f, disposeAfter: c, noDisposeOnSet: d, noUpdateTTL: u, maxSize: m = 0, maxEntrySize: p = 0, sizeCalculation: b, fetchMethod: w, memoMethod: v, noDeleteOnFetchRejection: E, noDeleteOnStaleGet: y, allowStaleOnFetchRejection: S, allowStaleOnFetchAbort: B, ignoreFetchAbort: U, perf: et } = t2;
           if (et !== void 0 && typeof et?.now != "function") throw new TypeError("perf option must have a now() method if specified");
           if (this.#c = et ?? er, e !== 0 && !V(e)) throw new TypeError("max option must be a nonnegative integer");
           let st = e ? cs(e) : Array;
@@ -276804,25 +276804,25 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             sr(le) && (as.add(le), ls("TTL caching without ttlAutopurge, max, or maxSize can result in unbounded memory consumption.", "UnboundedCacheWarning", le, us));
           }
         }
-        getRemainingTTL(t) {
-          return this.#u.has(t) ? 1 / 0 : 0;
+        getRemainingTTL(t2) {
+          return this.#u.has(t2) ? 1 / 0 : 0;
         }
         #P() {
-          let t = new Nt(this.#t), e = new Nt(this.#t);
-          this.#g = t, this.#x = e;
+          let t2 = new Nt(this.#t), e = new Nt(this.#t);
+          this.#g = t2, this.#x = e;
           let s = this.ttlAutopurge ? new Array(this.#t) : void 0;
           this.#b = s, this.#W = (h, o, a = this.#c.now()) => {
-            if (e[h] = o !== 0 ? a : 0, t[h] = o, s?.[h] && (clearTimeout(s[h]), s[h] = void 0), o !== 0 && s) {
+            if (e[h] = o !== 0 ? a : 0, t2[h] = o, s?.[h] && (clearTimeout(s[h]), s[h] = void 0), o !== 0 && s) {
               let l = setTimeout(() => {
                 this.#_(h) && this.#A(this.#a[h], "expire");
               }, o + 1);
               l.unref && l.unref(), s[h] = l;
             }
           }, this.#C = (h) => {
-            e[h] = t[h] !== 0 ? this.#c.now() : 0;
+            e[h] = t2[h] !== 0 ? this.#c.now() : 0;
           }, this.#D = (h, o) => {
-            if (t[o]) {
-              let a = t[o], l = e[o];
+            if (t2[o]) {
+              let a = t2[o], l = e[o];
               if (!a || !l) return;
               h.ttl = a, h.start = l, h.now = i || r();
               let f = h.now - l;
@@ -276841,12 +276841,12 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           this.getRemainingTTL = (h) => {
             let o = this.#u.get(h);
             if (o === void 0) return 0;
-            let a = t[o], l = e[o];
+            let a = t2[o], l = e[o];
             if (!a || !l) return 1 / 0;
             let f = (i || r()) - l;
             return a - f;
           }, this.#_ = (h) => {
-            let o = e[h], a = t[h];
+            let o = e[h], a = t2[h];
             return !!a && !!o && (i || r()) - o > a;
           };
         }
@@ -276858,9 +276858,9 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         };
         #_ = () => false;
         #$() {
-          let t = new Nt(this.#t);
-          this.#f = 0, this.#O = t, this.#L = (e) => {
-            this.#f -= t[e], t[e] = 0;
+          let t2 = new Nt(this.#t);
+          this.#f = 0, this.#O = t2, this.#L = (e) => {
+            this.#f -= t2[e], t2[e] = 0;
           }, this.#B = (e, s, i, r) => {
             if (this.#l(s)) return 0;
             if (!V(i)) if (r) {
@@ -276869,83 +276869,83 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             } else throw new TypeError("invalid size value (must be positive integer). When maxSize or maxEntrySize is used, sizeCalculation or size must be set.");
             return i;
           }, this.#j = (e, s, i) => {
-            if (t[e] = s, this.#s) {
-              let r = this.#s - t[e];
+            if (t2[e] = s, this.#s) {
+              let r = this.#s - t2[e];
               for (; this.#f > r; ) this.#G(true);
             }
-            this.#f += t[e], i && (i.entrySize = s, i.totalCalculatedSize = this.#f);
+            this.#f += t2[e], i && (i.entrySize = s, i.totalCalculatedSize = this.#f);
           };
         }
-        #L = (t) => {
+        #L = (t2) => {
         };
-        #j = (t, e, s) => {
+        #j = (t2, e, s) => {
         };
-        #B = (t, e, s, i) => {
+        #B = (t2, e, s, i) => {
           if (s || i) throw new TypeError("cannot set size without setting maxSize or maxEntrySize on cache");
           return 0;
         };
-        *#k({ allowStale: t = this.allowStale } = {}) {
-          if (this.#o) for (let e = this.#p; !(!this.#I(e) || ((t || !this.#_(e)) && (yield e), e === this.#y)); ) e = this.#v[e];
+        *#k({ allowStale: t2 = this.allowStale } = {}) {
+          if (this.#o) for (let e = this.#p; !(!this.#I(e) || ((t2 || !this.#_(e)) && (yield e), e === this.#y)); ) e = this.#v[e];
         }
-        *#M({ allowStale: t = this.allowStale } = {}) {
-          if (this.#o) for (let e = this.#y; !(!this.#I(e) || ((t || !this.#_(e)) && (yield e), e === this.#p)); ) e = this.#d[e];
+        *#M({ allowStale: t2 = this.allowStale } = {}) {
+          if (this.#o) for (let e = this.#y; !(!this.#I(e) || ((t2 || !this.#_(e)) && (yield e), e === this.#p)); ) e = this.#d[e];
         }
-        #I(t) {
-          return t !== void 0 && this.#u.get(this.#a[t]) === t;
+        #I(t2) {
+          return t2 !== void 0 && this.#u.get(this.#a[t2]) === t2;
         }
         *entries() {
-          for (let t of this.#k()) this.#i[t] !== void 0 && this.#a[t] !== void 0 && !this.#l(this.#i[t]) && (yield [this.#a[t], this.#i[t]]);
+          for (let t2 of this.#k()) this.#i[t2] !== void 0 && this.#a[t2] !== void 0 && !this.#l(this.#i[t2]) && (yield [this.#a[t2], this.#i[t2]]);
         }
         *rentries() {
-          for (let t of this.#M()) this.#i[t] !== void 0 && this.#a[t] !== void 0 && !this.#l(this.#i[t]) && (yield [this.#a[t], this.#i[t]]);
+          for (let t2 of this.#M()) this.#i[t2] !== void 0 && this.#a[t2] !== void 0 && !this.#l(this.#i[t2]) && (yield [this.#a[t2], this.#i[t2]]);
         }
         *keys() {
-          for (let t of this.#k()) {
-            let e = this.#a[t];
-            e !== void 0 && !this.#l(this.#i[t]) && (yield e);
+          for (let t2 of this.#k()) {
+            let e = this.#a[t2];
+            e !== void 0 && !this.#l(this.#i[t2]) && (yield e);
           }
         }
         *rkeys() {
-          for (let t of this.#M()) {
-            let e = this.#a[t];
-            e !== void 0 && !this.#l(this.#i[t]) && (yield e);
+          for (let t2 of this.#M()) {
+            let e = this.#a[t2];
+            e !== void 0 && !this.#l(this.#i[t2]) && (yield e);
           }
         }
         *values() {
-          for (let t of this.#k()) this.#i[t] !== void 0 && !this.#l(this.#i[t]) && (yield this.#i[t]);
+          for (let t2 of this.#k()) this.#i[t2] !== void 0 && !this.#l(this.#i[t2]) && (yield this.#i[t2]);
         }
         *rvalues() {
-          for (let t of this.#M()) this.#i[t] !== void 0 && !this.#l(this.#i[t]) && (yield this.#i[t]);
+          for (let t2 of this.#M()) this.#i[t2] !== void 0 && !this.#l(this.#i[t2]) && (yield this.#i[t2]);
         }
         [Symbol.iterator]() {
           return this.entries();
         }
         [Symbol.toStringTag] = "LRUCache";
-        find(t, e = {}) {
+        find(t2, e = {}) {
           for (let s of this.#k()) {
             let i = this.#i[s], r = this.#l(i) ? i.__staleWhileFetching : i;
-            if (r !== void 0 && t(r, this.#a[s], this)) return this.get(this.#a[s], e);
+            if (r !== void 0 && t2(r, this.#a[s], this)) return this.get(this.#a[s], e);
           }
         }
-        forEach(t, e = this) {
+        forEach(t2, e = this) {
           for (let s of this.#k()) {
             let i = this.#i[s], r = this.#l(i) ? i.__staleWhileFetching : i;
-            r !== void 0 && t.call(e, r, this.#a[s], this);
+            r !== void 0 && t2.call(e, r, this.#a[s], this);
           }
         }
-        rforEach(t, e = this) {
+        rforEach(t2, e = this) {
           for (let s of this.#M()) {
             let i = this.#i[s], r = this.#l(i) ? i.__staleWhileFetching : i;
-            r !== void 0 && t.call(e, r, this.#a[s], this);
+            r !== void 0 && t2.call(e, r, this.#a[s], this);
           }
         }
         purgeStale() {
-          let t = false;
-          for (let e of this.#M({ allowStale: true })) this.#_(e) && (this.#A(this.#a[e], "expire"), t = true);
-          return t;
+          let t2 = false;
+          for (let e of this.#M({ allowStale: true })) this.#_(e) && (this.#A(this.#a[e], "expire"), t2 = true);
+          return t2;
         }
-        info(t) {
-          let e = this.#u.get(t);
+        info(t2) {
+          let e = this.#u.get(t2);
           if (e === void 0) return;
           let s = this.#i[e], i = this.#l(s) ? s.__staleWhileFetching : s;
           if (i === void 0) return;
@@ -276960,7 +276960,7 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           return this.#O && (r.size = this.#O[e]), r;
         }
         dump() {
-          let t = [];
+          let t2 = [];
           for (let e of this.#k({ allowStale: true })) {
             let s = this.#a[e], i = this.#i[e], r = this.#l(i) ? i.__staleWhileFetching : i;
             if (r === void 0 || s === void 0) continue;
@@ -276970,13 +276970,13 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
               let o = this.#c.now() - this.#x[e];
               h.start = Math.floor(Date.now() - o);
             }
-            this.#O && (h.size = this.#O[e]), t.unshift([s, h]);
+            this.#O && (h.size = this.#O[e]), t2.unshift([s, h]);
           }
-          return t;
+          return t2;
         }
-        load(t) {
+        load(t2) {
           this.clear();
-          for (let [e, s] of t) {
+          for (let [e, s] of t2) {
             if (s.start) {
               let i = Date.now() - s.start;
               s.start = this.#c.now() - i;
@@ -276984,12 +276984,12 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             this.set(e, s.value, s);
           }
         }
-        set(t, e, s = {}) {
-          if (e === void 0) return this.delete(t), this;
-          let { ttl: i = this.ttl, start: r, noDisposeOnSet: h = this.noDisposeOnSet, sizeCalculation: o = this.sizeCalculation, status: a } = s, { noUpdateTTL: l = this.noUpdateTTL } = s, f = this.#B(t, e, s.size || 0, o);
-          if (this.maxEntrySize && f > this.maxEntrySize) return a && (a.set = "miss", a.maxEntrySizeExceeded = true), this.#A(t, "set"), this;
-          let c = this.#o === 0 ? void 0 : this.#u.get(t);
-          if (c === void 0) c = this.#o === 0 ? this.#p : this.#R.length !== 0 ? this.#R.pop() : this.#o === this.#t ? this.#G(false) : this.#o, this.#a[c] = t, this.#i[c] = e, this.#u.set(t, c), this.#d[this.#p] = c, this.#v[c] = this.#p, this.#p = c, this.#o++, this.#j(c, f, a), a && (a.set = "add"), l = false, this.#F && this.#r?.(e, t, "add");
+        set(t2, e, s = {}) {
+          if (e === void 0) return this.delete(t2), this;
+          let { ttl: i = this.ttl, start: r, noDisposeOnSet: h = this.noDisposeOnSet, sizeCalculation: o = this.sizeCalculation, status: a } = s, { noUpdateTTL: l = this.noUpdateTTL } = s, f = this.#B(t2, e, s.size || 0, o);
+          if (this.maxEntrySize && f > this.maxEntrySize) return a && (a.set = "miss", a.maxEntrySizeExceeded = true), this.#A(t2, "set"), this;
+          let c = this.#o === 0 ? void 0 : this.#u.get(t2);
+          if (c === void 0) c = this.#o === 0 ? this.#p : this.#R.length !== 0 ? this.#R.pop() : this.#o === this.#t ? this.#G(false) : this.#o, this.#a[c] = t2, this.#i[c] = e, this.#u.set(t2, c), this.#d[this.#p] = c, this.#v[c] = this.#p, this.#p = c, this.#o++, this.#j(c, f, a), a && (a.set = "add"), l = false, this.#F && this.#r?.(e, t2, "add");
           else {
             this.#N(c);
             let d = this.#i[c];
@@ -276997,15 +276997,15 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
               if (this.#T && this.#l(d)) {
                 d.__abortController.abort(new Error("replaced"));
                 let { __staleWhileFetching: u } = d;
-                u !== void 0 && !h && (this.#E && this.#n?.(u, t, "set"), this.#e && this.#m?.push([u, t, "set"]));
-              } else h || (this.#E && this.#n?.(d, t, "set"), this.#e && this.#m?.push([d, t, "set"]));
+                u !== void 0 && !h && (this.#E && this.#n?.(u, t2, "set"), this.#e && this.#m?.push([u, t2, "set"]));
+              } else h || (this.#E && this.#n?.(d, t2, "set"), this.#e && this.#m?.push([d, t2, "set"]));
               if (this.#L(c), this.#j(c, f, a), this.#i[c] = e, a) {
                 a.set = "replace";
                 let u = d && this.#l(d) ? d.__staleWhileFetching : d;
                 u !== void 0 && (a.oldValue = u);
               }
             } else a && (a.set = "update");
-            this.#F && this.onInsert?.(e, t, e === d ? "update" : "replace");
+            this.#F && this.onInsert?.(e, t2, e === d ? "update" : "replace");
           }
           if (i !== 0 && !this.#g && this.#P(), this.#g && (l || this.#W(c, i, r), a && this.#D(a, c)), !h && this.#e && this.#m) {
             let d = this.#m, u;
@@ -277016,24 +277016,24 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         pop() {
           try {
             for (; this.#o; ) {
-              let t = this.#i[this.#y];
-              if (this.#G(true), this.#l(t)) {
-                if (t.__staleWhileFetching) return t.__staleWhileFetching;
-              } else if (t !== void 0) return t;
+              let t2 = this.#i[this.#y];
+              if (this.#G(true), this.#l(t2)) {
+                if (t2.__staleWhileFetching) return t2.__staleWhileFetching;
+              } else if (t2 !== void 0) return t2;
             }
           } finally {
             if (this.#e && this.#m) {
-              let t = this.#m, e;
-              for (; e = t?.shift(); ) this.#h?.(...e);
+              let t2 = this.#m, e;
+              for (; e = t2?.shift(); ) this.#h?.(...e);
             }
           }
         }
-        #G(t) {
+        #G(t2) {
           let e = this.#y, s = this.#a[e], i = this.#i[e];
-          return this.#T && this.#l(i) ? i.__abortController.abort(new Error("evicted")) : (this.#E || this.#e) && (this.#E && this.#n?.(i, s, "evict"), this.#e && this.#m?.push([i, s, "evict"])), this.#L(e), this.#b?.[e] && (clearTimeout(this.#b[e]), this.#b[e] = void 0), t && (this.#a[e] = void 0, this.#i[e] = void 0, this.#R.push(e)), this.#o === 1 ? (this.#y = this.#p = 0, this.#R.length = 0) : this.#y = this.#d[e], this.#u.delete(s), this.#o--, e;
+          return this.#T && this.#l(i) ? i.__abortController.abort(new Error("evicted")) : (this.#E || this.#e) && (this.#E && this.#n?.(i, s, "evict"), this.#e && this.#m?.push([i, s, "evict"])), this.#L(e), this.#b?.[e] && (clearTimeout(this.#b[e]), this.#b[e] = void 0), t2 && (this.#a[e] = void 0, this.#i[e] = void 0, this.#R.push(e)), this.#o === 1 ? (this.#y = this.#p = 0, this.#R.length = 0) : this.#y = this.#d[e], this.#u.delete(s), this.#o--, e;
         }
-        has(t, e = {}) {
-          let { updateAgeOnHas: s = this.updateAgeOnHas, status: i } = e, r = this.#u.get(t);
+        has(t2, e = {}) {
+          let { updateAgeOnHas: s = this.updateAgeOnHas, status: i } = e, r = this.#u.get(t2);
           if (r !== void 0) {
             let h = this.#i[r];
             if (this.#l(h) && h.__staleWhileFetching === void 0) return false;
@@ -277042,13 +277042,13 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           } else i && (i.has = "miss");
           return false;
         }
-        peek(t, e = {}) {
-          let { allowStale: s = this.allowStale } = e, i = this.#u.get(t);
+        peek(t2, e = {}) {
+          let { allowStale: s = this.allowStale } = e, i = this.#u.get(t2);
           if (i === void 0 || !s && this.#_(i)) return;
           let r = this.#i[i];
           return this.#l(r) ? r.__staleWhileFetching : r;
         }
-        #z(t, e, s, i) {
+        #z(t2, e, s, i) {
           let r = e === void 0 ? void 0 : this.#i[e];
           if (this.#l(r)) return r;
           let h = new Lt(), { signal: o } = s;
@@ -277057,33 +277057,33 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             let { aborted: w } = h.signal, v = s.ignoreFetchAbort && p !== void 0, E = s.ignoreFetchAbort || !!(s.allowStaleOnFetchAbort && p !== void 0);
             if (s.status && (w && !b ? (s.status.fetchAborted = true, s.status.fetchError = h.signal.reason, v && (s.status.fetchAbortIgnored = true)) : s.status.fetchResolved = true), w && !v && !b) return c(h.signal.reason, E);
             let y = u, S = this.#i[e];
-            return (S === u || v && b && S === void 0) && (p === void 0 ? y.__staleWhileFetching !== void 0 ? this.#i[e] = y.__staleWhileFetching : this.#A(t, "fetch") : (s.status && (s.status.fetchUpdated = true), this.set(t, p, a.options))), p;
+            return (S === u || v && b && S === void 0) && (p === void 0 ? y.__staleWhileFetching !== void 0 ? this.#i[e] = y.__staleWhileFetching : this.#A(t2, "fetch") : (s.status && (s.status.fetchUpdated = true), this.set(t2, p, a.options))), p;
           }, f = (p) => (s.status && (s.status.fetchRejected = true, s.status.fetchError = p), c(p, false)), c = (p, b) => {
             let { aborted: w } = h.signal, v = w && s.allowStaleOnFetchAbort, E = v || s.allowStaleOnFetchRejection, y = E || s.noDeleteOnFetchRejection, S = u;
-            if (this.#i[e] === u && (!y || !b && S.__staleWhileFetching === void 0 ? this.#A(t, "fetch") : v || (this.#i[e] = S.__staleWhileFetching)), E) return s.status && S.__staleWhileFetching !== void 0 && (s.status.returnedStale = true), S.__staleWhileFetching;
+            if (this.#i[e] === u && (!y || !b && S.__staleWhileFetching === void 0 ? this.#A(t2, "fetch") : v || (this.#i[e] = S.__staleWhileFetching)), E) return s.status && S.__staleWhileFetching !== void 0 && (s.status.returnedStale = true), S.__staleWhileFetching;
             if (S.__returned === S) throw p;
           }, d = (p, b) => {
-            let w = this.#S?.(t, r, a);
+            let w = this.#S?.(t2, r, a);
             w && w instanceof Promise && w.then((v) => p(v === void 0 ? void 0 : v), b), h.signal.addEventListener("abort", () => {
               (!s.ignoreFetchAbort || s.allowStaleOnFetchAbort) && (p(void 0), s.allowStaleOnFetchAbort && (p = (v) => l(v, true)));
             });
           };
           s.status && (s.status.fetchDispatched = true);
           let u = new Promise(d).then(l, f), m = Object.assign(u, { __abortController: h, __staleWhileFetching: r, __returned: void 0 });
-          return e === void 0 ? (this.set(t, m, { ...a.options, status: void 0 }), e = this.#u.get(t)) : this.#i[e] = m, m;
+          return e === void 0 ? (this.set(t2, m, { ...a.options, status: void 0 }), e = this.#u.get(t2)) : this.#i[e] = m, m;
         }
-        #l(t) {
+        #l(t2) {
           if (!this.#T) return false;
-          let e = t;
+          let e = t2;
           return !!e && e instanceof Promise && e.hasOwnProperty("__staleWhileFetching") && e.__abortController instanceof Lt;
         }
-        async fetch(t, e = {}) {
+        async fetch(t2, e = {}) {
           let { allowStale: s = this.allowStale, updateAgeOnGet: i = this.updateAgeOnGet, noDeleteOnStaleGet: r = this.noDeleteOnStaleGet, ttl: h = this.ttl, noDisposeOnSet: o = this.noDisposeOnSet, size: a = 0, sizeCalculation: l = this.sizeCalculation, noUpdateTTL: f = this.noUpdateTTL, noDeleteOnFetchRejection: c = this.noDeleteOnFetchRejection, allowStaleOnFetchRejection: d = this.allowStaleOnFetchRejection, ignoreFetchAbort: u = this.ignoreFetchAbort, allowStaleOnFetchAbort: m = this.allowStaleOnFetchAbort, context: p, forceRefresh: b = false, status: w, signal: v } = e;
-          if (!this.#T) return w && (w.fetch = "get"), this.get(t, { allowStale: s, updateAgeOnGet: i, noDeleteOnStaleGet: r, status: w });
-          let E = { allowStale: s, updateAgeOnGet: i, noDeleteOnStaleGet: r, ttl: h, noDisposeOnSet: o, size: a, sizeCalculation: l, noUpdateTTL: f, noDeleteOnFetchRejection: c, allowStaleOnFetchRejection: d, allowStaleOnFetchAbort: m, ignoreFetchAbort: u, status: w, signal: v }, y = this.#u.get(t);
+          if (!this.#T) return w && (w.fetch = "get"), this.get(t2, { allowStale: s, updateAgeOnGet: i, noDeleteOnStaleGet: r, status: w });
+          let E = { allowStale: s, updateAgeOnGet: i, noDeleteOnStaleGet: r, ttl: h, noDisposeOnSet: o, size: a, sizeCalculation: l, noUpdateTTL: f, noDeleteOnFetchRejection: c, allowStaleOnFetchRejection: d, allowStaleOnFetchAbort: m, ignoreFetchAbort: u, status: w, signal: v }, y = this.#u.get(t2);
           if (y === void 0) {
             w && (w.fetch = "miss");
-            let S = this.#z(t, y, E, p);
+            let S = this.#z(t2, y, E, p);
             return S.__returned = S;
           } else {
             let S = this.#i[y];
@@ -277093,48 +277093,48 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             }
             let B = this.#_(y);
             if (!b && !B) return w && (w.fetch = "hit"), this.#N(y), i && this.#C(y), w && this.#D(w, y), S;
-            let U = this.#z(t, y, E, p), et = U.__staleWhileFetching !== void 0 && s;
+            let U = this.#z(t2, y, E, p), et = U.__staleWhileFetching !== void 0 && s;
             return w && (w.fetch = B ? "stale" : "refresh", et && B && (w.returnedStale = true)), et ? U.__staleWhileFetching : U.__returned = U;
           }
         }
-        async forceFetch(t, e = {}) {
-          let s = await this.fetch(t, e);
+        async forceFetch(t2, e = {}) {
+          let s = await this.fetch(t2, e);
           if (s === void 0) throw new Error("fetch() returned undefined");
           return s;
         }
-        memo(t, e = {}) {
+        memo(t2, e = {}) {
           let s = this.#w;
           if (!s) throw new Error("no memoMethod provided to constructor");
-          let { context: i, forceRefresh: r, ...h } = e, o = this.get(t, h);
+          let { context: i, forceRefresh: r, ...h } = e, o = this.get(t2, h);
           if (!r && o !== void 0) return o;
-          let a = s(t, o, { options: h, context: i });
-          return this.set(t, a, h), a;
+          let a = s(t2, o, { options: h, context: i });
+          return this.set(t2, a, h), a;
         }
-        get(t, e = {}) {
-          let { allowStale: s = this.allowStale, updateAgeOnGet: i = this.updateAgeOnGet, noDeleteOnStaleGet: r = this.noDeleteOnStaleGet, status: h } = e, o = this.#u.get(t);
+        get(t2, e = {}) {
+          let { allowStale: s = this.allowStale, updateAgeOnGet: i = this.updateAgeOnGet, noDeleteOnStaleGet: r = this.noDeleteOnStaleGet, status: h } = e, o = this.#u.get(t2);
           if (o !== void 0) {
             let a = this.#i[o], l = this.#l(a);
-            return h && this.#D(h, o), this.#_(o) ? (h && (h.get = "stale"), l ? (h && s && a.__staleWhileFetching !== void 0 && (h.returnedStale = true), s ? a.__staleWhileFetching : void 0) : (r || this.#A(t, "expire"), h && s && (h.returnedStale = true), s ? a : void 0)) : (h && (h.get = "hit"), l ? a.__staleWhileFetching : (this.#N(o), i && this.#C(o), a));
+            return h && this.#D(h, o), this.#_(o) ? (h && (h.get = "stale"), l ? (h && s && a.__staleWhileFetching !== void 0 && (h.returnedStale = true), s ? a.__staleWhileFetching : void 0) : (r || this.#A(t2, "expire"), h && s && (h.returnedStale = true), s ? a : void 0)) : (h && (h.get = "hit"), l ? a.__staleWhileFetching : (this.#N(o), i && this.#C(o), a));
           } else h && (h.get = "miss");
         }
-        #U(t, e) {
-          this.#v[e] = t, this.#d[t] = e;
+        #U(t2, e) {
+          this.#v[e] = t2, this.#d[t2] = e;
         }
-        #N(t) {
-          t !== this.#p && (t === this.#y ? this.#y = this.#d[t] : this.#U(this.#v[t], this.#d[t]), this.#U(this.#p, t), this.#p = t);
+        #N(t2) {
+          t2 !== this.#p && (t2 === this.#y ? this.#y = this.#d[t2] : this.#U(this.#v[t2], this.#d[t2]), this.#U(this.#p, t2), this.#p = t2);
         }
-        delete(t) {
-          return this.#A(t, "delete");
+        delete(t2) {
+          return this.#A(t2, "delete");
         }
-        #A(t, e) {
+        #A(t2, e) {
           let s = false;
           if (this.#o !== 0) {
-            let i = this.#u.get(t);
+            let i = this.#u.get(t2);
             if (i !== void 0) if (this.#b?.[i] && (clearTimeout(this.#b?.[i]), this.#b[i] = void 0), s = true, this.#o === 1) this.#q(e);
             else {
               this.#L(i);
               let r = this.#i[i];
-              if (this.#l(r) ? r.__abortController.abort(new Error("deleted")) : (this.#E || this.#e) && (this.#E && this.#n?.(r, t, e), this.#e && this.#m?.push([r, t, e])), this.#u.delete(t), this.#a[i] = void 0, this.#i[i] = void 0, i === this.#p) this.#p = this.#v[i];
+              if (this.#l(r) ? r.__abortController.abort(new Error("deleted")) : (this.#E || this.#e) && (this.#E && this.#n?.(r, t2, e), this.#e && this.#m?.push([r, t2, e])), this.#u.delete(t2), this.#a[i] = void 0, this.#i[i] = void 0, i === this.#p) this.#p = this.#v[i];
               else if (i === this.#y) this.#y = this.#d[i];
               else {
                 let h = this.#v[i];
@@ -277154,13 +277154,13 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         clear() {
           return this.#q("delete");
         }
-        #q(t) {
+        #q(t2) {
           for (let e of this.#M({ allowStale: true })) {
             let s = this.#i[e];
             if (this.#l(s)) s.__abortController.abort(new Error("deleted"));
             else {
               let i = this.#a[e];
-              this.#E && this.#n?.(s, i, t), this.#e && this.#m?.push([s, i, t]);
+              this.#E && this.#n?.(s, i, t2), this.#e && this.#m?.push([s, i, t2]);
             }
           }
           if (this.#u.clear(), this.#i.fill(void 0), this.#a.fill(void 0), this.#g && this.#x) {
@@ -277194,13 +277194,13 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         dest;
         opts;
         ondrain;
-        constructor(t, e, s) {
-          this.src = t, this.dest = e, this.opts = s, this.ondrain = () => t[nt](), this.dest.on("drain", this.ondrain);
+        constructor(t2, e, s) {
+          this.src = t2, this.dest = e, this.opts = s, this.ondrain = () => t2[nt](), this.dest.on("drain", this.ondrain);
         }
         unpipe() {
           this.dest.removeListener("drain", this.ondrain);
         }
-        proxyErrors(t) {
+        proxyErrors(t2) {
         }
         end() {
           this.unpipe(), this.opts.end && this.dest.end();
@@ -277209,8 +277209,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         unpipe() {
           this.src.removeListener("error", this.proxyErrors), super.unpipe();
         }
-        constructor(t, e, s) {
-          super(t, e, s), this.proxyErrors = (i) => this.dest.emit("error", i), t.on("error", this.proxyErrors);
+        constructor(t2, e, s) {
+          super(t2, e, s), this.proxyErrors = (i) => this.dest.emit("error", i), t2.on("error", this.proxyErrors);
         }
       }, pr = (n) => !!n.objectMode, mr = (n) => !n.objectMode && !!n.encoding && n.encoding !== "buffer", qt = class extends _e.EventEmitter {
         [x] = false;
@@ -277234,8 +277234,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         [D] = false;
         writable = true;
         readable = true;
-        constructor(...t) {
-          let e = t[0] || {};
+        constructor(...t2) {
+          let e = t2[0] || {};
           if (super(), e.objectMode && typeof e.encoding == "string") throw new TypeError("Encoding and objectMode may not be used together");
           pr(e) ? (this[k] = true, this[L] = null) : mr(e) ? (this[L] = e.encoding, this[k] = false) : (this[k] = false, this[L] = null), this[I] = !!e.async, this[rt] = this[L] ? new hr.StringDecoder(this[L]) : null, e && e.debugExposeBuffer === true && Object.defineProperty(this, "buffer", { get: () => this[T] }), e && e.debugExposePipes === true && Object.defineProperty(this, "pipes", { get: () => this[M] });
           let { signal: s } = e;
@@ -277247,23 +277247,23 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         get encoding() {
           return this[L];
         }
-        set encoding(t) {
+        set encoding(t2) {
           throw new Error("Encoding must be set at instantiation time");
         }
-        setEncoding(t) {
+        setEncoding(t2) {
           throw new Error("Encoding must be set at instantiation time");
         }
         get objectMode() {
           return this[k];
         }
-        set objectMode(t) {
+        set objectMode(t2) {
           throw new Error("objectMode must be set at instantiation time");
         }
         get async() {
           return this[I];
         }
-        set async(t) {
-          this[I] = this[I] || !!t;
+        set async(t2) {
+          this[I] = this[I] || !!t2;
         }
         [ve]() {
           this[Ut] = true, this.emit("abort", this[ut]?.reason), this.destroy(this[ut]?.reason);
@@ -277271,38 +277271,38 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         get aborted() {
           return this[Ut];
         }
-        set aborted(t) {
+        set aborted(t2) {
         }
-        write(t, e, s) {
+        write(t2, e, s) {
           if (this[Ut]) return false;
           if (this[$]) throw new Error("write after end");
           if (this[O]) return this.emit("error", Object.assign(new Error("Cannot call write after a stream was destroyed"), { code: "ERR_STREAM_DESTROYED" })), true;
           typeof e == "function" && (s = e, e = "utf8"), e || (e = "utf8");
           let i = this[I] ? ft : cr;
-          if (!this[k] && !Buffer.isBuffer(t)) {
-            if (dr(t)) t = Buffer.from(t.buffer, t.byteOffset, t.byteLength);
-            else if (fr(t)) t = Buffer.from(t);
-            else if (typeof t != "string") throw new Error("Non-contiguous data written to non-objectMode stream");
+          if (!this[k] && !Buffer.isBuffer(t2)) {
+            if (dr(t2)) t2 = Buffer.from(t2.buffer, t2.byteOffset, t2.byteLength);
+            else if (fr(t2)) t2 = Buffer.from(t2);
+            else if (typeof t2 != "string") throw new Error("Non-contiguous data written to non-objectMode stream");
           }
-          return this[k] ? (this[x] && this[C] !== 0 && this[Gt](true), this[x] ? this.emit("data", t) : this[we](t), this[C] !== 0 && this.emit("readable"), s && i(s), this[x]) : t.length ? (typeof t == "string" && !(e === this[L] && !this[rt]?.lastNeed) && (t = Buffer.from(t, e)), Buffer.isBuffer(t) && this[L] && (t = this[rt].write(t)), this[x] && this[C] !== 0 && this[Gt](true), this[x] ? this.emit("data", t) : this[we](t), this[C] !== 0 && this.emit("readable"), s && i(s), this[x]) : (this[C] !== 0 && this.emit("readable"), s && i(s), this[x]);
+          return this[k] ? (this[x] && this[C] !== 0 && this[Gt](true), this[x] ? this.emit("data", t2) : this[we](t2), this[C] !== 0 && this.emit("readable"), s && i(s), this[x]) : t2.length ? (typeof t2 == "string" && !(e === this[L] && !this[rt]?.lastNeed) && (t2 = Buffer.from(t2, e)), Buffer.isBuffer(t2) && this[L] && (t2 = this[rt].write(t2)), this[x] && this[C] !== 0 && this[Gt](true), this[x] ? this.emit("data", t2) : this[we](t2), this[C] !== 0 && this.emit("readable"), s && i(s), this[x]) : (this[C] !== 0 && this.emit("readable"), s && i(s), this[x]);
         }
-        read(t) {
+        read(t2) {
           if (this[O]) return null;
-          if (this[D] = false, this[C] === 0 || t === 0 || t && t > this[C]) return this[q](), null;
-          this[k] && (t = null), this[T].length > 1 && !this[k] && (this[T] = [this[L] ? this[T].join("") : Buffer.concat(this[T], this[C])]);
-          let e = this[ps](t || null, this[T][0]);
+          if (this[D] = false, this[C] === 0 || t2 === 0 || t2 && t2 > this[C]) return this[q](), null;
+          this[k] && (t2 = null), this[T].length > 1 && !this[k] && (this[T] = [this[L] ? this[T].join("") : Buffer.concat(this[T], this[C])]);
+          let e = this[ps](t2 || null, this[T][0]);
           return this[q](), e;
         }
-        [ps](t, e) {
+        [ps](t2, e) {
           if (this[k]) this[zt]();
           else {
             let s = e;
-            t === s.length || t === null ? this[zt]() : typeof s == "string" ? (this[T][0] = s.slice(t), e = s.slice(0, t), this[C] -= t) : (this[T][0] = s.subarray(t), e = s.subarray(0, t), this[C] -= t);
+            t2 === s.length || t2 === null ? this[zt]() : typeof s == "string" ? (this[T][0] = s.slice(t2), e = s.slice(0, t2), this[C] -= t2) : (this[T][0] = s.subarray(t2), e = s.subarray(0, t2), this[C] -= t2);
           }
           return this.emit("data", e), !this[T].length && !this[$] && this.emit("drain"), e;
         }
-        end(t, e, s) {
-          return typeof t == "function" && (s = t, t = void 0), typeof e == "function" && (s = e, e = "utf8"), t !== void 0 && this.write(t, e), s && this.once("end", s), this[$] = true, this.writable = false, (this[x] || !this[ct]) && this[q](), this;
+        end(t2, e, s) {
+          return typeof t2 == "function" && (s = t2, t2 = void 0), typeof e == "function" && (s = e, e = "utf8"), t2 !== void 0 && this.write(t2, e), s && this.once("end", s), this[$] = true, this.writable = false, (this[x] || !this[ct]) && this[q](), this;
         }
         [nt]() {
           this[O] || (!this[Z] && !this[M].length && (this[D] = true), this[ct] = false, this[x] = true, this.emit("resume"), this[T].length ? this[Gt]() : this[$] ? this[q]() : this.emit("drain"));
@@ -277322,55 +277322,55 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         get paused() {
           return this[ct];
         }
-        [we](t) {
-          this[k] ? this[C] += 1 : this[C] += t.length, this[T].push(t);
+        [we](t2) {
+          this[k] ? this[C] += 1 : this[C] += t2.length, this[T].push(t2);
         }
         [zt]() {
           return this[k] ? this[C] -= 1 : this[C] -= this[T][0].length, this[T].shift();
         }
-        [Gt](t = false) {
+        [Gt](t2 = false) {
           do
             ;
           while (this[ms](this[zt]()) && this[T].length);
-          !t && !this[T].length && !this[$] && this.emit("drain");
+          !t2 && !this[T].length && !this[$] && this.emit("drain");
         }
-        [ms](t) {
-          return this.emit("data", t), this[x];
+        [ms](t2) {
+          return this.emit("data", t2), this[x];
         }
-        pipe(t, e) {
-          if (this[O]) return t;
+        pipe(t2, e) {
+          if (this[O]) return t2;
           this[D] = false;
           let s = this[K];
-          return e = e || {}, t === ds.stdout || t === ds.stderr ? e.end = false : e.end = e.end !== false, e.proxyErrors = !!e.proxyErrors, s ? e.end && t.end() : (this[M].push(e.proxyErrors ? new Ee(this, t, e) : new $t(this, t, e)), this[I] ? ft(() => this[nt]()) : this[nt]()), t;
+          return e = e || {}, t2 === ds.stdout || t2 === ds.stderr ? e.end = false : e.end = e.end !== false, e.proxyErrors = !!e.proxyErrors, s ? e.end && t2.end() : (this[M].push(e.proxyErrors ? new Ee(this, t2, e) : new $t(this, t2, e)), this[I] ? ft(() => this[nt]()) : this[nt]()), t2;
         }
-        unpipe(t) {
-          let e = this[M].find((s) => s.dest === t);
+        unpipe(t2) {
+          let e = this[M].find((s) => s.dest === t2);
           e && (this[M].length === 1 ? (this[x] && this[Z] === 0 && (this[x] = false), this[M] = []) : this[M].splice(this[M].indexOf(e), 1), e.unpipe());
         }
-        addListener(t, e) {
-          return this.on(t, e);
+        addListener(t2, e) {
+          return this.on(t2, e);
         }
-        on(t, e) {
-          let s = super.on(t, e);
-          if (t === "data") this[D] = false, this[Z]++, !this[M].length && !this[x] && this[nt]();
-          else if (t === "readable" && this[C] !== 0) super.emit("readable");
-          else if (ur(t) && this[K]) super.emit(t), this.removeAllListeners(t);
-          else if (t === "error" && this[lt]) {
+        on(t2, e) {
+          let s = super.on(t2, e);
+          if (t2 === "data") this[D] = false, this[Z]++, !this[M].length && !this[x] && this[nt]();
+          else if (t2 === "readable" && this[C] !== 0) super.emit("readable");
+          else if (ur(t2) && this[K]) super.emit(t2), this.removeAllListeners(t2);
+          else if (t2 === "error" && this[lt]) {
             let i = e;
             this[I] ? ft(() => i.call(this, this[lt])) : i.call(this, this[lt]);
           }
           return s;
         }
-        removeListener(t, e) {
-          return this.off(t, e);
+        removeListener(t2, e) {
+          return this.off(t2, e);
         }
-        off(t, e) {
-          let s = super.off(t, e);
-          return t === "data" && (this[Z] = this.listeners("data").length, this[Z] === 0 && !this[D] && !this[M].length && (this[x] = false)), s;
+        off(t2, e) {
+          let s = super.off(t2, e);
+          return t2 === "data" && (this[Z] = this.listeners("data").length, this[Z] === 0 && !this[D] && !this[M].length && (this[x] = false)), s;
         }
-        removeAllListeners(t) {
-          let e = super.removeAllListeners(t);
-          return (t === "data" || t === void 0) && (this[Z] = 0, !this[D] && !this[M].length && (this[x] = false)), e;
+        removeAllListeners(t2) {
+          let e = super.removeAllListeners(t2);
+          return (t2 === "data" || t2 === void 0) && (this[Z] = 0, !this[D] && !this[M].length && (this[x] = false)), e;
         }
         get emittedEnd() {
           return this[K];
@@ -277378,32 +277378,32 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         [q]() {
           !this[Bt] && !this[K] && !this[O] && this[T].length === 0 && this[$] && (this[Bt] = true, this.emit("end"), this.emit("prefinish"), this.emit("finish"), this[It] && this.emit("close"), this[Bt] = false);
         }
-        emit(t, ...e) {
+        emit(t2, ...e) {
           let s = e[0];
-          if (t !== "error" && t !== "close" && t !== O && this[O]) return false;
-          if (t === "data") return !this[k] && !s ? false : this[I] ? (ft(() => this[ye](s)), true) : this[ye](s);
-          if (t === "end") return this[gs]();
-          if (t === "close") {
+          if (t2 !== "error" && t2 !== "close" && t2 !== O && this[O]) return false;
+          if (t2 === "data") return !this[k] && !s ? false : this[I] ? (ft(() => this[ye](s)), true) : this[ye](s);
+          if (t2 === "end") return this[gs]();
+          if (t2 === "close") {
             if (this[It] = true, !this[K] && !this[O]) return false;
             let r = super.emit("close");
             return this.removeAllListeners("close"), r;
-          } else if (t === "error") {
+          } else if (t2 === "error") {
             this[lt] = s, super.emit(be, s);
             let r = !this[ut] || this.listeners("error").length ? super.emit("error", s) : false;
             return this[q](), r;
-          } else if (t === "resume") {
+          } else if (t2 === "resume") {
             let r = super.emit("resume");
             return this[q](), r;
-          } else if (t === "finish" || t === "prefinish") {
-            let r = super.emit(t);
-            return this.removeAllListeners(t), r;
+          } else if (t2 === "finish" || t2 === "prefinish") {
+            let r = super.emit(t2);
+            return this.removeAllListeners(t2), r;
           }
-          let i = super.emit(t, ...e);
+          let i = super.emit(t2, ...e);
           return this[q](), i;
         }
-        [ye](t) {
-          for (let s of this[M]) s.dest.write(t) === false && this.pause();
-          let e = this[D] ? false : super.emit("data", t);
+        [ye](t2) {
+          for (let s of this[M]) s.dest.write(t2) === false && this.pause();
+          let e = this[D] ? false : super.emit("data", t2);
           return this[q](), e;
         }
         [gs]() {
@@ -277418,32 +277418,32 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             }
           }
           for (let e of this[M]) e.end();
-          let t = super.emit("end");
-          return this.removeAllListeners("end"), t;
+          let t2 = super.emit("end");
+          return this.removeAllListeners("end"), t2;
         }
         async collect() {
-          let t = Object.assign([], { dataLength: 0 });
-          this[k] || (t.dataLength = 0);
+          let t2 = Object.assign([], { dataLength: 0 });
+          this[k] || (t2.dataLength = 0);
           let e = this.promise();
           return this.on("data", (s) => {
-            t.push(s), this[k] || (t.dataLength += s.length);
-          }), await e, t;
+            t2.push(s), this[k] || (t2.dataLength += s.length);
+          }), await e, t2;
         }
         async concat() {
           if (this[k]) throw new Error("cannot concat in objectMode");
-          let t = await this.collect();
-          return this[L] ? t.join("") : Buffer.concat(t, t.dataLength);
+          let t2 = await this.collect();
+          return this[L] ? t2.join("") : Buffer.concat(t2, t2.dataLength);
         }
         async promise() {
-          return new Promise((t, e) => {
-            this.on(O, () => e(new Error("stream destroyed"))), this.on("error", (s) => e(s)), this.on("end", () => t());
+          return new Promise((t2, e) => {
+            this.on(O, () => e(new Error("stream destroyed"))), this.on("error", (s) => e(s)), this.on("end", () => t2());
           });
         }
         [Symbol.asyncIterator]() {
           this[D] = false;
-          let t = false, e = async () => (this.pause(), t = true, { value: void 0, done: true });
+          let t2 = false, e = async () => (this.pause(), t2 = true, { value: void 0, done: true });
           return { next: () => {
-            if (t) return e();
+            if (t2) return e();
             let i = this.read();
             if (i !== null) return Promise.resolve({ done: false, value: i });
             if (this[$]) return e();
@@ -277464,8 +277464,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         }
         [Symbol.iterator]() {
           this[D] = false;
-          let t = false, e = () => (this.pause(), this.off(be, e), this.off(O, e), this.off("end", e), t = true, { done: true, value: void 0 }), s = () => {
-            if (t) return e();
+          let t2 = false, e = () => (this.pause(), this.off(be, e), this.off(O, e), this.off("end", e), t2 = true, { done: true, value: void 0 }), s = () => {
+            if (t2) return e();
             let i = this.read();
             return i === null ? e() : { done: false, value: i };
           };
@@ -277474,11 +277474,11 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           }, [Symbol.dispose]: () => {
           } };
         }
-        destroy(t) {
-          if (this[O]) return t ? this.emit("error", t) : this.emit(O), this;
+        destroy(t2) {
+          if (this[O]) return t2 ? this.emit("error", t2) : this.emit(O), this;
           this[O] = true, this[D] = true, this[T].length = 0, this[C] = 0;
           let e = this;
-          return typeof e.close == "function" && !this[It] && e.close(), t ? this.emit("error", t) : this.emit(O), this;
+          return typeof e.close == "function" && !this[It] && e.close(), t2 ? this.emit("error", t2) : this.emit(O), this;
         }
         static get isStream() {
           return P.isStream;
@@ -277488,34 +277488,34 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
     });
     var Ms = R((_2) => {
       "use strict";
-      var gr = _2 && _2.__createBinding || (Object.create ? (function(n, t, e, s) {
+      var gr = _2 && _2.__createBinding || (Object.create ? (function(n, t2, e, s) {
         s === void 0 && (s = e);
-        var i = Object.getOwnPropertyDescriptor(t, e);
-        (!i || ("get" in i ? !t.__esModule : i.writable || i.configurable)) && (i = { enumerable: true, get: function() {
-          return t[e];
+        var i = Object.getOwnPropertyDescriptor(t2, e);
+        (!i || ("get" in i ? !t2.__esModule : i.writable || i.configurable)) && (i = { enumerable: true, get: function() {
+          return t2[e];
         } }), Object.defineProperty(n, s, i);
-      }) : (function(n, t, e, s) {
-        s === void 0 && (s = e), n[s] = t[e];
-      })), wr = _2 && _2.__setModuleDefault || (Object.create ? (function(n, t) {
-        Object.defineProperty(n, "default", { enumerable: true, value: t });
-      }) : function(n, t) {
-        n.default = t;
+      }) : (function(n, t2, e, s) {
+        s === void 0 && (s = e), n[s] = t2[e];
+      })), wr = _2 && _2.__setModuleDefault || (Object.create ? (function(n, t2) {
+        Object.defineProperty(n, "default", { enumerable: true, value: t2 });
+      }) : function(n, t2) {
+        n.default = t2;
       }), br = _2 && _2.__importStar || function(n) {
         if (n && n.__esModule) return n;
-        var t = {};
-        if (n != null) for (var e in n) e !== "default" && Object.prototype.hasOwnProperty.call(n, e) && gr(t, n, e);
-        return wr(t, n), t;
+        var t2 = {};
+        if (n != null) for (var e in n) e !== "default" && Object.prototype.hasOwnProperty.call(n, e) && gr(t2, n, e);
+        return wr(t2, n), t2;
       };
       Object.defineProperty(_2, "__esModule", { value: true });
       _2.PathScurry = _2.Path = _2.PathScurryDarwin = _2.PathScurryPosix = _2.PathScurryWin32 = _2.PathScurryBase = _2.PathPosix = _2.PathWin32 = _2.PathBase = _2.ChildrenCache = _2.ResolveCache = void 0;
       var Qt = fs19(), Yt = require("node:path"), yr = require("node:url"), pt = require("fs"), Sr = br(require("node:fs")), vr = pt.realpathSync.native, Ht = require("node:fs/promises"), bs = Oe(), mt = { lstatSync: pt.lstatSync, readdir: pt.readdir, readdirSync: pt.readdirSync, readlinkSync: pt.readlinkSync, realpathSync: vr, promises: { lstat: Ht.lstat, readdir: Ht.readdir, readlink: Ht.readlink, realpath: Ht.realpath } }, _s = (n) => !n || n === mt || n === Sr ? mt : { ...mt, ...n, promises: { ...mt.promises, ...n.promises || {} } }, Os = /^\\\\\?\\([a-z]:)\\?$/i, Er = (n) => n.replace(/\//g, "\\").replace(Os, "$1\\"), _r = /[\\\/]/, N = 0, xs = 1, Ts = 2, G = 4, Cs = 6, Rs = 8, Q = 10, As = 12, j = 15, dt = ~j, xe = 16, ys = 32, gt = 64, W = 128, Vt = 256, Xt = 512, Ss = gt | W | Xt, Or = 1023, Te = (n) => n.isFile() ? Rs : n.isDirectory() ? G : n.isSymbolicLink() ? Q : n.isCharacterDevice() ? Ts : n.isBlockDevice() ? Cs : n.isSocket() ? As : n.isFIFO() ? xs : N, vs = new Qt.LRUCache({ max: 2 ** 12 }), wt = (n) => {
-        let t = vs.get(n);
-        if (t) return t;
+        let t2 = vs.get(n);
+        if (t2) return t2;
         let e = n.normalize("NFKD");
         return vs.set(n, e), e;
       }, Es = new Qt.LRUCache({ max: 2 ** 12 }), Kt = (n) => {
-        let t = Es.get(n);
-        if (t) return t;
+        let t2 = Es.get(n);
+        if (t2) return t2;
         let e = wt(n.toLowerCase());
         return Es.set(n, e), e;
       }, bt = class extends Qt.LRUCache {
@@ -277525,8 +277525,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
       };
       _2.ResolveCache = bt;
       var Jt = class extends Qt.LRUCache {
-        constructor(t = 16 * 1024) {
-          super({ maxSize: t, sizeCalculation: (e) => e.length + 1 });
+        constructor(t2 = 16 * 1024) {
+          super({ maxSize: t2, sizeCalculation: (e) => e.length + 1 });
         }
       };
       _2.ChildrenCache = Jt;
@@ -277626,8 +277626,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         get path() {
           return this.parentPath;
         }
-        constructor(t, e = N, s, i, r, h, o) {
-          this.name = t, this.#O = r ? Kt(t) : wt(t), this.#e = e & Or, this.nocase = r, this.roots = i, this.root = s || this, this.#F = h, this.#g = o.fullpath, this.#E = o.relative, this.#T = o.relativePosix, this.parent = o.parent, this.parent ? this.#t = this.parent.#t : this.#t = _s(o.fs);
+        constructor(t2, e = N, s, i, r, h, o) {
+          this.name = t2, this.#O = r ? Kt(t2) : wt(t2), this.#e = e & Or, this.nocase = r, this.roots = i, this.root = s || this, this.#F = h, this.#g = o.fullpath, this.#E = o.relative, this.#T = o.relativePosix, this.parent = o.parent, this.parent ? this.#t = this.parent.#t : this.#t = _s(o.fs);
         }
         depth() {
           return this.#x !== void 0 ? this.#x : this.parent ? this.#x = this.parent.depth() + 1 : this.#x = 0;
@@ -277635,52 +277635,52 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         childrenCache() {
           return this.#F;
         }
-        resolve(t) {
-          if (!t) return this;
-          let e = this.getRootString(t), i = t.substring(e.length).split(this.splitSep);
+        resolve(t2) {
+          if (!t2) return this;
+          let e = this.getRootString(t2), i = t2.substring(e.length).split(this.splitSep);
           return e ? this.getRoot(e).#D(i) : this.#D(i);
         }
-        #D(t) {
+        #D(t2) {
           let e = this;
-          for (let s of t) e = e.child(s);
+          for (let s of t2) e = e.child(s);
           return e;
         }
         children() {
-          let t = this.#F.get(this);
-          if (t) return t;
+          let t2 = this.#F.get(this);
+          if (t2) return t2;
           let e = Object.assign([], { provisional: 0 });
           return this.#F.set(this, e), this.#e &= ~xe, e;
         }
-        child(t, e) {
-          if (t === "" || t === ".") return this;
-          if (t === "..") return this.parent || this;
-          let s = this.children(), i = this.nocase ? Kt(t) : wt(t);
+        child(t2, e) {
+          if (t2 === "" || t2 === ".") return this;
+          if (t2 === "..") return this.parent || this;
+          let s = this.children(), i = this.nocase ? Kt(t2) : wt(t2);
           for (let a of s) if (a.#O === i) return a;
-          let r = this.parent ? this.sep : "", h = this.#g ? this.#g + r + t : void 0, o = this.newChild(t, N, { ...e, parent: this, fullpath: h });
+          let r = this.parent ? this.sep : "", h = this.#g ? this.#g + r + t2 : void 0, o = this.newChild(t2, N, { ...e, parent: this, fullpath: h });
           return this.canReaddir() || (o.#e |= W), s.push(o), o;
         }
         relative() {
           if (this.isCWD) return "";
           if (this.#E !== void 0) return this.#E;
-          let t = this.name, e = this.parent;
+          let t2 = this.name, e = this.parent;
           if (!e) return this.#E = this.name;
           let s = e.relative();
-          return s + (!s || !e.parent ? "" : this.sep) + t;
+          return s + (!s || !e.parent ? "" : this.sep) + t2;
         }
         relativePosix() {
           if (this.sep === "/") return this.relative();
           if (this.isCWD) return "";
           if (this.#T !== void 0) return this.#T;
-          let t = this.name, e = this.parent;
+          let t2 = this.name, e = this.parent;
           if (!e) return this.#T = this.fullpathPosix();
           let s = e.relativePosix();
-          return s + (!s || !e.parent ? "" : "/") + t;
+          return s + (!s || !e.parent ? "" : "/") + t2;
         }
         fullpath() {
           if (this.#g !== void 0) return this.#g;
-          let t = this.name, e = this.parent;
+          let t2 = this.name, e = this.parent;
           if (!e) return this.#g = this.name;
-          let i = e.fullpath() + (e.parent ? this.sep : "") + t;
+          let i = e.fullpath() + (e.parent ? this.sep : "") + t2;
           return this.#g = i;
         }
         fullpathPosix() {
@@ -277690,14 +277690,14 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             let i = this.fullpath().replace(/\\/g, "/");
             return /^[a-z]:\//i.test(i) ? this.#b = `//?/${i}` : this.#b = i;
           }
-          let t = this.parent, e = t.fullpathPosix(), s = e + (!e || !t.parent ? "" : "/") + this.name;
+          let t2 = this.parent, e = t2.fullpathPosix(), s = e + (!e || !t2.parent ? "" : "/") + this.name;
           return this.#b = s;
         }
         isUnknown() {
           return (this.#e & j) === N;
         }
-        isType(t) {
-          return this[`is${t}`]();
+        isType(t2) {
+          return this[`is${t2}`]();
         }
         getType() {
           return this.isUnknown() ? "Unknown" : this.isDirectory() ? "Directory" : this.isFile() ? "File" : this.isSymbolicLink() ? "SymbolicLink" : this.isFIFO() ? "FIFO" : this.isCharacterDevice() ? "CharacterDevice" : this.isBlockDevice() ? "BlockDevice" : this.isSocket() ? "Socket" : "Unknown";
@@ -277733,14 +277733,14 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           return this.#C;
         }
         readdirCached() {
-          let t = this.children();
-          return t.slice(0, t.provisional);
+          let t2 = this.children();
+          return t2.slice(0, t2.provisional);
         }
         canReadlink() {
           if (this.#P) return true;
           if (!this.parent) return false;
-          let t = this.#e & j;
-          return !(t !== N && t !== Q || this.#e & Vt || this.#e & W);
+          let t2 = this.#e & j;
+          return !(t2 !== N && t2 !== Q || this.#e & Vt || this.#e & W);
         }
         calledReaddir() {
           return !!(this.#e & xe);
@@ -277748,12 +277748,12 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         isENOENT() {
           return !!(this.#e & W);
         }
-        isNamed(t) {
-          return this.nocase ? this.#O === Kt(t) : this.#O === wt(t);
+        isNamed(t2) {
+          return this.nocase ? this.#O === Kt(t2) : this.#O === wt(t2);
         }
         async readlink() {
-          let t = this.#P;
-          if (t) return t;
+          let t2 = this.#P;
+          if (t2) return t2;
           if (this.canReadlink() && this.parent) try {
             let e = await this.#t.promises.readlink(this.fullpath()), s = (await this.parent.realpath())?.resolve(e);
             if (s) return this.#P = s;
@@ -277763,8 +277763,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           }
         }
         readlinkSync() {
-          let t = this.#P;
-          if (t) return t;
+          let t2 = this.#P;
+          if (t2) return t2;
           if (this.canReadlink() && this.parent) try {
             let e = this.#t.readlinkSync(this.fullpath()), s = this.parent.realpathSync()?.resolve(e);
             if (s) return this.#P = s;
@@ -277773,10 +277773,10 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             return;
           }
         }
-        #W(t) {
+        #W(t2) {
           this.#e |= xe;
-          for (let e = t.provisional; e < t.length; e++) {
-            let s = t[e];
+          for (let e = t2.provisional; e < t2.length; e++) {
+            let s = t2[e];
             s && s.#_();
           }
         }
@@ -277784,84 +277784,84 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           this.#e & W || (this.#e = (this.#e | W) & dt, this.#$());
         }
         #$() {
-          let t = this.children();
-          t.provisional = 0;
-          for (let e of t) e.#_();
+          let t2 = this.children();
+          t2.provisional = 0;
+          for (let e of t2) e.#_();
         }
         #L() {
           this.#e |= Xt, this.#j();
         }
         #j() {
           if (this.#e & gt) return;
-          let t = this.#e;
-          (t & j) === G && (t &= dt), this.#e = t | gt, this.#$();
+          let t2 = this.#e;
+          (t2 & j) === G && (t2 &= dt), this.#e = t2 | gt, this.#$();
         }
-        #B(t = "") {
-          t === "ENOTDIR" || t === "EPERM" ? this.#j() : t === "ENOENT" ? this.#_() : this.children().provisional = 0;
+        #B(t2 = "") {
+          t2 === "ENOTDIR" || t2 === "EPERM" ? this.#j() : t2 === "ENOENT" ? this.#_() : this.children().provisional = 0;
         }
-        #k(t = "") {
-          t === "ENOTDIR" ? this.parent.#j() : t === "ENOENT" && this.#_();
+        #k(t2 = "") {
+          t2 === "ENOTDIR" ? this.parent.#j() : t2 === "ENOENT" && this.#_();
         }
-        #M(t = "") {
+        #M(t2 = "") {
           let e = this.#e;
-          e |= Vt, t === "ENOENT" && (e |= W), (t === "EINVAL" || t === "UNKNOWN") && (e &= dt), this.#e = e, t === "ENOTDIR" && this.parent && this.parent.#j();
+          e |= Vt, t2 === "ENOENT" && (e |= W), (t2 === "EINVAL" || t2 === "UNKNOWN") && (e &= dt), this.#e = e, t2 === "ENOTDIR" && this.parent && this.parent.#j();
         }
-        #I(t, e) {
-          return this.#z(t, e) || this.#G(t, e);
+        #I(t2, e) {
+          return this.#z(t2, e) || this.#G(t2, e);
         }
-        #G(t, e) {
-          let s = Te(t), i = this.newChild(t.name, s, { parent: this }), r = i.#e & j;
+        #G(t2, e) {
+          let s = Te(t2), i = this.newChild(t2.name, s, { parent: this }), r = i.#e & j;
           return r !== G && r !== Q && r !== N && (i.#e |= gt), e.unshift(i), e.provisional++, i;
         }
-        #z(t, e) {
+        #z(t2, e) {
           for (let s = e.provisional; s < e.length; s++) {
             let i = e[s];
-            if ((this.nocase ? Kt(t.name) : wt(t.name)) === i.#O) return this.#l(t, i, s, e);
+            if ((this.nocase ? Kt(t2.name) : wt(t2.name)) === i.#O) return this.#l(t2, i, s, e);
           }
         }
-        #l(t, e, s, i) {
+        #l(t2, e, s, i) {
           let r = e.name;
-          return e.#e = e.#e & dt | Te(t), r !== t.name && (e.name = t.name), s !== i.provisional && (s === i.length - 1 ? i.pop() : i.splice(s, 1), i.unshift(e)), i.provisional++, e;
+          return e.#e = e.#e & dt | Te(t2), r !== t2.name && (e.name = t2.name), s !== i.provisional && (s === i.length - 1 ? i.pop() : i.splice(s, 1), i.unshift(e)), i.provisional++, e;
         }
         async lstat() {
           if ((this.#e & W) === 0) try {
             return this.#U(await this.#t.promises.lstat(this.fullpath())), this;
-          } catch (t) {
-            this.#k(t.code);
+          } catch (t2) {
+            this.#k(t2.code);
           }
         }
         lstatSync() {
           if ((this.#e & W) === 0) try {
             return this.#U(this.#t.lstatSync(this.fullpath())), this;
-          } catch (t) {
-            this.#k(t.code);
+          } catch (t2) {
+            this.#k(t2.code);
           }
         }
-        #U(t) {
-          let { atime: e, atimeMs: s, birthtime: i, birthtimeMs: r, blksize: h, blocks: o, ctime: a, ctimeMs: l, dev: f, gid: c, ino: d, mode: u, mtime: m, mtimeMs: p, nlink: b, rdev: w, size: v, uid: E } = t;
+        #U(t2) {
+          let { atime: e, atimeMs: s, birthtime: i, birthtimeMs: r, blksize: h, blocks: o, ctime: a, ctimeMs: l, dev: f, gid: c, ino: d, mode: u, mtime: m, mtimeMs: p, nlink: b, rdev: w, size: v, uid: E } = t2;
           this.#y = e, this.#a = s, this.#m = i, this.#v = r, this.#c = h, this.#u = o, this.#R = a, this.#d = l, this.#s = f, this.#S = c, this.#o = d, this.#n = u, this.#p = m, this.#i = p, this.#r = b, this.#w = w, this.#f = v, this.#h = E;
-          let y = Te(t);
+          let y = Te(t2);
           this.#e = this.#e & dt | y | ys, y !== N && y !== G && y !== Q && (this.#e |= gt);
         }
         #N = [];
         #A = false;
-        #q(t) {
+        #q(t2) {
           this.#A = false;
           let e = this.#N.slice();
-          this.#N.length = 0, e.forEach((s) => s(null, t));
+          this.#N.length = 0, e.forEach((s) => s(null, t2));
         }
-        readdirCB(t, e = false) {
+        readdirCB(t2, e = false) {
           if (!this.canReaddir()) {
-            e ? t(null, []) : queueMicrotask(() => t(null, []));
+            e ? t2(null, []) : queueMicrotask(() => t2(null, []));
             return;
           }
           let s = this.children();
           if (this.calledReaddir()) {
             let r = s.slice(0, s.provisional);
-            e ? t(null, r) : queueMicrotask(() => t(null, r));
+            e ? t2(null, r) : queueMicrotask(() => t2(null, r));
             return;
           }
-          if (this.#N.push(t), this.#A) return;
+          if (this.#N.push(t2), this.#A) return;
           this.#A = true;
           let i = this.fullpath();
           this.#t.readdir(i, { withFileTypes: true }, (r, h) => {
@@ -277876,8 +277876,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         #H;
         async readdir() {
           if (!this.canReaddir()) return [];
-          let t = this.children();
-          if (this.calledReaddir()) return t.slice(0, t.provisional);
+          let t2 = this.children();
+          if (this.calledReaddir()) return t2.slice(0, t2.provisional);
           let e = this.fullpath();
           if (this.#H) await this.#H;
           else {
@@ -277885,41 +277885,41 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             };
             this.#H = new Promise((i) => s = i);
             try {
-              for (let i of await this.#t.promises.readdir(e, { withFileTypes: true })) this.#I(i, t);
-              this.#W(t);
+              for (let i of await this.#t.promises.readdir(e, { withFileTypes: true })) this.#I(i, t2);
+              this.#W(t2);
             } catch (i) {
-              this.#B(i.code), t.provisional = 0;
+              this.#B(i.code), t2.provisional = 0;
             }
             this.#H = void 0, s();
           }
-          return t.slice(0, t.provisional);
+          return t2.slice(0, t2.provisional);
         }
         readdirSync() {
           if (!this.canReaddir()) return [];
-          let t = this.children();
-          if (this.calledReaddir()) return t.slice(0, t.provisional);
+          let t2 = this.children();
+          if (this.calledReaddir()) return t2.slice(0, t2.provisional);
           let e = this.fullpath();
           try {
-            for (let s of this.#t.readdirSync(e, { withFileTypes: true })) this.#I(s, t);
-            this.#W(t);
+            for (let s of this.#t.readdirSync(e, { withFileTypes: true })) this.#I(s, t2);
+            this.#W(t2);
           } catch (s) {
-            this.#B(s.code), t.provisional = 0;
+            this.#B(s.code), t2.provisional = 0;
           }
-          return t.slice(0, t.provisional);
+          return t2.slice(0, t2.provisional);
         }
         canReaddir() {
           if (this.#e & Ss) return false;
-          let t = j & this.#e;
-          return t === N || t === G || t === Q;
+          let t2 = j & this.#e;
+          return t2 === N || t2 === G || t2 === Q;
         }
-        shouldWalk(t, e) {
-          return (this.#e & G) === G && !(this.#e & Ss) && !t.has(this) && (!e || e(this));
+        shouldWalk(t2, e) {
+          return (this.#e & G) === G && !(this.#e & Ss) && !t2.has(this) && (!e || e(this));
         }
         async realpath() {
           if (this.#C) return this.#C;
           if (!((Xt | Vt | W) & this.#e)) try {
-            let t = await this.#t.promises.realpath(this.fullpath());
-            return this.#C = this.resolve(t);
+            let t2 = await this.#t.promises.realpath(this.fullpath());
+            return this.#C = this.resolve(t2);
           } catch {
             this.#L();
           }
@@ -277927,57 +277927,57 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         realpathSync() {
           if (this.#C) return this.#C;
           if (!((Xt | Vt | W) & this.#e)) try {
-            let t = this.#t.realpathSync(this.fullpath());
-            return this.#C = this.resolve(t);
+            let t2 = this.#t.realpathSync(this.fullpath());
+            return this.#C = this.resolve(t2);
           } catch {
             this.#L();
           }
         }
-        [ks](t) {
-          if (t === this) return;
-          t.isCWD = false, this.isCWD = true;
+        [ks](t2) {
+          if (t2 === this) return;
+          t2.isCWD = false, this.isCWD = true;
           let e = /* @__PURE__ */ new Set([]), s = [], i = this;
           for (; i && i.parent; ) e.add(i), i.#E = s.join(this.sep), i.#T = s.join("/"), i = i.parent, s.push("..");
-          for (i = t; i && i.parent && !e.has(i); ) i.#E = void 0, i.#T = void 0, i = i.parent;
+          for (i = t2; i && i.parent && !e.has(i); ) i.#E = void 0, i.#T = void 0, i = i.parent;
         }
       };
       _2.PathBase = A;
       var yt = class n extends A {
         sep = "\\";
         splitSep = _r;
-        constructor(t, e = N, s, i, r, h, o) {
-          super(t, e, s, i, r, h, o);
+        constructor(t2, e = N, s, i, r, h, o) {
+          super(t2, e, s, i, r, h, o);
         }
-        newChild(t, e = N, s = {}) {
-          return new n(t, e, this.root, this.roots, this.nocase, this.childrenCache(), s);
+        newChild(t2, e = N, s = {}) {
+          return new n(t2, e, this.root, this.roots, this.nocase, this.childrenCache(), s);
         }
-        getRootString(t) {
-          return Yt.win32.parse(t).root;
+        getRootString(t2) {
+          return Yt.win32.parse(t2).root;
         }
-        getRoot(t) {
-          if (t = Er(t.toUpperCase()), t === this.root.name) return this.root;
-          for (let [e, s] of Object.entries(this.roots)) if (this.sameRoot(t, e)) return this.roots[t] = s;
-          return this.roots[t] = new Et(t, this).root;
+        getRoot(t2) {
+          if (t2 = Er(t2.toUpperCase()), t2 === this.root.name) return this.root;
+          for (let [e, s] of Object.entries(this.roots)) if (this.sameRoot(t2, e)) return this.roots[t2] = s;
+          return this.roots[t2] = new Et(t2, this).root;
         }
-        sameRoot(t, e = this.root.name) {
-          return t = t.toUpperCase().replace(/\//g, "\\").replace(Os, "$1\\"), t === e;
+        sameRoot(t2, e = this.root.name) {
+          return t2 = t2.toUpperCase().replace(/\//g, "\\").replace(Os, "$1\\"), t2 === e;
         }
       };
       _2.PathWin32 = yt;
       var St = class n extends A {
         splitSep = "/";
         sep = "/";
-        constructor(t, e = N, s, i, r, h, o) {
-          super(t, e, s, i, r, h, o);
+        constructor(t2, e = N, s, i, r, h, o) {
+          super(t2, e, s, i, r, h, o);
         }
-        getRootString(t) {
-          return t.startsWith("/") ? "/" : "";
+        getRootString(t2) {
+          return t2.startsWith("/") ? "/" : "";
         }
-        getRoot(t) {
+        getRoot(t2) {
           return this.root;
         }
-        newChild(t, e = N, s = {}) {
-          return new n(t, e, this.root, this.roots, this.nocase, this.childrenCache(), s);
+        newChild(t2, e = N, s = {}) {
+          return new n(t2, e, this.root, this.roots, this.nocase, this.childrenCache(), s);
         }
       };
       _2.PathPosix = St;
@@ -277991,9 +277991,9 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         #n;
         nocase;
         #r;
-        constructor(t = process.cwd(), e, s, { nocase: i, childrenCacheSize: r = 16 * 1024, fs: h = mt } = {}) {
-          this.#r = _s(h), (t instanceof URL || t.startsWith("file://")) && (t = (0, yr.fileURLToPath)(t));
-          let o = e.resolve(t);
+        constructor(t2 = process.cwd(), e, s, { nocase: i, childrenCacheSize: r = 16 * 1024, fs: h = mt } = {}) {
+          this.#r = _s(h), (t2 instanceof URL || t2.startsWith("file://")) && (t2 = (0, yr.fileURLToPath)(t2));
+          let o = e.resolve(t2);
           this.roots = /* @__PURE__ */ Object.create(null), this.rootPath = this.parseRootPath(o), this.#t = new bt(), this.#s = new bt(), this.#n = new Jt(r);
           let a = o.substring(this.rootPath.length).split(s);
           if (a.length === 1 && !a[0] && a.pop(), i === void 0) throw new TypeError("must provide nocase setting to PathScurryBase ctor");
@@ -278005,16 +278005,16 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           }
           this.cwd = l;
         }
-        depth(t = this.cwd) {
-          return typeof t == "string" && (t = this.cwd.resolve(t)), t.depth();
+        depth(t2 = this.cwd) {
+          return typeof t2 == "string" && (t2 = this.cwd.resolve(t2)), t2.depth();
         }
         childrenCache() {
           return this.#n;
         }
-        resolve(...t) {
+        resolve(...t2) {
           let e = "";
-          for (let r = t.length - 1; r >= 0; r--) {
-            let h = t[r];
+          for (let r = t2.length - 1; r >= 0; r--) {
+            let h = t2[r];
             if (!(!h || h === ".") && (e = e ? `${h}/${e}` : h, this.isAbsolute(h))) break;
           }
           let s = this.#t.get(e);
@@ -278022,10 +278022,10 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           let i = this.cwd.resolve(e).fullpath();
           return this.#t.set(e, i), i;
         }
-        resolvePosix(...t) {
+        resolvePosix(...t2) {
           let e = "";
-          for (let r = t.length - 1; r >= 0; r--) {
-            let h = t[r];
+          for (let r = t2.length - 1; r >= 0; r--) {
+            let h = t2[r];
             if (!(!h || h === ".") && (e = e ? `${h}/${e}` : h, this.isAbsolute(h))) break;
           }
           let s = this.#s.get(e);
@@ -278033,61 +278033,61 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           let i = this.cwd.resolve(e).fullpathPosix();
           return this.#s.set(e, i), i;
         }
-        relative(t = this.cwd) {
-          return typeof t == "string" && (t = this.cwd.resolve(t)), t.relative();
+        relative(t2 = this.cwd) {
+          return typeof t2 == "string" && (t2 = this.cwd.resolve(t2)), t2.relative();
         }
-        relativePosix(t = this.cwd) {
-          return typeof t == "string" && (t = this.cwd.resolve(t)), t.relativePosix();
+        relativePosix(t2 = this.cwd) {
+          return typeof t2 == "string" && (t2 = this.cwd.resolve(t2)), t2.relativePosix();
         }
-        basename(t = this.cwd) {
-          return typeof t == "string" && (t = this.cwd.resolve(t)), t.name;
+        basename(t2 = this.cwd) {
+          return typeof t2 == "string" && (t2 = this.cwd.resolve(t2)), t2.name;
         }
-        dirname(t = this.cwd) {
-          return typeof t == "string" && (t = this.cwd.resolve(t)), (t.parent || t).fullpath();
+        dirname(t2 = this.cwd) {
+          return typeof t2 == "string" && (t2 = this.cwd.resolve(t2)), (t2.parent || t2).fullpath();
         }
-        async readdir(t = this.cwd, e = { withFileTypes: true }) {
-          typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t, t = this.cwd);
+        async readdir(t2 = this.cwd, e = { withFileTypes: true }) {
+          typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2, t2 = this.cwd);
           let { withFileTypes: s } = e;
-          if (t.canReaddir()) {
-            let i = await t.readdir();
+          if (t2.canReaddir()) {
+            let i = await t2.readdir();
             return s ? i : i.map((r) => r.name);
           } else return [];
         }
-        readdirSync(t = this.cwd, e = { withFileTypes: true }) {
-          typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t, t = this.cwd);
+        readdirSync(t2 = this.cwd, e = { withFileTypes: true }) {
+          typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2, t2 = this.cwd);
           let { withFileTypes: s = true } = e;
-          return t.canReaddir() ? s ? t.readdirSync() : t.readdirSync().map((i) => i.name) : [];
+          return t2.canReaddir() ? s ? t2.readdirSync() : t2.readdirSync().map((i) => i.name) : [];
         }
-        async lstat(t = this.cwd) {
-          return typeof t == "string" && (t = this.cwd.resolve(t)), t.lstat();
+        async lstat(t2 = this.cwd) {
+          return typeof t2 == "string" && (t2 = this.cwd.resolve(t2)), t2.lstat();
         }
-        lstatSync(t = this.cwd) {
-          return typeof t == "string" && (t = this.cwd.resolve(t)), t.lstatSync();
+        lstatSync(t2 = this.cwd) {
+          return typeof t2 == "string" && (t2 = this.cwd.resolve(t2)), t2.lstatSync();
         }
-        async readlink(t = this.cwd, { withFileTypes: e } = { withFileTypes: false }) {
-          typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t.withFileTypes, t = this.cwd);
-          let s = await t.readlink();
+        async readlink(t2 = this.cwd, { withFileTypes: e } = { withFileTypes: false }) {
+          typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2.withFileTypes, t2 = this.cwd);
+          let s = await t2.readlink();
           return e ? s : s?.fullpath();
         }
-        readlinkSync(t = this.cwd, { withFileTypes: e } = { withFileTypes: false }) {
-          typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t.withFileTypes, t = this.cwd);
-          let s = t.readlinkSync();
+        readlinkSync(t2 = this.cwd, { withFileTypes: e } = { withFileTypes: false }) {
+          typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2.withFileTypes, t2 = this.cwd);
+          let s = t2.readlinkSync();
           return e ? s : s?.fullpath();
         }
-        async realpath(t = this.cwd, { withFileTypes: e } = { withFileTypes: false }) {
-          typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t.withFileTypes, t = this.cwd);
-          let s = await t.realpath();
+        async realpath(t2 = this.cwd, { withFileTypes: e } = { withFileTypes: false }) {
+          typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2.withFileTypes, t2 = this.cwd);
+          let s = await t2.realpath();
           return e ? s : s?.fullpath();
         }
-        realpathSync(t = this.cwd, { withFileTypes: e } = { withFileTypes: false }) {
-          typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t.withFileTypes, t = this.cwd);
-          let s = t.realpathSync();
+        realpathSync(t2 = this.cwd, { withFileTypes: e } = { withFileTypes: false }) {
+          typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2.withFileTypes, t2 = this.cwd);
+          let s = t2.realpathSync();
           return e ? s : s?.fullpath();
         }
-        async walk(t = this.cwd, e = {}) {
-          typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t, t = this.cwd);
+        async walk(t2 = this.cwd, e = {}) {
+          typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2, t2 = this.cwd);
           let { withFileTypes: s = true, follow: i = false, filter: r, walkFilter: h } = e, o = [];
-          (!r || r(t)) && o.push(s ? t : t.fullpath());
+          (!r || r(t2)) && o.push(s ? t2 : t2.fullpath());
           let a = /* @__PURE__ */ new Set(), l = (c, d) => {
             a.add(c), c.readdirCB((u, m) => {
               if (u) return d(u);
@@ -278098,7 +278098,7 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
               };
               for (let w of m) (!r || r(w)) && o.push(s ? w : w.fullpath()), i && w.isSymbolicLink() ? w.realpath().then((v) => v?.isUnknown() ? v.lstat() : v).then((v) => v?.shouldWalk(a, h) ? l(v, b) : b()) : w.shouldWalk(a, h) ? l(w, b) : b();
             }, true);
-          }, f = t;
+          }, f = t2;
           return new Promise((c, d) => {
             l(f, (u) => {
               if (u) return d(u);
@@ -278106,11 +278106,11 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             });
           });
         }
-        walkSync(t = this.cwd, e = {}) {
-          typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t, t = this.cwd);
+        walkSync(t2 = this.cwd, e = {}) {
+          typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2, t2 = this.cwd);
           let { withFileTypes: s = true, follow: i = false, filter: r, walkFilter: h } = e, o = [];
-          (!r || r(t)) && o.push(s ? t : t.fullpath());
-          let a = /* @__PURE__ */ new Set([t]);
+          (!r || r(t2)) && o.push(s ? t2 : t2.fullpath());
+          let a = /* @__PURE__ */ new Set([t2]);
           for (let l of a) {
             let f = l.readdirSync();
             for (let c of f) {
@@ -278128,17 +278128,17 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         [Symbol.asyncIterator]() {
           return this.iterate();
         }
-        iterate(t = this.cwd, e = {}) {
-          return typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t, t = this.cwd), this.stream(t, e)[Symbol.asyncIterator]();
+        iterate(t2 = this.cwd, e = {}) {
+          return typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2, t2 = this.cwd), this.stream(t2, e)[Symbol.asyncIterator]();
         }
         [Symbol.iterator]() {
           return this.iterateSync();
         }
-        *iterateSync(t = this.cwd, e = {}) {
-          typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t, t = this.cwd);
+        *iterateSync(t2 = this.cwd, e = {}) {
+          typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2, t2 = this.cwd);
           let { withFileTypes: s = true, follow: i = false, filter: r, walkFilter: h } = e;
-          (!r || r(t)) && (yield s ? t : t.fullpath());
-          let o = /* @__PURE__ */ new Set([t]);
+          (!r || r(t2)) && (yield s ? t2 : t2.fullpath());
+          let o = /* @__PURE__ */ new Set([t2]);
           for (let a of o) {
             let l = a.readdirSync();
             for (let f of l) {
@@ -278152,11 +278152,11 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             }
           }
         }
-        stream(t = this.cwd, e = {}) {
-          typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t, t = this.cwd);
+        stream(t2 = this.cwd, e = {}) {
+          typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2, t2 = this.cwd);
           let { withFileTypes: s = true, follow: i = false, filter: r, walkFilter: h } = e, o = new bs.Minipass({ objectMode: true });
-          (!r || r(t)) && o.write(s ? t : t.fullpath());
-          let a = /* @__PURE__ */ new Set(), l = [t], f = 0, c = () => {
+          (!r || r(t2)) && o.write(s ? t2 : t2.fullpath());
+          let a = /* @__PURE__ */ new Set(), l = [t2], f = 0, c = () => {
             let d = false;
             for (; !d; ) {
               let u = l.shift();
@@ -278188,11 +278188,11 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           };
           return c(), o;
         }
-        streamSync(t = this.cwd, e = {}) {
-          typeof t == "string" ? t = this.cwd.resolve(t) : t instanceof A || (e = t, t = this.cwd);
+        streamSync(t2 = this.cwd, e = {}) {
+          typeof t2 == "string" ? t2 = this.cwd.resolve(t2) : t2 instanceof A || (e = t2, t2 = this.cwd);
           let { withFileTypes: s = true, follow: i = false, filter: r, walkFilter: h } = e, o = new bs.Minipass({ objectMode: true }), a = /* @__PURE__ */ new Set();
-          (!r || r(t)) && o.write(s ? t : t.fullpath());
-          let l = [t], f = 0, c = () => {
+          (!r || r(t2)) && o.write(s ? t2 : t2.fullpath());
+          let l = [t2], f = 0, c = () => {
             let d = false;
             for (; !d; ) {
               let u = l.shift();
@@ -278217,51 +278217,51 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           };
           return c(), o;
         }
-        chdir(t = this.cwd) {
+        chdir(t2 = this.cwd) {
           let e = this.cwd;
-          this.cwd = typeof t == "string" ? this.cwd.resolve(t) : t, this.cwd[ks](e);
+          this.cwd = typeof t2 == "string" ? this.cwd.resolve(t2) : t2, this.cwd[ks](e);
         }
       };
       _2.PathScurryBase = vt;
       var Et = class extends vt {
         sep = "\\";
-        constructor(t = process.cwd(), e = {}) {
+        constructor(t2 = process.cwd(), e = {}) {
           let { nocase: s = true } = e;
-          super(t, Yt.win32, "\\", { ...e, nocase: s }), this.nocase = s;
+          super(t2, Yt.win32, "\\", { ...e, nocase: s }), this.nocase = s;
           for (let i = this.cwd; i; i = i.parent) i.nocase = this.nocase;
         }
-        parseRootPath(t) {
-          return Yt.win32.parse(t).root.toUpperCase();
+        parseRootPath(t2) {
+          return Yt.win32.parse(t2).root.toUpperCase();
         }
-        newRoot(t) {
-          return new yt(this.rootPath, G, void 0, this.roots, this.nocase, this.childrenCache(), { fs: t });
+        newRoot(t2) {
+          return new yt(this.rootPath, G, void 0, this.roots, this.nocase, this.childrenCache(), { fs: t2 });
         }
-        isAbsolute(t) {
-          return t.startsWith("/") || t.startsWith("\\") || /^[a-z]:(\/|\\)/i.test(t);
+        isAbsolute(t2) {
+          return t2.startsWith("/") || t2.startsWith("\\") || /^[a-z]:(\/|\\)/i.test(t2);
         }
       };
       _2.PathScurryWin32 = Et;
       var _t = class extends vt {
         sep = "/";
-        constructor(t = process.cwd(), e = {}) {
+        constructor(t2 = process.cwd(), e = {}) {
           let { nocase: s = false } = e;
-          super(t, Yt.posix, "/", { ...e, nocase: s }), this.nocase = s;
+          super(t2, Yt.posix, "/", { ...e, nocase: s }), this.nocase = s;
         }
-        parseRootPath(t) {
+        parseRootPath(t2) {
           return "/";
         }
-        newRoot(t) {
-          return new St(this.rootPath, G, void 0, this.roots, this.nocase, this.childrenCache(), { fs: t });
+        newRoot(t2) {
+          return new St(this.rootPath, G, void 0, this.roots, this.nocase, this.childrenCache(), { fs: t2 });
         }
-        isAbsolute(t) {
-          return t.startsWith("/");
+        isAbsolute(t2) {
+          return t2.startsWith("/");
         }
       };
       _2.PathScurryPosix = _t;
       var Zt = class extends _t {
-        constructor(t = process.cwd(), e = {}) {
+        constructor(t2 = process.cwd(), e = {}) {
           let { nocase: s = true } = e;
-          super(t, { ...e, nocase: s });
+          super(t2, { ...e, nocase: s });
         }
       };
       _2.PathScurryDarwin = Zt;
@@ -278284,12 +278284,12 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         #c;
         #o;
         #f = true;
-        constructor(t, e, s, i) {
-          if (!Tr(t)) throw new TypeError("empty pattern list");
+        constructor(t2, e, s, i) {
+          if (!Tr(t2)) throw new TypeError("empty pattern list");
           if (!Cr(e)) throw new TypeError("empty glob list");
-          if (e.length !== t.length) throw new TypeError("mismatched pattern list and glob list lengths");
-          if (this.length = t.length, s < 0 || s >= this.length) throw new TypeError("index out of range");
-          if (this.#t = t, this.#s = e, this.#n = s, this.#r = i, this.#n === 0) {
+          if (e.length !== t2.length) throw new TypeError("mismatched pattern list and glob list lengths");
+          if (this.length = t2.length, s < 0 || s >= this.length) throw new TypeError("index out of range");
+          if (this.#t = t2, this.#s = e, this.#n = s, this.#r = i, this.#n === 0) {
             if (this.isUNC()) {
               let [r, h, o, a, ...l] = this.#t, [f, c, d, u, ...m] = this.#s;
               l[0] === "" && (l.shift(), m.shift());
@@ -278328,20 +278328,20 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           return this.#h !== void 0 ? this.#h : this.hasMore() ? (this.#h = new n(this.#t, this.#s, this.#n + 1, this.#r), this.#h.#o = this.#o, this.#h.#c = this.#c, this.#h.#w = this.#w, this.#h) : this.#h = null;
         }
         isUNC() {
-          let t = this.#t;
-          return this.#c !== void 0 ? this.#c : this.#c = this.#r === "win32" && this.#n === 0 && t[0] === "" && t[1] === "" && typeof t[2] == "string" && !!t[2] && typeof t[3] == "string" && !!t[3];
+          let t2 = this.#t;
+          return this.#c !== void 0 ? this.#c : this.#c = this.#r === "win32" && this.#n === 0 && t2[0] === "" && t2[1] === "" && typeof t2[2] == "string" && !!t2[2] && typeof t2[3] == "string" && !!t2[3];
         }
         isDrive() {
-          let t = this.#t;
-          return this.#w !== void 0 ? this.#w : this.#w = this.#r === "win32" && this.#n === 0 && this.length > 1 && typeof t[0] == "string" && /^[a-z]:$/i.test(t[0]);
+          let t2 = this.#t;
+          return this.#w !== void 0 ? this.#w : this.#w = this.#r === "win32" && this.#n === 0 && this.length > 1 && typeof t2[0] == "string" && /^[a-z]:$/i.test(t2[0]);
         }
         isAbsolute() {
-          let t = this.#t;
-          return this.#o !== void 0 ? this.#o : this.#o = t[0] === "" && t.length > 1 || this.isDrive() || this.isUNC();
+          let t2 = this.#t;
+          return this.#o !== void 0 ? this.#o : this.#o = t2[0] === "" && t2.length > 1 || this.isDrive() || this.isUNC();
         }
         root() {
-          let t = this.#t[0];
-          return typeof t == "string" && this.isAbsolute() && this.#n === 0 ? t : "";
+          let t2 = this.#t[0];
+          return typeof t2 == "string" && this.isAbsolute() && this.#n === 0 ? t2 : "";
         }
         checkFollowGlobstar() {
           return !(this.#n === 0 || !this.isGlobstar() || !this.#f);
@@ -278363,12 +278363,12 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         absoluteChildren;
         platform;
         mmopts;
-        constructor(t, { nobrace: e, nocase: s, noext: i, noglobstar: r, platform: h = kr }) {
+        constructor(t2, { nobrace: e, nocase: s, noext: i, noglobstar: r, platform: h = kr }) {
           this.relative = [], this.absolute = [], this.relativeChildren = [], this.absoluteChildren = [], this.platform = h, this.mmopts = { dot: true, nobrace: e, nocase: s, noext: i, noglobstar: r, optimizationLevel: 2, platform: h, nocomment: true, nonegate: true };
-          for (let o of t) this.add(o);
+          for (let o of t2) this.add(o);
         }
-        add(t) {
-          let e = new Ps.Minimatch(t, this.mmopts);
+        add(t2) {
+          let e = new Ps.Minimatch(t2, this.mmopts);
           for (let s = 0; s < e.set.length; s++) {
             let i = e.set[s], r = e.globParts[s];
             if (!i || !r) throw new Error("invalid pattern object");
@@ -278377,14 +278377,14 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             l ? this.absolute.push(o) : this.relative.push(o), a && (l ? this.absoluteChildren.push(o) : this.relativeChildren.push(o));
           }
         }
-        ignored(t) {
-          let e = t.fullpath(), s = `${e}/`, i = t.relative() || ".", r = `${i}/`;
+        ignored(t2) {
+          let e = t2.fullpath(), s = `${e}/`, i = t2.relative() || ".", r = `${i}/`;
           for (let h of this.relative) if (h.match(i) || h.match(r)) return true;
           for (let h of this.absolute) if (h.match(e) || h.match(s)) return true;
           return false;
         }
-        childrenIgnored(t) {
-          let e = t.fullpath() + "/", s = (t.relative() || ".") + "/";
+        childrenIgnored(t2) {
+          let e = t2.fullpath() + "/", s = (t2.relative() || ".") + "/";
           for (let i of this.relativeChildren) if (i.match(s)) return true;
           for (let i of this.absoluteChildren) if (i.match(e)) return true;
           return false;
@@ -278398,49 +278398,49 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
       z2.Processor = z2.SubWalks = z2.MatchRecord = z2.HasWalkedCache = void 0;
       var Ds = H(), se = class n {
         store;
-        constructor(t = /* @__PURE__ */ new Map()) {
-          this.store = t;
+        constructor(t2 = /* @__PURE__ */ new Map()) {
+          this.store = t2;
         }
         copy() {
           return new n(new Map(this.store));
         }
-        hasWalked(t, e) {
-          return this.store.get(t.fullpath())?.has(e.globString());
+        hasWalked(t2, e) {
+          return this.store.get(t2.fullpath())?.has(e.globString());
         }
-        storeWalked(t, e) {
-          let s = t.fullpath(), i = this.store.get(s);
+        storeWalked(t2, e) {
+          let s = t2.fullpath(), i = this.store.get(s);
           i ? i.add(e.globString()) : this.store.set(s, /* @__PURE__ */ new Set([e.globString()]));
         }
       };
       z2.HasWalkedCache = se;
       var ie = class {
         store = /* @__PURE__ */ new Map();
-        add(t, e, s) {
-          let i = (e ? 2 : 0) | (s ? 1 : 0), r = this.store.get(t);
-          this.store.set(t, r === void 0 ? i : i & r);
+        add(t2, e, s) {
+          let i = (e ? 2 : 0) | (s ? 1 : 0), r = this.store.get(t2);
+          this.store.set(t2, r === void 0 ? i : i & r);
         }
         entries() {
-          return [...this.store.entries()].map(([t, e]) => [t, !!(e & 2), !!(e & 1)]);
+          return [...this.store.entries()].map(([t2, e]) => [t2, !!(e & 2), !!(e & 1)]);
         }
       };
       z2.MatchRecord = ie;
       var re = class {
         store = /* @__PURE__ */ new Map();
-        add(t, e) {
-          if (!t.canReaddir()) return;
-          let s = this.store.get(t);
-          s ? s.find((i) => i.globString() === e.globString()) || s.push(e) : this.store.set(t, [e]);
+        add(t2, e) {
+          if (!t2.canReaddir()) return;
+          let s = this.store.get(t2);
+          s ? s.find((i) => i.globString() === e.globString()) || s.push(e) : this.store.set(t2, [e]);
         }
-        get(t) {
-          let e = this.store.get(t);
+        get(t2) {
+          let e = this.store.get(t2);
           if (!e) throw new Error("attempting to walk unknown path");
           return e;
         }
         entries() {
-          return this.keys().map((t) => [t, this.store.get(t)]);
+          return this.keys().map((t2) => [t2, this.store.get(t2)]);
         }
         keys() {
-          return [...this.store.keys()].filter((t) => t.canReaddir());
+          return [...this.store.keys()].filter((t2) => t2.canReaddir());
         }
       };
       z2.SubWalks = re;
@@ -278452,12 +278452,12 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         follow;
         dot;
         opts;
-        constructor(t, e) {
-          this.opts = t, this.follow = !!t.follow, this.dot = !!t.dot, this.hasWalkedCache = e ? e.copy() : new se();
+        constructor(t2, e) {
+          this.opts = t2, this.follow = !!t2.follow, this.dot = !!t2.dot, this.hasWalkedCache = e ? e.copy() : new se();
         }
-        processPatterns(t, e) {
+        processPatterns(t2, e) {
           this.patterns = e;
-          let s = e.map((i) => [t, i]);
+          let s = e.map((i) => [t2, i]);
           for (let [i, r] of s) {
             this.hasWalkedCache.storeWalked(i, r);
             let h = r.root(), o = r.isAbsolute() && this.opts.absolute !== false;
@@ -278499,29 +278499,29 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         child() {
           return new n(this.opts, this.hasWalkedCache);
         }
-        filterEntries(t, e) {
-          let s = this.subwalks.get(t), i = this.child();
+        filterEntries(t2, e) {
+          let s = this.subwalks.get(t2), i = this.child();
           for (let r of e) for (let h of s) {
             let o = h.isAbsolute(), a = h.pattern(), l = h.rest();
             a === Ds.GLOBSTAR ? i.testGlobstar(r, h, l, o) : a instanceof RegExp ? i.testRegExp(r, a, l, o) : i.testString(r, a, l, o);
           }
           return i;
         }
-        testGlobstar(t, e, s, i) {
-          if ((this.dot || !t.name.startsWith(".")) && (e.hasMore() || this.matches.add(t, i, false), t.canReaddir() && (this.follow || !t.isSymbolicLink() ? this.subwalks.add(t, e) : t.isSymbolicLink() && (s && e.checkFollowGlobstar() ? this.subwalks.add(t, s) : e.markFollowGlobstar() && this.subwalks.add(t, e)))), s) {
+        testGlobstar(t2, e, s, i) {
+          if ((this.dot || !t2.name.startsWith(".")) && (e.hasMore() || this.matches.add(t2, i, false), t2.canReaddir() && (this.follow || !t2.isSymbolicLink() ? this.subwalks.add(t2, e) : t2.isSymbolicLink() && (s && e.checkFollowGlobstar() ? this.subwalks.add(t2, s) : e.markFollowGlobstar() && this.subwalks.add(t2, e)))), s) {
             let r = s.pattern();
-            if (typeof r == "string" && r !== ".." && r !== "" && r !== ".") this.testString(t, r, s.rest(), i);
+            if (typeof r == "string" && r !== ".." && r !== "" && r !== ".") this.testString(t2, r, s.rest(), i);
             else if (r === "..") {
-              let h = t.parent || t;
+              let h = t2.parent || t2;
               this.subwalks.add(h, s);
-            } else r instanceof RegExp && this.testRegExp(t, r, s.rest(), i);
+            } else r instanceof RegExp && this.testRegExp(t2, r, s.rest(), i);
           }
         }
-        testRegExp(t, e, s, i) {
-          e.test(t.name) && (s ? this.subwalks.add(t, s) : this.matches.add(t, i, false));
+        testRegExp(t2, e, s, i) {
+          e.test(t2.name) && (s ? this.subwalks.add(t2, s) : this.matches.add(t2, i, false));
         }
-        testString(t, e, s, i) {
-          t.isNamed(e) && (s ? this.subwalks.add(t, s) : this.matches.add(t, i, false));
+        testString(t2, e, s, i) {
+          t2.isNamed(e) && (s ? this.subwalks.add(t2, s) : this.matches.add(t2, i, false));
         }
       };
       z2.Processor = Me;
@@ -278530,7 +278530,7 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
       "use strict";
       Object.defineProperty(X, "__esModule", { value: true });
       X.GlobStream = X.GlobWalker = X.GlobUtil = void 0;
-      var Mr = Oe(), js = ke(), Ns = Fs(), Pr = (n, t) => typeof n == "string" ? new js.Ignore([n], t) : Array.isArray(n) ? new js.Ignore(n, t) : n, Ot = class {
+      var Mr = Oe(), js = ke(), Ns = Fs(), Pr = (n, t2) => typeof n == "string" ? new js.Ignore([n], t2) : Array.isArray(n) ? new js.Ignore(n, t2) : n, Ot = class {
         path;
         patterns;
         opts;
@@ -278543,8 +278543,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         signal;
         maxDepth;
         includeChildMatches;
-        constructor(t, e, s) {
-          if (this.patterns = t, this.path = e, this.opts = s, this.#n = !s.posix && s.platform === "win32" ? "\\" : "/", this.includeChildMatches = s.includeChildMatches !== false, (s.ignore || !this.includeChildMatches) && (this.#s = Pr(s.ignore ?? [], s), !this.includeChildMatches && typeof this.#s.add != "function")) {
+        constructor(t2, e, s) {
+          if (this.patterns = t2, this.path = e, this.opts = s, this.#n = !s.posix && s.platform === "win32" ? "\\" : "/", this.includeChildMatches = s.includeChildMatches !== false, (s.ignore || !this.includeChildMatches) && (this.#s = Pr(s.ignore ?? [], s), !this.includeChildMatches && typeof this.#s.add != "function")) {
             let i = "cannot ignore child matches, ignore lacks add() method.";
             throw new Error(i);
           }
@@ -278552,11 +278552,11 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
             this.#t.length = 0;
           }));
         }
-        #r(t) {
-          return this.seen.has(t) || !!this.#s?.ignored?.(t);
+        #r(t2) {
+          return this.seen.has(t2) || !!this.#s?.ignored?.(t2);
         }
-        #h(t) {
-          return !!this.#s?.childrenIgnored?.(t);
+        #h(t2) {
+          return !!this.#s?.childrenIgnored?.(t2);
         }
         pause() {
           this.paused = true;
@@ -278564,79 +278564,79 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         resume() {
           if (this.signal?.aborted) return;
           this.paused = false;
-          let t;
-          for (; !this.paused && (t = this.#t.shift()); ) t();
+          let t2;
+          for (; !this.paused && (t2 = this.#t.shift()); ) t2();
         }
-        onResume(t) {
-          this.signal?.aborted || (this.paused ? this.#t.push(t) : t());
+        onResume(t2) {
+          this.signal?.aborted || (this.paused ? this.#t.push(t2) : t2());
         }
-        async matchCheck(t, e) {
+        async matchCheck(t2, e) {
           if (e && this.opts.nodir) return;
           let s;
           if (this.opts.realpath) {
-            if (s = t.realpathCached() || await t.realpath(), !s) return;
-            t = s;
+            if (s = t2.realpathCached() || await t2.realpath(), !s) return;
+            t2 = s;
           }
-          let r = t.isUnknown() || this.opts.stat ? await t.lstat() : t;
+          let r = t2.isUnknown() || this.opts.stat ? await t2.lstat() : t2;
           if (this.opts.follow && this.opts.nodir && r?.isSymbolicLink()) {
             let h = await r.realpath();
             h && (h.isUnknown() || this.opts.stat) && await h.lstat();
           }
           return this.matchCheckTest(r, e);
         }
-        matchCheckTest(t, e) {
-          return t && (this.maxDepth === 1 / 0 || t.depth() <= this.maxDepth) && (!e || t.canReaddir()) && (!this.opts.nodir || !t.isDirectory()) && (!this.opts.nodir || !this.opts.follow || !t.isSymbolicLink() || !t.realpathCached()?.isDirectory()) && !this.#r(t) ? t : void 0;
+        matchCheckTest(t2, e) {
+          return t2 && (this.maxDepth === 1 / 0 || t2.depth() <= this.maxDepth) && (!e || t2.canReaddir()) && (!this.opts.nodir || !t2.isDirectory()) && (!this.opts.nodir || !this.opts.follow || !t2.isSymbolicLink() || !t2.realpathCached()?.isDirectory()) && !this.#r(t2) ? t2 : void 0;
         }
-        matchCheckSync(t, e) {
+        matchCheckSync(t2, e) {
           if (e && this.opts.nodir) return;
           let s;
           if (this.opts.realpath) {
-            if (s = t.realpathCached() || t.realpathSync(), !s) return;
-            t = s;
+            if (s = t2.realpathCached() || t2.realpathSync(), !s) return;
+            t2 = s;
           }
-          let r = t.isUnknown() || this.opts.stat ? t.lstatSync() : t;
+          let r = t2.isUnknown() || this.opts.stat ? t2.lstatSync() : t2;
           if (this.opts.follow && this.opts.nodir && r?.isSymbolicLink()) {
             let h = r.realpathSync();
             h && (h?.isUnknown() || this.opts.stat) && h.lstatSync();
           }
           return this.matchCheckTest(r, e);
         }
-        matchFinish(t, e) {
-          if (this.#r(t)) return;
+        matchFinish(t2, e) {
+          if (this.#r(t2)) return;
           if (!this.includeChildMatches && this.#s?.add) {
-            let r = `${t.relativePosix()}/**`;
+            let r = `${t2.relativePosix()}/**`;
             this.#s.add(r);
           }
           let s = this.opts.absolute === void 0 ? e : this.opts.absolute;
-          this.seen.add(t);
-          let i = this.opts.mark && t.isDirectory() ? this.#n : "";
-          if (this.opts.withFileTypes) this.matchEmit(t);
+          this.seen.add(t2);
+          let i = this.opts.mark && t2.isDirectory() ? this.#n : "";
+          if (this.opts.withFileTypes) this.matchEmit(t2);
           else if (s) {
-            let r = this.opts.posix ? t.fullpathPosix() : t.fullpath();
+            let r = this.opts.posix ? t2.fullpathPosix() : t2.fullpath();
             this.matchEmit(r + i);
           } else {
-            let r = this.opts.posix ? t.relativePosix() : t.relative(), h = this.opts.dotRelative && !r.startsWith(".." + this.#n) ? "." + this.#n : "";
+            let r = this.opts.posix ? t2.relativePosix() : t2.relative(), h = this.opts.dotRelative && !r.startsWith(".." + this.#n) ? "." + this.#n : "";
             this.matchEmit(r ? h + r + i : "." + i);
           }
         }
-        async match(t, e, s) {
-          let i = await this.matchCheck(t, s);
+        async match(t2, e, s) {
+          let i = await this.matchCheck(t2, s);
           i && this.matchFinish(i, e);
         }
-        matchSync(t, e, s) {
-          let i = this.matchCheckSync(t, s);
+        matchSync(t2, e, s) {
+          let i = this.matchCheckSync(t2, s);
           i && this.matchFinish(i, e);
         }
-        walkCB(t, e, s) {
-          this.signal?.aborted && s(), this.walkCB2(t, e, new Ns.Processor(this.opts), s);
+        walkCB(t2, e, s) {
+          this.signal?.aborted && s(), this.walkCB2(t2, e, new Ns.Processor(this.opts), s);
         }
-        walkCB2(t, e, s, i) {
-          if (this.#h(t)) return i();
+        walkCB2(t2, e, s, i) {
+          if (this.#h(t2)) return i();
           if (this.signal?.aborted && i(), this.paused) {
-            this.onResume(() => this.walkCB2(t, e, s, i));
+            this.onResume(() => this.walkCB2(t2, e, s, i));
             return;
           }
-          s.processPatterns(t, e);
+          s.processPatterns(t2, e);
           let r = 1, h = () => {
             --r === 0 && i();
           };
@@ -278649,8 +278649,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           }
           h();
         }
-        walkCB3(t, e, s, i) {
-          s = s.filterEntries(t, e);
+        walkCB3(t2, e, s, i) {
+          s = s.filterEntries(t2, e);
           let r = 1, h = () => {
             --r === 0 && i();
           };
@@ -278658,16 +278658,16 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           for (let [o, a] of s.subwalks.entries()) r++, this.walkCB2(o, a, s.child(), h);
           h();
         }
-        walkCBSync(t, e, s) {
-          this.signal?.aborted && s(), this.walkCB2Sync(t, e, new Ns.Processor(this.opts), s);
+        walkCBSync(t2, e, s) {
+          this.signal?.aborted && s(), this.walkCB2Sync(t2, e, new Ns.Processor(this.opts), s);
         }
-        walkCB2Sync(t, e, s, i) {
-          if (this.#h(t)) return i();
+        walkCB2Sync(t2, e, s, i) {
+          if (this.#h(t2)) return i();
           if (this.signal?.aborted && i(), this.paused) {
-            this.onResume(() => this.walkCB2Sync(t, e, s, i));
+            this.onResume(() => this.walkCB2Sync(t2, e, s, i));
             return;
           }
-          s.processPatterns(t, e);
+          s.processPatterns(t2, e);
           let r = 1, h = () => {
             --r === 0 && i();
           };
@@ -278680,8 +278680,8 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
           }
           h();
         }
-        walkCB3Sync(t, e, s, i) {
-          s = s.filterEntries(t, e);
+        walkCB3Sync(t2, e, s, i) {
+          s = s.filterEntries(t2, e);
           let r = 1, h = () => {
             --r === 0 && i();
           };
@@ -278693,17 +278693,17 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
       X.GlobUtil = Ot;
       var Pe = class extends Ot {
         matches = /* @__PURE__ */ new Set();
-        constructor(t, e, s) {
-          super(t, e, s);
+        constructor(t2, e, s) {
+          super(t2, e, s);
         }
-        matchEmit(t) {
-          this.matches.add(t);
+        matchEmit(t2) {
+          this.matches.add(t2);
         }
         async walk() {
           if (this.signal?.aborted) throw this.signal.reason;
-          return this.path.isUnknown() && await this.path.lstat(), await new Promise((t, e) => {
+          return this.path.isUnknown() && await this.path.lstat(), await new Promise((t2, e) => {
             this.walkCB(this.path, this.patterns, () => {
-              this.signal?.aborted ? e(this.signal.reason) : t(this.matches);
+              this.signal?.aborted ? e(this.signal.reason) : t2(this.matches);
             });
           }), this.matches;
         }
@@ -278717,17 +278717,17 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
       X.GlobWalker = Pe;
       var De = class extends Ot {
         results;
-        constructor(t, e, s) {
-          super(t, e, s), this.results = new Mr.Minipass({ signal: this.signal, objectMode: true }), this.results.on("drain", () => this.resume()), this.results.on("resume", () => this.resume());
+        constructor(t2, e, s) {
+          super(t2, e, s), this.results = new Mr.Minipass({ signal: this.signal, objectMode: true }), this.results.on("drain", () => this.resume()), this.results.on("resume", () => this.resume());
         }
-        matchEmit(t) {
-          this.results.write(t), this.results.flowing || this.pause();
+        matchEmit(t2) {
+          this.results.write(t2), this.results.flowing || this.pause();
         }
         stream() {
-          let t = this.path;
-          return t.isUnknown() ? t.lstat().then(() => {
-            this.walkCB(t, this.patterns, () => this.results.end());
-          }) : this.walkCB(t, this.patterns, () => this.results.end()), this.results;
+          let t2 = this.path;
+          return t2.isUnknown() ? t2.lstat().then(() => {
+            this.walkCB(t2, this.patterns, () => this.results.end());
+          }) : this.walkCB(t2, this.patterns, () => this.results.end()), this.results;
         }
         streamSync() {
           return this.path.isUnknown() && this.path.lstatSync(), this.walkCBSync(this.path, this.patterns, () => this.results.end()), this.results;
@@ -278767,14 +278767,14 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
         includeChildMatches;
         opts;
         patterns;
-        constructor(t, e) {
+        constructor(t2, e) {
           if (!e) throw new TypeError("glob options required");
           if (this.withFileTypes = !!e.withFileTypes, this.signal = e.signal, this.follow = !!e.follow, this.dot = !!e.dot, this.dotRelative = !!e.dotRelative, this.nodir = !!e.nodir, this.mark = !!e.mark, e.cwd ? (e.cwd instanceof URL || e.cwd.startsWith("file://")) && (e.cwd = (0, Fr.fileURLToPath)(e.cwd)) : this.cwd = "", this.cwd = e.cwd || "", this.root = e.root, this.magicalBraces = !!e.magicalBraces, this.nobrace = !!e.nobrace, this.noext = !!e.noext, this.realpath = !!e.realpath, this.absolute = e.absolute, this.includeChildMatches = e.includeChildMatches !== false, this.noglobstar = !!e.noglobstar, this.matchBase = !!e.matchBase, this.maxDepth = typeof e.maxDepth == "number" ? e.maxDepth : 1 / 0, this.stat = !!e.stat, this.ignore = e.ignore, this.withFileTypes && this.absolute !== void 0) throw new Error("cannot set absolute and withFileTypes:true");
-          if (typeof t == "string" && (t = [t]), this.windowsPathsNoEscape = !!e.windowsPathsNoEscape || e.allowWindowsEscape === false, this.windowsPathsNoEscape && (t = t.map((a) => a.replace(/\\/g, "/"))), this.matchBase) {
+          if (typeof t2 == "string" && (t2 = [t2]), this.windowsPathsNoEscape = !!e.windowsPathsNoEscape || e.allowWindowsEscape === false, this.windowsPathsNoEscape && (t2 = t2.map((a) => a.replace(/\\/g, "/"))), this.matchBase) {
             if (e.noglobstar) throw new TypeError("base matching requires globstar");
-            t = t.map((a) => a.includes("/") ? a : `./**/${a}`);
+            t2 = t2.map((a) => a.includes("/") ? a : `./**/${a}`);
           }
-          if (this.pattern = t, this.platform = e.platform || Nr, this.opts = { ...e, platform: this.platform }, e.scurry) {
+          if (this.pattern = t2, this.platform = e.platform || Nr, this.opts = { ...e, platform: this.platform }, e.scurry) {
             if (this.scurry = e.scurry, e.nocase !== void 0 && e.nocase !== e.scurry.nocase) throw new Error("nocase option contradicts provided scurry option");
           } else {
             let a = e.platform === "win32" ? ne.PathScurryWin32 : e.platform === "darwin" ? ne.PathScurryDarwin : e.platform ? ne.PathScurryPosix : ne.PathScurry;
@@ -278819,9 +278819,9 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
       "use strict";
       Object.defineProperty(ae, "__esModule", { value: true });
       ae.hasMagic = void 0;
-      var Lr = H(), Wr = (n, t = {}) => {
+      var Lr = H(), Wr = (n, t2 = {}) => {
         Array.isArray(n) || (n = [n]);
-        for (let e of n) if (new Lr.Minimatch(e, t).hasMagic()) return true;
+        for (let e of n) if (new Lr.Minimatch(e, t2).hasMagic()) return true;
         return false;
       };
       ae.hasMagic = Wr;
@@ -278855,23 +278855,23 @@ globstar while`, t, d, e, u, m), this.matchOne(t.slice(d), e.slice(u), s)) retur
     Object.defineProperty(exports2, "Ignore", { enumerable: true, get: function() {
       return zr.Ignore;
     } });
-    function xt(n, t = {}) {
-      return new tt.Glob(n, t).streamSync();
+    function xt(n, t2 = {}) {
+      return new tt.Glob(n, t2).streamSync();
     }
-    function Le(n, t = {}) {
-      return new tt.Glob(n, t).stream();
+    function Le(n, t2 = {}) {
+      return new tt.Glob(n, t2).stream();
     }
-    function We(n, t = {}) {
-      return new tt.Glob(n, t).walkSync();
+    function We(n, t2 = {}) {
+      return new tt.Glob(n, t2).walkSync();
     }
-    async function Bs(n, t = {}) {
-      return new tt.Glob(n, t).walk();
+    async function Bs(n, t2 = {}) {
+      return new tt.Glob(n, t2).walk();
     }
-    function Tt(n, t = {}) {
-      return new tt.Glob(n, t).iterateSync();
+    function Tt(n, t2 = {}) {
+      return new tt.Glob(n, t2).iterateSync();
     }
-    function Be(n, t = {}) {
-      return new tt.Glob(n, t).iterate();
+    function Be(n, t2 = {}) {
+      return new tt.Glob(n, t2).iterate();
     }
     exports2.streamSync = xt;
     exports2.stream = Object.assign(Le, { sync: xt });
@@ -283961,8 +283961,8 @@ var require_traverse = __commonJS({
     Object.keys(Traverse.prototype).forEach(function(key) {
       Traverse[key] = function(obj) {
         var args = [].slice.call(arguments, 1);
-        var t = Traverse(obj);
-        return t[key].apply(t, args);
+        var t2 = Traverse(obj);
+        return t2[key].apply(t2, args);
       };
     });
     function copy(src) {
@@ -286054,9 +286054,9 @@ var require_light = __commonJS({
           clearInterval(this.heartbeat);
           return this.Promise.resolve();
         }
-        yieldLoop(t = 0) {
+        yieldLoop(t2 = 0) {
           return new this.Promise(function(resolve2, reject) {
-            return setTimeout(resolve2, t);
+            return setTimeout(resolve2, t2);
           });
         }
         computePenalty() {
@@ -293300,8 +293300,8 @@ function numKeys(data) {
   return keyCount;
 }
 var getParsedType = (data) => {
-  const t = typeof data;
-  switch (t) {
+  const t2 = typeof data;
+  switch (t2) {
     case "undefined":
       return "undefined";
     case "string":
@@ -293340,7 +293340,7 @@ var getParsedType = (data) => {
       }
       return "object";
     default:
-      throw new Error(`Unknown data type: ${t}`);
+      throw new Error(`Unknown data type: ${t2}`);
   }
 };
 var propertyKeyTypes = /* @__PURE__ */ new Set(["string", "number", "symbol"]);
@@ -293663,8 +293663,8 @@ function getLengthableOrigin(input) {
   return "unknown";
 }
 function parsedType(data) {
-  const t = typeof data;
-  switch (t) {
+  const t2 = typeof data;
+  switch (t2) {
     case "number": {
       return Number.isNaN(data) ? "nan" : "number";
     }
@@ -293681,7 +293681,7 @@ function parsedType(data) {
       }
     }
   }
-  return t;
+  return t2;
 }
 function issue2(...args) {
   const [iss, input, inst] = args;
@@ -295423,7 +295423,7 @@ function handleCatchall(proms, input, payload, ctx, def, inst) {
   const unrecognized = [];
   const keySet = def.keySet;
   const _catchall = def.catchall._zod;
-  const t = _catchall.def.type;
+  const t2 = _catchall.def.type;
   const isOptionalIn = _catchall.optin === "optional";
   const isOptionalOut = _catchall.optout === "optional";
   for (const key in input) {
@@ -295431,7 +295431,7 @@ function handleCatchall(proms, input, payload, ctx, def, inst) {
       continue;
     if (keySet.has(key))
       continue;
-    if (t === "never") {
+    if (t2 === "never") {
       unrecognized.push(key);
       continue;
     }
@@ -298764,16 +298764,16 @@ var error18 = () => {
     number: { unit: "", shortLabel: "\u05E7\u05D8\u05DF", longLabel: "\u05D2\u05D3\u05D5\u05DC" }
     // no unit
   };
-  const typeEntry = (t) => t ? TypeNames[t] : void 0;
-  const typeLabel = (t) => {
-    const e = typeEntry(t);
+  const typeEntry = (t2) => t2 ? TypeNames[t2] : void 0;
+  const typeLabel = (t2) => {
+    const e = typeEntry(t2);
     if (e)
       return e.label;
-    return t ?? TypeNames.unknown.label;
+    return t2 ?? TypeNames.unknown.label;
   };
-  const withDefinite = (t) => `\u05D4${typeLabel(t)}`;
-  const verbFor = (t) => {
-    const e = typeEntry(t);
+  const withDefinite = (t2) => `\u05D4${typeLabel(t2)}`;
+  const verbFor = (t2) => {
+    const e = typeEntry(t2);
     const gender = e?.gender ?? "m";
     return gender === "f" ? "\u05E6\u05E8\u05D9\u05DB\u05D4 \u05DC\u05D4\u05D9\u05D5\u05EA" : "\u05E6\u05E8\u05D9\u05DA \u05DC\u05D4\u05D9\u05D5\u05EA";
   };
@@ -306625,8 +306625,8 @@ function convertBaseSchema(schema2, ctx) {
   }
   const type2 = schema2.type;
   if (Array.isArray(type2)) {
-    const typeSchemas = type2.map((t) => {
-      const typeSchema = { ...schema2, type: t };
+    const typeSchemas = type2.map((t2) => {
+      const typeSchema = { ...schema2, type: t2 };
       return convertBaseSchema(typeSchema, ctx);
     });
     if (typeSchemas.length === 0) {
@@ -309440,16 +309440,330 @@ mustache.Context = Context;
 mustache.Writer = Writer;
 var mustache_default = mustache;
 
+// src/i18n/en.ts
+var en = {
+  "cli.baseline.captured": "Captured {count} {findingWord} in {path}.",
+  "cli.baseline.diff": "Added: {added}\nRemoved: {removed}\nUnchanged: {unchanged}",
+  "cli.baseline.notFound": "Baseline not found: {path}.",
+  "cli.baseline.pruned": "Pruned {count} baseline {findingWord}.",
+  "cli.baseline.removed": "Removed {path}.",
+  "cli.error.configuration": "Configuration error: {error}",
+  "cli.error.concurrencyPositiveInteger": "concurrency must be a positive integer",
+  "cli.error.environment.kicadMissing": "Environment error: kicad-cli not available.",
+  "cli.error.unexpected": "unexpected CLI error",
+  "cli.explain.error.unknownRule": "Unknown rule: {ruleId}",
+  "cli.explain.error.unsupportedRule": "Rule {ruleId} does not support explanation.",
+  "cli.init.created": "created boardreadyops.yml",
+  "cli.init.exists": "boardreadyops.yml already exists",
+  "doctor.check.action": "Action / Workflow",
+  "doctor.check.adapters": "Adapters",
+  "doctor.check.kicad": "KiCad",
+  "doctor.check.repository": "Repository",
+  "doctor.check.runtime": "Runtime",
+  "doctor.check.suppressions": "Suppressions",
+  "doctor.error.unknownCheck": "Unknown doctor check: {check}. Available checks: {checks}",
+  "doctor.error.unknownFormat": "Unknown doctor format: {format}. Available formats: text, json",
+  "doctor.recommendation.action.noWorkflow": "Add the BoardReadyOps GitHub Action workflow for pull request preflight.",
+  "doctor.recommendation.action.permissions": "Add `permissions: { pull-requests: write }` or `permissions: { issues: write }` to the BoardReadyOps job.",
+  "doctor.recommendation.action.pinCheckout": "Pin actions/checkout to an immutable commit SHA.",
+  "doctor.recommendation.action.workflowYaml": "Fix the BoardReadyOps workflow YAML before relying on action diagnostics.",
+  "doctor.recommendation.adapters.nexar": "Set NEXAR_CLIENT_ID and NEXAR_CLIENT_SECRET for Nexar-backed lifecycle checks.",
+  "doctor.recommendation.kicad": "Install KiCad CLI to run DRC and ERC checks.",
+  "doctor.recommendation.repository.config": "Fix boardreadyops.yml before running repository checks.",
+  "doctor.recommendation.repository.gerbers": "Generate Gerber outputs from KiCad before CI.",
+  "doctor.recommendation.repository.projects": "Add a .kicad_pro project before CI.",
+  "doctor.recommendation.runtime.node": "Install a supported Node.js 22 or 24 runtime.",
+  "doctor.recommendation.runtime.npm": "Install npm for package-based BoardReadyOps workflows.",
+  "doctor.recommendations": "Recommendations",
+  "doctor.severity.fail": "fail",
+  "doctor.severity.info": "info",
+  "doctor.severity.pass": "pass",
+  "doctor.severity.warn": "warn",
+  "doctor.title": "BoardReadyOps Doctor - Environment & Repository Diagnosis",
+  "doctor.action.checkoutPinned": "actions/checkout is SHA-pinned.",
+  "doctor.action.checkoutUnpinned": "actions/checkout is not SHA-pinned.",
+  "doctor.action.noWorkflow": "No .github/workflows/boardreadyops.yml workflow found.",
+  "doctor.action.permissionsConfigured": "permissions: pull-requests or issues write configured.",
+  "doctor.action.permissionsMissing": "permissions: pull-requests or issues write missing for PR comments.",
+  "doctor.action.workflowFound": "{path} found.",
+  "doctor.action.workflowUnreadable": "Unable to read or parse {path} workflow.",
+  "doctor.adapters.nexarMissing": "Nexar credentials not present.",
+  "doctor.adapters.nexarPresent": "Nexar credentials present.",
+  "doctor.kicad.drcAvailable": "DRC available.",
+  "doctor.kicad.ercAvailable": "ERC available.",
+  "doctor.kicad.found": "kicad-cli{version} found at {path}.",
+  "doctor.kicad.missing": "kicad-cli not found.",
+  "doctor.repository.configFound": "{file} found and valid.",
+  "doctor.repository.configInvalid": "boardreadyops configuration is invalid: {errors}",
+  "doctor.repository.gerberOutput.word": "output",
+  "doctor.repository.gerberOutput.word.plural": "outputs",
+  "doctor.repository.gerbersDiscovered": "{count} Gerber {outputWord} found.",
+  "doctor.repository.noConfig": "No boardreadyops configuration file found; defaults are valid.",
+  "doctor.repository.noGerbers": "No Gerber outputs found.",
+  "doctor.repository.noProjects": "No KiCad projects discovered.",
+  "doctor.repository.project.word": "project",
+  "doctor.repository.project.word.plural": "projects",
+  "doctor.repository.projectsDiscovered": "{count} KiCad {projectWord} discovered.",
+  "doctor.runtime.boardreadyops": "boardreadyops: v{version}",
+  "doctor.runtime.node": "Node: {version} (supported majors: {majors})",
+  "doctor.runtime.npm": "npm: v{version}",
+  "doctor.runtime.npmMissing": "npm not found.",
+  "doctor.suppressions.baselineFound": "{file} baseline found.",
+  "doctor.suppressions.noBaseline": "No baseline captured.",
+  "doctor.suppressions.noSuppressions": "No suppressions file found.",
+  "doctor.suppressions.suppressionsFound": "{file} suppressions file found.",
+  "report.allProjects": "All projects",
+  "report.allRules": "All rules",
+  "report.allSeverities": "All severities",
+  "report.artifacts": "Artifacts",
+  "report.bom": "BOM",
+  "report.bomDiffTruncated": "BOM diff truncated.",
+  "report.confidence": "Confidence",
+  "report.context": "Context",
+  "report.count": "Count",
+  "report.current": "Current",
+  "report.details": "Details",
+  "report.fabricationChanges": "Fabrication Changes",
+  "report.filterFindings": "Filter findings",
+  "report.filterableFindingList": "Filterable finding list",
+  "report.finding": "Finding",
+  "report.finding.count": "{count} {findingWord}",
+  "report.finding.word": "finding",
+  "report.finding.word.plural": "findings",
+  "report.findings": "Findings",
+  "report.fix": "Fix",
+  "report.generatedMetadata": "Generated {date} by {tool} {version}. {threshold}",
+  "report.groupedByRule": "Findings grouped by rule",
+  "report.location.board": "board",
+  "report.location.column": "column {column}",
+  "report.location.line": "line {line}",
+  "report.location.lines": "lines {startLine}-{endLine}",
+  "report.manufacturingOutputs": "Manufacturing Outputs",
+  "report.metric": "Metric",
+  "report.moreNewFindings": "...and {count} more new {findingWord}.",
+  "report.newFindings": "New Findings",
+  "report.noBomChanges": "No BOM changes recorded.",
+  "report.noFindings": "No findings.",
+  "report.noFix": "No fix suggestion provided.",
+  "report.noLocation": "No location provided.",
+  "report.noProjects": "No projects were reported.",
+  "report.noReferences": "No references provided.",
+  "report.noRules": "No rules produced findings.",
+  "report.output.added": "{count} added",
+  "report.output.changed": "{count} changed",
+  "report.output.removed": "{count} removed",
+  "report.perProjectBreakdown": "Per-project Breakdown",
+  "report.perRuleGrouping": "Per-rule Grouping",
+  "report.previous": "Previous",
+  "report.project": "Project",
+  "report.ref": "Ref",
+  "report.references": "References",
+  "report.resource": "Resource",
+  "report.rule": "Rule",
+  "report.severity": "Severity",
+  "report.severityCounts": "Severity counts",
+  "report.status": "Status",
+  "report.summaryBySeverity": "Summary by Severity",
+  "report.threshold.failed": "Threshold failed.",
+  "report.threshold.passed": "Threshold passed.",
+  "report.title": "BoardReadyOps Report",
+  "report.topFindings": "Top Findings",
+  "report.total": "Total",
+  "report.unassigned": "Unassigned",
+  "severity.critical": "Critical",
+  "severity.high": "High",
+  "severity.info": "Info",
+  "severity.low": "Low",
+  "severity.medium": "Medium"
+};
+
+// src/i18n/tr.ts
+var tr = {
+  "cli.baseline.captured": "{count} {findingWord} {path} i\xE7inde kaydedildi.",
+  "cli.baseline.diff": "Eklenen: {added}\nKald\u0131r\u0131lan: {removed}\nDe\u011Fi\u015Fmeyen: {unchanged}",
+  "cli.baseline.notFound": "Temel liste bulunamad\u0131: {path}.",
+  "cli.baseline.pruned": "{count} temel liste {findingWord} budand\u0131.",
+  "cli.baseline.removed": "{path} kald\u0131r\u0131ld\u0131.",
+  "cli.error.configuration": "Yap\u0131land\u0131rma hatas\u0131: {error}",
+  "cli.error.concurrencyPositiveInteger": "concurrency pozitif bir tam say\u0131 olmal\u0131",
+  "cli.error.environment.kicadMissing": "Ortam hatas\u0131: kicad-cli kullan\u0131lam\u0131yor.",
+  "cli.error.unexpected": "beklenmeyen CLI hatas\u0131",
+  "cli.explain.error.unknownRule": "Bilinmeyen kural: {ruleId}",
+  "cli.explain.error.unsupportedRule": "{ruleId} kural\u0131 a\xE7\u0131klamay\u0131 desteklemiyor.",
+  "cli.init.created": "boardreadyops.yml olu\u015Fturuldu",
+  "cli.init.exists": "boardreadyops.yml zaten var",
+  "doctor.check.action": "Action / Workflow",
+  "doctor.check.adapters": "Ba\u011Fda\u015Ft\u0131r\u0131c\u0131lar",
+  "doctor.check.kicad": "KiCad",
+  "doctor.check.repository": "Depo",
+  "doctor.check.runtime": "\xC7al\u0131\u015Fma Zaman\u0131",
+  "doctor.check.suppressions": "Bast\u0131rmalar",
+  "doctor.error.unknownCheck": "Bilinmeyen doktor denetimi: {check}. Kullan\u0131labilir denetimler: {checks}",
+  "doctor.error.unknownFormat": "Bilinmeyen doktor bi\xE7imi: {format}. Kullan\u0131labilir bi\xE7imler: text, json",
+  "doctor.recommendation.action.noWorkflow": "Pull request \xF6n denetimi i\xE7in BoardReadyOps GitHub Action workflow dosyas\u0131n\u0131 ekleyin.",
+  "doctor.recommendation.action.permissions": "BoardReadyOps job'una `permissions: { pull-requests: write }` veya `permissions: { issues: write }` ekleyin.",
+  "doctor.recommendation.action.pinCheckout": "actions/checkout kullan\u0131m\u0131n\u0131 de\u011Fi\u015Fmez bir commit SHA de\u011Ferine sabitleyin.",
+  "doctor.recommendation.action.workflowYaml": "Action tan\u0131lar\u0131na g\xFCvenmeden \xF6nce BoardReadyOps workflow YAML dosyas\u0131n\u0131 d\xFCzeltin.",
+  "doctor.recommendation.adapters.nexar": "Nexar destekli ya\u015Fam d\xF6ng\xFCs\xFC denetimleri i\xE7in NEXAR_CLIENT_ID ve NEXAR_CLIENT_SECRET ayarlay\u0131n.",
+  "doctor.recommendation.kicad": "DRC ve ERC denetimlerini \xE7al\u0131\u015Ft\u0131rmak i\xE7in KiCad CLI kurun.",
+  "doctor.recommendation.repository.config": "Depo denetimlerini \xE7al\u0131\u015Ft\u0131rmadan \xF6nce boardreadyops.yml dosyas\u0131n\u0131 d\xFCzeltin.",
+  "doctor.recommendation.repository.gerbers": "CI'dan \xF6nce KiCad ile Gerber \xE7\u0131kt\u0131lar\u0131n\u0131 \xFCretin.",
+  "doctor.recommendation.repository.projects": "CI'dan \xF6nce bir .kicad_pro projesi ekleyin.",
+  "doctor.recommendation.runtime.node": "Desteklenen Node.js 22 veya 24 \xE7al\u0131\u015Fma zaman\u0131 kurun.",
+  "doctor.recommendation.runtime.npm": "Paket tabanl\u0131 BoardReadyOps ak\u0131\u015Flar\u0131 i\xE7in npm kurun.",
+  "doctor.recommendations": "\xD6neriler",
+  "doctor.severity.fail": "ba\u015Far\u0131s\u0131z",
+  "doctor.severity.info": "bilgi",
+  "doctor.severity.pass": "ge\xE7ti",
+  "doctor.severity.warn": "uyar\u0131",
+  "doctor.title": "BoardReadyOps Doktoru - Ortam ve Depo Tan\u0131s\u0131",
+  "doctor.action.checkoutPinned": "actions/checkout SHA'ya sabitlenmi\u015F.",
+  "doctor.action.checkoutUnpinned": "actions/checkout SHA'ya sabitlenmemi\u015F.",
+  "doctor.action.noWorkflow": ".github/workflows/boardreadyops.yml workflow dosyas\u0131 bulunamad\u0131.",
+  "doctor.action.permissionsConfigured": "permissions: pull-requests veya issues write yap\u0131land\u0131r\u0131lm\u0131\u015F.",
+  "doctor.action.permissionsMissing": "PR yorumlar\u0131 i\xE7in permissions: pull-requests veya issues write eksik.",
+  "doctor.action.workflowFound": "{path} bulundu.",
+  "doctor.action.workflowUnreadable": "{path} workflow dosyas\u0131 okunamad\u0131 veya ayr\u0131\u015Ft\u0131r\u0131lamad\u0131.",
+  "doctor.adapters.nexarMissing": "Nexar kimlik bilgileri yok.",
+  "doctor.adapters.nexarPresent": "Nexar kimlik bilgileri var.",
+  "doctor.kicad.drcAvailable": "DRC kullan\u0131labilir.",
+  "doctor.kicad.ercAvailable": "ERC kullan\u0131labilir.",
+  "doctor.kicad.found": "kicad-cli{version} {path} konumunda bulundu.",
+  "doctor.kicad.missing": "kicad-cli bulunamad\u0131.",
+  "doctor.repository.configFound": "{file} bulundu ve ge\xE7erli.",
+  "doctor.repository.configInvalid": "boardreadyops yap\u0131land\u0131rmas\u0131 ge\xE7ersiz: {errors}",
+  "doctor.repository.gerberOutput.word": "\xE7\u0131kt\u0131s\u0131",
+  "doctor.repository.gerberOutput.word.plural": "\xE7\u0131kt\u0131s\u0131",
+  "doctor.repository.gerbersDiscovered": "{count} Gerber {outputWord} bulundu.",
+  "doctor.repository.noConfig": "BoardReadyOps yap\u0131land\u0131rma dosyas\u0131 bulunamad\u0131; varsay\u0131lanlar ge\xE7erli.",
+  "doctor.repository.noGerbers": "Gerber \xE7\u0131kt\u0131s\u0131 bulunamad\u0131.",
+  "doctor.repository.noProjects": "KiCad projesi ke\u015Ffedilmedi.",
+  "doctor.repository.project.word": "projesi",
+  "doctor.repository.project.word.plural": "projesi",
+  "doctor.repository.projectsDiscovered": "{count} KiCad {projectWord} ke\u015Ffedildi.",
+  "doctor.runtime.boardreadyops": "boardreadyops: v{version}",
+  "doctor.runtime.node": "Node: {version} (desteklenen ana s\xFCr\xFCmler: {majors})",
+  "doctor.runtime.npm": "npm: v{version}",
+  "doctor.runtime.npmMissing": "npm bulunamad\u0131.",
+  "doctor.suppressions.baselineFound": "{file} temel listesi bulundu.",
+  "doctor.suppressions.noBaseline": "Temel liste kaydedilmemi\u015F.",
+  "doctor.suppressions.noSuppressions": "Bast\u0131rma dosyas\u0131 bulunamad\u0131.",
+  "doctor.suppressions.suppressionsFound": "{file} bast\u0131rma dosyas\u0131 bulundu.",
+  "report.allProjects": "T\xFCm projeler",
+  "report.allRules": "T\xFCm kurallar",
+  "report.allSeverities": "T\xFCm \xF6nem dereceleri",
+  "report.artifacts": "Artifaktlar",
+  "report.bom": "BOM",
+  "report.bomDiffTruncated": "BOM fark\u0131 k\u0131salt\u0131ld\u0131.",
+  "report.confidence": "G\xFCven",
+  "report.context": "Ba\u011Flam",
+  "report.count": "Say\u0131",
+  "report.current": "Mevcut",
+  "report.details": "Ayr\u0131nt\u0131lar",
+  "report.fabricationChanges": "Fabrikasyon De\u011Fi\u015Fiklikleri",
+  "report.filterFindings": "Bulgular\u0131 filtrele",
+  "report.filterableFindingList": "Filtrelenebilir bulgu listesi",
+  "report.finding": "Bulgu",
+  "report.finding.count": "{count} {findingWord}",
+  "report.finding.word": "bulgu",
+  "report.finding.word.plural": "bulgu",
+  "report.findings": "Bulgular",
+  "report.fix": "\xC7\xF6z\xFCm",
+  "report.generatedMetadata": "{date} tarihinde {tool} {version} taraf\u0131ndan \xFCretildi. {threshold}",
+  "report.groupedByRule": "Kurala g\xF6re gruplanm\u0131\u015F bulgular",
+  "report.location.board": "kart",
+  "report.location.column": "s\xFCtun {column}",
+  "report.location.line": "sat\u0131r {line}",
+  "report.location.lines": "{startLine}-{endLine} sat\u0131rlar\u0131",
+  "report.manufacturingOutputs": "\xDCretim \xC7\u0131kt\u0131lar\u0131",
+  "report.metric": "\xD6l\xE7\xFCt",
+  "report.moreNewFindings": "...ve {count} yeni {findingWord} daha.",
+  "report.newFindings": "Yeni Bulgular",
+  "report.noBomChanges": "BOM de\u011Fi\u015Fikli\u011Fi kaydedilmedi.",
+  "report.noFindings": "Bulgu yok.",
+  "report.noFix": "\xC7\xF6z\xFCm \xF6nerisi yok.",
+  "report.noLocation": "Konum belirtilmedi.",
+  "report.noProjects": "Proje raporlanmad\u0131.",
+  "report.noReferences": "Referans belirtilmedi.",
+  "report.noRules": "Hi\xE7bir kural bulgu \xFCretmedi.",
+  "report.output.added": "{count} eklendi",
+  "report.output.changed": "{count} de\u011Fi\u015Fti",
+  "report.output.removed": "{count} kald\u0131r\u0131ld\u0131",
+  "report.perProjectBreakdown": "Proje Baz\u0131nda Da\u011F\u0131l\u0131m",
+  "report.perRuleGrouping": "Kural Baz\u0131nda Gruplama",
+  "report.previous": "\xD6nceki",
+  "report.project": "Proje",
+  "report.ref": "Ref",
+  "report.references": "Referanslar",
+  "report.resource": "Kaynak",
+  "report.rule": "Kural",
+  "report.severity": "\xD6nem Derecesi",
+  "report.severityCounts": "\xD6nem derecesi say\u0131lar\u0131",
+  "report.status": "Durum",
+  "report.summaryBySeverity": "\xD6nem Derecesine G\xF6re \xD6zet",
+  "report.threshold.failed": "E\u015Fik ba\u015Far\u0131s\u0131z.",
+  "report.threshold.passed": "E\u015Fik ge\xE7ti.",
+  "report.title": "BoardReadyOps Raporu",
+  "report.topFindings": "\xD6ne \xC7\u0131kan Bulgular",
+  "report.total": "Toplam",
+  "report.unassigned": "Atanmam\u0131\u015F",
+  "severity.critical": "Kritik",
+  "severity.high": "Y\xFCksek",
+  "severity.info": "Bilgi",
+  "severity.low": "D\xFC\u015F\xFCk",
+  "severity.medium": "Orta"
+};
+
+// src/i18n/catalog.ts
+var catalogs = {
+  en,
+  tr
+};
+
+// src/i18n/t.ts
+function resolveLocale(env = process.env) {
+  return normalizeLocale(env.BOARDREADY_LOCALE) ?? normalizeLocale(env.LANG) ?? "en";
+}
+function t(key, params = {}, locale = resolveLocale()) {
+  const catalog = locale === "__PSEUDO__" ? catalogs.en : catalogs[locale];
+  const template = catalog[key];
+  const values = { ...params };
+  if (template.includes("{findingWord}")) {
+    values.findingWord = typeof params.count === "number" && params.count === 1 ? catalog["report.finding.word"] : catalog["report.finding.word.plural"];
+  }
+  const rendered = template.replace(/\{([a-zA-Z0-9_]+)\}/g, (match, name) => {
+    const value = values[name];
+    return value === void 0 ? match : String(value);
+  });
+  return locale === "__PSEUDO__" ? `[[${rendered}]]` : rendered;
+}
+function normalizeLocale(value) {
+  if (!value) {
+    return void 0;
+  }
+  if (value === "__PSEUDO__") {
+    return "__PSEUDO__";
+  }
+  const normalized = value.toLowerCase().replace(/_/g, "-");
+  if (normalized === "tr" || normalized.startsWith("tr-")) {
+    return "tr";
+  }
+  if (normalized === "en" || normalized.startsWith("en-")) {
+    return "en";
+  }
+  return void 0;
+}
+
 // src/report/templates/pr-comment.mustache
-var pr_comment_default = "<!-- boardreadyops:sticky:v1 -->\n{{> summary}}\n\n{{#hasFindings}}\n## Top Findings\n\n{{#topFindings}}\n- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}\n{{/topFindings}}\n{{/hasFindings}}\n{{^hasFindings}}\nNo findings.\n{{/hasFindings}}\n{{#hasFixes}}\n\n## Fix\n\n{{#fixFindings}}\n- `{{ruleId}}` in `{{resource.path}}`: {{fix.description}}\n{{#fix.steps}}\n  1. {{.}}\n{{/fix.steps}}\n{{/fixFindings}}\n{{/hasFixes}}\n\n{{#hasFabricationDiff}}\n## Fabrication Changes\n\n### BOM\n{{#fabrication.bom.hasRows}}\n| Ref | Previous | Current | Status |\n| --- | --- | --- | --- |\n{{#fabrication.bom.rows}}\n| {{reference}} | {{previous}} | {{current}} | {{status}} |\n{{/fabrication.bom.rows}}\n{{#fabrication.bom.truncated}}\n_BOM diff truncated._\n{{/fabrication.bom.truncated}}\n{{/fabrication.bom.hasRows}}\n{{^fabrication.bom.hasRows}}\nNo BOM changes recorded.\n{{/fabrication.bom.hasRows}}\n\n### Manufacturing Outputs\n{{#fabrication.outputs}}\n- {{kind}}: {{status}}{{#summary}} ({{summary}}){{/summary}}\n{{/fabrication.outputs}}\n\n{{#fabrication.findings.hasAdded}}\n### New Findings\n{{#fabrication.findings.added}}\n- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}\n{{/fabrication.findings.added}}\n{{#fabrication.findings.addedTruncated}}\n_...and {{fabrication.findings.addedRemaining}} more new findings._\n{{/fabrication.findings.addedTruncated}}\n{{/fabrication.findings.hasAdded}}\n{{/hasFabricationDiff}}\n\n{{#hasArtifacts}}\n## Artifacts\n\n{{#artifacts}}\n- [{{label}}]({{{url}}})\n{{/artifacts}}\n{{/hasArtifacts}}\n";
+var pr_comment_default = "<!-- boardreadyops:sticky:v1 -->\n{{> summary}}\n\n{{#hasFindings}}\n## {{labels.topFindings}}\n\n{{#topFindings}}\n- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}\n{{/topFindings}}\n{{/hasFindings}}\n{{^hasFindings}}\n{{labels.noFindings}}\n{{/hasFindings}}\n{{#hasFixes}}\n\n## {{labels.fix}}\n\n{{#fixFindings}}\n- `{{ruleId}}` in `{{resource.path}}`: {{fix.description}}\n{{#fix.steps}}\n  1. {{.}}\n{{/fix.steps}}\n{{/fixFindings}}\n{{/hasFixes}}\n\n{{#hasFabricationDiff}}\n## {{labels.fabricationChanges}}\n\n### {{labels.bom}}\n{{#fabrication.bom.hasRows}}\n| {{labels.ref}} | {{labels.previous}} | {{labels.current}} | {{labels.status}} |\n| --- | --- | --- | --- |\n{{#fabrication.bom.rows}}\n| {{reference}} | {{previous}} | {{current}} | {{status}} |\n{{/fabrication.bom.rows}}\n{{#fabrication.bom.truncated}}\n_{{labels.bomDiffTruncated}}_\n{{/fabrication.bom.truncated}}\n{{/fabrication.bom.hasRows}}\n{{^fabrication.bom.hasRows}}\n{{labels.noBomChanges}}\n{{/fabrication.bom.hasRows}}\n\n### {{labels.manufacturingOutputs}}\n{{#fabrication.outputs}}\n- {{kind}}: {{status}}{{#summary}} ({{summary}}){{/summary}}\n{{/fabrication.outputs}}\n\n{{#fabrication.findings.hasAdded}}\n### {{labels.newFindings}}\n{{#fabrication.findings.added}}\n- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}\n{{/fabrication.findings.added}}\n{{#fabrication.findings.addedTruncated}}\n_{{fabrication.findings.addedRemainingLabel}}_\n{{/fabrication.findings.addedTruncated}}\n{{/fabrication.findings.hasAdded}}\n{{/hasFabricationDiff}}\n\n{{#hasArtifacts}}\n## {{labels.artifacts}}\n\n{{#artifacts}}\n- [{{label}}]({{{url}}})\n{{/artifacts}}\n{{/hasArtifacts}}\n";
 
 // src/report/templates/summary.mustache
-var summary_default = "# BoardReadyOps Report\n\n| Metric | Count |\n| --- | ---: |\n| Total | {{summary.total}} |\n| Critical | {{summary.critical}} |\n| High | {{summary.high}} |\n| Medium | {{summary.medium}} |\n| Low | {{summary.low}} |\n| Info | {{summary.info}} |\n";
+var summary_default = "# {{labels.reportTitle}}\n\n| {{labels.metric}} | {{labels.count}} |\n| --- | ---: |\n| {{labels.total}} | {{summary.total}} |\n| {{labels.critical}} | {{summary.critical}} |\n| {{labels.high}} | {{summary.high}} |\n| {{labels.medium}} | {{summary.medium}} |\n| {{labels.low}} | {{summary.low}} |\n| {{labels.info}} | {{summary.info}} |\n";
 
 // src/report/markdown.ts
 var stickyMarker = "<!-- boardreadyops:sticky:v1 -->";
-function formatMarkdown(result, artifacts = [], fabrication) {
-  const fabricationView = fabrication ? formatFabricationDiff(fabrication) : void 0;
+function formatMarkdown(result, artifacts = [], fabrication, locale = "en") {
+  const fabricationView = fabrication ? formatFabricationDiff(fabrication, locale) : void 0;
   const topFindings = result.findings.slice(0, 10);
   const fixFindings = result.findings.filter((finding2) => finding2.fix).slice(0, 10);
   return mustache_default.render(
@@ -309463,12 +309777,13 @@ function formatMarkdown(result, artifacts = [], fabrication) {
       hasArtifacts: artifacts.length > 0,
       artifacts,
       hasFabricationDiff: Boolean(fabricationView),
-      fabrication: fabricationView
+      fabrication: fabricationView,
+      labels: markdownLabels(locale)
     },
     { summary: summary_default }
   );
 }
-function formatFabricationDiff(diff) {
+function formatFabricationDiff(diff, locale) {
   const addedFindings = diff.findings.added.slice(0, 10);
   return {
     ...diff,
@@ -309483,26 +309798,58 @@ function formatFabricationDiff(diff) {
     },
     outputs: diff.outputs.map((output) => ({
       ...output,
-      summary: outputSummary(output)
+      summary: outputSummary(output, locale)
     })),
     findings: {
       ...diff.findings,
       hasAdded: diff.findings.added.length > 0,
       added: addedFindings,
       addedTruncated: diff.findings.added.length > addedFindings.length,
-      addedRemaining: diff.findings.added.length - addedFindings.length
+      addedRemaining: diff.findings.added.length - addedFindings.length,
+      addedRemainingLabel: t(
+        "report.moreNewFindings",
+        { count: diff.findings.added.length - addedFindings.length },
+        locale
+      )
     }
   };
 }
-function outputSummary(output) {
+function outputSummary(output, locale) {
   if (output.status === "unchanged" || output.status === "added" || output.status === "removed") {
     return "";
   }
   return [
-    output.changed > 0 ? `${output.changed} changed` : "",
-    output.added > 0 ? `${output.added} added` : "",
-    output.removed > 0 ? `${output.removed} removed` : ""
+    output.changed > 0 ? t("report.output.changed", { count: output.changed }, locale) : "",
+    output.added > 0 ? t("report.output.added", { count: output.added }, locale) : "",
+    output.removed > 0 ? t("report.output.removed", { count: output.removed }, locale) : ""
   ].filter(Boolean).join(", ");
+}
+function markdownLabels(locale) {
+  return {
+    artifacts: t("report.artifacts", {}, locale),
+    bom: t("report.bom", {}, locale),
+    bomDiffTruncated: t("report.bomDiffTruncated", {}, locale),
+    count: t("report.count", {}, locale),
+    critical: t("severity.critical", {}, locale),
+    current: t("report.current", {}, locale),
+    fabricationChanges: t("report.fabricationChanges", {}, locale),
+    fix: t("report.fix", {}, locale),
+    high: t("severity.high", {}, locale),
+    info: t("severity.info", {}, locale),
+    low: t("severity.low", {}, locale),
+    manufacturingOutputs: t("report.manufacturingOutputs", {}, locale),
+    medium: t("severity.medium", {}, locale),
+    metric: t("report.metric", {}, locale),
+    newFindings: t("report.newFindings", {}, locale),
+    noBomChanges: t("report.noBomChanges", {}, locale),
+    noFindings: t("report.noFindings", {}, locale),
+    previous: t("report.previous", {}, locale),
+    ref: t("report.ref", {}, locale),
+    reportTitle: t("report.title", {}, locale),
+    status: t("report.status", {}, locale),
+    topFindings: t("report.topFindings", {}, locale),
+    total: t("report.total", {}, locale)
+  };
 }
 
 // src/report/sarif.ts
@@ -320603,7 +320950,7 @@ function validate2(xmlData, options) {
   } else if (tags2.length == 1) {
     return getErrorObject("InvalidTag", "Unclosed tag '" + tags2[0].tagName + "'.", getLineNumberForPosition(xmlData, tags2[0].tagStartPos));
   } else if (tags2.length > 0) {
-    return getErrorObject("InvalidXml", "Invalid '" + JSON.stringify(tags2.map((t) => t.tagName), null, 4).replace(/\r?\n/g, "") + "' found.", { line: 1, col: 1 });
+    return getErrorObject("InvalidXml", "Invalid '" + JSON.stringify(tags2.map((t2) => t2.tagName), null, 4).replace(/\r?\n/g, "") + "' found.", { line: 1, col: 1 });
   }
   return true;
 }
@@ -348489,15 +348836,15 @@ var __awaiter14 = function(thisArg, _arguments, P, generator) {
   });
 };
 var __rest = function(s, e) {
-  var t = {};
+  var t2 = {};
   for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-    t[p] = s[p];
+    t2[p] = s[p];
   if (s != null && typeof Object.getOwnPropertySymbols === "function")
     for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
       if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-        t[p[i]] = s[p[i]];
+        t2[p[i]] = s[p[i]];
     }
-  return t;
+  return t2;
 };
 var DefaultArtifactClient = class {
   uploadArtifact(name, files, rootDirectory, options) {

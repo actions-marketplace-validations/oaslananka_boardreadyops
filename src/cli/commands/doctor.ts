@@ -4,6 +4,7 @@ import { loadConfig } from "../../core/config.js";
 import type { ProjectContext } from "../../core/context.js";
 import { discoverProjects } from "../../core/discovery.js";
 import { boardReadyVersion } from "../../generated/version.js";
+import { type Locale, type MessageKey, type MessageParams, resolveLocale, t } from "../../i18n/t.js";
 import { detectKicadCli } from "../../kicad/cli.js";
 import { pathExists, readTextFile } from "../../util/fs.js";
 import { globFiles } from "../../util/glob.js";
@@ -24,6 +25,10 @@ interface DoctorItem {
   severity: DoctorSeverity;
   message: string;
   recommendation?: string | undefined;
+  messageKey?: MessageKey | undefined;
+  messageParams?: MessageParams | undefined;
+  recommendationKey?: MessageKey | undefined;
+  recommendationParams?: MessageParams | undefined;
 }
 
 interface DoctorCheck {
@@ -48,7 +53,11 @@ export async function doctorCommand(
 ): Promise<number> {
   const format = parseDoctorFormat(options.format);
   const report = await createDoctorReport(options.check);
-  streams.stdout.write(format === "json" ? `${JSON.stringify(report, null, 2)}\n` : renderText(report));
+  streams.stdout.write(
+    format === "json"
+      ? `${JSON.stringify(publicDoctorReport(report), null, 2)}\n`
+      : renderText(report, resolveLocale()),
+  );
   return 0;
 }
 
@@ -78,17 +87,23 @@ async function createDoctorReport(selected: string | undefined): Promise<DoctorR
   };
 }
 
-function renderText(report: DoctorReport): string {
+function renderText(report: DoctorReport, locale: Locale): string {
   const checks = report.checks
-    .map((check) => `${check.title}\n${check.items.map((entry) => `  ${renderItem(entry)}`).join("\n")}`)
+    .map(
+      (check) =>
+        `${localizedCheckTitle(check.name, locale)}\n${check.items
+          .map((entry) => `  ${renderItem(entry, locale)}`)
+          .join("\n")}`,
+    )
     .join("\n\n");
+  const localizedRecommendations = collectLocalizedRecommendations(report.checks, locale);
   const recommendations =
-    report.recommendations.length === 0
+    localizedRecommendations.length === 0
       ? ""
-      : `\n\nRecommendations\n${report.recommendations
+      : `\n\n${t("doctor.recommendations", {}, locale)}\n${localizedRecommendations
           .map((recommendation, index) => `  ${index + 1}. ${recommendation}`)
           .join("\n")}`;
-  return `BoardReadyOps Doctor - Environment & Repository Diagnosis\n\n${checks}${recommendations}\n`;
+  return `${t("doctor.title", {}, locale)}\n\n${checks}${recommendations}\n`;
 }
 
 async function runtimeCheck(): Promise<DoctorItem[]> {
@@ -101,34 +116,58 @@ async function runtimeCheck(): Promise<DoctorItem[]> {
   return [
     item(supportedNode ? "pass" : "fail", `Node: ${process.version} (supported majors: 22, 24)`, {
       recommendation: supportedNode ? undefined : "Install a supported Node.js 22 or 24 runtime.",
+      messageKey: "doctor.runtime.node",
+      messageParams: { version: process.version, majors: "22, 24" },
+      recommendationKey: supportedNode ? undefined : "doctor.recommendation.runtime.node",
     }),
-    item("pass", `boardreadyops: v${boardReadyVersion}`),
+    item("pass", `boardreadyops: v${boardReadyVersion}`, {
+      messageKey: "doctor.runtime.boardreadyops",
+      messageParams: { version: boardReadyVersion },
+    }),
     npmVersion.code === 0
-      ? item("pass", `npm: v${npmVersion.stdout.trim()}`)
-      : item("warn", "npm not found.", { recommendation: "Install npm for package-based BoardReadyOps workflows." }),
+      ? item("pass", `npm: v${npmVersion.stdout.trim()}`, {
+          messageKey: "doctor.runtime.npm",
+          messageParams: { version: npmVersion.stdout.trim() },
+        })
+      : item("warn", "npm not found.", {
+          recommendation: "Install npm for package-based BoardReadyOps workflows.",
+          messageKey: "doctor.runtime.npmMissing",
+          recommendationKey: "doctor.recommendation.runtime.npm",
+        }),
   ];
 }
 
 async function kicadCheck(): Promise<DoctorItem[]> {
   const kicad = await detectKicadCli();
   if (!kicad.found) {
-    return [item("warn", "kicad-cli not found.", { recommendation: "Install KiCad CLI to run DRC and ERC checks." })];
+    return [
+      item("warn", "kicad-cli not found.", {
+        recommendation: "Install KiCad CLI to run DRC and ERC checks.",
+        messageKey: "doctor.kicad.missing",
+        recommendationKey: "doctor.recommendation.kicad",
+      }),
+    ];
   }
   const version = kicad.version ? ` ${kicad.version}` : "";
   return [
-    item("pass", `kicad-cli${version} found at ${kicad.path}.`),
-    item("pass", "DRC available."),
-    item("pass", "ERC available."),
+    item("pass", `kicad-cli${version} found at ${kicad.path}.`, {
+      messageKey: "doctor.kicad.found",
+      messageParams: { version, path: kicad.path ?? "" },
+    }),
+    item("pass", "DRC available.", { messageKey: "doctor.kicad.drcAvailable" }),
+    item("pass", "ERC available.", { messageKey: "doctor.kicad.ercAvailable" }),
   ];
 }
 
 async function adaptersCheck(): Promise<DoctorItem[]> {
   if (process.env.NEXAR_CLIENT_ID && process.env.NEXAR_CLIENT_SECRET) {
-    return [item("pass", "Nexar credentials present.")];
+    return [item("pass", "Nexar credentials present.", { messageKey: "doctor.adapters.nexarPresent" })];
   }
   return [
     item("warn", "Nexar credentials not present.", {
       recommendation: "Set NEXAR_CLIENT_ID and NEXAR_CLIENT_SECRET for Nexar-backed lifecycle checks.",
+      messageKey: "doctor.adapters.nexarMissing",
+      recommendationKey: "doctor.recommendation.adapters.nexar",
     }),
   ];
 }
@@ -141,25 +180,52 @@ async function repositoryCheck(root: string): Promise<DoctorItem[]> {
     items.push(
       item("fail", `boardreadyops configuration is invalid: ${loaded.errors.join("; ")}`, {
         recommendation: "Fix boardreadyops.yml before running repository checks.",
+        messageKey: "doctor.repository.configInvalid",
+        messageParams: { errors: loaded.errors.join("; ") },
+        recommendationKey: "doctor.recommendation.repository.config",
       }),
     );
   } else if (loaded.path) {
-    items.push(item("pass", `${path.basename(loaded.path)} found and valid.`));
+    items.push(
+      item("pass", `${path.basename(loaded.path)} found and valid.`, {
+        messageKey: "doctor.repository.configFound",
+        messageParams: { file: path.basename(loaded.path) },
+      }),
+    );
   } else {
-    items.push(item("info", "No boardreadyops configuration file found; defaults are valid."));
+    items.push(
+      item("info", "No boardreadyops configuration file found; defaults are valid.", {
+        messageKey: "doctor.repository.noConfig",
+      }),
+    );
   }
   items.push(
     projects.length === 0
-      ? item("warn", "No KiCad projects discovered.", { recommendation: "Add a .kicad_pro project before CI." })
+      ? item("warn", "No KiCad projects discovered.", {
+          recommendation: "Add a .kicad_pro project before CI.",
+          messageKey: "doctor.repository.noProjects",
+          recommendationKey: "doctor.recommendation.repository.projects",
+        })
       : item(
           projects.length === 1 ? "pass" : "warn",
           `${projects.length} KiCad project${plural(projects.length)} discovered.`,
+          {
+            messageKey: "doctor.repository.projectsDiscovered",
+            messageParams: { count: projects.length },
+          },
         ),
   );
   items.push(
     gerbers.length === 0
-      ? item("fail", "No Gerber outputs found.", { recommendation: "Generate Gerber outputs from KiCad before CI." })
-      : item("pass", `${gerbers.length} Gerber output${plural(gerbers.length)} found.`),
+      ? item("fail", "No Gerber outputs found.", {
+          recommendation: "Generate Gerber outputs from KiCad before CI.",
+          messageKey: "doctor.repository.noGerbers",
+          recommendationKey: "doctor.recommendation.repository.gerbers",
+        })
+      : item("pass", `${gerbers.length} Gerber output${plural(gerbers.length)} found.`, {
+          messageKey: "doctor.repository.gerbersDiscovered",
+          messageParams: { count: gerbers.length },
+        }),
   );
   return items;
 }
@@ -175,9 +241,17 @@ async function suppressionsCheck(root: string): Promise<DoctorItem[]> {
   ]);
   return [
     suppressionsFile
-      ? item("info", `${suppressionsFile} suppressions file found.`)
-      : item("pass", "No suppressions file found."),
-    baselineFile ? item("info", `${baselineFile} baseline found.`) : item("info", "No baseline captured."),
+      ? item("info", `${suppressionsFile} suppressions file found.`, {
+          messageKey: "doctor.suppressions.suppressionsFound",
+          messageParams: { file: suppressionsFile },
+        })
+      : item("pass", "No suppressions file found.", { messageKey: "doctor.suppressions.noSuppressions" }),
+    baselineFile
+      ? item("info", `${baselineFile} baseline found.`, {
+          messageKey: "doctor.suppressions.baselineFound",
+          messageParams: { file: baselineFile },
+        })
+      : item("info", "No baseline captured.", { messageKey: "doctor.suppressions.noBaseline" }),
   ];
 }
 
@@ -187,6 +261,8 @@ async function actionCheck(root: string): Promise<DoctorItem[]> {
     return [
       item("warn", "No .github/workflows/boardreadyops.yml workflow found.", {
         recommendation: "Add the BoardReadyOps GitHub Action workflow for pull request preflight.",
+        messageKey: "doctor.action.noWorkflow",
+        recommendationKey: "doctor.recommendation.action.noWorkflow",
       }),
     ];
   }
@@ -197,17 +273,27 @@ async function actionCheck(root: string): Promise<DoctorItem[]> {
     return [
       item("warn", `Unable to read or parse ${workflow.relativePath} workflow.`, {
         recommendation: "Fix the BoardReadyOps workflow YAML before relying on action diagnostics.",
+        messageKey: "doctor.action.workflowUnreadable",
+        messageParams: { path: workflow.relativePath },
+        recommendationKey: "doctor.recommendation.action.workflowYaml",
       }),
     ];
   }
   return [
-    item("pass", `${workflow.relativePath} found.`),
+    item("pass", `${workflow.relativePath} found.`, {
+      messageKey: "doctor.action.workflowFound",
+      messageParams: { path: workflow.relativePath },
+    }),
     checkoutPinnedItem(document),
     hasPullRequestCommentPermission(document)
-      ? item("pass", "permissions: pull-requests or issues write configured.")
+      ? item("pass", "permissions: pull-requests or issues write configured.", {
+          messageKey: "doctor.action.permissionsConfigured",
+        })
       : item("warn", "permissions: pull-requests or issues write missing for PR comments.", {
           recommendation:
             "Add `permissions: { pull-requests: write }` or `permissions: { issues: write }` to the BoardReadyOps job.",
+          messageKey: "doctor.action.permissionsMissing",
+          recommendationKey: "doctor.recommendation.action.permissions",
         }),
   ];
 }
@@ -215,10 +301,12 @@ async function actionCheck(root: string): Promise<DoctorItem[]> {
 function checkoutPinnedItem(workflow: unknown): DoctorItem {
   const checkoutUses = workflowUses(workflow).filter(isCheckoutUse);
   if (checkoutUses.length > 0 && checkoutUses.every(isPinnedCheckoutUse)) {
-    return item("pass", "actions/checkout is SHA-pinned.");
+    return item("pass", "actions/checkout is SHA-pinned.", { messageKey: "doctor.action.checkoutPinned" });
   }
   return item("warn", "actions/checkout is not SHA-pinned.", {
     recommendation: "Pin actions/checkout to an immutable commit SHA.",
+    messageKey: "doctor.action.checkoutUnpinned",
+    recommendationKey: "doctor.recommendation.action.pinCheckout",
   });
 }
 
@@ -232,7 +320,7 @@ function parseDoctorFormat(format: string | undefined): "text" | "json" {
   if (candidate === "text" || candidate === "json") {
     return candidate;
   }
-  throw new Error(`Unknown doctor format: ${candidate}. Available formats: text, json`);
+  throw new Error(t("doctor.error.unknownFormat", { format: candidate }));
 }
 
 function parseDoctorCheck(check: string | undefined): DoctorCheckName | undefined {
@@ -242,7 +330,7 @@ function parseDoctorCheck(check: string | undefined): DoctorCheckName | undefine
   if (isDoctorCheckName(check)) {
     return check;
   }
-  throw new Error(`Unknown doctor check: ${check}. Available checks: ${doctorChecks.join(", ")}`);
+  throw new Error(t("doctor.error.unknownCheck", { check, checks: doctorChecks.join(", ") }));
 }
 
 function isDoctorCheckName(value: string): value is DoctorCheckName {
@@ -350,9 +438,23 @@ function asRecord(value: unknown): Record<string, unknown> | undefined {
 function item(
   severity: DoctorSeverity,
   message: string,
-  options: { recommendation?: string | undefined } = {},
+  options: {
+    recommendation?: string | undefined;
+    messageKey?: MessageKey | undefined;
+    messageParams?: MessageParams | undefined;
+    recommendationKey?: MessageKey | undefined;
+    recommendationParams?: MessageParams | undefined;
+  } = {},
 ): DoctorItem {
-  return { severity, message, recommendation: options.recommendation };
+  return {
+    severity,
+    message,
+    recommendation: options.recommendation,
+    messageKey: options.messageKey,
+    messageParams: options.messageParams,
+    recommendationKey: options.recommendationKey,
+    recommendationParams: options.recommendationParams,
+  };
 }
 
 function collectRecommendations(checks: DoctorCheck[]): string[] {
@@ -363,8 +465,95 @@ function collectRecommendations(checks: DoctorCheck[]): string[] {
   ];
 }
 
-function renderItem(entry: DoctorItem): string {
-  return `[${entry.severity}] ${entry.message}`;
+function publicDoctorReport(report: DoctorReport): DoctorReport {
+  return {
+    ...report,
+    checks: report.checks.map((check) => ({
+      ...check,
+      items: check.items.map((entry) => ({
+        severity: entry.severity,
+        message: entry.message,
+        ...(entry.recommendation ? { recommendation: entry.recommendation } : {}),
+      })),
+    })),
+  };
+}
+
+function renderItem(entry: DoctorItem, locale: Locale): string {
+  return `[${t(severityKey(entry.severity), {}, locale)}] ${localizedMessage(entry, locale)}`;
+}
+
+function localizedMessage(entry: DoctorItem, locale: Locale): string {
+  return entry.messageKey
+    ? t(entry.messageKey, localizedDoctorParams(entry.messageKey, entry.messageParams, locale), locale)
+    : entry.message;
+}
+
+function localizedRecommendation(entry: DoctorItem, locale: Locale): string | undefined {
+  if (entry.recommendationKey) {
+    return t(entry.recommendationKey, entry.recommendationParams ?? {}, locale);
+  }
+  return entry.recommendation;
+}
+
+function collectLocalizedRecommendations(checks: DoctorCheck[], locale: Locale): string[] {
+  return [
+    ...new Set(
+      checks.flatMap((check) =>
+        check.items.flatMap((entry) => {
+          const recommendation = localizedRecommendation(entry, locale);
+          return recommendation ? [recommendation] : [];
+        }),
+      ),
+    ),
+  ];
+}
+
+function localizedDoctorParams(key: MessageKey, params: MessageParams | undefined, locale: Locale): MessageParams {
+  const values: MessageParams = { ...(params ?? {}) };
+  if (key === "doctor.repository.projectsDiscovered" && typeof values.count === "number") {
+    values.projectWord =
+      values.count === 1
+        ? t("doctor.repository.project.word", {}, locale)
+        : t("doctor.repository.project.word.plural", {}, locale);
+  }
+  if (key === "doctor.repository.gerbersDiscovered" && typeof values.count === "number") {
+    values.outputWord =
+      values.count === 1
+        ? t("doctor.repository.gerberOutput.word", {}, locale)
+        : t("doctor.repository.gerberOutput.word.plural", {}, locale);
+  }
+  return values;
+}
+
+function localizedCheckTitle(name: DoctorCheckName, locale: Locale): string {
+  switch (name) {
+    case "runtime":
+      return t("doctor.check.runtime", {}, locale);
+    case "kicad":
+      return t("doctor.check.kicad", {}, locale);
+    case "adapters":
+      return t("doctor.check.adapters", {}, locale);
+    case "repository":
+      return t("doctor.check.repository", {}, locale);
+    case "suppressions":
+      return t("doctor.check.suppressions", {}, locale);
+    case "action":
+      return t("doctor.check.action", {}, locale);
+  }
+}
+
+function severityKey(severity: DoctorSeverity): MessageKey {
+  switch (severity) {
+    case "pass":
+      return "doctor.severity.pass";
+    case "warn":
+      return "doctor.severity.warn";
+    case "fail":
+      return "doctor.severity.fail";
+    case "info":
+      return "doctor.severity.info";
+  }
 }
 
 function plural(count: number): string {

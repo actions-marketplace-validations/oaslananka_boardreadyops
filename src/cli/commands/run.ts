@@ -3,6 +3,7 @@ import { type Command, InvalidArgumentError } from "commander";
 import { loadConfig } from "../../core/config.js";
 import type { FailOn } from "../../core/findings.js";
 import { canonicalRoot, runPipeline } from "../../core/pipeline.js";
+import { resolveLocale, t } from "../../i18n/t.js";
 import { detectKicadCli } from "../../kicad/cli.js";
 import { emitAnnotations } from "../../report/annotations.js";
 import { formatMarkdown } from "../../report/markdown.js";
@@ -37,18 +38,19 @@ export async function runCommand(
   options: CommonCliOptions,
   streams: { stdout: NodeJS.WritableStream; stderr: NodeJS.WritableStream },
 ): Promise<number> {
+  const locale = resolveLocale();
   const root = await canonicalRoot(path.resolve(normalizePathInput(pathInput ?? ".")));
   const loaded = await loadConfig(root, options.config);
   if (loaded.errors.length > 0) {
     for (const error of loaded.errors) {
-      streams.stderr.write(`Configuration error: ${error}\n`);
+      streams.stderr.write(`${t("cli.error.configuration", { error }, locale)}\n`);
     }
     return 2;
   }
   if (options.requireKicad) {
     const kicad = await detectKicadCli(options.kicadCli);
     if (!kicad.found) {
-      streams.stderr.write("Environment error: kicad-cli not available.\n");
+      streams.stderr.write(`${t("cli.error.environment.kicadMissing", {}, locale)}\n`);
       return 3;
     }
   }
@@ -73,9 +75,9 @@ export async function runCommand(
     verbose: options.verbose ?? false,
     color: options.color ?? "auto",
   });
-  await writeReports(result, root, outputOptions(options), loaded, streams.stdout);
+  await writeReports(result, root, outputOptions(options), loaded, streams.stdout, locale);
   if (!hasExplicitReportOutput(options)) {
-    streams.stdout.write(formatMarkdown(result));
+    streams.stdout.write(formatMarkdown(result, [], undefined, locale));
   }
   if (options.annotations !== false) {
     emitAnnotations(result.findings, streams.stderr);
@@ -113,7 +115,7 @@ function collect(value: string, previous: string[]): string[] {
 
 function positiveInteger(value: string): number {
   if (!/^[1-9]\d*$/.test(value)) {
-    throw new InvalidArgumentError("concurrency must be a positive integer");
+    throw new InvalidArgumentError(t("cli.error.concurrencyPositiveInteger"));
   }
   return Number.parseInt(value, 10);
 }

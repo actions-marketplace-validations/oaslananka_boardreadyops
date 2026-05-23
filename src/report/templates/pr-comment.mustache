@@ -2,18 +2,18 @@
 {{> summary}}
 
 {{#hasFindings}}
-## Top Findings
+## {{labels.topFindings}}
 
 {{#topFindings}}
 - **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}
 {{/topFindings}}
 {{/hasFindings}}
 {{^hasFindings}}
-No findings.
+{{labels.noFindings}}
 {{/hasFindings}}
 {{#hasFixes}}
 
-## Fix
+## {{labels.fix}}
 
 {{#fixFindings}}
 - `{{ruleId}}` in `{{resource.path}}`: {{fix.description}}
@@ -24,41 +24,41 @@ No findings.
 {{/hasFixes}}
 
 {{#hasFabricationDiff}}
-## Fabrication Changes
+## {{labels.fabricationChanges}}
 
-### BOM
+### {{labels.bom}}
 {{#fabrication.bom.hasRows}}
-| Ref | Previous | Current | Status |
+| {{labels.ref}} | {{labels.previous}} | {{labels.current}} | {{labels.status}} |
 | --- | --- | --- | --- |
 {{#fabrication.bom.rows}}
 | {{reference}} | {{previous}} | {{current}} | {{status}} |
 {{/fabrication.bom.rows}}
 {{#fabrication.bom.truncated}}
-_BOM diff truncated._
+_{{labels.bomDiffTruncated}}_
 {{/fabrication.bom.truncated}}
 {{/fabrication.bom.hasRows}}
 {{^fabrication.bom.hasRows}}
-No BOM changes recorded.
+{{labels.noBomChanges}}
 {{/fabrication.bom.hasRows}}
 
-### Manufacturing Outputs
+### {{labels.manufacturingOutputs}}
 {{#fabrication.outputs}}
 - {{kind}}: {{status}}{{#summary}} ({{summary}}){{/summary}}
 {{/fabrication.outputs}}
 
 {{#fabrication.findings.hasAdded}}
-### New Findings
+### {{labels.newFindings}}
 {{#fabrication.findings.added}}
 - **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}
 {{/fabrication.findings.added}}
 {{#fabrication.findings.addedTruncated}}
-_...and {{fabrication.findings.addedRemaining}} more new findings._
+_{{fabrication.findings.addedRemainingLabel}}_
 {{/fabrication.findings.addedTruncated}}
 {{/fabrication.findings.hasAdded}}
 {{/hasFabricationDiff}}
 
 {{#hasArtifacts}}
-## Artifacts
+## {{labels.artifacts}}
 
 {{#artifacts}}
 - [{{label}}]({{{url}}})

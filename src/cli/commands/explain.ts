@@ -4,28 +4,30 @@ import { createLogger } from "../../core/logger.js";
 import { canonicalRoot, registerPipelineRules, runPipeline } from "../../core/pipeline.js";
 import type { RuleExplanation } from "../../core/rule-registry.js";
 import { listRules } from "../../core/rule-registry.js";
+import { resolveLocale, t } from "../../i18n/t.js";
 
 export async function explainCommand(
   ruleId: string,
   pathInput: string | undefined,
   streams: { stdout: NodeJS.WritableStream; stderr: NodeJS.WritableStream },
 ): Promise<number> {
+  const locale = resolveLocale();
   const root = await canonicalRoot(path.resolve(pathInput ?? "."));
   const loaded = await loadConfig(root);
   if (loaded.errors.length > 0) {
     for (const error of loaded.errors) {
-      streams.stderr.write(`Configuration error: ${error}\n`);
+      streams.stderr.write(`${t("cli.error.configuration", { error }, locale)}\n`);
     }
     return 2;
   }
   registerPipelineRules();
   const selected = listRules().find((candidate) => candidate.meta.id === ruleId);
   if (!selected) {
-    streams.stderr.write(`Unknown rule: ${ruleId}\n`);
+    streams.stderr.write(`${t("cli.explain.error.unknownRule", { ruleId }, locale)}\n`);
     return 2;
   }
   if (!selected.explain) {
-    streams.stderr.write(`Rule ${ruleId} does not support explanation.\n`);
+    streams.stderr.write(`${t("cli.explain.error.unsupportedRule", { ruleId }, locale)}\n`);
     return 2;
   }
   const result = await runPipeline({

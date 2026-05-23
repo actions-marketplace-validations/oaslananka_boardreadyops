@@ -98,6 +98,28 @@ gates:
     expect(doctor.stdoutText()).toContain("Node:");
   });
 
+  it("honors BOARDREADY_LOCALE for CLI status and doctor text output", async () => {
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-i18n-cli-"));
+    const previousCwd = process.cwd();
+    const previousLocale = process.env.BOARDREADY_LOCALE;
+    process.chdir(temp);
+    process.env.BOARDREADY_LOCALE = "tr";
+    try {
+      const init = captureStreams();
+      expect(await runCli(["init"], init)).toBe(0);
+      expect(init.stdoutText()).toContain("boardreadyops.yml oluşturuldu");
+
+      const doctor = captureStreams();
+      expect(await runCli(["doctor", "--check", "runtime"], doctor)).toBe(0);
+      expect(doctor.stdoutText()).toContain("BoardReadyOps Doktoru");
+      expect(doctor.stdoutText()).toContain("Çalışma Zamanı");
+      expect(doctor.stdoutText()).toContain("desteklenen ana sürümler");
+    } finally {
+      process.chdir(previousCwd);
+      restoreEnv("BOARDREADY_LOCALE", previousLocale);
+    }
+  });
+
   it("prints a JSON doctor report for one selected check", async () => {
     const doctor = captureStreams();
     expect(await runCli(["doctor", "--check", "runtime", "--format", "json"], doctor)).toBe(0);
@@ -557,6 +579,34 @@ rules:
       ),
     ).toBe(3);
     expect(missingKicad.stderrText()).toContain("Environment error:");
+  });
+
+  it("localizes CLI configuration and environment errors", async () => {
+    const previousLocale = process.env.BOARDREADY_LOCALE;
+    process.env.BOARDREADY_LOCALE = "tr";
+    try {
+      const badConfig = captureStreams();
+      expect(await runCli(["run", path.join(fixtureRoot, "malformed-config"), "--no-annotations"], badConfig)).toBe(2);
+      expect(badConfig.stderrText()).toContain("Yapılandırma hatası:");
+
+      const missingKicad = captureStreams();
+      expect(
+        await runCli(
+          [
+            "run",
+            path.join(fixtureRoot, "safe-basic"),
+            "--require-kicad",
+            "--kicad-cli",
+            path.join(os.tmpdir(), "missing-kicad-cli"),
+            "--no-annotations",
+          ],
+          missingKicad,
+        ),
+      ).toBe(3);
+      expect(missingKicad.stderrText()).toContain("Ortam hatası:");
+    } finally {
+      restoreEnv("BOARDREADY_LOCALE", previousLocale);
+    }
   });
 
   it("runs every KiCad 10 extension fixture through the expected rule", async () => {

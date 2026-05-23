@@ -3,6 +3,7 @@ import path from "node:path";
 import { createBaseline, diffBaseline, readBaseline, resolveBaselinePath, writeBaseline } from "../../core/baseline.js";
 import { loadConfig } from "../../core/config.js";
 import { canonicalRoot, runPipeline } from "../../core/pipeline.js";
+import { resolveLocale, t } from "../../i18n/t.js";
 
 type Streams = { stdout: NodeJS.WritableStream; stderr: NodeJS.WritableStream };
 type PathInput = string | undefined;
@@ -16,7 +17,9 @@ export const captureBaselineCommand: BaselineHandler = async (pathInput, options
     const result = await currentResult(root, options.config, true);
     const baseline = createBaseline(result.findings);
     await writeBaseline(file, baseline);
-    streams.stdout.write(`Captured ${baseline.findings.length} finding(s) in ${baselineDisplayPath(root, file)}.\n`);
+    streams.stdout.write(
+      `${t("cli.baseline.captured", { count: baseline.findings.length, path: baselineDisplayPath(root, file) })}\n`,
+    );
     return 0;
   });
 };
@@ -29,7 +32,11 @@ export const diffBaselineCommand: BaselineHandler = async (pathInput, options, s
     }
     const diff = diffBaseline((await currentResult(root, options.config)).findings, baseline);
     streams.stdout.write(
-      `Added: ${diff.added.length}\nRemoved: ${diff.removed.length}\nUnchanged: ${diff.unchanged.length}\n`,
+      `${t("cli.baseline.diff", {
+        added: diff.added.length,
+        removed: diff.removed.length,
+        unchanged: diff.unchanged.length,
+      })}\n`,
     );
     return 0;
   });
@@ -38,7 +45,7 @@ export const diffBaselineCommand: BaselineHandler = async (pathInput, options, s
 export const clearBaselineCommand: BaselineHandler = async (pathInput, options, streams) => {
   return withBaselineRoot(pathInput, options.config, streams, async (root, file) => {
     await fs.rm(file, { force: true });
-    streams.stdout.write(`Removed ${baselineDisplayPath(root, file)}.\n`);
+    streams.stdout.write(`${t("cli.baseline.removed", { path: baselineDisplayPath(root, file) })}\n`);
     return 0;
   });
 };
@@ -63,7 +70,7 @@ export const pruneBaselineCommand: BaselineHandler = async (pathInput, options, 
     const current = new Set((await currentResult(root, options.config)).findings.map((finding) => finding.fingerprint));
     const findings = baseline.findings.filter((finding) => current.has(finding.fingerprint));
     await writeBaseline(file, { ...baseline, findings });
-    streams.stdout.write(`Pruned ${baseline.findings.length - findings.length} baseline finding(s).\n`);
+    streams.stdout.write(`${t("cli.baseline.pruned", { count: baseline.findings.length - findings.length })}\n`);
     return 0;
   });
 };
@@ -74,11 +81,12 @@ async function withBaselineRoot(
   streams: Streams,
   command: (root: string, file: string) => Promise<number>,
 ): Promise<number> {
+  const locale = resolveLocale();
   const root = await canonicalRoot(path.resolve(pathInput ?? "."));
   const loaded = await loadConfig(root, configInput);
   if (loaded.errors.length > 0) {
     for (const error of loaded.errors) {
-      streams.stderr.write(`Configuration error: ${error}\n`);
+      streams.stderr.write(`${t("cli.error.configuration", { error }, locale)}\n`);
     }
     return 2;
   }
@@ -99,7 +107,7 @@ async function currentResult(root: string, configInput: string | undefined, igno
 async function requiredBaseline(file: string, root: string, streams: Streams) {
   const baseline = await readBaseline(file);
   if (!baseline) {
-    streams.stderr.write(`Baseline not found: ${baselineDisplayPath(root, file)}.\n`);
+    streams.stderr.write(`${t("cli.baseline.notFound", { path: baselineDisplayPath(root, file) })}\n`);
   }
   return baseline;
 }

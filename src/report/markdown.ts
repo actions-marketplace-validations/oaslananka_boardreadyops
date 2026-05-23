@@ -1,6 +1,7 @@
 import Mustache from "mustache";
 import type { FabricationDiff, FabricationOutputDiff } from "../core/diff/fabrication.js";
 import type { RunResult } from "../core/result.js";
+import { type Locale, t } from "../i18n/t.js";
 import prCommentTemplate from "./templates/pr-comment.mustache";
 import summaryTemplate from "./templates/summary.mustache";
 
@@ -15,8 +16,9 @@ export function formatMarkdown(
   result: RunResult,
   artifacts: MarkdownArtifact[] = [],
   fabrication?: FabricationDiff,
+  locale: Locale = "en",
 ): string {
-  const fabricationView = fabrication ? formatFabricationDiff(fabrication) : undefined;
+  const fabricationView = fabrication ? formatFabricationDiff(fabrication, locale) : undefined;
   const topFindings = result.findings.slice(0, 10);
   const fixFindings = result.findings.filter((finding) => finding.fix).slice(0, 10);
   return Mustache.render(
@@ -31,6 +33,7 @@ export function formatMarkdown(
       artifacts,
       hasFabricationDiff: Boolean(fabricationView),
       fabrication: fabricationView,
+      labels: markdownLabels(locale),
     },
     { summary: summaryTemplate },
   );
@@ -38,7 +41,7 @@ export function formatMarkdown(
 
 export { stickyMarker };
 
-function formatFabricationDiff(diff: FabricationDiff) {
+function formatFabricationDiff(diff: FabricationDiff, locale: Locale) {
   const addedFindings = diff.findings.added.slice(0, 10);
   return {
     ...diff,
@@ -53,7 +56,7 @@ function formatFabricationDiff(diff: FabricationDiff) {
     },
     outputs: diff.outputs.map((output) => ({
       ...output,
-      summary: outputSummary(output),
+      summary: outputSummary(output, locale),
     })),
     findings: {
       ...diff.findings,
@@ -61,19 +64,52 @@ function formatFabricationDiff(diff: FabricationDiff) {
       added: addedFindings,
       addedTruncated: diff.findings.added.length > addedFindings.length,
       addedRemaining: diff.findings.added.length - addedFindings.length,
+      addedRemainingLabel: t(
+        "report.moreNewFindings",
+        { count: diff.findings.added.length - addedFindings.length },
+        locale,
+      ),
     },
   };
 }
 
-function outputSummary(output: FabricationOutputDiff): string {
+function outputSummary(output: FabricationOutputDiff, locale: Locale): string {
   if (output.status === "unchanged" || output.status === "added" || output.status === "removed") {
     return "";
   }
   return [
-    output.changed > 0 ? `${output.changed} changed` : "",
-    output.added > 0 ? `${output.added} added` : "",
-    output.removed > 0 ? `${output.removed} removed` : "",
+    output.changed > 0 ? t("report.output.changed", { count: output.changed }, locale) : "",
+    output.added > 0 ? t("report.output.added", { count: output.added }, locale) : "",
+    output.removed > 0 ? t("report.output.removed", { count: output.removed }, locale) : "",
   ]
     .filter(Boolean)
     .join(", ");
+}
+
+function markdownLabels(locale: Locale): Record<string, string> {
+  return {
+    artifacts: t("report.artifacts", {}, locale),
+    bom: t("report.bom", {}, locale),
+    bomDiffTruncated: t("report.bomDiffTruncated", {}, locale),
+    count: t("report.count", {}, locale),
+    critical: t("severity.critical", {}, locale),
+    current: t("report.current", {}, locale),
+    fabricationChanges: t("report.fabricationChanges", {}, locale),
+    fix: t("report.fix", {}, locale),
+    high: t("severity.high", {}, locale),
+    info: t("severity.info", {}, locale),
+    low: t("severity.low", {}, locale),
+    manufacturingOutputs: t("report.manufacturingOutputs", {}, locale),
+    medium: t("severity.medium", {}, locale),
+    metric: t("report.metric", {}, locale),
+    newFindings: t("report.newFindings", {}, locale),
+    noBomChanges: t("report.noBomChanges", {}, locale),
+    noFindings: t("report.noFindings", {}, locale),
+    previous: t("report.previous", {}, locale),
+    ref: t("report.ref", {}, locale),
+    reportTitle: t("report.title", {}, locale),
+    status: t("report.status", {}, locale),
+    topFindings: t("report.topFindings", {}, locale),
+    total: t("report.total", {}, locale),
+  };
 }

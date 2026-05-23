@@ -85,6 +85,26 @@ describe("HTML report", () => {
     expect(html).toContain("0 findings");
   });
 
+  it("renders Turkish HTML report labels without translating finding messages", () => {
+    const html = formatHtml(sampleResult([], []), "tr");
+
+    expect(html).toContain('<html lang="tr">');
+    expect(html).toContain("BoardReadyOps Raporu");
+    expect(html).toContain("Önem Derecesine Göre Özet");
+    expect(html).toContain("Proje Bazında Dağılım");
+    expect(html).toContain("Tüm önem dereceleri");
+    expect(html).toContain("Bulgu yok.");
+    expect(html).toContain("0 bulgu");
+  });
+
+  it("renders pseudo-locale HTML labels for hard-coded string smoke coverage", () => {
+    const html = formatHtml(sampleResult([], []), "__PSEUDO__");
+
+    expect(html).toContain("[[BoardReadyOps Report]]");
+    expect(html).toContain("[[Summary by Severity]]");
+    expect(html).toContain("[[No findings.]]");
+  });
+
   it("renders advanced finding detail branches", () => {
     const html = formatHtml(
       sampleResult([
@@ -116,6 +136,32 @@ describe("HTML report", () => {
     expect(html).toContain("Confidence: definite");
     expect(html).toContain("Close the outline before release.");
     expect(html).not.toContain("<ol>");
+  });
+
+  it("renders details without optional confidence", () => {
+    const html = formatHtml(
+      sampleResult([
+        createFinding({
+          ruleId: "design.copper-balance",
+          severity: "low",
+          message: "Copper balance is low near the board origin.",
+          resource: { path: "hardware/main.kicad_pcb", kind: "pcb" },
+          location: {
+            boardCoordinates: {
+              x: 1.234567,
+              y: 2.5,
+              layer: "F.Cu",
+              units: "mm",
+            },
+          },
+          details: { note: "Needs review" },
+        }),
+      ]),
+    );
+
+    expect(html).toContain("F.Cu (1.234567mm, 2.5mm)");
+    expect(html).toContain("&quot;note&quot;: &quot;Needs review&quot;");
+    expect(html).not.toContain("Confidence:");
   });
 });
 

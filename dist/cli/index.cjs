@@ -4966,7 +4966,7 @@ var require_dataType = __commonJS({
     exports2.coerceAndCheckDataType = coerceAndCheckDataType;
     var COERCIBLE = /* @__PURE__ */ new Set(["string", "number", "integer", "boolean", "null"]);
     function coerceToTypes(types2, coerceTypes) {
-      return coerceTypes ? types2.filter((t) => COERCIBLE.has(t) || coerceTypes === "array" && t === "array") : [];
+      return coerceTypes ? types2.filter((t2) => COERCIBLE.has(t2) || coerceTypes === "array" && t2 === "array") : [];
     }
     function coerceData(it, types2, coerceTo) {
       const { gen, data, opts } = it;
@@ -4976,9 +4976,9 @@ var require_dataType = __commonJS({
         gen.if((0, codegen_1._)`${dataType} == 'object' && Array.isArray(${data}) && ${data}.length == 1`, () => gen.assign(data, (0, codegen_1._)`${data}[0]`).assign(dataType, (0, codegen_1._)`typeof ${data}`).if(checkDataTypes(types2, data, opts.strictNumbers), () => gen.assign(coerced, data)));
       }
       gen.if((0, codegen_1._)`${coerced} !== undefined`);
-      for (const t of coerceTo) {
-        if (COERCIBLE.has(t) || t === "array" && opts.coerceTypes === "array") {
-          coerceSpecificType(t);
+      for (const t2 of coerceTo) {
+        if (COERCIBLE.has(t2) || t2 === "array" && opts.coerceTypes === "array") {
+          coerceSpecificType(t2);
         }
       }
       gen.else();
@@ -4988,8 +4988,8 @@ var require_dataType = __commonJS({
         gen.assign(data, coerced);
         assignParentData(it, coerced);
       });
-      function coerceSpecificType(t) {
-        switch (t) {
+      function coerceSpecificType(t2) {
+        switch (t2) {
           case "string":
             gen.elseIf((0, codegen_1._)`${dataType} == "number" || ${dataType} == "boolean"`).assign(coerced, (0, codegen_1._)`"" + ${data}`).elseIf((0, codegen_1._)`${data} === null`).assign(coerced, (0, codegen_1._)`""`);
             return;
@@ -5061,8 +5061,8 @@ var require_dataType = __commonJS({
       }
       if (types2.number)
         delete types2.integer;
-      for (const t in types2)
-        cond = (0, codegen_1.and)(cond, checkDataType(t, data, strictNums, correct));
+      for (const t2 in types2)
+        cond = (0, codegen_1.and)(cond, checkDataType(t2, data, strictNums, correct));
       return cond;
     }
     exports2.checkDataTypes = checkDataTypes;
@@ -5977,9 +5977,9 @@ var require_validate = __commonJS({
         it.dataTypes = types2;
         return;
       }
-      types2.forEach((t) => {
-        if (!includesType(it.dataTypes, t)) {
-          strictTypesError(it, `type "${t}" not allowed by context "${it.dataTypes.join(",")}"`);
+      types2.forEach((t2) => {
+        if (!includesType(it.dataTypes, t2)) {
+          strictTypesError(it, `type "${t2}" not allowed by context "${it.dataTypes.join(",")}"`);
         }
       });
       narrowSchemaTypes(it, types2);
@@ -5995,7 +5995,7 @@ var require_validate = __commonJS({
         const rule2 = rules[keyword];
         if (typeof rule2 == "object" && (0, applicability_1.shouldUseRule)(it.schema, rule2)) {
           const { type: type2 } = rule2.definition;
-          if (type2.length && !type2.some((t) => hasApplicableType(ts, t))) {
+          if (type2.length && !type2.some((t2) => hasApplicableType(ts, t2))) {
             strictTypesError(it, `missing type "${type2.join(",")}" for keyword "${keyword}"`);
           }
         }
@@ -6004,15 +6004,15 @@ var require_validate = __commonJS({
     function hasApplicableType(schTs, kwdT) {
       return schTs.includes(kwdT) || kwdT === "number" && schTs.includes("integer");
     }
-    function includesType(ts, t) {
-      return ts.includes(t) || t === "integer" && ts.includes("number");
+    function includesType(ts, t2) {
+      return ts.includes(t2) || t2 === "integer" && ts.includes("number");
     }
     function narrowSchemaTypes(it, withTypes) {
       const ts = [];
-      for (const t of it.dataTypes) {
-        if (includesType(withTypes, t))
-          ts.push(t);
-        else if (withTypes.includes("integer") && t === "number")
+      for (const t2 of it.dataTypes) {
+        if (includesType(withTypes, t2))
+          ts.push(t2);
+        else if (withTypes.includes("integer") && t2 === "number")
           ts.push("integer");
       }
       it.dataTypes = ts;
@@ -7710,7 +7710,7 @@ var require_core = __commonJS({
           type: (0, dataType_1.getJSONTypes)(def.type),
           schemaType: (0, dataType_1.getJSONTypes)(def.schemaType)
         };
-        (0, util_1.eachItem)(keyword, definition.type.length === 0 ? (k) => addRule.call(this, k, definition) : (k) => definition.type.forEach((t) => addRule.call(this, k, definition, t)));
+        (0, util_1.eachItem)(keyword, definition.type.length === 0 ? (k) => addRule.call(this, k, definition) : (k) => definition.type.forEach((t2) => addRule.call(this, k, definition, t2)));
         return this;
       }
       getKeyword(keyword) {
@@ -7909,7 +7909,7 @@ var require_core = __commonJS({
       if (dataType && post)
         throw new Error('keyword with "post" flag cannot have "type"');
       const { RULES } = this;
-      let ruleGroup = post ? RULES.post : RULES.rules.find(({ type: t }) => t === dataType);
+      let ruleGroup = post ? RULES.post : RULES.rules.find(({ type: t2 }) => t2 === dataType);
       if (!ruleGroup) {
         ruleGroup = { type: dataType, rules: [] };
         RULES.rules.push(ruleGroup);
@@ -8457,7 +8457,7 @@ var require_uniqueItems = __commonJS({
           gen.if((0, codegen_1._)`${i} > 1`, () => (canOptimize() ? loopN : loopN2)(i, j));
         }
         function canOptimize() {
-          return itemTypes.length > 0 && !itemTypes.some((t) => t === "object" || t === "array");
+          return itemTypes.length > 0 && !itemTypes.some((t2) => t2 === "object" || t2 === "array");
         }
         function loopN(i, j) {
           const item2 = gen.name("item");
@@ -17932,16 +17932,16 @@ var require_typescript = __commonJS({
         }
         return result;
       }
-      function assign(t, ...args) {
+      function assign(t2, ...args) {
         for (const arg of args) {
           if (arg === void 0) continue;
           for (const p in arg) {
             if (hasProperty2(arg, p)) {
-              t[p] = arg[p];
+              t2[p] = arg[p];
             }
           }
         }
-        return t;
+        return t2;
       }
       function equalOwnProperties(left, right, equalityComparer = equateValues) {
         if (left === right) return true;
@@ -18548,8 +18548,8 @@ var require_typescript = __commonJS({
       }
       function assertType(_) {
       }
-      function singleElementArray(t) {
-        return t === void 0 ? void 0 : [t];
+      function singleElementArray(t2) {
+        return t2 === void 0 ? void 0 : [t2];
       }
       function enumerateInsertsAndDeletes(newItems, oldItems, comparer, inserted, deleted, unchanged) {
         unchanged ?? (unchanged = noop);
@@ -19299,13 +19299,13 @@ Node ${formatSyntaxKind(node.kind)} was unexpected.`,
                 return zipWith(
                   this.sources,
                   this.targets || map3(this.sources, () => "any"),
-                  (s, t) => `${s.__debugTypeToString()} -> ${typeof t === "string" ? t : t.__debugTypeToString()}`
+                  (s, t2) => `${s.__debugTypeToString()} -> ${typeof t2 === "string" ? t2 : t2.__debugTypeToString()}`
                 ).join(", ");
               case 2:
                 return zipWith(
                   this.sources,
                   this.targets,
-                  (s, t) => `${s.__debugTypeToString()} -> ${t().__debugTypeToString()}`
+                  (s, t2) => `${s.__debugTypeToString()} -> ${t2().__debugTypeToString()}`
                 ).join(", ");
               case 5:
               case 4:
@@ -20284,7 +20284,7 @@ ${lanes.join("\n")}
               const referenceType = type2;
               referenceProperties = {
                 instantiatedType: (_d = referenceType.target) == null ? void 0 : _d.id,
-                typeArguments: (_e = referenceType.resolvedTypeArguments) == null ? void 0 : _e.map((t) => t.id),
+                typeArguments: (_e = referenceType.resolvedTypeArguments) == null ? void 0 : _e.map((t2) => t2.id),
                 referenceLocation: getLocation(referenceType.node)
               };
             }
@@ -20338,9 +20338,9 @@ ${lanes.join("\n")}
               symbolName: (symbol2 == null ? void 0 : symbol2.escapedName) && unescapeLeadingUnderscores(symbol2.escapedName),
               recursionId: recursionToken,
               isTuple: objectFlags & 8 ? true : void 0,
-              unionTypes: type2.flags & 134217728 ? (_p = type2.types) == null ? void 0 : _p.map((t) => t.id) : void 0,
-              intersectionTypes: type2.flags & 268435456 ? type2.types.map((t) => t.id) : void 0,
-              aliasTypeArguments: (_q = type2.aliasTypeArguments) == null ? void 0 : _q.map((t) => t.id),
+              unionTypes: type2.flags & 134217728 ? (_p = type2.types) == null ? void 0 : _p.map((t2) => t2.id) : void 0,
+              intersectionTypes: type2.flags & 268435456 ? type2.types.map((t2) => t2.id) : void 0,
+              aliasTypeArguments: (_q = type2.aliasTypeArguments) == null ? void 0 : _q.map((t2) => t2.id),
               keyofType: type2.flags & 2097152 ? (_r = type2.type) == null ? void 0 : _r.id : void 0,
               ...indexedAccessProperties,
               ...referenceProperties,
@@ -26836,8 +26836,8 @@ ${lanes.join("\n")}
         return result;
       }
       var tokenStrings = makeReverseMap(textToToken);
-      function tokenToString(t) {
-        return tokenStrings[t];
+      function tokenToString(t2) {
+        return tokenStrings[t2];
       }
       function stringToToken(s) {
         return textToToken.get(s);
@@ -37408,7 +37408,7 @@ ${lanes.join("\n")}
         return 3 <= moduleResolution && moduleResolution <= 99 || getResolvePackageJsonExports(options) || getResolvePackageJsonImports(options);
       }
       function usesWildcardTypes(options) {
-        return some(options.types, (t) => t === "*");
+        return some(options.types, (t2) => t2 === "*");
       }
       function createComputedCompilerOptions(options) {
         return options;
@@ -51027,44 +51027,44 @@ ${lanes.join("\n")}
             );
           }
         }
-        function parseOptional(t) {
-          if (token() === t) {
+        function parseOptional(t2) {
+          if (token() === t2) {
             nextToken();
             return true;
           }
           return false;
         }
-        function parseOptionalToken(t) {
-          if (token() === t) {
+        function parseOptionalToken(t2) {
+          if (token() === t2) {
             return parseTokenNode();
           }
           return void 0;
         }
-        function parseOptionalTokenJSDoc(t) {
-          if (token() === t) {
+        function parseOptionalTokenJSDoc(t2) {
+          if (token() === t2) {
             return parseTokenNodeJSDoc();
           }
           return void 0;
         }
-        function parseExpectedToken(t, diagnosticMessage, arg0) {
-          return parseOptionalToken(t) || createMissingNode(
-            t,
+        function parseExpectedToken(t2, diagnosticMessage, arg0) {
+          return parseOptionalToken(t2) || createMissingNode(
+            t2,
             /*reportAtCurrentPosition*/
             false,
             diagnosticMessage || Diagnostics._0_expected,
-            arg0 || tokenToString(t)
+            arg0 || tokenToString(t2)
           );
         }
-        function parseExpectedTokenJSDoc(t) {
-          const optional2 = parseOptionalTokenJSDoc(t);
+        function parseExpectedTokenJSDoc(t2) {
+          const optional2 = parseOptionalTokenJSDoc(t2);
           if (optional2) return optional2;
-          Debug.assert(isKeywordOrPunctuation(t));
+          Debug.assert(isKeywordOrPunctuation(t2));
           return createMissingNode(
-            t,
+            t2,
             /*reportAtCurrentPosition*/
             false,
             Diagnostics._0_expected,
-            tokenToString(t)
+            tokenToString(t2)
           );
         }
         function parseTokenNode() {
@@ -51249,8 +51249,8 @@ ${lanes.join("\n")}
           nextToken();
           return finishNode(node, pos);
         }
-        function parseContextualModifier(t) {
-          return token() === t && tryParse(nextTokenCanFollowModifier);
+        function parseContextualModifier(t2) {
+          return token() === t2 && tryParse(nextTokenCanFollowModifier);
         }
         function nextTokenIsOnSameLineAndCanFollowModifier() {
           nextToken();
@@ -53744,8 +53744,8 @@ ${lanes.join("\n")}
           const leftOperand = parseUnaryExpressionOrHigher();
           return parseBinaryExpressionRest(precedence, leftOperand, pos);
         }
-        function isInOrOfKeyword(t) {
-          return t === 103 || t === 165;
+        function isInOrOfKeyword(t2) {
+          return t2 === 103 || t2 === 165;
         }
         function parseBinaryExpressionRest(precedence, leftOperand, pos) {
           while (true) {
@@ -57899,18 +57899,18 @@ ${lanes.join("\n")}
               nextTokenJSDoc();
               const tagName = parseJSDocIdentifierName();
               const indentText = skipWhitespaceOrAsterisk();
-              let t;
+              let t2;
               switch (tagName.escapedText) {
                 case "type":
                   return target === 1 && parseTypeTag(start2, tagName);
                 case "prop":
                 case "property":
-                  t = 1;
+                  t2 = 1;
                   break;
                 case "arg":
                 case "argument":
                 case "param":
-                  t = 2 | 4;
+                  t2 = 2 | 4;
                   break;
                 case "template":
                   return parseTemplateTag(start2, tagName, indent3, indentText);
@@ -57919,7 +57919,7 @@ ${lanes.join("\n")}
                 default:
                   return false;
               }
-              if (!(target & t)) {
+              if (!(target & t2)) {
                 return false;
               }
               return parseParameterOrPropertyTag(start2, tagName, target, indent3);
@@ -57985,8 +57985,8 @@ ${lanes.join("\n")}
               const typeParameters = parseTemplateTagTypeParameters();
               return finishNode(factory2.createJSDocTemplateTag(tagName, constraint, typeParameters, parseTrailingTagComments(start2, getNodePos(), indent3, indentText)), start2);
             }
-            function parseOptionalJsdoc(t) {
-              if (token() === t) {
+            function parseOptionalJsdoc(t2) {
+              if (token() === t2) {
                 nextTokenJSDoc();
                 return true;
               }
@@ -62719,7 +62719,7 @@ ${lanes.join("\n")}
             }
           }
         }
-        return deduplicate(flatten(options.types.map((t) => t === "*" ? wildcardMatches : t)), equateValues);
+        return deduplicate(flatten(options.types.map((t2) => t2 === "*" ? wildcardMatches : t2)), equateValues);
       }
       function isPackageJsonInfo(entry) {
         return !!(entry == null ? void 0 : entry.contents);
@@ -63869,8 +63869,8 @@ ${lanes.join("\n")}
               }
             }
           } else if (Array.isArray(target)) {
-            for (const t of target) {
-              const success2 = loadEntrypointsFromTargetExports(t);
+            for (const t2 of target) {
+              const success2 = loadEntrypointsFromTargetExports(t2);
               if (success2) {
                 return true;
               }
@@ -68345,8 +68345,8 @@ ${lanes.join("\n")}
             if (!accept(symbol2)) {
               return true;
             }
-            const t = getTypeOfSymbol(symbol2);
-            visitType(t);
+            const t2 = getTypeOfSymbol(symbol2);
+            visitType(t2);
             if (symbol2.exports) {
               symbol2.exports.forEach(visitSymbol);
             }
@@ -70341,8 +70341,8 @@ ${lanes.join("\n")}
         var numberOrBigIntType = getUnionType([numberType, bigintType]);
         var templateConstraintType = getUnionType([stringType, numberType, booleanType, bigintType, nullType, undefinedType]);
         var numericStringType = getTemplateLiteralType(["", ""], [numberType]);
-        var restrictiveMapper = makeFunctionTypeMapper((t) => t.flags & 524288 ? getRestrictiveTypeParameter(t) : t, () => "(restrictive mapper)");
-        var permissiveMapper = makeFunctionTypeMapper((t) => t.flags & 524288 ? wildcardType : t, () => "(permissive mapper)");
+        var restrictiveMapper = makeFunctionTypeMapper((t2) => t2.flags & 524288 ? getRestrictiveTypeParameter(t2) : t2, () => "(restrictive mapper)");
+        var permissiveMapper = makeFunctionTypeMapper((t2) => t2.flags & 524288 ? wildcardType : t2, () => "(permissive mapper)");
         var uniqueLiteralType = createIntrinsicType(
           262144,
           "never",
@@ -70350,25 +70350,25 @@ ${lanes.join("\n")}
           void 0,
           "unique literal"
         );
-        var uniqueLiteralMapper = makeFunctionTypeMapper((t) => t.flags & 524288 ? uniqueLiteralType : t, () => "(unique literal mapper)");
+        var uniqueLiteralMapper = makeFunctionTypeMapper((t2) => t2.flags & 524288 ? uniqueLiteralType : t2, () => "(unique literal mapper)");
         var outofbandVarianceMarkerHandler;
-        var reportUnreliableMapper = makeFunctionTypeMapper((t) => {
-          if (outofbandVarianceMarkerHandler && (t === markerSuperType || t === markerSubType || t === markerOtherType)) {
+        var reportUnreliableMapper = makeFunctionTypeMapper((t2) => {
+          if (outofbandVarianceMarkerHandler && (t2 === markerSuperType || t2 === markerSubType || t2 === markerOtherType)) {
             outofbandVarianceMarkerHandler(
               /*onlyUnreliable*/
               true
             );
           }
-          return t;
+          return t2;
         }, () => "(unmeasurable reporter)");
-        var reportUnmeasurableMapper = makeFunctionTypeMapper((t) => {
-          if (outofbandVarianceMarkerHandler && (t === markerSuperType || t === markerSubType || t === markerOtherType)) {
+        var reportUnmeasurableMapper = makeFunctionTypeMapper((t2) => {
+          if (outofbandVarianceMarkerHandler && (t2 === markerSuperType || t2 === markerSubType || t2 === markerOtherType)) {
             outofbandVarianceMarkerHandler(
               /*onlyUnreliable*/
               false
             );
           }
-          return t;
+          return t2;
         }, () => "(unreliable reporter)");
         var emptyObjectType = createAnonymousType(
           /*symbol*/
@@ -73398,8 +73398,8 @@ ${lanes.join("\n")}
             )) {
               return append(concatenate(concatenate([container2], additionalContainers), reexportContainers), objectLiteralContainer);
             }
-            const firstVariableMatch = !(container2.flags & getQualifiedLeftMeaning(meaning)) && container2.flags & 788968 && getDeclaredTypeOfSymbol(container2).flags & 1048576 && meaning === 111551 ? forEachSymbolTableInScope(enclosingDeclaration, (t) => {
-              return forEachEntry(t, (s) => {
+            const firstVariableMatch = !(container2.flags & getQualifiedLeftMeaning(meaning)) && container2.flags & 788968 && getDeclaredTypeOfSymbol(container2).flags & 1048576 && meaning === 111551 ? forEachSymbolTableInScope(enclosingDeclaration, (t2) => {
+              return forEachEntry(t2, (s) => {
                 if (s.flags & getQualifiedLeftMeaning(meaning) && getTypeOfSymbol(s) === getDeclaredTypeOfSymbol(container2)) {
                   return s;
                 }
@@ -75072,8 +75072,8 @@ ${lanes.join("\n")}
               const types2 = type2.types;
               const templateHead = factory.createTemplateHead(texts[0]);
               const templateSpans = factory.createNodeArray(
-                map3(types2, (t, i) => factory.createTemplateLiteralTypeSpan(
-                  typeToTypeNodeHelper(t, context),
+                map3(types2, (t2, i) => factory.createTemplateLiteralTypeSpan(
+                  typeToTypeNodeHelper(t2, context),
                   (i < types2.length - 1 ? factory.createTemplateMiddle : factory.createTemplateTail)(texts[i + 1])
                 ))
               );
@@ -75474,7 +75474,7 @@ ${lanes.join("\n")}
                 const arrayType = factory.createArrayTypeNode(elementType);
                 return type22.target === globalArrayType ? arrayType : factory.createTypeOperatorNode(148, arrayType);
               } else if (type22.target.objectFlags & 8) {
-                typeArguments = sameMap(typeArguments, (t, i) => removeMissingType(t, !!(type22.target.elementFlags[i] & 2)));
+                typeArguments = sameMap(typeArguments, (t2, i) => removeMissingType(t2, !!(type22.target.elementFlags[i] & 2)));
                 if (typeArguments.length > 0) {
                   const arity = getTypeReferenceArity(type22);
                   const tupleConstituentNodes = mapToTypeNodes(typeArguments.slice(0, arity), context);
@@ -75911,7 +75911,7 @@ ${lanes.join("\n")}
             ) : void 0;
             if (propertySymbol.flags & (16 | 8192) && !getPropertiesOfObjectType(propertyType).length && !isReadonlySymbol(propertySymbol)) {
               const signatures = getSignaturesOfType(
-                filterType(propertyType, (t) => !(t.flags & 4)),
+                filterType(propertyType, (t2) => !(t2.flags & 4)),
                 0
                 /* Call */
               );
@@ -76694,7 +76694,7 @@ ${lanes.join("\n")}
                 const params = getTypeParametersOfClassOrInterface(
                   parentSymbol.flags & 2097152 ? resolveAlias(parentSymbol) : parentSymbol
                 );
-                typeParameterNodes = mapToTypeNodes(map3(params, (t) => getMappedType(t, nextSymbol.links.mapper)), context);
+                typeParameterNodes = mapToTypeNodes(map3(params, (t2) => getMappedType(t2, nextSymbol.links.mapper)), context);
               } else {
                 typeParameterNodes = typeParametersToTypeParameterDeclarations(symbol2, context);
               }
@@ -77417,7 +77417,7 @@ ${lanes.join("\n")}
           }
           function serializeExistingTypeNode(context, typeNode, addUndefined) {
             const type2 = getTypeFromTypeNode2(context, typeNode);
-            if (addUndefined && !someType(type2, (t) => !!(t.flags & 4)) && canReuseTypeNode(context, typeNode)) {
+            if (addUndefined && !someType(type2, (t2) => !!(t2.flags & 4)) && canReuseTypeNode(context, typeNode)) {
               const clone22 = syntacticNodeBuilder.tryReuseExistingTypeNode(context, typeNode);
               if (clone22) {
                 return factory.createUnionTypeNode([clone22, factory.createKeywordTypeNode(
@@ -79177,9 +79177,9 @@ ${lanes.join("\n")}
               }
               return results2;
             }
-            function serializeBaseType(t, staticType, rootName) {
+            function serializeBaseType(t2, staticType, rootName) {
               const ref = trySerializeAsTypeReference(
-                t,
+                t2,
                 111551
                 /* Value */
               );
@@ -79214,20 +79214,20 @@ ${lanes.join("\n")}
                 void 0
               );
             }
-            function trySerializeAsTypeReference(t, flags) {
+            function trySerializeAsTypeReference(t2, flags) {
               let typeArgs;
               let reference;
-              if (t.target && isSymbolAccessibleByFlags(t.target.symbol, enclosingDeclaration, flags)) {
-                typeArgs = map3(getTypeArguments(t), (t2) => typeToTypeNodeHelper(t2, context));
+              if (t2.target && isSymbolAccessibleByFlags(t2.target.symbol, enclosingDeclaration, flags)) {
+                typeArgs = map3(getTypeArguments(t2), (t22) => typeToTypeNodeHelper(t22, context));
                 reference = symbolToExpression(
-                  t.target.symbol,
+                  t2.target.symbol,
                   context,
                   788968
                   /* Type */
                 );
-              } else if (t.symbol && isSymbolAccessibleByFlags(t.symbol, enclosingDeclaration, flags)) {
+              } else if (t2.symbol && isSymbolAccessibleByFlags(t2.symbol, enclosingDeclaration, flags)) {
                 reference = symbolToExpression(
-                  t.symbol,
+                  t2.symbol,
                   context,
                   788968
                   /* Type */
@@ -79237,19 +79237,19 @@ ${lanes.join("\n")}
                 return factory.createExpressionWithTypeArguments(reference, typeArgs);
               }
             }
-            function serializeImplementedType(t) {
+            function serializeImplementedType(t2) {
               const ref = trySerializeAsTypeReference(
-                t,
+                t2,
                 788968
                 /* Type */
               );
               if (ref) {
                 return ref;
               }
-              if (t.symbol) {
+              if (t2.symbol) {
                 return factory.createExpressionWithTypeArguments(
                   symbolToExpression(
-                    t.symbol,
+                    t2.symbol,
                     context,
                     788968
                     /* Type */
@@ -79347,11 +79347,11 @@ ${lanes.join("\n")}
           const result = [];
           let flags = 0;
           for (let i = 0; i < types2.length; i++) {
-            const t = types2[i];
-            flags |= t.flags;
-            if (!(t.flags & 12)) {
-              if (t.flags & 8192 || !expandingEnum && t.flags | 98304) {
-                const baseType = t.flags & 8192 ? booleanType : getBaseTypeOfEnumLikeType(t);
+            const t2 = types2[i];
+            flags |= t2.flags;
+            if (!(t2.flags & 12)) {
+              if (t2.flags & 8192 || !expandingEnum && t2.flags | 98304) {
+                const baseType = t2.flags & 8192 ? booleanType : getBaseTypeOfEnumLikeType(t2);
                 if (baseType.flags & 134217728) {
                   const count = baseType.types.length;
                   if (i + count <= types2.length && getRegularTypeOfLiteralType(types2[i + count - 1]) === getRegularTypeOfLiteralType(baseType.types[count - 1])) {
@@ -79361,7 +79361,7 @@ ${lanes.join("\n")}
                   }
                 }
               }
-              result.push(t);
+              result.push(t2);
             }
           }
           if (flags & 8) result.push(nullType);
@@ -79723,12 +79723,12 @@ ${lanes.join("\n")}
           );
         }
         function getRestType(source, properties, symbol2) {
-          source = filterType(source, (t) => !(t.flags & 12));
+          source = filterType(source, (t2) => !(t2.flags & 12));
           if (source.flags & 262144) {
             return emptyObjectType;
           }
           if (source.flags & 134217728) {
-            return mapType(source, (t) => getRestType(t, properties, symbol2));
+            return mapType(source, (t2) => getRestType(t2, properties, symbol2));
           }
           let omitKeyType = getUnionType(map3(properties, getLiteralTypeFromPropertyName));
           const spreadableProperties = [];
@@ -79778,7 +79778,7 @@ ${lanes.join("\n")}
           );
         }
         function getNonUndefinedType(type2) {
-          const typeOrConstraint = someType(type2, isGenericTypeWithUndefinedConstraint) ? mapType(type2, (t) => t.flags & 132644864 ? getBaseConstraintOrType(t) : t) : type2;
+          const typeOrConstraint = someType(type2, isGenericTypeWithUndefinedConstraint) ? mapType(type2, (t2) => t2.flags & 132644864 ? getBaseConstraintOrType(t2) : t2) : type2;
           return getTypeWithFacts(
             typeOrConstraint,
             524288
@@ -79889,8 +79889,8 @@ ${lanes.join("\n")}
             const elementType = checkIteratedTypeOrElementType(65 | (declaration.dotDotDotToken ? 0 : 128), parentType, undefinedType, pattern);
             const index = pattern.elements.indexOf(declaration);
             if (declaration.dotDotDotToken) {
-              const baseConstraint = mapType(parentType, (t) => t.flags & 117964800 ? getBaseConstraintOrType(t) : t);
-              type2 = everyType(baseConstraint, isTupleType) ? mapType(baseConstraint, (t) => sliceTupleType(t, index)) : createArrayType(elementType);
+              const baseConstraint = mapType(parentType, (t2) => t2.flags & 117964800 ? getBaseConstraintOrType(t2) : t2);
+              type2 = everyType(baseConstraint, isTupleType) ? mapType(baseConstraint, (t2) => sliceTupleType(t2, index)) : createArrayType(elementType);
             } else if (isArrayLikeType(parentType)) {
               const indexType = getNumberLiteralType(index);
               const declaredType = getIndexedAccessTypeOrUndefined(parentType, indexType, accessFlags, declaration.name) || errorType;
@@ -80201,7 +80201,7 @@ ${lanes.join("\n")}
                   definedInConstructor = true;
                 }
               }
-              const sourceTypes = some(constructorTypes, (t) => !!(t.flags & ~12)) ? constructorTypes : types2;
+              const sourceTypes = some(constructorTypes, (t2) => !!(t2.flags & ~12)) ? constructorTypes : types2;
               type2 = getUnionType(sourceTypes);
             }
           }
@@ -80211,7 +80211,7 @@ ${lanes.join("\n")}
             false,
             definedInMethod && !definedInConstructor
           ));
-          if (symbol2.valueDeclaration && isInJSFile(symbol2.valueDeclaration) && filterType(widened, (t) => !!(t.flags & ~12)) === neverType) {
+          if (symbol2.valueDeclaration && isInJSFile(symbol2.valueDeclaration) && filterType(widened, (t2) => !!(t2.flags & ~12)) === neverType) {
             reportImplicitAny(symbol2.valueDeclaration, anyType);
             return anyType;
           }
@@ -80776,7 +80776,7 @@ ${lanes.join("\n")}
         }
         function getBaseTypeVariableOfClass(symbol2) {
           const baseConstructorType = getBaseConstructorTypeOfClass(getDeclaredTypeOfClassOrInterface(symbol2));
-          return baseConstructorType.flags & 34078720 ? baseConstructorType : baseConstructorType.flags & 268435456 ? find(baseConstructorType.types, (t) => !!(t.flags & 34078720)) : void 0;
+          return baseConstructorType.flags & 34078720 ? baseConstructorType : baseConstructorType.flags & 268435456 ? find(baseConstructorType.types, (t2) => !!(t2.flags & 34078720)) : void 0;
         }
         function getTypeOfFuncClassEnumModule(symbol2) {
           let links = getSymbolLinks(symbol2);
@@ -81060,7 +81060,7 @@ ${lanes.join("\n")}
                 break;
               case 321: {
                 const outerTypeParameters = getOuterTypeParameters(node, includeThisTypes);
-                return node.tags ? appendTypeParameters(outerTypeParameters, flatMap(node.tags, (t) => isJSDocTemplateTag(t) ? t.typeParameters : void 0)) : outerTypeParameters;
+                return node.tags ? appendTypeParameters(outerTypeParameters, flatMap(node.tags, (t2) => isJSDocTemplateTag(t2) ? t2.typeParameters : void 0)) : outerTypeParameters;
               }
             }
           }
@@ -81259,7 +81259,7 @@ ${lanes.join("\n")}
           return type2.resolvedBaseTypes;
         }
         function getTupleBaseType(type2) {
-          const elementTypes = sameMap(type2.typeParameters, (t, i) => type2.elementFlags[i] & 8 ? getIndexedAccessType(t, numberType) : t);
+          const elementTypes = sameMap(type2.typeParameters, (t2, i) => type2.elementFlags[i] & 8 ? getIndexedAccessType(t2, numberType) : t2);
           return createArrayType(getUnionType(elementTypes || emptyArray), type2.readonly);
         }
         function resolveBaseTypesOfClass(type2) {
@@ -81837,7 +81837,7 @@ ${lanes.join("\n")}
             const typeArguments = getTypeArguments(type2);
             return length(target.typeParameters) === length(typeArguments) ? createTypeReference(target, concatenate(typeArguments, [thisArgument || target.thisType])) : type2;
           } else if (type2.flags & 268435456) {
-            const types2 = sameMap(type2.types, (t) => getTypeWithThisArgument(t, thisArgument, needApparentType));
+            const types2 = sameMap(type2.types, (t2) => getTypeWithThisArgument(t2, thisArgument, needApparentType));
             return types2 !== type2.types ? getIntersectionType(types2) : type2;
           }
           return needApparentType ? getApparentType(type2) : type2;
@@ -81974,19 +81974,19 @@ ${lanes.join("\n")}
             if (isTupleType(restType)) {
               return [expandSignatureParametersWithTupleMembers(restType, restIndex, restSymbol)];
             } else if (!skipUnionExpanding && restType.flags & 134217728 && every(restType.types, isTupleType)) {
-              return map3(restType.types, (t) => expandSignatureParametersWithTupleMembers(t, restIndex, restSymbol));
+              return map3(restType.types, (t2) => expandSignatureParametersWithTupleMembers(t2, restIndex, restSymbol));
             }
           }
           return [sig.parameters];
           function expandSignatureParametersWithTupleMembers(restType, restIndex, restSymbol) {
             const elementTypes = getTypeArguments(restType);
             const associatedNames = getUniqAssociatedNamesFromTupleType(restType, restSymbol);
-            const restParams = map3(elementTypes, (t, i) => {
+            const restParams = map3(elementTypes, (t2, i) => {
               const name = associatedNames && associatedNames[i] ? associatedNames[i] : getParameterNameAtPosition(sig, restIndex + i, restType);
               const flags = restType.target.elementFlags[i];
               const checkFlags = flags & 12 ? 32768 : flags & 2 ? 16384 : 0;
               const symbol2 = createSymbol(1, name, checkFlags);
-              symbol2.links.type = flags & 4 ? createArrayType(t) : t;
+              symbol2.links.type = flags & 4 ? createArrayType(t2) : t2;
               return symbol2;
             });
             return concatenate(sig.parameters.slice(0, restIndex), restParams);
@@ -82285,8 +82285,8 @@ ${lanes.join("\n")}
             const result = [];
             for (const info of sourceInfos) {
               const indexType = info.keyType;
-              if (every(types2, (t) => !!getIndexInfoOfType(t, indexType))) {
-                result.push(createIndexInfo(indexType, getUnionType(map3(types2, (t) => getIndexTypeOfType(t, indexType))), some(types2, (t) => getIndexInfoOfType(t, indexType).isReadonly)));
+              if (every(types2, (t2) => !!getIndexInfoOfType(t2, indexType))) {
+                result.push(createIndexInfo(indexType, getUnionType(map3(types2, (t2) => getIndexTypeOfType(t2, indexType))), some(types2, (t2) => getIndexInfoOfType(t2, indexType).isReadonly)));
               }
             }
             return result;
@@ -82294,13 +82294,13 @@ ${lanes.join("\n")}
           return emptyArray;
         }
         function resolveUnionTypeMembers(type2) {
-          const callSignatures = getUnionSignatures(map3(type2.types, (t) => t === globalFunctionType ? [unknownSignature] : getSignaturesOfType(
-            t,
+          const callSignatures = getUnionSignatures(map3(type2.types, (t2) => t2 === globalFunctionType ? [unknownSignature] : getSignaturesOfType(
+            t2,
             0
             /* Call */
           )));
-          const constructSignatures = getUnionSignatures(map3(type2.types, (t) => getSignaturesOfType(
-            t,
+          const constructSignatures = getUnionSignatures(map3(type2.types, (t2) => getSignaturesOfType(
+            t2,
             1
             /* Construct */
           )));
@@ -82311,8 +82311,8 @@ ${lanes.join("\n")}
           return !type1 ? type2 : !type2 ? type1 : getIntersectionType([type1, type2]);
         }
         function findMixins(types2) {
-          const constructorTypeCount = countWhere(types2, (t) => getSignaturesOfType(
-            t,
+          const constructorTypeCount = countWhere(types2, (t2) => getSignaturesOfType(
+            t2,
             1
             /* Construct */
           ).length > 0);
@@ -82349,10 +82349,10 @@ ${lanes.join("\n")}
           const mixinFlags = findMixins(types2);
           const mixinCount = countWhere(mixinFlags, (b) => b);
           for (let i = 0; i < types2.length; i++) {
-            const t = type2.types[i];
+            const t2 = type2.types[i];
             if (!mixinFlags[i]) {
               let signatures = getSignaturesOfType(
-                t,
+                t2,
                 1
                 /* Construct */
               );
@@ -82366,11 +82366,11 @@ ${lanes.join("\n")}
               constructSignatures = appendSignatures(constructSignatures, signatures);
             }
             callSignatures = appendSignatures(callSignatures, getSignaturesOfType(
-              t,
+              t2,
               0
               /* Call */
             ));
-            indexInfos = reduceLeft(getIndexInfosOfType(t), (infos, newInfo) => appendIndexInfo(
+            indexInfos = reduceLeft(getIndexInfosOfType(t2), (infos, newInfo) => appendIndexInfo(
               infos,
               newInfo,
               /*union*/
@@ -82531,7 +82531,7 @@ ${lanes.join("\n")}
           if (!origin || !(origin.flags & 268435456)) {
             return;
           }
-          const limitedConstraint = getIntersectionType(origin.types.filter((t) => t !== type2.constraintType));
+          const limitedConstraint = getIntersectionType(origin.types.filter((t2) => t2 !== type2.constraintType));
           return limitedConstraint !== neverType ? limitedConstraint : void 0;
         }
         function resolveReverseMappedTypeMembers(type2) {
@@ -82573,8 +82573,8 @@ ${lanes.join("\n")}
         }
         function getLowerBoundOfKeyType(type2) {
           if (type2.flags & 2097152) {
-            const t = getApparentType(type2.type);
-            return isGenericTupleType(t) ? getKnownKeysOfTupleType(t) : getIndexType(t);
+            const t2 = getApparentType(type2.type);
+            return isGenericTupleType(t2) ? getKnownKeysOfTupleType(t2) : getIndexType(t2);
           }
           if (type2.flags & 67108864) {
             if (type2.root.isDistributive) {
@@ -82652,7 +82652,7 @@ ${lanes.join("\n")}
           setStructuredTypeMembers(type2, members, emptyArray, emptyArray, indexInfos || emptyArray);
           function addMemberForKeyType(keyType) {
             const propNameType = nameType ? instantiateType(nameType, appendTypeMapping(type2.mapper, typeParameter, keyType)) : keyType;
-            forEachType(propNameType, (t) => addMemberForKeyTypeWorker(keyType, t));
+            forEachType(propNameType, (t2) => addMemberForKeyTypeWorker(keyType, t2));
           }
           function addMemberForKeyTypeWorker(keyType, propNameType) {
             if (isTypeUsableAsPropertyName(propNameType)) {
@@ -82775,7 +82775,7 @@ ${lanes.join("\n")}
           }
           if (type2.flags & 268435456) {
             const optionality = getCombinedMappedTypeOptionality(type2.types[0]);
-            return every(type2.types, (t, i) => i === 0 || getCombinedMappedTypeOptionality(t) === optionality) ? optionality : 0;
+            return every(type2.types, (t2, i) => i === 0 || getCombinedMappedTypeOptionality(t2) === optionality) ? optionality : 0;
           }
           return 0;
         }
@@ -82923,7 +82923,7 @@ ${lanes.join("\n")}
             d,
             4096
             /* Const */
-          )) || type2.flags & 402653184 && some(type2.types, (t) => isConstTypeVariable(t, depth)) || type2.flags & 33554432 && isConstTypeVariable(type2.objectType, depth + 1) || type2.flags & 67108864 && isConstTypeVariable(getConstraintOfConditionalType(type2), depth + 1) || type2.flags & 16777216 && isConstTypeVariable(type2.baseType, depth) || getObjectFlags(type2) & 32 && isConstMappedType(type2, depth) || isGenericTupleType(type2) && findIndex(getElementTypes(type2), (t, i) => !!(type2.target.elementFlags[i] & 8) && isConstTypeVariable(t, depth)) >= 0));
+          )) || type2.flags & 402653184 && some(type2.types, (t2) => isConstTypeVariable(t2, depth)) || type2.flags & 33554432 && isConstTypeVariable(type2.objectType, depth + 1) || type2.flags & 67108864 && isConstTypeVariable(getConstraintOfConditionalType(type2), depth + 1) || type2.flags & 16777216 && isConstTypeVariable(type2.baseType, depth) || getObjectFlags(type2) & 32 && isConstMappedType(type2, depth) || isGenericTupleType(type2) && findIndex(getElementTypes(type2), (t2, i) => !!(type2.target.elementFlags[i] & 8) && isConstTypeVariable(t2, depth)) >= 0));
         }
         function getConstraintOfIndexedAccess(type2) {
           return hasNonCircularBaseConstraint(type2) ? getConstraintFromIndexedAccess(type2) : void 0;
@@ -82997,27 +82997,27 @@ ${lanes.join("\n")}
         function getEffectiveConstraintOfIntersection(types2, targetIsUnion) {
           let constraints;
           let hasDisjointDomainType = false;
-          for (const t of types2) {
-            if (t.flags & 132644864) {
-              let constraint = getConstraintOfType(t);
+          for (const t2 of types2) {
+            if (t2.flags & 132644864) {
+              let constraint = getConstraintOfType(t2);
               while (constraint && constraint.flags & (524288 | 2097152 | 67108864)) {
                 constraint = getConstraintOfType(constraint);
               }
               if (constraint) {
                 constraints = append(constraints, constraint);
                 if (targetIsUnion) {
-                  constraints = append(constraints, t);
+                  constraints = append(constraints, t2);
                 }
               }
-            } else if (t.flags & 12812284 || isEmptyAnonymousObjectType(t)) {
+            } else if (t2.flags & 12812284 || isEmptyAnonymousObjectType(t2)) {
               hasDisjointDomainType = true;
             }
           }
           if (constraints && (targetIsUnion || hasDisjointDomainType)) {
             if (hasDisjointDomainType) {
-              for (const t of types2) {
-                if (t.flags & 12812284 || isEmptyAnonymousObjectType(t)) {
-                  constraints = append(constraints, t);
+              for (const t2 of types2) {
+                if (t2.flags & 12812284 || isEmptyAnonymousObjectType(t2)) {
+                  constraints = append(constraints, t2);
                 }
               }
             }
@@ -83052,31 +83052,31 @@ ${lanes.join("\n")}
           }
           const stack = [];
           return type2.resolvedBaseConstraint = getImmediateBaseConstraint(type2);
-          function getImmediateBaseConstraint(t) {
-            if (!t.immediateBaseConstraint) {
+          function getImmediateBaseConstraint(t2) {
+            if (!t2.immediateBaseConstraint) {
               if (!pushTypeResolution(
-                t,
+                t2,
                 4
                 /* ImmediateBaseConstraint */
               )) {
                 return circularConstraintType;
               }
               let result;
-              const identity2 = getRecursionIdentity(t);
+              const identity2 = getRecursionIdentity(t2);
               if (stack.length < 10 || stack.length < 50 && !contains(stack, identity2)) {
                 stack.push(identity2);
                 result = computeBaseConstraint(getSimplifiedType(
-                  t,
+                  t2,
                   /*writing*/
                   false
                 ));
                 stack.pop();
               }
               if (!popTypeResolution()) {
-                if (t.flags & 524288) {
-                  const errorNode = getConstraintDeclaration(t);
+                if (t2.flags & 524288) {
+                  const errorNode = getConstraintDeclaration(t2);
                   if (errorNode) {
-                    const diagnostic = error210(errorNode, Diagnostics.Type_parameter_0_has_a_circular_constraint, typeToString(t));
+                    const diagnostic = error210(errorNode, Diagnostics.Type_parameter_0_has_a_circular_constraint, typeToString(t2));
                     if (currentNode && !isNodeDescendantOf(errorNode, currentNode) && !isNodeDescendantOf(currentNode, errorNode)) {
                       addRelatedInfo(diagnostic, createDiagnosticForNode(currentNode, Diagnostics.Circularity_originates_in_type_at_this_location));
                     }
@@ -83084,21 +83084,21 @@ ${lanes.join("\n")}
                 }
                 result = circularConstraintType;
               }
-              t.immediateBaseConstraint ?? (t.immediateBaseConstraint = result || noConstraintType);
+              t2.immediateBaseConstraint ?? (t2.immediateBaseConstraint = result || noConstraintType);
             }
-            return t.immediateBaseConstraint;
+            return t2.immediateBaseConstraint;
           }
-          function getBaseConstraint(t) {
-            const c = getImmediateBaseConstraint(t);
+          function getBaseConstraint(t2) {
+            const c = getImmediateBaseConstraint(t2);
             return c !== noConstraintType && c !== circularConstraintType ? c : void 0;
           }
-          function computeBaseConstraint(t) {
-            if (t.flags & 524288) {
-              const constraint = getConstraintFromTypeParameter(t);
-              return t.isThisType || !constraint ? constraint : getBaseConstraint(constraint);
+          function computeBaseConstraint(t2) {
+            if (t2.flags & 524288) {
+              const constraint = getConstraintFromTypeParameter(t2);
+              return t2.isThisType || !constraint ? constraint : getBaseConstraint(constraint);
             }
-            if (t.flags & 402653184) {
-              const types2 = t.types;
+            if (t2.flags & 402653184) {
+              const types2 = t2.types;
               const baseTypes = [];
               let different = false;
               for (const type22 of types2) {
@@ -83113,13 +83113,13 @@ ${lanes.join("\n")}
                 }
               }
               if (!different) {
-                return t;
+                return t2;
               }
-              return t.flags & 134217728 && baseTypes.length === types2.length ? getUnionType(baseTypes) : t.flags & 268435456 && baseTypes.length ? getIntersectionType(baseTypes) : void 0;
+              return t2.flags & 134217728 && baseTypes.length === types2.length ? getUnionType(baseTypes) : t2.flags & 268435456 && baseTypes.length ? getIntersectionType(baseTypes) : void 0;
             }
-            if (t.flags & 2097152) {
-              if (isGenericMappedType(t.type)) {
-                const mappedType = t.type;
+            if (t2.flags & 2097152) {
+              if (isGenericMappedType(t2.type)) {
+                const mappedType = t2.type;
                 if (getNameTypeFromMappedType(mappedType) && !isMappedTypeWithKeyofConstraintDeclaration(mappedType)) {
                   return getBaseConstraint(getIndexTypeForMappedType(
                     mappedType,
@@ -83130,39 +83130,39 @@ ${lanes.join("\n")}
               }
               return stringNumberSymbolType;
             }
-            if (t.flags & 4194304) {
-              const types2 = t.types;
+            if (t2.flags & 4194304) {
+              const types2 = t2.types;
               const constraints = mapDefined(types2, getBaseConstraint);
-              return constraints.length === types2.length ? getTemplateLiteralType(t.texts, constraints) : stringType;
+              return constraints.length === types2.length ? getTemplateLiteralType(t2.texts, constraints) : stringType;
             }
-            if (t.flags & 8388608) {
-              const constraint = getBaseConstraint(t.type);
-              return constraint && constraint !== t.type ? getStringMappingType(t.symbol, constraint) : stringType;
+            if (t2.flags & 8388608) {
+              const constraint = getBaseConstraint(t2.type);
+              return constraint && constraint !== t2.type ? getStringMappingType(t2.symbol, constraint) : stringType;
             }
-            if (t.flags & 33554432) {
-              if (isMappedTypeGenericIndexedAccess(t)) {
-                return getBaseConstraint(substituteIndexedMappedType(t.objectType, t.indexType));
+            if (t2.flags & 33554432) {
+              if (isMappedTypeGenericIndexedAccess(t2)) {
+                return getBaseConstraint(substituteIndexedMappedType(t2.objectType, t2.indexType));
               }
-              const baseObjectType = getBaseConstraint(t.objectType);
-              const baseIndexType = getBaseConstraint(t.indexType);
-              const baseIndexedAccess = baseObjectType && baseIndexType && getIndexedAccessTypeOrUndefined(baseObjectType, baseIndexType, t.accessFlags);
+              const baseObjectType = getBaseConstraint(t2.objectType);
+              const baseIndexType = getBaseConstraint(t2.indexType);
+              const baseIndexedAccess = baseObjectType && baseIndexType && getIndexedAccessTypeOrUndefined(baseObjectType, baseIndexType, t2.accessFlags);
               return baseIndexedAccess && getBaseConstraint(baseIndexedAccess);
             }
-            if (t.flags & 67108864) {
-              const constraint = getConstraintFromConditionalType(t);
+            if (t2.flags & 67108864) {
+              const constraint = getConstraintFromConditionalType(t2);
               return constraint && getBaseConstraint(constraint);
             }
-            if (t.flags & 16777216) {
-              return getBaseConstraint(getSubstitutionIntersection(t));
+            if (t2.flags & 16777216) {
+              return getBaseConstraint(getSubstitutionIntersection(t2));
             }
-            if (isGenericTupleType(t)) {
-              const newElements = map3(getElementTypes(t), (v, i) => {
-                const constraint = v.flags & 524288 && t.target.elementFlags[i] & 8 && getBaseConstraint(v) || v;
+            if (isGenericTupleType(t2)) {
+              const newElements = map3(getElementTypes(t2), (v, i) => {
+                const constraint = v.flags & 524288 && t2.target.elementFlags[i] & 8 && getBaseConstraint(v) || v;
                 return constraint !== v && everyType(constraint, (c) => isArrayOrTupleType(c) && !isGenericTupleType(c)) ? constraint : v;
               });
-              return createTupleType(newElements, t.target.elementFlags, t.target.readonly, t.target.labeledElementDeclarations);
+              return createTupleType(newElements, t2.target.elementFlags, t2.target.readonly, t2.target.labeledElementDeclarations);
             }
-            return t;
+            return t2;
           }
         }
         function getApparentTypeOfIntersectionType(type2, thisArgument) {
@@ -83219,7 +83219,7 @@ ${lanes.join("\n")}
           if (typeVariable && !target.declaration.nameType) {
             const modifiersType = getModifiersTypeFromMappedType(type2);
             const baseConstraint = isGenericMappedType(modifiersType) ? getApparentTypeOfMappedType(modifiersType) : getBaseConstraintOfType(modifiersType);
-            if (baseConstraint && everyType(baseConstraint, (t) => isArrayOrTupleType(t) || isArrayOrTupleOrIntersection(t))) {
+            if (baseConstraint && everyType(baseConstraint, (t2) => isArrayOrTupleType(t2) || isArrayOrTupleOrIntersection(t2))) {
               return instantiateType(target, prependTypeMapping(typeVariable, baseConstraint, type2.mapper));
             }
           }
@@ -83233,9 +83233,9 @@ ${lanes.join("\n")}
           return !!(type2.flags & 33554432 && getObjectFlags(objectType = type2.objectType) & 32 && !isGenericMappedType(objectType) && isGenericIndexType(type2.indexType) && !(getMappedTypeModifiers(objectType) & 8) && !objectType.declaration.nameType);
         }
         function getApparentType(type2) {
-          const t = type2.flags & 132644864 ? getBaseConstraintOfType(type2) || unknownType : type2;
-          const objectFlags = getObjectFlags(t);
-          return objectFlags & 32 ? getApparentTypeOfMappedType(t) : objectFlags & 4 && t !== type2 ? getTypeWithThisArgument(t, type2) : t.flags & 268435456 ? getApparentTypeOfIntersectionType(t, type2) : t.flags & 12583968 ? globalStringType : t.flags & 67648 ? globalNumberType : t.flags & 4224 ? getGlobalBigIntType() : t.flags & 8448 ? globalBooleanType : t.flags & 16896 ? getGlobalESSymbolType() : t.flags & 131072 ? emptyObjectType : t.flags & 2097152 ? stringNumberSymbolType : t.flags & 2 && !strictNullChecks ? emptyObjectType : t;
+          const t2 = type2.flags & 132644864 ? getBaseConstraintOfType(type2) || unknownType : type2;
+          const objectFlags = getObjectFlags(t2);
+          return objectFlags & 32 ? getApparentTypeOfMappedType(t2) : objectFlags & 4 && t2 !== type2 ? getTypeWithThisArgument(t2, type2) : t2.flags & 268435456 ? getApparentTypeOfIntersectionType(t2, type2) : t2.flags & 12583968 ? globalStringType : t2.flags & 67648 ? globalNumberType : t2.flags & 4224 ? getGlobalBigIntType() : t2.flags & 8448 ? globalBooleanType : t2.flags & 16896 ? getGlobalESSymbolType() : t2.flags & 131072 ? emptyObjectType : t2.flags & 2097152 ? stringNumberSymbolType : t2.flags & 2 && !strictNullChecks ? emptyObjectType : t2;
         }
         function getReducedApparentType(type2) {
           return getReducedType(getApparentType(getReducedType(type2)));
@@ -83550,12 +83550,12 @@ ${lanes.join("\n")}
               return type2.arrayFallbackSignatures;
             }
             let memberName;
-            if (everyType(type2, (t) => {
+            if (everyType(type2, (t2) => {
               var _a3;
-              return !!((_a3 = t.symbol) == null ? void 0 : _a3.parent) && isArrayOrTupleSymbol(t.symbol.parent) && (!memberName ? (memberName = t.symbol.escapedName, true) : memberName === t.symbol.escapedName);
+              return !!((_a3 = t2.symbol) == null ? void 0 : _a3.parent) && isArrayOrTupleSymbol(t2.symbol.parent) && (!memberName ? (memberName = t2.symbol.escapedName, true) : memberName === t2.symbol.escapedName);
             })) {
-              const arrayArg = mapType(type2, (t) => getMappedType((isReadonlyArraySymbol(t.symbol.parent) ? globalReadonlyArrayType : globalArrayType).typeParameters[0], t.mapper));
-              const arrayType = createArrayType(arrayArg, someType(type2, (t) => isReadonlyArraySymbol(t.symbol.parent)));
+              const arrayArg = mapType(type2, (t2) => getMappedType((isReadonlyArraySymbol(t2.symbol.parent) ? globalReadonlyArrayType : globalArrayType).typeParameters[0], t2.mapper));
+              const arrayType = createArrayType(arrayArg, someType(type2, (t2) => isReadonlyArraySymbol(t2.symbol.parent)));
               return type2.arrayFallbackSignatures = getSignaturesOfType(getTypeOfPropertyOfType(arrayType, memberName), kind);
             }
             type2.arrayFallbackSignatures = result;
@@ -85460,9 +85460,9 @@ ${lanes.join("\n")}
             return createTypeReference(target, elementTypes);
           }
           if (target.combinedFlags & 8) {
-            const unionIndex = findIndex(elementTypes, (t, i) => !!(target.elementFlags[i] & 8 && t.flags & (262144 | 134217728)));
+            const unionIndex = findIndex(elementTypes, (t2, i) => !!(target.elementFlags[i] & 8 && t2.flags & (262144 | 134217728)));
             if (unionIndex >= 0) {
-              return checkCrossProductUnion(map3(elementTypes, (t, i) => target.elementFlags[i] & 8 ? t : unknownType)) ? mapType(elementTypes[unionIndex], (t) => createNormalizedTupleType(target, replaceElement(elementTypes, unionIndex, t))) : errorType;
+              return checkCrossProductUnion(map3(elementTypes, (t2, i) => target.elementFlags[i] & 8 ? t2 : unknownType)) ? mapType(elementTypes[unionIndex], (t2) => createNormalizedTupleType(target, replaceElement(elementTypes, unionIndex, t2))) : errorType;
             }
           }
           const expandedTypes = [];
@@ -85488,9 +85488,9 @@ ${lanes.join("\n")}
                   );
                   return errorType;
                 }
-                forEach(elements, (t, n) => {
+                forEach(elements, (t2, n) => {
                   var _a22;
-                  return addElement(t, type2.target.elementFlags[n], (_a22 = type2.target.labeledElementDeclarations) == null ? void 0 : _a22[n]);
+                  return addElement(t2, type2.target.elementFlags[n], (_a22 = type2.target.labeledElementDeclarations) == null ? void 0 : _a22[n]);
                 });
               } else {
                 addElement(isArrayLikeType(type2) && getIndexTypeOfType(type2, numberType) || errorType, 4, (_c = target.labeledElementDeclarations) == null ? void 0 : _c[i]);
@@ -85503,7 +85503,7 @@ ${lanes.join("\n")}
             if (expandedFlags[i] & 2) expandedFlags[i] = 1;
           }
           if (firstRestIndex >= 0 && firstRestIndex < lastOptionalOrRestIndex) {
-            expandedTypes[firstRestIndex] = getUnionType(sameMap(expandedTypes.slice(firstRestIndex, lastOptionalOrRestIndex + 1), (t, i) => expandedFlags[firstRestIndex + i] & 8 ? getIndexedAccessType(t, numberType) : t));
+            expandedTypes[firstRestIndex] = getUnionType(sameMap(expandedTypes.slice(firstRestIndex, lastOptionalOrRestIndex + 1), (t2, i) => expandedFlags[firstRestIndex + i] & 8 ? getIndexedAccessType(t2, numberType) : t2));
             expandedTypes.splice(firstRestIndex + 1, lastOptionalOrRestIndex - firstRestIndex);
             expandedFlags.splice(firstRestIndex + 1, lastOptionalOrRestIndex - firstRestIndex);
             expandedDeclarations.splice(firstRestIndex + 1, lastOptionalOrRestIndex - firstRestIndex);
@@ -85623,7 +85623,7 @@ ${lanes.join("\n")}
           if (match) {
             return match;
           }
-          const hasEmptyObject = hasObjectTypes && some(types2, (t) => !!(t.flags & 1048576) && !isGenericMappedType(t) && isEmptyResolvedType(resolveStructuredTypeMembers(t)));
+          const hasEmptyObject = hasObjectTypes && some(types2, (t2) => !!(t2.flags & 1048576) && !isGenericMappedType(t2) && isEmptyResolvedType(resolveStructuredTypeMembers(t2)));
           const len = types2.length;
           let i = len;
           let count = 0;
@@ -85632,7 +85632,7 @@ ${lanes.join("\n")}
             const source = types2[i];
             if (hasEmptyObject || source.flags & 536346624) {
               if (source.flags & 524288 && getBaseConstraintOrType(source).flags & 134217728) {
-                if (isTypeRelatedTo(source, getUnionType(map3(types2, (t) => t === source ? neverType : t)), strictSubtypeRelation)) {
+                if (isTypeRelatedTo(source, getUnionType(map3(types2, (t2) => t2 === source ? neverType : t2)), strictSubtypeRelation)) {
                   orderedRemoveItemAt(types2, i);
                 }
                 continue;
@@ -85644,15 +85644,15 @@ ${lanes.join("\n")}
                   if (count === 1e5) {
                     const estimatedCount = count / (len - i) * len;
                     if (estimatedCount > 1e6) {
-                      (_a3 = tracing) == null ? void 0 : _a3.instant(tracing.Phase.CheckTypes, "removeSubtypes_DepthLimit", { typeIds: types2.map((t) => t.id) });
+                      (_a3 = tracing) == null ? void 0 : _a3.instant(tracing.Phase.CheckTypes, "removeSubtypes_DepthLimit", { typeIds: types2.map((t2) => t2.id) });
                       error210(currentNode, Diagnostics.Expression_produces_a_union_type_that_is_too_complex_to_represent);
                       return void 0;
                     }
                   }
                   count++;
                   if (keyProperty && target.flags & (1048576 | 268435456 | 117964800)) {
-                    const t = getTypeOfPropertyOfType(target, keyProperty.escapedName);
-                    if (t && isUnitType(t) && getRegularTypeOfLiteralType(t) !== keyPropertyType) {
+                    const t2 = getTypeOfPropertyOfType(target, keyProperty.escapedName);
+                    if (t2 && isUnitType(t2) && getRegularTypeOfLiteralType(t2) !== keyPropertyType) {
                       continue;
                     }
                   }
@@ -85671,9 +85671,9 @@ ${lanes.join("\n")}
           let i = types2.length;
           while (i > 0) {
             i--;
-            const t = types2[i];
-            const flags = t.flags;
-            const remove = flags & (1024 | 4194304 | 8388608) && includes & 32 || flags & 2048 && includes & 64 || flags & 4096 && includes & 128 || flags & 16384 && includes & 512 || reduceVoidUndefined && flags & 4 && includes & 16 || isFreshLiteralType(t) && containsType(types2, t.regularType);
+            const t2 = types2[i];
+            const flags = t2.flags;
+            const remove = flags & (1024 | 4194304 | 8388608) && includes & 32 || flags & 2048 && includes & 64 || flags & 4096 && includes & 128 || flags & 16384 && includes & 512 || reduceVoidUndefined && flags & 4 && includes & 16 || isFreshLiteralType(t2) && containsType(types2, t2.regularType);
             if (remove) {
               orderedRemoveItemAt(types2, i);
             }
@@ -85685,8 +85685,8 @@ ${lanes.join("\n")}
             let i = types2.length;
             while (i > 0) {
               i--;
-              const t = types2[i];
-              if (t.flags & 1024 && some(templates, (template) => isTypeMatchedByTemplateLiteralOrStringMapping(t, template))) {
+              const t2 = types2[i];
+              if (t2.flags & 1024 && some(templates, (template) => isTypeMatchedByTemplateLiteralOrStringMapping(t2, template))) {
                 orderedRemoveItemAt(types2, i);
               }
             }
@@ -85714,7 +85714,7 @@ ${lanes.join("\n")}
               }
             }
             const constraint = getBaseConstraintOfType(typeVariable);
-            if (everyType(constraint, (t) => containsType(primitives, t))) {
+            if (everyType(constraint, (t2) => containsType(primitives, t2))) {
               let i = types2.length;
               while (i > 0) {
                 i--;
@@ -85734,11 +85734,11 @@ ${lanes.join("\n")}
           return !!(type2.flags & 134217728 && (type2.aliasSymbol || type2.origin));
         }
         function addNamedUnions(namedUnions, types2) {
-          for (const t of types2) {
-            if (t.flags & 134217728) {
-              const origin = t.origin;
-              if (t.aliasSymbol || origin && !(origin.flags & 134217728)) {
-                pushIfUnique(namedUnions, t);
+          for (const t2 of types2) {
+            if (t2.flags & 134217728) {
+              const origin = t2.origin;
+              if (t2.aliasSymbol || origin && !(origin.flags & 134217728)) {
+                pushIfUnique(namedUnions, t2);
               } else if (origin && origin.flags & 134217728) {
                 addNamedUnions(namedUnions, origin.types);
               }
@@ -85812,9 +85812,9 @@ ${lanes.join("\n")}
             const namedUnions = [];
             addNamedUnions(namedUnions, types2);
             const reducedTypes = [];
-            for (const t of typeSet) {
-              if (!some(namedUnions, (union2) => containsType(union2.types, t))) {
-                reducedTypes.push(t);
+            for (const t2 of typeSet) {
+              if (!some(namedUnions, (union2) => containsType(union2.types, t2))) {
+                reducedTypes.push(t2);
               }
             }
             if (!aliasSymbol && namedUnions.length === 1 && reducedTypes.length === 0) {
@@ -85822,8 +85822,8 @@ ${lanes.join("\n")}
             }
             const namedTypesCount = reduceLeft(namedUnions, (sum, union2) => sum + union2.types.length, 0);
             if (namedTypesCount + reducedTypes.length === typeSet.length) {
-              for (const t of namedUnions) {
-                insertType(reducedTypes, t);
+              for (const t2 of namedUnions) {
+                insertType(reducedTypes, t2);
               }
               origin = createOriginUnionOrIntersectionType(134217728, reducedTypes);
             }
@@ -85939,8 +85939,8 @@ ${lanes.join("\n")}
           let i = types2.length;
           while (i > 0) {
             i--;
-            const t = types2[i];
-            const remove = t.flags & 32 && includes & (1024 | 4194304 | 8388608) || t.flags & 64 && includes & 2048 || t.flags & 128 && includes & 4096 || t.flags & 512 && includes & 16384 || t.flags & 16 && includes & 4 || isEmptyAnonymousObjectType(t) && includes & 13893600;
+            const t2 = types2[i];
+            const remove = t2.flags & 32 && includes & (1024 | 4194304 | 8388608) || t2.flags & 64 && includes & 2048 || t2.flags & 128 && includes & 4096 || t2.flags & 512 && includes & 16384 || t2.flags & 16 && includes & 4 || isEmptyAnonymousObjectType(t2) && includes & 13893600;
             if (remove) {
               orderedRemoveItemAt(types2, i);
             }
@@ -85965,16 +85965,16 @@ ${lanes.join("\n")}
         }
         function extractRedundantTemplateLiterals(types2) {
           let i = types2.length;
-          const literals = filter(types2, (t) => !!(t.flags & 1024));
+          const literals = filter(types2, (t2) => !!(t2.flags & 1024));
           while (i > 0) {
             i--;
-            const t = types2[i];
-            if (!(t.flags & (4194304 | 8388608))) continue;
-            for (const t2 of literals) {
-              if (isTypeSubtypeOf(t2, t)) {
+            const t2 = types2[i];
+            if (!(t2.flags & (4194304 | 8388608))) continue;
+            for (const t22 of literals) {
+              if (isTypeSubtypeOf(t22, t2)) {
                 orderedRemoveItemAt(types2, i);
                 break;
-              } else if (isPatternLiteralType(t)) {
+              } else if (isPatternLiteralType(t2)) {
                 return true;
               }
             }
@@ -85983,20 +85983,20 @@ ${lanes.join("\n")}
         }
         function removeFromEach(types2, flag) {
           for (let i = 0; i < types2.length; i++) {
-            types2[i] = filterType(types2[i], (t) => !(t.flags & flag));
+            types2[i] = filterType(types2[i], (t2) => !(t2.flags & flag));
           }
         }
         function intersectUnionsOfPrimitiveTypes(types2) {
           let unionTypes2;
-          const index = findIndex(types2, (t) => !!(getObjectFlags(t) & 32768));
+          const index = findIndex(types2, (t2) => !!(getObjectFlags(t2) & 32768));
           if (index < 0) {
             return false;
           }
           let i = index + 1;
           while (i < types2.length) {
-            const t = types2[i];
-            if (getObjectFlags(t) & 32768) {
-              (unionTypes2 || (unionTypes2 = [types2[index]])).push(t);
+            const t2 = types2[i];
+            if (getObjectFlags(t2) & 32768) {
+              (unionTypes2 || (unionTypes2 = [types2[index]])).push(t2);
               orderedRemoveItemAt(types2, i);
             } else {
               i++;
@@ -86008,17 +86008,17 @@ ${lanes.join("\n")}
           const checked = [];
           const result = [];
           for (const u of unionTypes2) {
-            for (const t of u.types) {
-              if (insertType(checked, t)) {
-                if (eachUnionContains(unionTypes2, t)) {
-                  if (t === undefinedType && result.length && result[0] === missingType) {
+            for (const t2 of u.types) {
+              if (insertType(checked, t2)) {
+                if (eachUnionContains(unionTypes2, t2)) {
+                  if (t2 === undefinedType && result.length && result[0] === missingType) {
                     continue;
                   }
-                  if (t === missingType && result.length && result[0] === undefinedType) {
+                  if (t2 === missingType && result.length && result[0] === undefinedType) {
                     result[0] = missingType;
                     continue;
                   }
-                  insertType(result, t);
+                  insertType(result, t2);
                 }
               }
             }
@@ -86084,7 +86084,7 @@ ${lanes.join("\n")}
             const primitiveType = typeSet[1 - typeVarIndex];
             if (typeVariable.flags & 34078720 && (primitiveType.flags & (12713980 | 131072) && !isGenericStringLikeType(primitiveType) || includes & 67108864)) {
               const constraint = getBaseConstraintOfType(typeVariable);
-              if (constraint && everyType(constraint, (t) => !!(t.flags & (12713980 | 131072)) || isEmptyAnonymousObjectType(t))) {
+              if (constraint && everyType(constraint, (t2) => !!(t2.flags & (12713980 | 131072)) || isEmptyAnonymousObjectType(t2))) {
                 if (isTypeStrictSubtypeOf(constraint, primitiveType)) {
                   return typeVariable;
                 }
@@ -86103,7 +86103,7 @@ ${lanes.join("\n")}
             if (includes & 134217728) {
               if (intersectUnionsOfPrimitiveTypes(typeSet)) {
                 result = getIntersectionType(typeSet, flags, aliasSymbol, aliasTypeArguments);
-              } else if (every(typeSet, (t) => !!(t.flags & 134217728 && t.types[0].flags & 4))) {
+              } else if (every(typeSet, (t2) => !!(t2.flags & 134217728 && t2.types[0].flags & 4))) {
                 const containedUndefinedType = some(typeSet, containsMissingType) ? missingType : undefinedType;
                 removeFromEach(
                   typeSet,
@@ -86111,7 +86111,7 @@ ${lanes.join("\n")}
                   /* Undefined */
                 );
                 result = getUnionType([getIntersectionType(typeSet, flags), containedUndefinedType], 1, aliasSymbol, aliasTypeArguments);
-              } else if (every(typeSet, (t) => !!(t.flags & 134217728 && (t.types[0].flags & 8 || t.types[1].flags & 8)))) {
+              } else if (every(typeSet, (t2) => !!(t2.flags & 134217728 && (t2.types[0].flags & 8 || t2.types[1].flags & 8)))) {
                 removeFromEach(
                   typeSet,
                   8
@@ -86126,7 +86126,7 @@ ${lanes.join("\n")}
                   return errorType;
                 }
                 const constituents = getCrossProductIntersections(typeSet, flags);
-                const origin = some(constituents, (t) => !!(t.flags & 268435456)) && getConstituentCountOfTypes(constituents) > getConstituentCountOfTypes(typeSet) ? createOriginUnionOrIntersectionType(268435456, typeSet) : void 0;
+                const origin = some(constituents, (t2) => !!(t2.flags & 268435456)) && getConstituentCountOfTypes(constituents) > getConstituentCountOfTypes(typeSet) ? createOriginUnionOrIntersectionType(268435456, typeSet) : void 0;
                 result = getUnionType(constituents, 1, aliasSymbol, aliasTypeArguments, origin);
               }
             } else {
@@ -86137,13 +86137,13 @@ ${lanes.join("\n")}
           return result;
         }
         function getCrossProductUnionSize(types2) {
-          return reduceLeft(types2, (n, t) => t.flags & 134217728 ? n * t.types.length : t.flags & 262144 ? 0 : n, 1);
+          return reduceLeft(types2, (n, t2) => t2.flags & 134217728 ? n * t2.types.length : t2.flags & 262144 ? 0 : n, 1);
         }
         function checkCrossProductUnion(types2) {
           var _a3;
           const size = getCrossProductUnionSize(types2);
           if (size >= 1e5) {
-            (_a3 = tracing) == null ? void 0 : _a3.instant(tracing.Phase.CheckTypes, "checkCrossProductUnion_DepthLimit", { typeIds: types2.map((t) => t.id), size });
+            (_a3 = tracing) == null ? void 0 : _a3.instant(tracing.Phase.CheckTypes, "checkCrossProductUnion_DepthLimit", { typeIds: types2.map((t2) => t2.id), size });
             error210(currentNode, Diagnostics.Expression_produces_a_union_type_that_is_too_complex_to_represent);
             return false;
           }
@@ -86163,8 +86163,8 @@ ${lanes.join("\n")}
                 n = Math.floor(n / length2);
               }
             }
-            const t = getIntersectionType(constituents, flags);
-            if (!(t.flags & 262144)) intersections.push(t);
+            const t2 = getIntersectionType(constituents, flags);
+            if (!(t2.flags & 262144)) intersections.push(t2);
           }
           return intersections;
         }
@@ -86172,7 +86172,7 @@ ${lanes.join("\n")}
           return !(type2.flags & 402653184) || type2.aliasSymbol ? 1 : type2.flags & 134217728 && type2.origin ? getConstituentCount(type2.origin) : getConstituentCountOfTypes(type2.types);
         }
         function getConstituentCountOfTypes(types2) {
-          return reduceLeft(types2, (n, t) => n + getConstituentCount(t), 0);
+          return reduceLeft(types2, (n, t2) => n + getConstituentCount(t2), 0);
         }
         function getTypeFromIntersectionTypeNode(node) {
           const links = getNodeLinks(node);
@@ -86180,8 +86180,8 @@ ${lanes.join("\n")}
             const aliasSymbol = getAliasSymbolForTypeNode(node);
             const types2 = map3(node.types, getTypeFromTypeNode);
             const emptyIndex = types2.length === 2 ? types2.indexOf(emptyTypeLiteralType) : -1;
-            const t = emptyIndex >= 0 ? types2[1 - emptyIndex] : unknownType;
-            const noSupertypeReduction = !!(t.flags & (32 | 64 | 128) || t.flags & 4194304 && isPatternLiteralType(t));
+            const t2 = emptyIndex >= 0 ? types2[1 - emptyIndex] : unknownType;
+            const noSupertypeReduction = !!(t2.flags & (32 | 64 | 128) || t2.flags & 4194304 && isPatternLiteralType(t2));
             links.resolvedType = getIntersectionType(types2, noSupertypeReduction ? 1 : 0, aliasSymbol, getTypeArgumentsForAliasSymbol(aliasSymbol));
           }
           return links.resolvedType;
@@ -86233,7 +86233,7 @@ ${lanes.join("\n")}
           } else {
             forEachType(getLowerBoundOfKeyType(constraintType), addMemberForKeyType);
           }
-          const result = indexFlags & 2 ? filterType(getUnionType(keyTypes), (t) => !(t.flags & (1 | 32))) : getUnionType(keyTypes);
+          const result = indexFlags & 2 ? filterType(getUnionType(keyTypes), (t2) => !(t2.flags & (1 | 32))) : getUnionType(keyTypes);
           if (result.flags & 134217728 && constraintType.flags & 134217728 && getTypeListId(result.types) === getTypeListId(constraintType.types)) {
             return constraintType;
           }
@@ -86276,7 +86276,7 @@ ${lanes.join("\n")}
           return neverType;
         }
         function isKeyTypeIncluded(keyType, include) {
-          return !!(keyType.flags & include || keyType.flags & 268435456 && some(keyType.types, (t) => isKeyTypeIncluded(t, include)));
+          return !!(keyType.flags & include || keyType.flags & 268435456 && some(keyType.types, (t2) => isKeyTypeIncluded(t2, include)));
         }
         function getLiteralTypeFromProperties(type2, include, includeOrigin) {
           const origin = includeOrigin && (getObjectFlags(type2) & (3 | 4) || type2.aliasSymbol) ? createOriginIndexType(type2) : void 0;
@@ -86301,7 +86301,7 @@ ${lanes.join("\n")}
         }
         function getIndexType(type2, indexFlags = 0) {
           type2 = getReducedType(type2);
-          return isNoInferType(type2) ? getNoInferType(getIndexType(type2.baseType, indexFlags)) : shouldDeferIndexType(type2, indexFlags) ? getIndexTypeForGenericType(type2, indexFlags) : type2.flags & 134217728 ? getIntersectionType(map3(type2.types, (t) => getIndexType(t, indexFlags))) : type2.flags & 268435456 ? getUnionType(map3(type2.types, (t) => getIndexType(t, indexFlags))) : getObjectFlags(type2) & 32 ? getIndexTypeForMappedType(type2, indexFlags) : type2 === wildcardType ? wildcardType : type2.flags & 2 ? neverType : type2.flags & (1 | 262144) ? stringNumberSymbolType : getLiteralTypeFromProperties(
+          return isNoInferType(type2) ? getNoInferType(getIndexType(type2.baseType, indexFlags)) : shouldDeferIndexType(type2, indexFlags) ? getIndexTypeForGenericType(type2, indexFlags) : type2.flags & 134217728 ? getIntersectionType(map3(type2.types, (t2) => getIndexType(t2, indexFlags))) : type2.flags & 268435456 ? getUnionType(map3(type2.types, (t2) => getIndexType(t2, indexFlags))) : getObjectFlags(type2) & 32 ? getIndexTypeForMappedType(type2, indexFlags) : type2 === wildcardType ? wildcardType : type2.flags & 2 ? neverType : type2.flags & (1 | 262144) ? stringNumberSymbolType : getLiteralTypeFromProperties(
             type2,
             (indexFlags & 2 ? 1024 : 12583968) | (indexFlags & 1 ? 0 : 67648 | 16896),
             indexFlags === 0
@@ -86346,9 +86346,9 @@ ${lanes.join("\n")}
           return links.resolvedType;
         }
         function getTemplateLiteralType(texts, types2) {
-          const unionIndex = findIndex(types2, (t) => !!(t.flags & (262144 | 134217728)));
+          const unionIndex = findIndex(types2, (t2) => !!(t2.flags & (262144 | 134217728)));
           if (unionIndex >= 0) {
-            return checkCrossProductUnion(types2) ? mapType(types2[unionIndex], (t) => getTemplateLiteralType(texts, replaceElement(types2, unionIndex, t))) : errorType;
+            return checkCrossProductUnion(types2) ? mapType(types2[unionIndex], (t2) => getTemplateLiteralType(texts, replaceElement(types2, unionIndex, t2))) : errorType;
           }
           if (contains(types2, wildcardType)) {
             return wildcardType;
@@ -86363,15 +86363,15 @@ ${lanes.join("\n")}
             return getStringLiteralType(text);
           }
           newTexts.push(text);
-          if (every(newTexts, (t) => t === "")) {
-            if (every(newTypes, (t) => !!(t.flags & 32))) {
+          if (every(newTexts, (t2) => t2 === "")) {
+            if (every(newTypes, (t2) => !!(t2.flags & 32))) {
               return stringType;
             }
             if (newTypes.length === 1 && isPatternLiteralType(newTypes[0])) {
               return newTypes[0];
             }
           }
-          const id = `${getTypeListId(newTypes)}|${map3(newTexts, (t) => t.length).join(",")}|${newTexts.join("")}`;
+          const id = `${getTypeListId(newTypes)}|${map3(newTexts, (t2) => t2.length).join(",")}|${newTexts.join("")}`;
           let type2 = templateLiteralTypes.get(id);
           if (!type2) {
             templateLiteralTypes.set(id, type2 = createTemplateLiteralType(newTexts, newTypes));
@@ -86379,16 +86379,16 @@ ${lanes.join("\n")}
           return type2;
           function addSpans(texts2, types22) {
             for (let i = 0; i < types22.length; i++) {
-              const t = types22[i];
-              if (t.flags & (15360 | 8 | 4)) {
-                text += getTemplateStringForType(t) || "";
+              const t2 = types22[i];
+              if (t2.flags & (15360 | 8 | 4)) {
+                text += getTemplateStringForType(t2) || "";
                 text += texts2[i + 1];
-              } else if (t.flags & 4194304) {
-                text += t.texts[0];
-                if (!addSpans(t.texts, t.types)) return false;
+              } else if (t2.flags & 4194304) {
+                text += t2.texts[0];
+                if (!addSpans(t2.texts, t2.types)) return false;
                 text += texts2[i + 1];
-              } else if (isGenericIndexType(t) || isPatternLiteralPlaceholderType(t)) {
-                newTypes.push(t);
+              } else if (isGenericIndexType(t2) || isPatternLiteralPlaceholderType(t2)) {
+                newTypes.push(t2);
                 newTexts.push(text);
                 text = texts2[i + 1];
               } else {
@@ -86411,7 +86411,7 @@ ${lanes.join("\n")}
           return type2;
         }
         function getStringMappingType(symbol2, type2) {
-          return type2.flags & (134217728 | 262144) ? mapType(type2, (t) => getStringMappingType(symbol2, t)) : type2.flags & 1024 ? getStringLiteralType(applyStringMapping(symbol2, type2.value)) : type2.flags & 4194304 ? getTemplateLiteralType(...applyTemplateStringMapping(symbol2, type2.texts, type2.types)) : (
+          return type2.flags & (134217728 | 262144) ? mapType(type2, (t2) => getStringMappingType(symbol2, t2)) : type2.flags & 1024 ? getStringLiteralType(applyStringMapping(symbol2, type2.value)) : type2.flags & 4194304 ? getTemplateLiteralType(...applyTemplateStringMapping(symbol2, type2.texts, type2.types)) : (
             // Mapping<Mapping<T>> === Mapping<T>
             type2.flags & 8388608 && symbol2 === type2.symbol ? type2 : type2.flags & (1 | 32 | 8388608) || isGenericIndexType(type2) ? getStringMappingTypeForGenericType(symbol2, type2) : (
               // This handles Mapping<`${number}`> and Mapping<`${bigint}`>
@@ -86435,9 +86435,9 @@ ${lanes.join("\n")}
         function applyTemplateStringMapping(symbol2, texts, types2) {
           switch (intrinsicTypeKinds.get(symbol2.escapedName)) {
             case 0:
-              return [texts.map((t) => t.toUpperCase()), types2.map((t) => getStringMappingType(symbol2, t))];
+              return [texts.map((t2) => t2.toUpperCase()), types2.map((t2) => getStringMappingType(symbol2, t2))];
             case 1:
-              return [texts.map((t) => t.toLowerCase()), types2.map((t) => getStringMappingType(symbol2, t))];
+              return [texts.map((t2) => t2.toLowerCase()), types2.map((t2) => getStringMappingType(symbol2, t2))];
             case 2:
               return [texts[0] === "" ? texts : [texts[0].charAt(0).toUpperCase() + texts[0].slice(1), ...texts.slice(1)], texts[0] === "" ? [getStringMappingType(symbol2, types2[0]), ...types2.slice(1)] : types2];
             case 3:
@@ -86536,7 +86536,7 @@ ${lanes.join("\n")}
             }
             if (everyType(objectType, isTupleType) && isNumericLiteralName(propName)) {
               const index = +propName;
-              if (accessNode && everyType(objectType, (t) => !(t.target.combinedFlags & 12)) && !(accessFlags & 16)) {
+              if (accessNode && everyType(objectType, (t2) => !(t2.target.combinedFlags & 12)) && !(accessFlags & 16)) {
                 const indexNode = getIndexNodeForAccessExpression(accessNode);
                 if (isTupleType(objectType)) {
                   if (index < 0) {
@@ -86716,10 +86716,10 @@ ${lanes.join("\n")}
         function isPatternLiteralPlaceholderType(type2) {
           if (type2.flags & 268435456) {
             let seenPlaceholder = false;
-            for (const t of type2.types) {
-              if (t.flags & (15360 | 12) || isPatternLiteralPlaceholderType(t)) {
+            for (const t2 of type2.types) {
+              if (t2.flags & (15360 | 12) || isPatternLiteralPlaceholderType(t2)) {
                 seenPlaceholder = true;
-              } else if (!(t.flags & 1048576)) {
+              } else if (!(t2.flags & 1048576)) {
                 return false;
               }
             }
@@ -86745,7 +86745,7 @@ ${lanes.join("\n")}
         function getGenericObjectFlags(type2) {
           if (type2.flags & 402653184) {
             if (!(type2.objectFlags & 2097152)) {
-              type2.objectFlags |= 2097152 | reduceLeft(type2.types, (flags, t) => flags | getGenericObjectFlags(t), 0);
+              type2.objectFlags |= 2097152 | reduceLeft(type2.types, (flags, t2) => flags | getGenericObjectFlags(t2), 0);
             }
             return type2.objectFlags & 12582912;
           }
@@ -86762,13 +86762,13 @@ ${lanes.join("\n")}
         }
         function distributeIndexOverObjectType(objectType, indexType, writing) {
           if (objectType.flags & 134217728 || objectType.flags & 268435456 && !shouldDeferIndexType(objectType)) {
-            const types2 = map3(objectType.types, (t) => getSimplifiedType(getIndexedAccessType(t, indexType), writing));
+            const types2 = map3(objectType.types, (t2) => getSimplifiedType(getIndexedAccessType(t2, indexType), writing));
             return objectType.flags & 268435456 || writing ? getIntersectionType(types2) : getUnionType(types2);
           }
         }
         function distributeObjectOverIndexType(objectType, indexType, writing) {
           if (indexType.flags & 134217728) {
-            const types2 = map3(indexType.types, (t) => getSimplifiedType(getIndexedAccessType(objectType, t), writing));
+            const types2 = map3(indexType.types, (t2) => getSimplifiedType(getIndexedAccessType(objectType, t2), writing));
             return writing ? getIntersectionType(types2) : getUnionType(types2);
           }
         }
@@ -86804,7 +86804,7 @@ ${lanes.join("\n")}
           }
           if (isGenericMappedType(objectType)) {
             if (getMappedTypeNameTypeKind(objectType) !== 2) {
-              return type2[cache] = mapType(substituteIndexedMappedType(objectType, type2.indexType), (t) => getSimplifiedType(t, writing));
+              return type2[cache] = mapType(substituteIndexedMappedType(objectType, type2.indexType), (t2) => getSimplifiedType(t2, writing));
             }
           }
           return type2[cache] = type2;
@@ -86866,9 +86866,9 @@ ${lanes.join("\n")}
           return getIndexedAccessTypeOrUndefined(objectType, indexType, accessFlags, accessNode, aliasSymbol, aliasTypeArguments) || (accessNode ? errorType : unknownType);
         }
         function indexTypeLessThan(indexType, limit) {
-          return everyType(indexType, (t) => {
-            if (t.flags & 3072) {
-              const propName = getPropertyNameFromType(t);
+          return everyType(indexType, (t2) => {
+            if (t2.flags & 3072) {
+              const propName = getPropertyNameFromType(t2);
               if (isNumericLiteralName(propName)) {
                 const index = +propName;
                 return index >= 0 && index < limit;
@@ -86906,8 +86906,8 @@ ${lanes.join("\n")}
           if (indexType.flags & 134217728 && !(indexType.flags & 256)) {
             const propTypes = [];
             let wasMissingProp = false;
-            for (const t of indexType.types) {
-              const propType = getPropertyTypeForIndexType(objectType, apparentObjectType, t, indexType, accessNode, accessFlags | (wasMissingProp ? 128 : 0));
+            for (const t2 of indexType.types) {
+              const propType = getPropertyTypeForIndexType(objectType, apparentObjectType, t2, indexType, accessNode, accessFlags | (wasMissingProp ? 128 : 0));
               if (propType) {
                 propTypes.push(propType);
               } else if (!accessNode) {
@@ -87015,7 +87015,7 @@ ${lanes.join("\n")}
             const inferredExtendsType = combinedMapper ? instantiateType(root.extendsType, combinedMapper) : extendsType;
             if (!checkTypeDeferred && !isDeferredType(inferredExtendsType, checkTuples)) {
               if (!(inferredExtendsType.flags & 3) && (checkType.flags & 1 || !isTypeAssignableTo(getPermissiveInstantiation(checkType), getPermissiveInstantiation(inferredExtendsType)))) {
-                if (checkType.flags & 1 || forConstraint && !(inferredExtendsType.flags & 262144) && someType(getPermissiveInstantiation(inferredExtendsType), (t) => isTypeAssignableTo(t, getPermissiveInstantiation(checkType)))) {
+                if (checkType.flags & 1 || forConstraint && !(inferredExtendsType.flags & 262144) && someType(getPermissiveInstantiation(inferredExtendsType), (t2) => isTypeAssignableTo(t2, getPermissiveInstantiation(checkType)))) {
                   (extraTypes || (extraTypes = [])).push(instantiateType(getTypeFromTypeNode(root.node.trueType), combinedMapper || mapper));
                 }
                 const falseType2 = getTypeFromTypeNode(root.node.falseType);
@@ -87061,7 +87061,7 @@ ${lanes.join("\n")}
               const newRoot = newType.root;
               if (newRoot.outerTypeParameters) {
                 const typeParamMapper = combineTypeMappers(newType.mapper, newMapper);
-                const typeArguments = map3(newRoot.outerTypeParameters, (t) => getMappedType(t, typeParamMapper));
+                const typeArguments = map3(newRoot.outerTypeParameters, (t2) => getMappedType(t2, typeParamMapper));
                 const newRootMapper = createTypeMapper(newRoot.outerTypeParameters, typeArguments);
                 const newCheckType = newRoot.isDistributive ? getMappedType(newRoot.checkType, newRootMapper) : void 0;
                 if (!newCheckType || newCheckType === newRoot.checkType || !(newCheckType.flags & (134217728 | 262144))) {
@@ -87266,11 +87266,11 @@ ${lanes.join("\n")}
           if (every(type2.types, isEmptyObjectTypeOrSpreadsIntoEmptyObject)) {
             return find(type2.types, isEmptyObjectType) || emptyObjectType;
           }
-          const firstType = find(type2.types, (t) => !isEmptyObjectTypeOrSpreadsIntoEmptyObject(t));
+          const firstType = find(type2.types, (t2) => !isEmptyObjectTypeOrSpreadsIntoEmptyObject(t2));
           if (!firstType) {
             return type2;
           }
-          const secondType = find(type2.types, (t) => t !== firstType && !isEmptyObjectTypeOrSpreadsIntoEmptyObject(t));
+          const secondType = find(type2.types, (t2) => t2 !== firstType && !isEmptyObjectTypeOrSpreadsIntoEmptyObject(t2));
           if (secondType) {
             return type2;
           }
@@ -87314,11 +87314,11 @@ ${lanes.join("\n")}
           }
           left = tryMergeUnionOfObjectTypeAndEmptyObject(left, readonly2);
           if (left.flags & 134217728) {
-            return checkCrossProductUnion([left, right]) ? mapType(left, (t) => getSpreadType(t, right, symbol2, objectFlags, readonly2)) : errorType;
+            return checkCrossProductUnion([left, right]) ? mapType(left, (t2) => getSpreadType(t2, right, symbol2, objectFlags, readonly2)) : errorType;
           }
           right = tryMergeUnionOfObjectTypeAndEmptyObject(right, readonly2);
           if (right.flags & 134217728) {
-            return checkCrossProductUnion([left, right]) ? mapType(right, (t) => getSpreadType(left, t, symbol2, objectFlags, readonly2)) : errorType;
+            return checkCrossProductUnion([left, right]) ? mapType(right, (t2) => getSpreadType(left, t2, symbol2, objectFlags, readonly2)) : errorType;
           }
           if (right.flags & (8448 | 67648 | 4224 | 12583968 | 98304 | 131072 | 2097152)) {
             return left;
@@ -87825,7 +87825,7 @@ ${lanes.join("\n")}
           }
           if (typeParameters.length) {
             const combinedMapper = combineTypeMappers(type2.mapper, mapper);
-            const typeArguments = map3(typeParameters, (t) => getMappedType(t, combinedMapper));
+            const typeArguments = map3(typeParameters, (t2) => getMappedType(t2, combinedMapper));
             const newAliasSymbol = aliasSymbol || type2.aliasSymbol;
             const newAliasTypeArguments = aliasSymbol ? aliasTypeArguments : instantiateTypes(type2.aliasTypeArguments, mapper);
             const id = getTypeListId(typeArguments) + getAliasId(newAliasSymbol, newAliasTypeArguments);
@@ -87922,27 +87922,27 @@ ${lanes.join("\n")}
             }
           }
           return instantiateType(getConstraintTypeFromMappedType(type2), mapper) === wildcardType ? wildcardType : instantiateAnonymousType(type2, mapper, aliasSymbol, aliasTypeArguments);
-          function instantiateConstituent(t) {
-            if (t.flags & (3 | 117964800 | 1048576 | 268435456) && t !== wildcardType && !isErrorType(t)) {
+          function instantiateConstituent(t2) {
+            if (t2.flags & (3 | 117964800 | 1048576 | 268435456) && t2 !== wildcardType && !isErrorType(t2)) {
               if (!type2.declaration.nameType) {
                 let constraint;
-                if (isArrayType(t) || t.flags & 1 && findResolutionCycleStartIndex(
+                if (isArrayType(t2) || t2.flags & 1 && findResolutionCycleStartIndex(
                   typeVariable,
                   4
                   /* ImmediateBaseConstraint */
                 ) < 0 && (constraint = getConstraintOfTypeParameter(typeVariable)) && everyType(constraint, isArrayOrTupleType)) {
-                  return instantiateMappedArrayType(t, type2, prependTypeMapping(typeVariable, t, mapper));
+                  return instantiateMappedArrayType(t2, type2, prependTypeMapping(typeVariable, t2, mapper));
                 }
-                if (isTupleType(t)) {
-                  return instantiateMappedTupleType(t, type2, typeVariable, mapper);
+                if (isTupleType(t2)) {
+                  return instantiateMappedTupleType(t2, type2, typeVariable, mapper);
                 }
-                if (isArrayOrTupleOrIntersection(t)) {
-                  return getIntersectionType(map3(t.types, instantiateConstituent));
+                if (isArrayOrTupleOrIntersection(t2)) {
+                  return getIntersectionType(map3(t2.types, instantiateConstituent));
                 }
               }
-              return instantiateAnonymousType(type2, prependTypeMapping(typeVariable, t, mapper));
+              return instantiateAnonymousType(type2, prependTypeMapping(typeVariable, t2, mapper));
             }
-            return t;
+            return t2;
           }
         }
         function getModifiedReadonlyState(state, modifiers) {
@@ -88013,14 +88013,14 @@ ${lanes.join("\n")}
         function getConditionalTypeInstantiation(type2, mapper, forConstraint, aliasSymbol, aliasTypeArguments) {
           const root = type2.root;
           if (root.outerTypeParameters) {
-            const typeArguments = map3(root.outerTypeParameters, (t) => getMappedType(t, mapper));
+            const typeArguments = map3(root.outerTypeParameters, (t2) => getMappedType(t2, mapper));
             const id = (forConstraint ? "C" : "") + getTypeListId(typeArguments) + getAliasId(aliasSymbol, aliasTypeArguments);
             let result = root.instantiations.get(id);
             if (!result) {
               const newMapper = createTypeMapper(root.outerTypeParameters, typeArguments);
               const checkType = root.checkType;
               const distributionType = root.isDistributive ? getReducedType(getMappedType(checkType, newMapper)) : void 0;
-              result = distributionType && checkType !== distributionType && distributionType.flags & (134217728 | 262144) ? mapTypeWithAlias(distributionType, (t) => getConditionalType(root, prependTypeMapping(checkType, t, newMapper), forConstraint), aliasSymbol, aliasTypeArguments) : getConditionalType(root, newMapper, forConstraint, aliasSymbol, aliasTypeArguments);
+              result = distributionType && checkType !== distributionType && distributionType.flags & (134217728 | 262144) ? mapTypeWithAlias(distributionType, (t2) => getConditionalType(root, prependTypeMapping(checkType, t2, newMapper), forConstraint), aliasSymbol, aliasTypeArguments) : getConditionalType(root, newMapper, forConstraint, aliasSymbol, aliasTypeArguments);
               root.instantiations.set(id, result);
             }
             return result;
@@ -88275,7 +88275,7 @@ ${lanes.join("\n")}
           return isTypeRelatedTo(source, target, assignableRelation);
         }
         function isTypeDerivedFrom(source, target) {
-          return source.flags & 134217728 ? every(source.types, (t) => isTypeDerivedFrom(t, target)) : target.flags & 134217728 ? some(target.types, (t) => isTypeDerivedFrom(source, t)) : source.flags & 268435456 ? some(source.types, (t) => isTypeDerivedFrom(t, target)) : source.flags & 117964800 ? isTypeDerivedFrom(getBaseConstraintOfType(source) || unknownType, target) : isEmptyAnonymousObjectType(target) ? !!(source.flags & (1048576 | 131072)) : target === globalObjectType ? !!(source.flags & (1048576 | 131072)) && !isEmptyAnonymousObjectType(source) : target === globalFunctionType ? !!(source.flags & 1048576) && isFunctionObjectType(source) : hasBaseType(source, getTargetType(target)) || isArrayType(target) && !isReadonlyArrayType(target) && isTypeDerivedFrom(source, globalReadonlyArrayType);
+          return source.flags & 134217728 ? every(source.types, (t2) => isTypeDerivedFrom(t2, target)) : target.flags & 134217728 ? some(target.types, (t2) => isTypeDerivedFrom(source, t2)) : source.flags & 268435456 ? some(source.types, (t2) => isTypeDerivedFrom(t2, target)) : source.flags & 117964800 ? isTypeDerivedFrom(getBaseConstraintOfType(source) || unknownType, target) : isEmptyAnonymousObjectType(target) ? !!(source.flags & (1048576 | 131072)) : target === globalObjectType ? !!(source.flags & (1048576 | 131072)) && !isEmptyAnonymousObjectType(source) : target === globalFunctionType ? !!(source.flags & 1048576) && isFunctionObjectType(source) : hasBaseType(source, getTargetType(target)) || isArrayType(target) && !isReadonlyArrayType(target) && isTypeDerivedFrom(source, globalReadonlyArrayType);
         }
         function isTypeComparableTo(source, target) {
           return isTypeRelatedTo(source, target, comparableRelation);
@@ -88576,7 +88576,7 @@ ${lanes.join("\n")}
         }
         function elaborateIterableOrArrayLikeTargetElementwise(iterator, source, target, relation, containingMessageChain, errorOutputContainer) {
           const tupleOrArrayLikeTargetParts = filterType(target, isArrayOrTupleLikeType);
-          const nonTupleOrArrayLikeTargetParts = filterType(target, (t) => !isArrayOrTupleLikeType(t));
+          const nonTupleOrArrayLikeTargetParts = filterType(target, (t2) => !isArrayOrTupleLikeType(t2));
           const iterationType = nonTupleOrArrayLikeTargetParts !== neverType ? getIterationTypeOfIterable(
             13,
             0,
@@ -88700,11 +88700,11 @@ ${lanes.join("\n")}
             );
             if (iterableType !== emptyGenericType) {
               const anyIterable = createIterableType(anyType);
-              arrayLikeTargetParts = filterType(childrenTargetType, (t) => isTypeAssignableTo(t, anyIterable));
-              nonArrayLikeTargetParts = filterType(childrenTargetType, (t) => !isTypeAssignableTo(t, anyIterable));
+              arrayLikeTargetParts = filterType(childrenTargetType, (t2) => isTypeAssignableTo(t2, anyIterable));
+              nonArrayLikeTargetParts = filterType(childrenTargetType, (t2) => !isTypeAssignableTo(t2, anyIterable));
             } else {
               arrayLikeTargetParts = filterType(childrenTargetType, isArrayOrTupleLikeType);
-              nonArrayLikeTargetParts = filterType(childrenTargetType, (t) => !isArrayOrTupleLikeType(t));
+              nonArrayLikeTargetParts = filterType(childrenTargetType, (t2) => !isArrayOrTupleLikeType(t2));
             }
             if (moreThanOneRealChildren) {
               if (arrayLikeTargetParts !== neverType) {
@@ -89028,8 +89028,8 @@ ${lanes.join("\n")}
           }
           return false;
         }
-        function isEmptyResolvedType(t) {
-          return t !== anyFunctionType && t.properties.length === 0 && t.callSignatures.length === 0 && t.constructSignatures.length === 0 && t.indexInfos.length === 0;
+        function isEmptyResolvedType(t2) {
+          return t2 !== anyFunctionType && t2.properties.length === 0 && t2.callSignatures.length === 0 && t2.constructSignatures.length === 0 && t2.indexInfos.length === 0;
         }
         function isEmptyObjectType(type2) {
           return type2.flags & 1048576 ? !isGenericMappedType(type2) && isEmptyResolvedType(resolveStructuredTypeMembers(type2)) : type2.flags & 131072 ? true : type2.flags & 134217728 ? some(type2.types, isEmptyObjectType) : type2.flags & 268435456 ? every(type2.types, isEmptyObjectType) : false;
@@ -89144,29 +89144,29 @@ ${lanes.join("\n")}
         }
         function isSimpleTypeRelatedTo(source, target, relation, errorReporter) {
           const s = source.flags;
-          const t = target.flags;
-          if (t & 1 || s & 262144 || source === wildcardType) return true;
-          if (t & 2 && !(relation === strictSubtypeRelation && s & 1)) return true;
-          if (t & 262144) return false;
-          if (s & 12583968 && t & 32) return true;
-          if (s & 1024 && s & 32768 && t & 1024 && !(t & 32768) && source.value === target.value) return true;
-          if (s & 67648 && t & 64) return true;
-          if (s & 2048 && s & 32768 && t & 2048 && !(t & 32768) && source.value === target.value) return true;
-          if (s & 4224 && t & 128) return true;
-          if (s & 8448 && t & 256) return true;
-          if (s & 16896 && t & 512) return true;
-          if (s & 65536 && t & 65536 && source.symbol.escapedName === target.symbol.escapedName && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
-          if (s & 32768 && t & 32768) {
-            if (s & 134217728 && t & 134217728 && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
-            if (s & 15360 && t & 15360 && source.value === target.value && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
+          const t2 = target.flags;
+          if (t2 & 1 || s & 262144 || source === wildcardType) return true;
+          if (t2 & 2 && !(relation === strictSubtypeRelation && s & 1)) return true;
+          if (t2 & 262144) return false;
+          if (s & 12583968 && t2 & 32) return true;
+          if (s & 1024 && s & 32768 && t2 & 1024 && !(t2 & 32768) && source.value === target.value) return true;
+          if (s & 67648 && t2 & 64) return true;
+          if (s & 2048 && s & 32768 && t2 & 2048 && !(t2 & 32768) && source.value === target.value) return true;
+          if (s & 4224 && t2 & 128) return true;
+          if (s & 8448 && t2 & 256) return true;
+          if (s & 16896 && t2 & 512) return true;
+          if (s & 65536 && t2 & 65536 && source.symbol.escapedName === target.symbol.escapedName && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
+          if (s & 32768 && t2 & 32768) {
+            if (s & 134217728 && t2 & 134217728 && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
+            if (s & 15360 && t2 & 15360 && source.value === target.value && isEnumTypeRelatedTo(source.symbol, target.symbol, errorReporter)) return true;
           }
-          if (s & 4 && (!strictNullChecks && !(t & 402653184) || t & (4 | 16))) return true;
-          if (s & 8 && (!strictNullChecks && !(t & 402653184) || t & 8)) return true;
-          if (s & 1048576 && t & 131072 && !(relation === strictSubtypeRelation && isEmptyAnonymousObjectType(source) && !(getObjectFlags(source) & 8192))) return true;
+          if (s & 4 && (!strictNullChecks && !(t2 & 402653184) || t2 & (4 | 16))) return true;
+          if (s & 8 && (!strictNullChecks && !(t2 & 402653184) || t2 & 8)) return true;
+          if (s & 1048576 && t2 & 131072 && !(relation === strictSubtypeRelation && isEmptyAnonymousObjectType(source) && !(getObjectFlags(source) & 8192))) return true;
           if (relation === assignableRelation || relation === comparableRelation) {
             if (s & 1) return true;
-            if (s & 64 && (t & 65536 || t & 2048 && t & 32768)) return true;
-            if (s & 2048 && !(s & 32768) && (t & 65536 || t & 2048 && t & 32768 && source.value === target.value)) return true;
+            if (s & 64 && (t2 & 65536 || t2 & 2048 && t2 & 32768)) return true;
+            if (s & 2048 && !(s & 32768) && (t2 & 65536 || t2 & 2048 && t2 & 32768 && source.value === target.value)) return true;
             if (isUnknownLikeUnionType(target)) return true;
           }
           return false;
@@ -89218,9 +89218,9 @@ ${lanes.join("\n")}
         }
         function getNormalizedType(type2, writing) {
           while (true) {
-            const t = isFreshLiteralType(type2) ? type2.regularType : isGenericTupleType(type2) ? getNormalizedTupleType(type2, writing) : getObjectFlags(type2) & 4 ? type2.node ? createTypeReference(type2.target, getTypeArguments(type2)) : getSingleBaseForNonAugmentingSubtype(type2) || type2 : type2.flags & 402653184 ? getNormalizedUnionOrIntersectionType(type2, writing) : type2.flags & 16777216 ? writing ? type2.baseType : getSubstitutionIntersection(type2) : type2.flags & 102760448 ? getSimplifiedType(type2, writing) : type2;
-            if (t === type2) return t;
-            type2 = t;
+            const t2 = isFreshLiteralType(type2) ? type2.regularType : isGenericTupleType(type2) ? getNormalizedTupleType(type2, writing) : getObjectFlags(type2) & 4 ? type2.node ? createTypeReference(type2.target, getTypeArguments(type2)) : getSingleBaseForNonAugmentingSubtype(type2) || type2 : type2.flags & 402653184 ? getNormalizedUnionOrIntersectionType(type2, writing) : type2.flags & 16777216 ? writing ? type2.baseType : getSubstitutionIntersection(type2) : type2.flags & 102760448 ? getSimplifiedType(type2, writing) : type2;
+            if (t2 === type2) return t2;
+            type2 = t2;
           }
         }
         function getNormalizedUnionOrIntersectionType(type2, writing) {
@@ -89229,7 +89229,7 @@ ${lanes.join("\n")}
             return reduced;
           }
           if (type2.flags & 268435456 && shouldNormalizeIntersection(type2)) {
-            const normalizedTypes = sameMap(type2.types, (t) => getNormalizedType(t, writing));
+            const normalizedTypes = sameMap(type2.types, (t2) => getNormalizedType(t2, writing));
             if (normalizedTypes !== type2.types) {
               return getIntersectionType(normalizedTypes);
             }
@@ -89239,16 +89239,16 @@ ${lanes.join("\n")}
         function shouldNormalizeIntersection(type2) {
           let hasInstantiable = false;
           let hasNullableOrEmpty = false;
-          for (const t of type2.types) {
-            hasInstantiable || (hasInstantiable = !!(t.flags & 132644864));
-            hasNullableOrEmpty || (hasNullableOrEmpty = !!(t.flags & 12) || isEmptyAnonymousObjectType(t));
+          for (const t2 of type2.types) {
+            hasInstantiable || (hasInstantiable = !!(t2.flags & 132644864));
+            hasNullableOrEmpty || (hasNullableOrEmpty = !!(t2.flags & 12) || isEmptyAnonymousObjectType(t2));
             if (hasInstantiable && hasNullableOrEmpty) return true;
           }
           return false;
         }
         function getNormalizedTupleType(type2, writing) {
           const elements = getElementTypes(type2);
-          const normalizedElements = sameMap(elements, (t) => t.flags & 102760448 ? getSimplifiedType(t, writing) : t);
+          const normalizedElements = sameMap(elements, (t2) => t2.flags & 102760448 ? getSimplifiedType(t2, writing) : t2);
           return elements !== normalizedElements ? createNormalizedTupleType(type2.target, normalizedElements) : type2;
         }
         function checkTypeRelatedTo(source, target, relation, errorNode, headMessage, containingMessageChain, errorOutputContainer) {
@@ -89858,7 +89858,7 @@ ${lanes.join("\n")}
               );
             }
             if (relation === comparableRelation && target2.flags & 12713980) {
-              const constraints = sameMap(source2.types, (t) => t.flags & 132644864 ? getBaseConstraintOfType(t) || unknownType : t);
+              const constraints = sameMap(source2.types, (t2) => t2.flags & 132644864 ? getBaseConstraintOfType(t2) || unknownType : t2);
               if (constraints !== source2.types) {
                 source2 = getIntersectionType(constraints);
                 if (source2.flags & 262144) {
@@ -90070,16 +90070,16 @@ ${lanes.join("\n")}
               const variance = varianceFlags & 7;
               if (variance !== 4) {
                 const s = sources[i];
-                const t = targets[i];
+                const t2 = targets[i];
                 let related = -1;
                 if (varianceFlags & 8) {
                   related = relation === identityRelation ? isRelatedTo(
                     s,
-                    t,
+                    t2,
                     3,
                     /*reportErrors*/
                     false
-                  ) : compareTypesIdentical(s, t);
+                  ) : compareTypesIdentical(s, t2);
                 } else {
                   if (inVarianceComputation && varianceFlags & 16) {
                     instantiateType(s, reportUnreliableMapper);
@@ -90087,7 +90087,7 @@ ${lanes.join("\n")}
                   if (variance === 1) {
                     related = isRelatedTo(
                       s,
-                      t,
+                      t2,
                       3,
                       reportErrors2,
                       /*headMessage*/
@@ -90096,7 +90096,7 @@ ${lanes.join("\n")}
                     );
                   } else if (variance === 2) {
                     related = isRelatedTo(
-                      t,
+                      t2,
                       s,
                       3,
                       reportErrors2,
@@ -90106,7 +90106,7 @@ ${lanes.join("\n")}
                     );
                   } else if (variance === 3) {
                     related = isRelatedTo(
-                      t,
+                      t2,
                       s,
                       3,
                       /*reportErrors*/
@@ -90115,7 +90115,7 @@ ${lanes.join("\n")}
                     if (!related) {
                       related = isRelatedTo(
                         s,
-                        t,
+                        t2,
                         3,
                         reportErrors2,
                         /*headMessage*/
@@ -90126,7 +90126,7 @@ ${lanes.join("\n")}
                   } else {
                     related = isRelatedTo(
                       s,
-                      t,
+                      t2,
                       3,
                       reportErrors2,
                       /*headMessage*/
@@ -90135,7 +90135,7 @@ ${lanes.join("\n")}
                     );
                     if (related) {
                       related &= isRelatedTo(
-                        t,
+                        t2,
                         s,
                         3,
                         reportErrors2,
@@ -90245,9 +90245,9 @@ ${lanes.join("\n")}
             if (expandingFlags === 3) {
               (_a22 = tracing) == null ? void 0 : _a22.instant(tracing.Phase.CheckTypes, "recursiveTypeRelatedTo_DepthLimit", {
                 sourceId: source2.id,
-                sourceIdStack: sourceStack.map((t) => t.id),
+                sourceIdStack: sourceStack.map((t2) => t2.id),
                 targetId: target2.id,
-                targetIdStack: targetStack.map((t) => t.id),
+                targetIdStack: targetStack.map((t2) => t2.id),
                 depth: sourceDepth,
                 targetDepth
               });
@@ -90343,7 +90343,7 @@ ${lanes.join("\n")}
                     /* None */
                   );
                 }
-              } else if (result2 && isNonGenericObjectType(target2) && !isArrayOrTupleType(target2) && source2.flags & 268435456 && getApparentType(source2).flags & 403701760 && !some(source2.types, (t) => t === target2 || !!(getObjectFlags(t) & 262144))) {
+              } else if (result2 && isNonGenericObjectType(target2) && !isArrayOrTupleType(target2) && source2.flags & 268435456 && getApparentType(source2).flags & 403701760 && !some(source2.types, (t2) => t2 === target2 || !!(getObjectFlags(t2) & 262144))) {
                 result2 &= propertiesRelatedTo(
                   source2,
                   target2,
@@ -90369,7 +90369,7 @@ ${lanes.join("\n")}
               19456,
               /*stringsOnly*/
               false,
-              (t) => void mappedKeys.push(instantiateType(nameType, appendTypeMapping(targetType.mapper, getTypeParameterFromMappedType(targetType), t)))
+              (t2) => void mappedKeys.push(instantiateType(nameType, appendTypeMapping(targetType.mapper, getTypeParameterFromMappedType(targetType), t2)))
             );
             return getUnionType(mappedKeys);
           }
@@ -90911,7 +90911,7 @@ ${lanes.join("\n")}
                 if (varianceResult !== void 0) {
                   return varianceResult;
                 }
-              } else if (isReadonlyArrayType(target2) ? everyType(source2, isArrayOrTupleType) : isArrayType(target2) && everyType(source2, (t) => isTupleType(t) && !t.target.readonly)) {
+              } else if (isReadonlyArrayType(target2) ? everyType(source2, isArrayOrTupleType) : isArrayType(target2) && everyType(source2, (t2) => isTupleType(t2) && !t2.target.readonly)) {
                 if (relation !== identityRelation) {
                   return isRelatedTo(getIndexTypeOfType(source2, numberType) || anyType, getIndexTypeOfType(target2, numberType) || anyType, 3, reportErrors2);
                 } else {
@@ -91508,18 +91508,18 @@ ${lanes.join("\n")}
               }
             } else {
               outer:
-                for (const t of targetSignatures) {
+                for (const t2 of targetSignatures) {
                   const saveErrorInfo = captureErrorCalculationState();
                   let shouldElaborateErrors = reportErrors2;
                   for (const s of sourceSignatures) {
                     const related = signatureRelatedTo(
                       s,
-                      t,
+                      t2,
                       /*erase*/
                       true,
                       shouldElaborateErrors,
                       intersectionState,
-                      incompatibleReporter(s, t)
+                      incompatibleReporter(s, t2)
                     );
                     if (related) {
                       result2 &= related;
@@ -91530,7 +91530,7 @@ ${lanes.join("\n")}
                   }
                   if (shouldElaborateErrors) {
                     reportError(Diagnostics.Type_0_provides_no_match_for_the_signature_1, typeToString(source2), signatureToString(
-                      t,
+                      t2,
                       /*enclosingDeclaration*/
                       void 0,
                       /*flags*/
@@ -91803,7 +91803,7 @@ ${lanes.join("\n")}
         function discriminateTypeByDiscriminableItems(target, discriminators, related) {
           const types2 = target.types;
           const include = types2.map(
-            (t) => t.flags & 12713980 || getReducedType(t).flags & 262144 ? 0 : -1
+            (t2) => t2.flags & 12713980 || getReducedType(t2).flags & 262144 ? 0 : -1
             /* True */
           );
           for (const [getDiscriminatingType, propertyName] of discriminators) {
@@ -91812,7 +91812,7 @@ ${lanes.join("\n")}
               if (include[i]) {
                 const targetType = getTypeOfPropertyOrIndexSignatureOfType(types2[i], propertyName);
                 if (targetType) {
-                  if (someType(getDiscriminatingType(), (t) => !!related(t, targetType))) {
+                  if (someType(getDiscriminatingType(), (t2) => !!related(t2, targetType))) {
                     matched = true;
                   } else {
                     include[i] = 3;
@@ -91949,7 +91949,7 @@ ${lanes.join("\n")}
           return !!(getObjectFlags(type2) & 4) && !type2.node;
         }
         function isTypeReferenceWithGenericArguments(type2) {
-          return isNonDeferredTypeReference(type2) && some(getTypeArguments(type2), (t) => !!(t.flags & 524288) || isTypeReferenceWithGenericArguments(t));
+          return isNonDeferredTypeReference(type2) && some(getTypeArguments(type2), (t2) => !!(t2.flags & 524288) || isTypeReferenceWithGenericArguments(t2));
         }
         function getGenericTypeReferenceRelationKey(source, target, postFix, ignoreConstraints) {
           const typeParameters = [];
@@ -91959,23 +91959,23 @@ ${lanes.join("\n")}
           return `${constraintMarker}${sourceId},${targetId}${postFix}`;
           function getTypeReferenceId(type2, depth = 0) {
             let result = "" + type2.target.id;
-            for (const t of getTypeArguments(type2)) {
-              if (t.flags & 524288) {
-                if (ignoreConstraints || isUnconstrainedTypeParameter(t)) {
-                  let index = typeParameters.indexOf(t);
+            for (const t2 of getTypeArguments(type2)) {
+              if (t2.flags & 524288) {
+                if (ignoreConstraints || isUnconstrainedTypeParameter(t2)) {
+                  let index = typeParameters.indexOf(t2);
                   if (index < 0) {
                     index = typeParameters.length;
-                    typeParameters.push(t);
+                    typeParameters.push(t2);
                   }
                   result += "=" + index;
                   continue;
                 }
                 constraintMarker = "*";
-              } else if (depth < 4 && isTypeReferenceWithGenericArguments(t)) {
-                result += "<" + getTypeReferenceId(t, depth + 1) + ">";
+              } else if (depth < 4 && isTypeReferenceWithGenericArguments(t2)) {
+                result += "<" + getTypeReferenceId(t2, depth + 1) + ">";
                 continue;
               }
-              result += "-" + t.id;
+              result += "-" + t2.id;
             }
             return result;
           }
@@ -91991,8 +91991,8 @@ ${lanes.join("\n")}
         }
         function forEachProperty2(prop, callback) {
           if (getCheckFlags(prop) & 6) {
-            for (const t of prop.links.containingType.types) {
-              const p = getPropertyOfType(t, prop.escapedName);
+            for (const t2 of prop.links.containingType.types) {
+              const p = getPropertyOfType(t2, prop.escapedName);
               const result = p && forEachProperty2(p, callback);
               if (result) {
                 return result;
@@ -92028,21 +92028,21 @@ ${lanes.join("\n")}
               type2 = getMappedTargetWithSymbol(type2);
             }
             if (type2.flags & 268435456) {
-              return some(type2.types, (t) => isDeeplyNestedType(t, stack, depth, maxDepth));
+              return some(type2.types, (t2) => isDeeplyNestedType(t2, stack, depth, maxDepth));
             }
             const identity2 = getRecursionIdentity(type2);
             let count = 0;
             let lastTypeId = 0;
             for (let i = 0; i < depth; i++) {
-              const t = stack[i];
-              if (hasMatchingRecursionIdentity(t, identity2)) {
-                if (t.id >= lastTypeId) {
+              const t2 = stack[i];
+              if (hasMatchingRecursionIdentity(t2, identity2)) {
+                if (t2.id >= lastTypeId) {
                   count++;
                   if (count >= maxDepth) {
                     return true;
                   }
                 }
-                lastTypeId = t.id;
+                lastTypeId = t2.id;
               }
             }
           }
@@ -92050,7 +92050,7 @@ ${lanes.join("\n")}
         }
         function getMappedTargetWithSymbol(type2) {
           let target;
-          while ((getObjectFlags(type2) & 96) === 96 && (target = getModifiersTypeFromMappedType(type2)) && (target.symbol || target.flags & 268435456 && some(target.types, (t) => !!t.symbol))) {
+          while ((getObjectFlags(type2) & 96) === 96 && (target = getModifiersTypeFromMappedType(type2)) && (target.symbol || target.flags & 268435456 && some(target.types, (t2) => !!t2.symbol))) {
             type2 = target;
           }
           return type2;
@@ -92060,7 +92060,7 @@ ${lanes.join("\n")}
             type2 = getMappedTargetWithSymbol(type2);
           }
           if (type2.flags & 268435456) {
-            return some(type2.types, (t) => hasMatchingRecursionIdentity(t, identity2));
+            return some(type2.types, (t2) => hasMatchingRecursionIdentity(t2, identity2));
           }
           return getRecursionIdentity(type2) === identity2;
         }
@@ -92145,8 +92145,8 @@ ${lanes.join("\n")}
             const mapper = createTypeMapper(source.typeParameters, target.typeParameters);
             for (let i = 0; i < target.typeParameters.length; i++) {
               const s = source.typeParameters[i];
-              const t = target.typeParameters[i];
-              if (!(s === t || compareTypes2(instantiateType(getConstraintFromTypeParameter(s), mapper) || unknownType, getConstraintFromTypeParameter(t) || unknownType) && compareTypes2(instantiateType(getDefaultFromTypeParameter(s), mapper) || unknownType, getDefaultFromTypeParameter(t) || unknownType))) {
+              const t2 = target.typeParameters[i];
+              if (!(s === t2 || compareTypes2(instantiateType(getConstraintFromTypeParameter(s), mapper) || unknownType, getConstraintFromTypeParameter(t2) || unknownType) && compareTypes2(instantiateType(getDefaultFromTypeParameter(s), mapper) || unknownType, getDefaultFromTypeParameter(t2) || unknownType))) {
                 return 0;
               }
             }
@@ -92174,8 +92174,8 @@ ${lanes.join("\n")}
           const targetLen = getParameterCount(target);
           for (let i = 0; i < targetLen; i++) {
             const s = getTypeAtPosition(source, i);
-            const t = getTypeAtPosition(target, i);
-            const related = compareTypes2(t, s);
+            const t2 = getTypeAtPosition(target, i);
+            const related = compareTypes2(t2, s);
             if (!related) {
               return 0;
             }
@@ -92193,11 +92193,11 @@ ${lanes.join("\n")}
         }
         function literalTypesWithSameBaseType(types2) {
           let commonBaseType;
-          for (const t of types2) {
-            if (!(t.flags & 262144)) {
-              const baseType = getBaseTypeOfLiteralType(t);
+          for (const t2 of types2) {
+            if (!(t2.flags & 262144)) {
+              const baseType = getBaseTypeOfLiteralType(t2);
               commonBaseType ?? (commonBaseType = baseType);
-              if (baseType === t || baseType !== commonBaseType) {
+              if (baseType === t2 || baseType !== commonBaseType) {
                 return false;
               }
             }
@@ -92205,13 +92205,13 @@ ${lanes.join("\n")}
           return true;
         }
         function getCombinedTypeFlags(types2) {
-          return reduceLeft(types2, (flags, t) => flags | (t.flags & 134217728 ? getCombinedTypeFlags(t.types) : t.flags), 0);
+          return reduceLeft(types2, (flags, t2) => flags | (t2.flags & 134217728 ? getCombinedTypeFlags(t2.types) : t2.flags), 0);
         }
         function getCommonSupertype(types2) {
           if (types2.length === 1) {
             return types2[0];
           }
-          const primaryTypes = strictNullChecks ? sameMap(types2, (t) => filterType(t, (u) => !(u.flags & 12))) : types2;
+          const primaryTypes = strictNullChecks ? sameMap(types2, (t2) => filterType(t2, (u) => !(u.flags & 12))) : types2;
           const superTypeOrUnion = literalTypesWithSameBaseType(primaryTypes) ? getUnionType(primaryTypes) : getSingleCommonSupertype(primaryTypes);
           return primaryTypes === types2 ? superTypeOrUnion : getNullableType(
             superTypeOrUnion,
@@ -92220,11 +92220,11 @@ ${lanes.join("\n")}
           );
         }
         function getSingleCommonSupertype(types2) {
-          const candidate = reduceLeft(types2, (s, t) => isTypeStrictSubtypeOf(s, t) ? t : s);
-          return every(types2, (t) => t === candidate || isTypeStrictSubtypeOf(t, candidate)) ? candidate : reduceLeft(types2, (s, t) => isTypeSubtypeOf(s, t) ? t : s);
+          const candidate = reduceLeft(types2, (s, t2) => isTypeStrictSubtypeOf(s, t2) ? t2 : s);
+          return every(types2, (t2) => t2 === candidate || isTypeStrictSubtypeOf(t2, candidate)) ? candidate : reduceLeft(types2, (s, t2) => isTypeSubtypeOf(s, t2) ? t2 : s);
         }
         function getCommonSubtype(types2) {
-          return reduceLeft(types2, (s, t) => isTypeSubtypeOf(t, s) ? t : s);
+          return reduceLeft(types2, (s, t2) => isTypeSubtypeOf(t2, s) ? t2 : s);
         }
         function isArrayType(type2) {
           return !!(getObjectFlags(type2) & 4) && (type2.target === globalArrayType || type2.target === globalReadonlyArrayType);
@@ -92285,7 +92285,7 @@ ${lanes.join("\n")}
         }
         function isTupleLikeType(type2) {
           let lengthType;
-          return isTupleType(type2) || !!getPropertyOfType(type2, "0") || isArrayLikeType(type2) && !!(lengthType = getTypeOfPropertyOfType(type2, "length")) && everyType(lengthType, (t) => !!(t.flags & 2048));
+          return isTupleType(type2) || !!getPropertyOfType(type2, "0") || isArrayLikeType(type2) && !!(lengthType = getTypeOfPropertyOfType(type2, "length")) && everyType(lengthType, (t2) => !!(t2.flags & 2048));
         }
         function isArrayOrTupleLikeType(type2) {
           return isArrayLikeType(type2) || isTupleLikeType(type2);
@@ -92307,8 +92307,8 @@ ${lanes.join("\n")}
           return !!(type2.flags & 97292);
         }
         function isUnitLikeType(type2) {
-          const t = getBaseConstraintOrType(type2);
-          return t.flags & 268435456 ? some(t.types, isUnitType) : isUnitType(t);
+          const t2 = getBaseConstraintOrType(type2);
+          return t2.flags & 268435456 ? some(t2.types, isUnitType) : isUnitType(t2);
         }
         function extractUnitType(type2) {
           return type2.flags & 268435456 ? find(type2.types, isUnitType) || type2 : type2;
@@ -92365,8 +92365,8 @@ ${lanes.join("\n")}
           return getElementTypeOfSliceOfTupleType(type2, type2.target.fixedLength);
         }
         function getTupleElementTypeOutOfStartCount(type2, index, undefinedOrMissingType2) {
-          return mapType(type2, (t) => {
-            const tupleType = t;
+          return mapType(type2, (t2) => {
+            const tupleType = t2;
             const restType = getRestTypeOfTupleType(tupleType);
             if (!restType) {
               return undefinedType;
@@ -92387,8 +92387,8 @@ ${lanes.join("\n")}
             const typeArguments = getTypeArguments(type2);
             const elementTypes = [];
             for (let i = index; i < length2; i++) {
-              const t = typeArguments[i];
-              elementTypes.push(type2.target.elementFlags[i] & 8 ? getIndexedAccessType(t, numberType) : t);
+              const t2 = typeArguments[i];
+              elementTypes.push(type2.target.elementFlags[i] & 8 ? getIndexedAccessType(t2, numberType) : t2);
             }
             return writing ? getIntersectionType(elementTypes) : getUnionType(
               elementTypes,
@@ -92405,8 +92405,8 @@ ${lanes.join("\n")}
           return value.base10Value === "0";
         }
         function removeDefinitelyFalsyTypes(type2) {
-          return filterType(type2, (t) => hasTypeFacts(
-            t,
+          return filterType(type2, (t2) => hasTypeFacts(
+            t2,
             4194304
             /* Truthy */
           ));
@@ -92531,8 +92531,8 @@ ${lanes.join("\n")}
               if (isObjectLiteralType2(type2)) {
                 const prop = getPropertyOfObjectType(type2, context.propertyName);
                 if (prop) {
-                  forEachType(getTypeOfSymbol(prop), (t) => {
-                    siblings.push(t);
+                  forEachType(getTypeOfSymbol(prop), (t2) => {
+                    siblings.push(t2);
                   });
                 }
               }
@@ -92544,9 +92544,9 @@ ${lanes.join("\n")}
         function getPropertiesOfContext(context) {
           if (!context.resolvedProperties) {
             const names = /* @__PURE__ */ new Map();
-            for (const t of getSiblingsOfContext(context)) {
-              if (isObjectLiteralType2(t) && !(getObjectFlags(t) & 2097152)) {
-                for (const prop of getPropertiesOfType(t)) {
+            for (const t2 of getSiblingsOfContext(context)) {
+              if (isObjectLiteralType2(t2) && !(getObjectFlags(t2) & 2097152)) {
+                for (const prop of getPropertiesOfType(t2)) {
                   names.set(prop.escapedName, prop);
                 }
               }
@@ -92620,7 +92620,7 @@ ${lanes.join("\n")}
                 void 0,
                 type2.types
               );
-              const widenedTypes = sameMap(type2.types, (t) => t.flags & 12 ? t : getWidenedTypeWithContext(t, unionContext));
+              const widenedTypes = sameMap(type2.types, (t2) => t2.flags & 12 ? t2 : getWidenedTypeWithContext(t2, unionContext));
               result = getUnionType(
                 widenedTypes,
                 some(widenedTypes, isEmptyObjectType) ? 2 : 1
@@ -92646,26 +92646,26 @@ ${lanes.join("\n")}
               if (some(type2.types, isEmptyObjectType)) {
                 errorReported = true;
               } else {
-                for (const t of type2.types) {
-                  errorReported || (errorReported = reportWideningErrorsInType(t));
+                for (const t2 of type2.types) {
+                  errorReported || (errorReported = reportWideningErrorsInType(t2));
                 }
               }
             } else if (isArrayOrTupleType(type2)) {
-              for (const t of getTypeArguments(type2)) {
-                errorReported || (errorReported = reportWideningErrorsInType(t));
+              for (const t2 of getTypeArguments(type2)) {
+                errorReported || (errorReported = reportWideningErrorsInType(t2));
               }
             } else if (isObjectLiteralType2(type2)) {
               for (const p of getPropertiesOfObjectType(type2)) {
-                const t = getTypeOfSymbol(p);
-                if (getObjectFlags(t) & 65536) {
-                  errorReported = reportWideningErrorsInType(t);
+                const t2 = getTypeOfSymbol(p);
+                if (getObjectFlags(t2) & 65536) {
+                  errorReported = reportWideningErrorsInType(t2);
                   if (!errorReported) {
                     const valueDeclaration = (_a3 = p.declarations) == null ? void 0 : _a3.find((d) => {
                       var _a22;
                       return ((_a22 = d.symbol.valueDeclaration) == null ? void 0 : _a22.parent) === type2.symbol.valueDeclaration;
                     });
                     if (valueDeclaration) {
-                      error210(valueDeclaration, Diagnostics.Object_literal_s_property_0_implicitly_has_an_1_type, symbolToString(p), typeToString(getWidenedType(t)));
+                      error210(valueDeclaration, Diagnostics.Object_literal_s_property_0_implicitly_has_an_1_type, symbolToString(p), typeToString(getWidenedType(t2)));
                       errorReported = true;
                     }
                   }
@@ -92948,7 +92948,7 @@ ${lanes.join("\n")}
           return false;
         }
         function isTypeParameterAtTopLevel(type2, tp, depth = 0) {
-          return !!(type2 === tp || type2.flags & 402653184 && some(type2.types, (t) => isTypeParameterAtTopLevel(t, tp, depth)) || depth < 3 && type2.flags & 67108864 && (isTypeParameterAtTopLevel(getTrueTypeFromConditionalType(type2), tp, depth + 1) || isTypeParameterAtTopLevel(getFalseTypeFromConditionalType(type2), tp, depth + 1)));
+          return !!(type2 === tp || type2.flags & 402653184 && some(type2.types, (t2) => isTypeParameterAtTopLevel(t2, tp, depth)) || depth < 3 && type2.flags & 67108864 && (isTypeParameterAtTopLevel(getTrueTypeFromConditionalType(type2), tp, depth + 1) || isTypeParameterAtTopLevel(getFalseTypeFromConditionalType(type2), tp, depth + 1)));
         }
         function isTypeParameterAtTopLevelInReturnType(signature, typeParameter) {
           const typePredicate = getTypePredicateOfSignature(signature);
@@ -92956,16 +92956,16 @@ ${lanes.join("\n")}
         }
         function createEmptyObjectTypeFromStringLiteral(type2) {
           const members = createSymbolTable();
-          forEachType(type2, (t) => {
-            if (!(t.flags & 1024)) {
+          forEachType(type2, (t2) => {
+            if (!(t2.flags & 1024)) {
               return;
             }
-            const name = escapeLeadingUnderscores(t.value);
+            const name = escapeLeadingUnderscores(t2.value);
             const literalProp = createSymbol(4, name);
             literalProp.links.type = anyType;
-            if (t.symbol) {
-              literalProp.declarations = t.symbol.declarations;
-              literalProp.valueDeclaration = t.symbol.valueDeclaration;
+            if (t2.symbol) {
+              literalProp.declarations = t2.symbol.declarations;
+              literalProp.valueDeclaration = t2.symbol.valueDeclaration;
             }
             members.set(name, literalProp);
           });
@@ -93008,8 +93008,8 @@ ${lanes.join("\n")}
             return createArrayType(elementType, isReadonlyArrayType(source));
           }
           if (isTupleType(source)) {
-            const elementTypes = map3(getElementTypes(source), (t) => inferReverseMappedType(t, target, constraint));
-            if (!every(elementTypes, (t) => !!t)) {
+            const elementTypes = map3(getElementTypes(source), (t2) => inferReverseMappedType(t2, target, constraint));
+            if (!every(elementTypes, (t2) => !!t2)) {
               return void 0;
             }
             const elementFlags = getMappedTypeModifiers(target) & 4 ? sameMap(source.target.elementFlags, (f) => f & 2 ? 1 : f) : source.target.elementFlags;
@@ -93154,7 +93154,7 @@ ${lanes.join("\n")}
         }
         function isValidTypeForTemplateLiteralPlaceholder(source, target) {
           if (target.flags & 268435456) {
-            return every(target.types, (t) => t === emptyTypeLiteralType || isValidTypeForTemplateLiteralPlaceholder(source, t));
+            return every(target.types, (t2) => t2 === emptyTypeLiteralType || isValidTypeForTemplateLiteralPlaceholder(source, t2));
           }
           if (target.flags & 32 || isTypeAssignableTo(source, target)) {
             return true;
@@ -93270,8 +93270,8 @@ ${lanes.join("\n")}
               return;
             }
             if (source === target && source.flags & 402653184) {
-              for (const t of source.types) {
-                inferFromTypes(t, t);
+              for (const t2 of source.types) {
+                inferFromTypes(t2, t2);
               }
               return;
             }
@@ -93483,18 +93483,18 @@ ${lanes.join("\n")}
           function inferFromMatchingTypes(sources, targets, matches) {
             let matchedSources;
             let matchedTargets;
-            for (const t of targets) {
+            for (const t2 of targets) {
               for (const s of sources) {
-                if (matches(s, t)) {
-                  inferFromTypes(s, t);
+                if (matches(s, t2)) {
+                  inferFromTypes(s, t2);
                   matchedSources = appendIfUnique(matchedSources, s);
-                  matchedTargets = appendIfUnique(matchedTargets, t);
+                  matchedTargets = appendIfUnique(matchedTargets, t2);
                 }
               }
             }
             return [
-              matchedSources ? filter(sources, (t) => !contains(matchedSources, t)) : sources,
-              matchedTargets ? filter(targets, (t) => !contains(matchedTargets, t)) : targets
+              matchedSources ? filter(sources, (t2) => !contains(matchedSources, t2)) : sources,
+              matchedTargets ? filter(targets, (t2) => !contains(matchedTargets, t2)) : targets
             ];
           }
           function inferFromTypeArguments(sourceTypes, targetTypes, variances) {
@@ -93532,11 +93532,11 @@ ${lanes.join("\n")}
           function getSingleTypeVariableFromIntersectionTypes(types2) {
             let typeVariable;
             for (const type2 of types2) {
-              const t = type2.flags & 268435456 && find(type2.types, (t2) => !!getInferenceInfoForType(t2));
-              if (!t || typeVariable && t !== typeVariable) {
+              const t2 = type2.flags & 268435456 && find(type2.types, (t22) => !!getInferenceInfoForType(t22));
+              if (!t2 || typeVariable && t2 !== typeVariable) {
                 return void 0;
               }
-              typeVariable = t;
+              typeVariable = t2;
             }
             return typeVariable;
           }
@@ -93547,15 +93547,15 @@ ${lanes.join("\n")}
               const sources = source.flags & 134217728 ? source.types : [source];
               const matched = new Array(sources.length);
               let inferenceCircularity = false;
-              for (const t of targets) {
-                if (getInferenceInfoForType(t)) {
-                  nakedTypeVariable = t;
+              for (const t2 of targets) {
+                if (getInferenceInfoForType(t2)) {
+                  nakedTypeVariable = t2;
                   typeVariableCount++;
                 } else {
                   for (let i = 0; i < sources.length; i++) {
                     const saveInferencePriority = inferencePriority;
                     inferencePriority = 2048;
-                    inferFromTypes(sources[i], t);
+                    inferFromTypes(sources[i], t2);
                     if (inferencePriority === priority) matched[i] = true;
                     inferenceCircularity = inferenceCircularity || inferencePriority === -1;
                     inferencePriority = Math.min(inferencePriority, saveInferencePriority);
@@ -93582,20 +93582,20 @@ ${lanes.join("\n")}
                 }
               }
             } else {
-              for (const t of targets) {
-                if (getInferenceInfoForType(t)) {
+              for (const t2 of targets) {
+                if (getInferenceInfoForType(t2)) {
                   typeVariableCount++;
                 } else {
-                  inferFromTypes(source, t);
+                  inferFromTypes(source, t2);
                 }
               }
             }
             if (targetFlags & 268435456 ? typeVariableCount === 1 : typeVariableCount > 0) {
-              for (const t of targets) {
-                if (getInferenceInfoForType(t)) {
+              for (const t2 of targets) {
+                if (getInferenceInfoForType(t2)) {
                   inferWithPriority(
                     source,
-                    t,
+                    t2,
                     1
                     /* NakedTypeVariable */
                   );
@@ -93672,7 +93672,7 @@ ${lanes.join("\n")}
                   const constraint = inferenceContext ? getBaseConstraintOfType(inferenceContext.typeParameter) : void 0;
                   if (constraint && !isTypeAny(constraint)) {
                     const constraintTypes = constraint.flags & 134217728 ? constraint.types : [constraint];
-                    let allTypeFlags = reduceLeft(constraintTypes, (flags, t) => flags | t.flags, 0);
+                    let allTypeFlags = reduceLeft(constraintTypes, (flags, t2) => flags | t2.flags, 0);
                     if (!(allTypeFlags & 32)) {
                       const str2 = source2.value;
                       if (allTypeFlags & 67648 && !isValidNumberString(
@@ -93898,11 +93898,11 @@ ${lanes.join("\n")}
             }
           }
         }
-        function isTypeOrBaseIdenticalTo(s, t) {
-          return t === missingType ? s === t : isTypeIdenticalTo(s, t) || !!(t.flags & 32 && s.flags & 1024 || t.flags & 64 && s.flags & 2048);
+        function isTypeOrBaseIdenticalTo(s, t2) {
+          return t2 === missingType ? s === t2 : isTypeIdenticalTo(s, t2) || !!(t2.flags & 32 && s.flags & 1024 || t2.flags & 64 && s.flags & 2048);
         }
-        function isTypeCloselyMatchedBy(s, t) {
-          return !!(s.flags & 1048576 && t.flags & 1048576 && s.symbol && s.symbol === t.symbol || s.aliasSymbol && s.aliasTypeArguments && s.aliasSymbol === t.aliasSymbol);
+        function isTypeCloselyMatchedBy(s, t2) {
+          return !!(s.flags & 1048576 && t2.flags & 1048576 && s.symbol && s.symbol === t2.symbol || s.aliasSymbol && s.aliasTypeArguments && s.aliasSymbol === t2.aliasSymbol);
         }
         function hasPrimitiveConstraint(type2) {
           const constraint = getConstraintOfTypeParameter(type2);
@@ -93927,7 +93927,7 @@ ${lanes.join("\n")}
                 2
                 /* Subtype */
               );
-              return concatenate(filter(candidates, (t) => !isObjectOrArrayLiteralType(t)), [literalsType]);
+              return concatenate(filter(candidates, (t2) => !isObjectOrArrayLiteralType(t2)), [literalsType]);
             }
           }
           return candidates;
@@ -93956,7 +93956,7 @@ ${lanes.join("\n")}
               const inferredCovariantType = inference.candidates ? getCovariantInference(inference, context.signature) : void 0;
               const inferredContravariantType = inference.contraCandidates ? getContravariantInference(inference) : void 0;
               if (inferredCovariantType || inferredContravariantType) {
-                const preferCovariantType = inferredCovariantType && (!inferredContravariantType || !(inferredCovariantType.flags & (262144 | 1)) && some(inference.contraCandidates, (t) => isTypeAssignableTo(inferredCovariantType, t)) && every(context.inferences, (other) => other !== inference && getConstraintOfTypeParameter(other.typeParameter) !== inference.typeParameter || every(other.candidates, (t) => isTypeAssignableTo(t, inferredCovariantType))));
+                const preferCovariantType = inferredCovariantType && (!inferredContravariantType || !(inferredCovariantType.flags & (262144 | 1)) && some(inference.contraCandidates, (t2) => isTypeAssignableTo(inferredCovariantType, t2)) && every(context.inferences, (other) => other !== inference && getConstraintOfTypeParameter(other.typeParameter) !== inference.typeParameter || every(other.candidates, (t2) => isTypeAssignableTo(t2, inferredCovariantType))));
                 inferredType = preferCovariantType ? inferredCovariantType : inferredContravariantType;
                 fallbackType = preferCovariantType ? inferredContravariantType : inferredCovariantType;
               } else if (context.flags & 1) {
@@ -93977,7 +93977,7 @@ ${lanes.join("\n")}
               if (inferredType) {
                 const constraintWithThis = getTypeWithThisArgument(instantiatedConstraint, inferredType);
                 if (!context.compareTypes(inferredType, constraintWithThis)) {
-                  const filteredByConstraint = inference.priority === 128 ? filterType(inferredType, (t) => !!context.compareTypes(t, constraintWithThis)) : neverType;
+                  const filteredByConstraint = inference.priority === 128 ? filterType(inferredType, (t2) => !!context.compareTypes(t2, constraintWithThis)) : neverType;
                   inferredType = !(filteredByConstraint.flags & 262144) ? filteredByConstraint : void 0;
                 }
               }
@@ -94273,8 +94273,8 @@ ${lanes.join("\n")}
                 return void 0;
               }
               let duplicate = false;
-              forEachType(discriminant, (t) => {
-                const id = getTypeId(getRegularTypeOfLiteralType(t));
+              forEachType(discriminant, (t2) => {
+                const id = getTypeId(getRegularTypeOfLiteralType(t2));
                 const existing = map22.get(id);
                 if (!existing) {
                   map22.set(id, type2);
@@ -94290,11 +94290,11 @@ ${lanes.join("\n")}
         }
         function getKeyPropertyName(unionType) {
           const types2 = unionType.types;
-          if (types2.length < 10 || getObjectFlags(unionType) & 32768 || countWhere(types2, (t) => !!(t.flags & (1048576 | 117964800))) < 10) {
+          if (types2.length < 10 || getObjectFlags(unionType) & 32768 || countWhere(types2, (t2) => !!(t2.flags & (1048576 | 117964800))) < 10) {
             return void 0;
           }
           if (unionType.keyPropertyName === void 0) {
-            const keyPropertyName = forEach(types2, (t) => t.flags & (1048576 | 117964800) ? forEach(getPropertiesOfType(t), (p) => isUnitType(getTypeOfSymbol(p)) ? p.escapedName : void 0) : void 0);
+            const keyPropertyName = forEach(types2, (t2) => t2.flags & (1048576 | 117964800) ? forEach(getPropertiesOfType(t2), (p) => isUnitType(getTypeOfSymbol(p)) ? p.escapedName : void 0) : void 0);
             const mapByKeyProperty = keyPropertyName && mapTypesByKeyProperty(types2, keyPropertyName);
             unionType.keyPropertyName = mapByKeyProperty ? keyPropertyName : "";
             unionType.constituentMap = mapByKeyProperty;
@@ -94344,8 +94344,8 @@ ${lanes.join("\n")}
           if (!(source.flags & 134217728)) {
             return isTypeAssignableTo(source, target);
           }
-          for (const t of source.types) {
-            if (isTypeAssignableTo(t, target)) {
+          for (const t2 of source.types) {
+            if (isTypeAssignableTo(t2, target)) {
               return true;
             }
           }
@@ -94362,7 +94362,7 @@ ${lanes.join("\n")}
           return getCachedType(key) ?? setCachedType(key, getAssignmentReducedTypeWorker(declaredType, assignedType));
         }
         function getAssignmentReducedTypeWorker(declaredType, assignedType) {
-          const filteredType = filterType(declaredType, (t) => typeMaybeAssignableTo(assignedType, t));
+          const filteredType = filterType(declaredType, (t2) => typeMaybeAssignableTo(assignedType, t2));
           const reducedType = assignedType.flags & 8192 && isFreshLiteralType(assignedType) ? mapType(filteredType, getFreshTypeOfLiteralType) : filteredType;
           return isTypeAssignableTo(assignedType, reducedType) ? reducedType : declaredType;
         }
@@ -94439,7 +94439,7 @@ ${lanes.join("\n")}
           if (flags & 134217728) {
             return reduceLeft(
               type2.types,
-              (facts, t) => facts | getTypeFactsWorker(t, callerOnlyNeeds),
+              (facts, t2) => facts | getTypeFactsWorker(t2, callerOnlyNeeds),
               0
               /* None */
             );
@@ -94457,9 +94457,9 @@ ${lanes.join("\n")}
           );
           let oredFacts = 0;
           let andedFacts = 134217727;
-          for (const t of type2.types) {
-            if (!(ignoreObjects && t.flags & 1048576)) {
-              const f = getTypeFactsWorker(t, callerOnlyNeeds);
+          for (const t2 of type2.types) {
+            if (!(ignoreObjects && t2.flags & 1048576)) {
+              const f = getTypeFactsWorker(t2, callerOnlyNeeds);
               oredFacts |= f;
               andedFacts &= f;
             }
@@ -94467,7 +94467,7 @@ ${lanes.join("\n")}
           return oredFacts & 8256 | andedFacts & 134209471;
         }
         function getTypeWithFacts(type2, include) {
-          return filterType(type2, (t) => hasTypeFacts(t, include));
+          return filterType(type2, (t2) => hasTypeFacts(t2, include));
         }
         function getAdjustedTypeWithFacts(type2, facts) {
           const reduced = recombineUnknownType(getTypeWithFacts(strictNullChecks && type2.flags & 2 ? unknownUnionType : type2, facts));
@@ -94479,11 +94479,11 @@ ${lanes.join("\n")}
                 return removeNullableByIntersection(reduced, 131072, 65536, 16777216, undefinedType);
               case 2097152:
               case 4194304:
-                return mapType(reduced, (t) => hasTypeFacts(
-                  t,
+                return mapType(reduced, (t2) => hasTypeFacts(
+                  t2,
                   262144
                   /* EQUndefinedOrNull */
-                ) ? getGlobalNonNullableTypeInstantiation(t) : t);
+                ) ? getGlobalNonNullableTypeInstantiation(t2) : t2);
             }
           }
           return reduced;
@@ -94498,7 +94498,7 @@ ${lanes.join("\n")}
             return type2;
           }
           const emptyAndOtherUnion = getUnionType([emptyObjectType, otherType]);
-          return mapType(type2, (t) => hasTypeFacts(t, targetFacts) ? getIntersectionType([t, !(facts & otherIncludesFacts) && hasTypeFacts(t, otherFacts) ? emptyAndOtherUnion : emptyObjectType]) : t);
+          return mapType(type2, (t2) => hasTypeFacts(t2, targetFacts) ? getIntersectionType([t2, !(facts & otherIncludesFacts) && hasTypeFacts(t2, otherFacts) ? emptyAndOtherUnion : emptyObjectType]) : t2);
         }
         function recombineUnknownType(type2) {
           return type2 === unknownUnionType ? unknownType : type2;
@@ -94653,15 +94653,15 @@ ${lanes.join("\n")}
           return witnesses;
         }
         function eachTypeContainedIn(source, types2) {
-          return source.flags & 134217728 ? !forEach(source.types, (t) => !contains(types2, t)) : contains(types2, source);
+          return source.flags & 134217728 ? !forEach(source.types, (t2) => !contains(types2, t2)) : contains(types2, source);
         }
         function isTypeSubsetOf(source, target) {
           return !!(source === target || source.flags & 262144 || target.flags & 134217728 && isTypeSubsetOfUnion(source, target));
         }
         function isTypeSubsetOfUnion(source, target) {
           if (source.flags & 134217728) {
-            for (const t of source.types) {
-              if (!containsType(target.types, t)) {
+            for (const t2 of source.types) {
+              if (!containsType(target.types, t2)) {
                 return false;
               }
             }
@@ -94695,7 +94695,7 @@ ${lanes.join("\n")}
             let newOrigin;
             if (origin && origin.flags & 134217728) {
               const originTypes = origin.types;
-              const originFiltered = filter(originTypes, (t) => !!(t.flags & 134217728) || f(t));
+              const originFiltered = filter(originTypes, (t2) => !!(t2.flags & 134217728) || f(t2));
               if (originTypes.length - originFiltered.length === types2.length - filtered2.length) {
                 if (originFiltered.length === 1) {
                   return originFiltered[0];
@@ -94716,7 +94716,7 @@ ${lanes.join("\n")}
           return type2.flags & 262144 || f(type2) ? type2 : neverType;
         }
         function removeType(type2, targetType) {
-          return filterType(type2, (t) => t !== targetType);
+          return filterType(type2, (t2) => t2 !== targetType);
         }
         function countTypes(type2) {
           return type2.flags & 134217728 ? type2.types.length : 1;
@@ -94732,9 +94732,9 @@ ${lanes.join("\n")}
           const types2 = origin && origin.flags & 134217728 ? origin.types : type2.types;
           let mappedTypes;
           let changed = false;
-          for (const t of types2) {
-            const mapped = t.flags & 134217728 ? mapType(t, mapper, noReductions) : mapper(t);
-            changed || (changed = t !== mapped);
+          for (const t2 of types2) {
+            const mapped = t2.flags & 134217728 ? mapType(t2, mapper, noReductions) : mapper(t2);
+            changed || (changed = t2 !== mapped);
             if (mapped) {
               if (!mappedTypes) {
                 mappedTypes = [mapped];
@@ -94753,7 +94753,7 @@ ${lanes.join("\n")}
           return type2.flags & 134217728 && aliasSymbol ? getUnionType(map3(type2.types, mapper), 1, aliasSymbol, aliasTypeArguments) : mapType(type2, mapper);
         }
         function extractTypesOfKind(type2, kind) {
-          return filterType(type2, (t) => (t.flags & kind) !== 0);
+          return filterType(type2, (t2) => (t2.flags & kind) !== 0);
         }
         function replacePrimitivesWithLiterals(typeWithPrimitives, typeWithLiterals) {
           if (maybeTypeOfKind(
@@ -94765,11 +94765,11 @@ ${lanes.join("\n")}
             1024 | 4194304 | 8388608 | 2048 | 4096
             /* BigIntLiteral */
           )) {
-            return mapType(typeWithPrimitives, (t) => t.flags & 32 ? extractTypesOfKind(
+            return mapType(typeWithPrimitives, (t2) => t2.flags & 32 ? extractTypesOfKind(
               typeWithLiterals,
               32 | 1024 | 4194304 | 8388608
               /* StringMapping */
-            ) : isPatternLiteralType(t) && !maybeTypeOfKind(
+            ) : isPatternLiteralType(t2) && !maybeTypeOfKind(
               typeWithLiterals,
               32 | 4194304 | 8388608
               /* StringMapping */
@@ -94777,15 +94777,15 @@ ${lanes.join("\n")}
               typeWithLiterals,
               1024
               /* StringLiteral */
-            ) : t.flags & 64 ? extractTypesOfKind(
+            ) : t2.flags & 64 ? extractTypesOfKind(
               typeWithLiterals,
               64 | 2048
               /* NumberLiteral */
-            ) : t.flags & 128 ? extractTypesOfKind(
+            ) : t2.flags & 128 ? extractTypesOfKind(
               typeWithLiterals,
               128 | 4096
               /* BigIntLiteral */
-            ) : t);
+            ) : t2);
           }
           return typeWithPrimitives;
         }
@@ -94833,9 +94833,9 @@ ${lanes.join("\n")}
         }
         function isEvolvingArrayTypeList(types2) {
           let hasEvolvingArrayType = false;
-          for (const t of types2) {
-            if (!(t.flags & 262144)) {
-              if (!(getObjectFlags(t) & 256)) {
+          for (const t2 of types2) {
+            if (!(t2.flags & 262144)) {
+              if (!(getObjectFlags(t2) & 256)) {
                 return false;
               }
               hasEvolvingArrayType = true;
@@ -95263,11 +95263,11 @@ ${lanes.join("\n")}
                 const assignedType = getWidenedLiteralType(getInitialOrAssignedType(flow));
                 return isTypeAssignableTo(assignedType, declaredType) ? assignedType : anyArrayType;
               }
-              const t = isInCompoundLikeAssignment(node) ? getBaseTypeOfLiteralType(declaredType) : declaredType;
-              if (t.flags & 134217728) {
-                return getAssignmentReducedType(t, getInitialOrAssignedType(flow));
+              const t2 = isInCompoundLikeAssignment(node) ? getBaseTypeOfLiteralType(declaredType) : declaredType;
+              if (t2.flags & 134217728) {
+                return getAssignmentReducedType(t2, getInitialOrAssignedType(flow));
               }
-              return t;
+              return t2;
             }
             if (containsMatchingReference(reference, node)) {
               if (!isReachableFlowNode(flow)) {
@@ -95389,9 +95389,9 @@ ${lanes.join("\n")}
             } else {
               if (strictNullChecks) {
                 if (optionalChainContainsReference(expr, reference)) {
-                  type2 = narrowTypeBySwitchOptionalChainContainment(type2, flow.node, (t) => !(t.flags & (4 | 262144)));
+                  type2 = narrowTypeBySwitchOptionalChainContainment(type2, flow.node, (t2) => !(t2.flags & (4 | 262144)));
                 } else if (expr.kind === 222 && optionalChainContainsReference(expr.expression, reference)) {
-                  type2 = narrowTypeBySwitchOptionalChainContainment(type2, flow.node, (t) => !(t.flags & 262144 || t.flags & 1024 && t.value === "undefined"));
+                  type2 = narrowTypeBySwitchOptionalChainContainment(type2, flow.node, (t2) => !(t2.flags & 262144 || t2.flags & 1024 && t2.value === "undefined"));
                 }
               }
               const access = getDiscriminantPropertyAccess(expr, type2);
@@ -95596,8 +95596,8 @@ ${lanes.join("\n")}
             }
             propType = removeNullable && optionalChain ? getOptionalType(propType) : propType;
             const narrowedPropType = narrowType2(propType);
-            return filterType(type2, (t) => {
-              const discriminantType = getTypeOfPropertyOrIndexSignatureOfType(t, propName) || unknownType;
+            return filterType(type2, (t2) => {
+              const discriminantType = getTypeOfPropertyOrIndexSignatureOfType(t2, propName) || unknownType;
               return !(discriminantType.flags & 262144) && !(narrowedPropType.flags & 262144) && areTypesComparable(narrowedPropType, discriminantType);
             });
           }
@@ -95611,17 +95611,17 @@ ${lanes.join("\n")}
                 }
               }
             }
-            return narrowTypeByDiscriminant(type2, access, (t) => narrowTypeByEquality(t, operator, value, assumeTrue));
+            return narrowTypeByDiscriminant(type2, access, (t2) => narrowTypeByEquality(t2, operator, value, assumeTrue));
           }
           function narrowTypeBySwitchOnDiscriminantProperty(type2, access, data) {
             if (data.clauseStart < data.clauseEnd && type2.flags & 134217728 && getKeyPropertyName(type2) === getAccessedPropertyName(access)) {
               const clauseTypes = getSwitchClauseTypes(data.switchStatement).slice(data.clauseStart, data.clauseEnd);
-              const candidate = getUnionType(map3(clauseTypes, (t) => getConstituentTypeForKeyType(type2, t) || unknownType));
+              const candidate = getUnionType(map3(clauseTypes, (t2) => getConstituentTypeForKeyType(type2, t2) || unknownType));
               if (candidate !== unknownType) {
                 return candidate;
               }
             }
-            return narrowTypeByDiscriminant(type2, access, (t) => narrowTypeBySwitchOnDiscriminant(t, data));
+            return narrowTypeByDiscriminant(type2, access, (t2) => narrowTypeBySwitchOnDiscriminant(t2, data));
           }
           function narrowTypeByTruthiness(type2, expr, assumeTrue) {
             if (isMatchingReference(reference, expr)) {
@@ -95640,8 +95640,8 @@ ${lanes.join("\n")}
             }
             const access = getDiscriminantPropertyAccess(expr, type2);
             if (access) {
-              return narrowTypeByDiscriminant(type2, access, (t) => getTypeWithFacts(
-                t,
+              return narrowTypeByDiscriminant(type2, access, (t2) => getTypeWithFacts(
+                t2,
                 assumeTrue ? 4194304 : 8388608
                 /* Falsy */
               ));
@@ -95654,14 +95654,14 @@ ${lanes.join("\n")}
           }
           function narrowTypeByInKeyword(type2, nameType, assumeTrue) {
             const name = getPropertyNameFromType(nameType);
-            const isKnownProperty2 = someType(type2, (t) => isTypePresencePossible(
-              t,
+            const isKnownProperty2 = someType(type2, (t2) => isTypePresencePossible(
+              t2,
               name,
               /*assumeTrue*/
               true
             ));
             if (isKnownProperty2) {
-              return filterType(type2, (t) => isTypePresencePossible(t, name, assumeTrue));
+              return filterType(type2, (t2) => isTypePresencePossible(t2, name, assumeTrue));
             }
             if (assumeTrue) {
               const recordSymbol = getGlobalRecordSymbol();
@@ -95829,7 +95829,7 @@ ${lanes.join("\n")}
             const equalsOperator = operator === 35 || operator === 37;
             const nullableFlags = operator === 35 || operator === 36 ? 12 : 4;
             const valueType = getTypeOfExpression(value);
-            const removeNullable = equalsOperator !== assumeTrue && everyType(valueType, (t) => !!(t.flags & nullableFlags)) || equalsOperator === assumeTrue && everyType(valueType, (t) => !(t.flags & (3 | nullableFlags)));
+            const removeNullable = equalsOperator !== assumeTrue && everyType(valueType, (t2) => !!(t2.flags & nullableFlags)) || equalsOperator === assumeTrue && everyType(valueType, (t2) => !(t2.flags & (3 | nullableFlags)));
             return removeNullable ? getAdjustedTypeWithFacts(
               type2,
               2097152
@@ -95861,11 +95861,11 @@ ${lanes.join("\n")}
                   return nonPrimitiveType;
                 }
               }
-              const filteredType = filterType(type2, (t) => areTypesComparable(t, valueType) || doubleEquals && isCoercibleUnderDoubleEquals(t, valueType));
+              const filteredType = filterType(type2, (t2) => areTypesComparable(t2, valueType) || doubleEquals && isCoercibleUnderDoubleEquals(t2, valueType));
               return replacePrimitivesWithLiterals(filteredType, valueType);
             }
             if (isUnitType(valueType)) {
-              return filterType(type2, (t) => !(isUnitLikeType(t) && areTypesComparable(t, valueType)));
+              return filterType(type2, (t2) => !(isUnitLikeType(t2) && areTypesComparable(t2, valueType)));
             }
             return type2;
           }
@@ -95884,7 +95884,7 @@ ${lanes.join("\n")}
               }
               const propertyAccess = getDiscriminantPropertyAccess(target, type2);
               if (propertyAccess) {
-                return narrowTypeByDiscriminant(type2, propertyAccess, (t) => narrowTypeByLiteralExpression(t, literal2, assumeTrue));
+                return narrowTypeByDiscriminant(type2, propertyAccess, (t2) => narrowTypeByLiteralExpression(t2, literal2, assumeTrue));
               }
               return type2;
             }
@@ -95915,12 +95915,12 @@ ${lanes.join("\n")}
             if (type2.flags & 2 && !hasDefaultClause) {
               let groundClauseTypes;
               for (let i = 0; i < clauseTypes.length; i += 1) {
-                const t = clauseTypes[i];
-                if (t.flags & (12713980 | 131072)) {
+                const t2 = clauseTypes[i];
+                if (t2.flags & (12713980 | 131072)) {
                   if (groundClauseTypes !== void 0) {
-                    groundClauseTypes.push(t);
+                    groundClauseTypes.push(t2);
                   }
-                } else if (t.flags & 1048576) {
+                } else if (t2.flags & 1048576) {
                   if (groundClauseTypes === void 0) {
                     groundClauseTypes = clauseTypes.slice(0, i);
                   }
@@ -95932,11 +95932,11 @@ ${lanes.join("\n")}
               return getUnionType(groundClauseTypes === void 0 ? clauseTypes : groundClauseTypes);
             }
             const discriminantType = getUnionType(clauseTypes);
-            const caseType = discriminantType.flags & 262144 ? neverType : replacePrimitivesWithLiterals(filterType(type2, (t) => areTypesComparable(discriminantType, t)), discriminantType);
+            const caseType = discriminantType.flags & 262144 ? neverType : replacePrimitivesWithLiterals(filterType(type2, (t2) => areTypesComparable(discriminantType, t2)), discriminantType);
             if (!hasDefaultClause) {
               return caseType;
             }
-            const defaultType = filterType(type2, (t) => !(isUnitLikeType(t) && contains(switchTypes, t.flags & 4 ? undefinedType : getRegularTypeOfLiteralType(extractUnitType(t)), (t1, t2) => isUnitType(t1) && areTypesComparable(t1, t2))));
+            const defaultType = filterType(type2, (t2) => !(isUnitLikeType(t2) && contains(switchTypes, t2.flags & 4 ? undefinedType : getRegularTypeOfLiteralType(extractUnitType(t2)), (t1, t22) => isUnitType(t1) && areTypesComparable(t1, t22))));
             return caseType.flags & 262144 ? defaultType : getUnionType([caseType, defaultType]);
           }
           function narrowTypeByTypeName(type2, typeName) {
@@ -96011,19 +96011,19 @@ ${lanes.join("\n")}
             );
           }
           function narrowTypeByTypeFacts(type2, impliedType, facts) {
-            return mapType(type2, (t) => (
+            return mapType(type2, (t2) => (
               // We first check if a constituent is a subtype of the implied type. If so, we either keep or eliminate
               // the constituent based on its type facts. We use the strict subtype relation because it treats `object`
               // as a subtype of `{}`, and we need the type facts check because function types are subtypes of `object`,
               // but are classified as "function" according to `typeof`.
-              isTypeRelatedTo(t, impliedType, strictSubtypeRelation) ? hasTypeFacts(t, facts) ? t : neverType : (
+              isTypeRelatedTo(t2, impliedType, strictSubtypeRelation) ? hasTypeFacts(t2, facts) ? t2 : neverType : (
                 // We next check if the consituent is a supertype of the implied type. If so, we substitute the implied
                 // type. This handles top types like `unknown` and `{}`, and supertypes like `{ toString(): string }`.
-                isTypeSubtypeOf(impliedType, t) ? impliedType : (
+                isTypeSubtypeOf(impliedType, t2) ? impliedType : (
                   // Neither the constituent nor the implied type is a subtype of the other, however their domains may still
                   // overlap. For example, an unconstrained type parameter and type `string`. If the type facts indicate
                   // possible overlap, we form an intersection. Otherwise, we eliminate the constituent.
-                  hasTypeFacts(t, facts) ? getIntersectionType([t, impliedType]) : neverType
+                  hasTypeFacts(t2, facts) ? getIntersectionType([t2, impliedType]) : neverType
                 )
               )
             ));
@@ -96041,7 +96041,7 @@ ${lanes.join("\n")}
             const hasDefaultClause = clauseStart === clauseEnd || defaultIndex >= clauseStart && defaultIndex < clauseEnd;
             if (hasDefaultClause) {
               const notEqualFacts = getNotEqualFactsFromTypeofSwitch(clauseStart, clauseEnd, witnesses);
-              return filterType(type2, (t) => getTypeFacts(t, notEqualFacts) === notEqualFacts);
+              return filterType(type2, (t2) => getTypeFacts(t2, notEqualFacts) === notEqualFacts);
             }
             const clauseWitnesses = witnesses.slice(clauseStart, clauseEnd);
             return getUnionType(map3(clauseWitnesses, (text) => text ? narrowTypeByTypeName(type2, text) : neverType));
@@ -96109,7 +96109,7 @@ ${lanes.join("\n")}
             if (isTypeAny(type2)) {
               return candidate;
             }
-            return filterType(type2, (t) => isConstructedBy(t, candidate));
+            return filterType(type2, (t2) => isConstructedBy(t2, candidate));
             function isConstructedBy(source, target) {
               if (source.flags & 1048576 && getObjectFlags(source) & 1 || target.flags & 1048576 && getObjectFlags(target) & 1) {
                 return source.symbol === target.symbol;
@@ -96185,7 +96185,7 @@ ${lanes.join("\n")}
                 return neverType;
               }
               if (checkDerived) {
-                return filterType(type2, (t) => !isTypeDerivedFrom(t, candidate));
+                return filterType(type2, (t2) => !isTypeDerivedFrom(t2, candidate));
               }
               type2 = type2.flags & 2 ? unknownUnionType : type2;
               const trueType2 = getNarrowedType(
@@ -96196,7 +96196,7 @@ ${lanes.join("\n")}
                 /*checkDerived*/
                 false
               );
-              return recombineUnknownType(filterType(type2, (t) => !isTypeSubsetOf(t, trueType2)));
+              return recombineUnknownType(filterType(type2, (t2) => !isTypeSubsetOf(t2, trueType2)));
             }
             if (type2.flags & 3) {
               return candidate;
@@ -96211,13 +96211,13 @@ ${lanes.join("\n")}
               const matching = discriminant && getConstituentTypeForKeyType(type2, discriminant);
               const directlyRelated = mapType(
                 matching || type2,
-                checkDerived ? (t) => isTypeDerivedFrom(t, c) ? t : isTypeDerivedFrom(c, t) ? c : neverType : (t) => isTypeStrictSubtypeOf(t, c) ? t : isTypeStrictSubtypeOf(c, t) ? c : isTypeSubtypeOf(t, c) ? t : isTypeSubtypeOf(c, t) ? c : neverType
+                checkDerived ? (t2) => isTypeDerivedFrom(t2, c) ? t2 : isTypeDerivedFrom(c, t2) ? c : neverType : (t2) => isTypeStrictSubtypeOf(t2, c) ? t2 : isTypeStrictSubtypeOf(c, t2) ? c : isTypeSubtypeOf(t2, c) ? t2 : isTypeSubtypeOf(c, t2) ? c : neverType
               );
-              return directlyRelated.flags & 262144 ? mapType(type2, (t) => maybeTypeOfKind(
-                t,
+              return directlyRelated.flags & 262144 ? mapType(type2, (t2) => maybeTypeOfKind(
+                t2,
                 132644864
                 /* Instantiable */
-              ) && isRelated(c, getBaseConstraintOfType(t) || unknownType) ? getIntersectionType([t, c]) : neverType) : directlyRelated;
+              ) && isRelated(c, getBaseConstraintOfType(t2) || unknownType) ? getIntersectionType([t2, c]) : neverType) : directlyRelated;
             });
             return !(narrowedType.flags & 262144) ? narrowedType : isTypeSubtypeOf(candidate, type2) ? candidate : isTypeAssignableTo(type2, candidate) ? type2 : isTypeAssignableTo(candidate, type2) ? candidate : getIntersectionType([type2, candidate]);
           }
@@ -96270,8 +96270,8 @@ ${lanes.join("\n")}
                 }
                 const access = getDiscriminantPropertyAccess(predicateArgument, type2);
                 if (access) {
-                  return narrowTypeByDiscriminant(type2, access, (t) => getNarrowedType(
-                    t,
+                  return narrowTypeByDiscriminant(type2, access, (t2) => getNarrowedType(
+                    t2,
                     predicate.type,
                     assumeTrue,
                     /*checkDerived*/
@@ -96332,8 +96332,8 @@ ${lanes.join("\n")}
             }
             const access = getDiscriminantPropertyAccess(expr, type2);
             if (access) {
-              return narrowTypeByDiscriminant(type2, access, (t) => getTypeWithFacts(
-                t,
+              return narrowTypeByDiscriminant(type2, access, (t2) => getTypeWithFacts(
+                t2,
                 assumePresent ? 2097152 : 262144
                 /* EQUndefinedOrNull */
               ));
@@ -97582,8 +97582,8 @@ ${lanes.join("\n")}
           return getObjectFlags(type2) & 4 && type2.target === globalThisType ? getTypeArguments(type2)[0] : void 0;
         }
         function getThisTypeFromContextualType(type2) {
-          return mapType(type2, (t) => {
-            return t.flags & 268435456 ? forEach(t.types, getThisTypeArgument) : getThisTypeArgument(t);
+          return mapType(type2, (t2) => {
+            return t2.flags & 268435456 ? forEach(t2.types, getThisTypeArgument) : getThisTypeArgument(t2);
           });
         }
         function getThisTypeOfObjectLiteralFromContextualType(containingLiteral, contextualType) {
@@ -97852,9 +97852,9 @@ ${lanes.join("\n")}
             const returnType2 = getReturnTypeOfSignature(signature);
             const functionFlags = getFunctionFlags(functionDecl);
             if (functionFlags & 1) {
-              return filterType(returnType2, (t) => {
-                return !!(t.flags & (3 | 16 | 117964800)) || checkGeneratorInstantiationAssignabilityToReturnType(
-                  t,
+              return filterType(returnType2, (t2) => {
+                return !!(t2.flags & (3 | 16 | 117964800)) || checkGeneratorInstantiationAssignabilityToReturnType(
+                  t2,
                   functionFlags,
                   /*errorNode*/
                   void 0
@@ -97862,8 +97862,8 @@ ${lanes.join("\n")}
               });
             }
             if (functionFlags & 2) {
-              return filterType(returnType2, (t) => {
-                return !!(t.flags & (3 | 16 | 117964800)) || !!getAwaitedTypeOfPromise(t);
+              return filterType(returnType2, (t2) => {
+                return !!(t2.flags & (3 | 16 | 117964800)) || !!getAwaitedTypeOfPromise(t2);
               });
             }
             return returnType2;
@@ -98085,19 +98085,19 @@ ${lanes.join("\n")}
             return !!(getReducedType(getTrueTypeFromConditionalType(type2)).flags & 262144) && getActualTypeVariable(getFalseTypeFromConditionalType(type2)) === getActualTypeVariable(type2.checkType) && isTypeAssignableTo(propertyNameType, type2.extendsType);
           }
           if (constraint.flags & 268435456) {
-            return some(constraint.types, (t) => isExcludedMappedPropertyName(t, propertyNameType));
+            return some(constraint.types, (t2) => isExcludedMappedPropertyName(t2, propertyNameType));
           }
           return false;
         }
         function getTypeOfPropertyOfContextualType(type2, name, nameType) {
           return mapType(
             type2,
-            (t) => {
-              if (t.flags & 268435456) {
+            (t2) => {
+              if (t2.flags & 268435456) {
                 let types2;
                 let indexInfoCandidates;
                 let ignoreIndexInfos = false;
-                for (const constituentType of t.types) {
+                for (const constituentType of t2.types) {
                   if (!(constituentType.flags & 1048576)) {
                     continue;
                   }
@@ -98131,10 +98131,10 @@ ${lanes.join("\n")}
                 }
                 return getIntersectionType(types2);
               }
-              if (!(t.flags & 1048576)) {
+              if (!(t2.flags & 1048576)) {
                 return;
               }
-              return isGenericMappedType(t) && getMappedTypeNameTypeKind(t) !== 2 ? getIndexedMappedTypeSubstitutedTypeOfContextualType(t, name, nameType) : getTypeOfConcretePropertyOfContextualType(t, name) ?? getTypeFromIndexInfosOfContextualType(t, name, nameType);
+              return isGenericMappedType(t2) && getMappedTypeNameTypeKind(t2) !== 2 ? getIndexedMappedTypeSubstitutedTypeOfContextualType(t2, name, nameType) : getTypeOfConcretePropertyOfContextualType(t2, name) ?? getTypeFromIndexInfosOfContextualType(t2, name, nameType);
             },
             /*noReductions*/
             true
@@ -98214,9 +98214,9 @@ ${lanes.join("\n")}
               const nameType = getLiteralTypeFromPropertyName(element.name);
               return mapType(
                 type2,
-                (t) => {
+                (t2) => {
                   var _a3;
-                  return (_a3 = findApplicableIndexInfo(getIndexInfosOfStructuredType(t), nameType)) == null ? void 0 : _a3.type;
+                  return (_a3 = findApplicableIndexInfo(getIndexInfosOfStructuredType(t2), nameType)) == null ? void 0 : _a3.type;
                 },
                 /*noReductions*/
                 true
@@ -98238,23 +98238,23 @@ ${lanes.join("\n")}
         function getContextualTypeForElementExpression(type2, index, length2, firstSpreadIndex, lastSpreadIndex) {
           return type2 && mapType(
             type2,
-            (t) => {
-              if (isTupleType(t)) {
-                if ((firstSpreadIndex === void 0 || index < firstSpreadIndex) && index < t.target.fixedLength) {
-                  return removeMissingType(getTypeArguments(t)[index], !!(t.target.elementFlags[index] && 2));
+            (t2) => {
+              if (isTupleType(t2)) {
+                if ((firstSpreadIndex === void 0 || index < firstSpreadIndex) && index < t2.target.fixedLength) {
+                  return removeMissingType(getTypeArguments(t2)[index], !!(t2.target.elementFlags[index] && 2));
                 }
                 const offset = length2 !== void 0 && (lastSpreadIndex === void 0 || index > lastSpreadIndex) ? length2 - index : 0;
-                const fixedEndLength = offset > 0 && t.target.combinedFlags & 12 ? getEndElementCount(
-                  t.target,
+                const fixedEndLength = offset > 0 && t2.target.combinedFlags & 12 ? getEndElementCount(
+                  t2.target,
                   3
                   /* Fixed */
                 ) : 0;
                 if (offset > 0 && offset <= fixedEndLength) {
-                  return getTypeArguments(t)[getTypeReferenceArity(t) - offset];
+                  return getTypeArguments(t2)[getTypeReferenceArity(t2) - offset];
                 }
                 return getElementTypeOfSliceOfTupleType(
-                  t,
-                  firstSpreadIndex === void 0 ? t.target.fixedLength : Math.min(t.target.fixedLength, firstSpreadIndex),
+                  t2,
+                  firstSpreadIndex === void 0 ? t2.target.fixedLength : Math.min(t2.target.fixedLength, firstSpreadIndex),
                   length2 === void 0 || lastSpreadIndex === void 0 ? fixedEndLength : Math.min(fixedEndLength, length2 - lastSpreadIndex),
                   /*writing*/
                   false,
@@ -98262,9 +98262,9 @@ ${lanes.join("\n")}
                   true
                 );
               }
-              return (!firstSpreadIndex || index < firstSpreadIndex) && getTypeOfPropertyOfContextualType(t, "" + index) || getIteratedTypeOrElementType(
+              return (!firstSpreadIndex || index < firstSpreadIndex) && getTypeOfPropertyOfContextualType(t2, "" + index) || getIteratedTypeOrElementType(
                 1,
-                t,
+                t2,
                 undefinedType,
                 /*errorNode*/
                 void 0,
@@ -98291,11 +98291,11 @@ ${lanes.join("\n")}
           const childFieldType = getTypeOfPropertyOfContextualType(attributesType, jsxChildrenPropertyName);
           return childFieldType && (realChildren.length === 1 ? childFieldType : mapType(
             childFieldType,
-            (t) => {
-              if (isArrayLikeType(t)) {
-                return getIndexedAccessType(t, getNumberLiteralType(childIndex));
+            (t2) => {
+              if (isArrayLikeType(t2)) {
+                return getIndexedAccessType(t2, getNumberLiteralType(childIndex));
               } else {
-                return t;
+                return t2;
               }
             },
             /*noReductions*/
@@ -98415,7 +98415,7 @@ ${lanes.join("\n")}
               // That would evaluate mapped types with array or tuple type constraints too eagerly
               // and thus it would prevent `getTypeOfPropertyOfContextualType` from obtaining per-position contextual type for elements of array literal expressions.
               // Apparent type of other mapped types is already the mapped type itself so we can just avoid calling `getApparentType` here for all mapped types.
-              (t) => getObjectFlags(t) & 32 ? t : getApparentType(t),
+              (t2) => getObjectFlags(t2) & 32 ? t2 : getApparentType(t2),
               /*noReductions*/
               true
             );
@@ -98438,7 +98438,7 @@ ${lanes.join("\n")}
             if (inferenceContext == null ? void 0 : inferenceContext.returnMapper) {
               const type2 = instantiateInstantiableTypes(contextualType, inferenceContext.returnMapper);
               if (!(type2.flags & 3)) {
-                return type2.flags & 134217728 && containsType(type2.types, regularFalseType) && containsType(type2.types, regularTrueType) ? filterType(type2, (t) => t !== regularFalseType && t !== regularTrueType) : type2;
+                return type2.flags & 134217728 && containsType(type2.types, regularFalseType) && containsType(type2.types, regularTrueType) ? filterType(type2, (t2) => t2 !== regularFalseType && t2 !== regularTrueType) : type2;
               }
             }
           }
@@ -98450,13 +98450,13 @@ ${lanes.join("\n")}
           }
           if (type2.flags & 134217728) {
             return getUnionType(
-              map3(type2.types, (t) => instantiateInstantiableTypes(t, mapper)),
+              map3(type2.types, (t2) => instantiateInstantiableTypes(t2, mapper)),
               0
               /* None */
             );
           }
           if (type2.flags & 268435456) {
-            return getIntersectionType(map3(type2.types, (t) => instantiateInstantiableTypes(t, mapper)));
+            return getIntersectionType(map3(type2.types, (t2) => instantiateInstantiableTypes(t2, mapper)));
           }
           return type2;
         }
@@ -98978,7 +98978,7 @@ ${lanes.join("\n")}
             /*contextFlags*/
             void 0
           );
-          const inTupleContext = isSpreadIntoCallOrNew(node) || !!contextualType && someType(contextualType, (t) => isTupleLikeType(t) || isGenericMappedType(t) && !t.nameType && !!getHomomorphicTypeVariable(t.target || t));
+          const inTupleContext = isSpreadIntoCallOrNew(node) || !!contextualType && someType(contextualType, (t2) => isTupleLikeType(t2) || isGenericMappedType(t2) && !t2.nameType && !!getHomomorphicTypeVariable(t2.target || t2));
           let hasOmittedExpression = false;
           for (let i = 0; i < elementCount; i++) {
             const e = elements[i];
@@ -99059,7 +99059,7 @@ ${lanes.join("\n")}
           }
           return createArrayLiteralType(createArrayType(
             elementTypes.length ? getUnionType(
-              sameMap(elementTypes, (t, i) => elementFlags[i] & 8 ? getIndexedAccessTypeOrUndefined(t, numberType) || anyType : t),
+              sameMap(elementTypes, (t2, i) => elementFlags[i] & 8 ? getIndexedAccessTypeOrUndefined(t2, numberType) || anyType : t2),
               2
               /* Subtype */
             ) : strictNullChecks ? implicitNeverType : undefinedWideningType,
@@ -99341,7 +99341,7 @@ ${lanes.join("\n")}
               hasComputedStringProperty = false;
               hasComputedNumberProperty = false;
             }
-            return mapType(spread, (t) => t === emptyObjectType ? createObjectLiteralType() : t);
+            return mapType(spread, (t2) => t2 === emptyObjectType ? createObjectLiteralType() : t2);
           }
           return createObjectLiteralType();
           function createObjectLiteralType() {
@@ -99365,8 +99365,8 @@ ${lanes.join("\n")}
           }
         }
         function isValidSpreadType(type2) {
-          const t = removeDefinitelyFalsyTypes(mapType(type2, getBaseConstraintOrType));
-          return !!(t.flags & (1 | 131072 | 1048576 | 117964800) || t.flags & 402653184 && every(t.types, isValidSpreadType));
+          const t2 = removeDefinitelyFalsyTypes(mapType(type2, getBaseConstraintOrType));
+          return !!(t2.flags & (1 | 131072 | 1048576 | 117964800) || t2.flags & 402653184 && every(t2.types, isValidSpreadType));
         }
         function checkJsxSelfClosingElementDeferred(node) {
           checkJsxOpeningLikeElementOrOpeningFragment(node);
@@ -99786,7 +99786,7 @@ ${lanes.join("\n")}
             );
           }
           if (signatures.length === 0 && apparentElemType.flags & 134217728) {
-            signatures = getUnionSignatures(map3(apparentElemType.types, (t) => getUninstantiatedJsxSignaturesOfType(t, caller)));
+            signatures = getUnionSignatures(map3(apparentElemType.types, (t2) => getUninstantiatedJsxSignaturesOfType(t2, caller)));
           }
           return signatures;
         }
@@ -99944,8 +99944,8 @@ ${lanes.join("\n")}
             return isKnownProperty(targetType.baseType, name, isComparingJsxAttributes);
           }
           if (targetType.flags & 402653184 && isExcessPropertyCheckTarget(targetType)) {
-            for (const t of targetType.types) {
-              if (isKnownProperty(t, name, isComparingJsxAttributes)) {
+            for (const t2 of targetType.types) {
+              if (isKnownProperty(t2, name, isComparingJsxAttributes)) {
                 return true;
               }
             }
@@ -100159,8 +100159,8 @@ ${lanes.join("\n")}
           );
           if (facts & 50331648) {
             reportError(node, facts);
-            const t = getNonNullableType(type2);
-            return t.flags & (12 | 262144) ? errorType : t;
+            const t2 = getNonNullableType(type2);
+            return t2.flags & (12 | 262144) ? errorType : t2;
           }
           return type2;
         }
@@ -100956,11 +100956,11 @@ ${lanes.join("\n")}
         function getSpreadArgumentIndex(args) {
           return findIndex(args, isSpreadArgument);
         }
-        function acceptsVoid(t) {
-          return !!(t.flags & 16);
+        function acceptsVoid(t2) {
+          return !!(t2.flags & 16);
         }
-        function acceptsVoidUndefinedUnknownOrAny(t) {
-          return !!(t.flags & (16 | 4 | 2 | 1));
+        function acceptsVoidUndefinedUnknownOrAny(t2) {
+          return !!(t2.flags & (16 | 4 | 2 | 1));
         }
         function hasCorrectArity(node, args, signature, signatureHelpTrailingComma = false) {
           if (isJsxOpeningFragment(node)) return true;
@@ -101546,10 +101546,10 @@ ${lanes.join("\n")}
               const arg = args[i];
               const spreadType = arg.kind === 231 && (flowLoopCount ? checkExpression(arg.expression) : checkExpressionCached(arg.expression));
               if (spreadType && isTupleType(spreadType)) {
-                forEach(getElementTypes(spreadType), (t, i2) => {
+                forEach(getElementTypes(spreadType), (t2, i2) => {
                   var _a3;
                   const flags = spreadType.target.elementFlags[i2];
-                  const syntheticArg = createSyntheticExpression(arg, flags & 4 ? createArrayType(t) : t, !!(flags & 12), (_a3 = spreadType.target.labeledElementDeclarations) == null ? void 0 : _a3[i2]);
+                  const syntheticArg = createSyntheticExpression(arg, flags & 4 ? createArrayType(t2) : t2, !!(flags & 12), (_a3 = spreadType.target.labeledElementDeclarations) == null ? void 0 : _a3[i2]);
                   effectiveArgs.push(syntheticArg);
                 });
               } else {
@@ -104209,7 +104209,7 @@ ${lanes.join("\n")}
                 /*contextFlags*/
                 void 0
               );
-              const returnType2 = contextualReturnType && someType(unwrapReturnType(contextualReturnType, functionFlags) || voidType, (t) => !!(t.flags & 4)) ? undefinedType : voidType;
+              const returnType2 = contextualReturnType && someType(unwrapReturnType(contextualReturnType, functionFlags) || voidType, (t2) => !!(t2.flags & 4)) ? undefinedType : voidType;
               return functionFlags & 2 ? createPromiseReturnType(func, returnType2) : (
                 // Async function
                 returnType2
@@ -104377,7 +104377,7 @@ ${lanes.join("\n")}
             if (operandConstraint.flags & 3) {
               return (556800 & notEqualFacts) === 556800;
             }
-            return !someType(operandConstraint, (t) => getTypeFacts(t, notEqualFacts) === notEqualFacts);
+            return !someType(operandConstraint, (t2) => getTypeFacts(t2, notEqualFacts) === notEqualFacts);
           }
           const type2 = getBaseConstraintOrType(checkExpressionCached(node.expression));
           if (!isLiteralType(type2)) {
@@ -104441,7 +104441,7 @@ ${lanes.join("\n")}
           if (aggregatedTypes.length === 0 && !hasReturnWithNoExpression && (hasReturnOfTypeNever || mayReturnNever(func))) {
             return void 0;
           }
-          if (strictNullChecks && aggregatedTypes.length && hasReturnWithNoExpression && !(isJSConstructor(func) && aggregatedTypes.some((t) => t.symbol === func.symbol))) {
+          if (strictNullChecks && aggregatedTypes.length && hasReturnWithNoExpression && !(isJSConstructor(func) && aggregatedTypes.some((t2) => t2.symbol === func.symbol))) {
             pushIfUnique(aggregatedTypes, undefinedType);
           }
           return aggregatedTypes;
@@ -104998,8 +104998,8 @@ ${lanes.join("\n")}
           }
           if (type2.flags & 402653184) {
             const types2 = type2.types;
-            for (const t of types2) {
-              if (maybeTypeOfKind(t, kind)) {
+            for (const t2 of types2) {
+              if (maybeTypeOfKind(t2, kind)) {
                 return true;
               }
             }
@@ -105070,7 +105070,7 @@ ${lanes.join("\n")}
           return booleanType;
         }
         function hasEmptyObjectIntersection(type2) {
-          return someType(type2, (t) => t === unknownEmptyObjectType || !!(t.flags & 268435456) && isEmptyAnonymousObjectType(getBaseConstraintOrType(t)));
+          return someType(type2, (t2) => t2 === unknownEmptyObjectType || !!(t2.flags & 268435456) && isEmptyAnonymousObjectType(getBaseConstraintOrType(t2)));
         }
         function checkInExpression(left, right, leftType, rightType) {
           if (leftType === silentNeverType || rightType === silentNeverType) {
@@ -105212,7 +105212,7 @@ ${lanes.join("\n")}
                 error210(restExpression.operatorToken, Diagnostics.A_rest_element_cannot_have_an_initializer);
               } else {
                 checkGrammarForDisallowedTrailingComma(node.elements, Diagnostics.A_rest_parameter_or_binding_pattern_may_not_have_a_trailing_comma);
-                const type2 = everyType(sourceType, isTupleType) ? mapType(sourceType, (t) => sliceTupleType(t, elementIndex)) : createArrayType(elementType);
+                const type2 = everyType(sourceType, isTupleType) ? mapType(sourceType, (t2) => sliceTupleType(t2, elementIndex)) : createArrayType(elementType);
                 return checkDestructuringAssignment(restExpression, type2, checkMode);
               }
             }
@@ -106091,8 +106091,8 @@ ${lanes.join("\n")}
           }
           let returnType = getReturnTypeFromAnnotation(func);
           if (returnType && returnType.flags & 134217728) {
-            returnType = filterType(returnType, (t) => checkGeneratorInstantiationAssignabilityToReturnType(
-              t,
+            returnType = filterType(returnType, (t2) => checkGeneratorInstantiationAssignabilityToReturnType(
+              t2,
               functionFlags,
               /*errorNode*/
               void 0
@@ -106355,7 +106355,7 @@ ${lanes.join("\n")}
           if (contextualType) {
             if (contextualType.flags & 402653184) {
               const types2 = contextualType.types;
-              return some(types2, (t) => isLiteralOfContextualType(candidateType, t));
+              return some(types2, (t2) => isLiteralOfContextualType(candidateType, t2));
             }
             if (contextualType.flags & 117964800) {
               const constraint = getBaseConstraintOfType(contextualType) || unknownType;
@@ -107671,11 +107671,11 @@ ${lanes.join("\n")}
           const objectType = type2.objectType;
           const indexType = type2.indexType;
           const hasNumberIndexInfo = !!getIndexInfoOfType(objectType, numberType);
-          if (everyType(indexType, (t) => isTypeAssignableTo(t, getIndexType(
+          if (everyType(indexType, (t2) => isTypeAssignableTo(t2, getIndexType(
             objectType,
             0
             /* None */
-          )) || hasNumberIndexInfo && isApplicableIndexType(t, numberType))) {
+          )) || hasNumberIndexInfo && isApplicableIndexType(t2, numberType))) {
             if (accessNode.kind === 213 && isAssignmentTarget(accessNode) && getObjectFlags(objectType) & 32 && getMappedTypeModifiers(objectType) & 1) {
               error210(accessNode, Diagnostics.Index_signature_in_type_0_only_permits_reading, typeToString(objectType));
             }
@@ -107684,7 +107684,7 @@ ${lanes.join("\n")}
           if (isGenericObjectType(objectType)) {
             const propertyName = getPropertyNameFromIndex(indexType, accessNode);
             if (propertyName) {
-              const propertySymbol = forEachType(getApparentType(objectType), (t) => getPropertyOfType(t, propertyName));
+              const propertySymbol = forEachType(getApparentType(objectType), (t2) => getPropertyOfType(t2, propertyName));
               if (propertySymbol && getDeclarationModifierFlagsFromSymbol(propertySymbol) & 6) {
                 error210(accessNode, Diagnostics.Private_or_protected_member_0_cannot_be_accessed_on_a_type_parameter, unescapeLeadingUnderscores(propertyName));
                 return errorType;
@@ -109864,7 +109864,7 @@ ${lanes.join("\n")}
           if (use & 4) {
             if (arrayType.flags & 134217728) {
               const arrayTypes = inputType.types;
-              const filteredTypes = filter(arrayTypes, (t) => !(t.flags & 12583968));
+              const filteredTypes = filter(arrayTypes, (t2) => !(t2.flags & 12583968));
               if (filteredTypes !== arrayTypes) {
                 arrayType = getUnionType(
                   filteredTypes,
@@ -111082,11 +111082,11 @@ ${lanes.join("\n")}
           });
           function createImplementsDiagnostics(typeRefNode) {
             return () => {
-              const t = getReducedType(getTypeFromTypeNode(typeRefNode));
-              if (!isErrorType(t)) {
-                if (isValidBaseType(t)) {
-                  const genericDiag = t.symbol && t.symbol.flags & 32 ? Diagnostics.Class_0_incorrectly_implements_class_1_Did_you_mean_to_extend_1_and_inherit_its_members_as_a_subclass : Diagnostics.Class_0_incorrectly_implements_interface_1;
-                  const baseWithThis = getTypeWithThisArgument(t, type2.thisType);
+              const t2 = getReducedType(getTypeFromTypeNode(typeRefNode));
+              if (!isErrorType(t2)) {
+                if (isValidBaseType(t2)) {
+                  const genericDiag = t2.symbol && t2.symbol.flags & 32 ? Diagnostics.Class_0_incorrectly_implements_class_1_Did_you_mean_to_extend_1_and_inherit_its_members_as_a_subclass : Diagnostics.Class_0_incorrectly_implements_interface_1;
+                  const baseWithThis = getTypeWithThisArgument(t2, type2.thisType);
                   if (!checkTypeAssignableTo(
                     typeWithThis,
                     baseWithThis,
@@ -113644,8 +113644,8 @@ ${lanes.join("\n")}
           const right = isIdentifier(name) ? name.escapedText : name.right.escapedText;
           if (left) {
             const proto = left.flags & 111551 && getPropertyOfType(getTypeOfSymbol(left), "prototype");
-            const t = proto ? getTypeOfSymbol(proto) : getDeclaredTypeOfSymbol(left);
-            return getPropertyOfType(t, right);
+            const t2 = proto ? getTypeOfSymbol(proto) : getDeclaredTypeOfSymbol(left);
+            return getPropertyOfType(t2, right);
           }
         }
         function getSymbolAtLocation(node, ignoreErrors) {
@@ -113775,7 +113775,7 @@ ${lanes.join("\n")}
             const keyType = getLiteralTypeFromPropertyName(node);
             const objectType = getTypeOfExpression(node.parent.expression);
             const objectTypes = objectType.flags & 134217728 ? objectType.types : [objectType];
-            return flatMap(objectTypes, (t) => filter(getIndexInfosOfType(t), (info) => isApplicableIndexType(keyType, info.keyType)));
+            return flatMap(objectTypes, (t2) => filter(getIndexInfosOfType(t2), (info) => isApplicableIndexType(keyType, info.keyType)));
           }
           return void 0;
         }
@@ -115779,7 +115779,7 @@ ${lanes.join("\n")}
             return grammarErrorOnNode(parameter.name, Diagnostics.An_index_signature_parameter_must_have_a_type_annotation);
           }
           const type2 = getTypeFromTypeNode(parameter.type);
-          if (someType(type2, (t) => !!(t.flags & 19456)) || isGenericType(type2)) {
+          if (someType(type2, (t2) => !!(t2.flags & 19456)) || isGenericType(type2)) {
             return grammarErrorOnNode(parameter.name, Diagnostics.An_index_signature_parameter_type_cannot_be_a_literal_type_or_generic_type_Consider_using_a_mapped_object_type_instead);
           }
           if (!everyType(type2, isValidIndexKeyType)) {
@@ -116776,14 +116776,14 @@ ${lanes.join("\n")}
         }
         function findBestTypeForObjectLiteral(source, unionTarget) {
           if (getObjectFlags(source) & 128 && someType(unionTarget, isArrayLikeType)) {
-            return find(unionTarget.types, (t) => !isArrayLikeType(t));
+            return find(unionTarget.types, (t2) => !isArrayLikeType(t2));
           }
         }
         function findBestTypeForInvokable(source, unionTarget) {
           let signatureKind = 0;
           const hasSignatures2 = getSignaturesOfType(source, signatureKind).length > 0 || (signatureKind = 1, getSignaturesOfType(source, signatureKind).length > 0);
           if (hasSignatures2) {
-            return find(unionTarget.types, (t) => getSignaturesOfType(t, signatureKind).length > 0);
+            return find(unionTarget.types, (t2) => getSignaturesOfType(t2, signatureKind).length > 0);
           }
         }
         function findMostOverlappyType(source, unionTarget) {
@@ -116813,7 +116813,7 @@ ${lanes.join("\n")}
             131072
             /* NonPrimitive */
           )) {
-            const result = filterType(type2, (t) => !(t.flags & 12713980));
+            const result = filterType(type2, (t2) => !(t2.flags & 12713980));
             if (!(result.flags & 262144)) {
               return result;
             }
@@ -117082,11 +117082,11 @@ ${lanes.join("\n")}
             return 0;
           }
         }
-        function getSortOrderFlags(t) {
-          if (t.flags & (32768 | 65536) && !(t.flags & 134217728)) {
+        function getSortOrderFlags(t2) {
+          if (t2.flags & (32768 | 65536) && !(t2.flags & 134217728)) {
             return 65536;
           }
-          return t.flags;
+          return t2.flags;
         }
         function compareTypeNames(t1, t2) {
           const s1 = getTypeNameSymbol(t1);
@@ -117105,12 +117105,12 @@ ${lanes.join("\n")}
           }
           return compareComparableValues(s1.escapedName, s2.escapedName);
         }
-        function getTypeNameSymbol(t) {
-          if (t.aliasSymbol !== void 0) {
-            return t.aliasSymbol;
+        function getTypeNameSymbol(t2) {
+          if (t2.aliasSymbol !== void 0) {
+            return t2.aliasSymbol;
           }
-          if (t.flags & (524288 | 8388608) || getObjectFlags(t) & (3 | 4)) {
-            return t.symbol;
+          if (t2.flags & (524288 | 8388608) || getObjectFlags(t2) & (3 | 4)) {
+            return t2.symbol;
           }
           return void 0;
         }
@@ -144109,13 +144109,13 @@ ${lanes.join("\n")}
                   if (clause.token === 96) {
                     const oldDiag2 = getSymbolAccessibilityDiagnostic;
                     getSymbolAccessibilityDiagnostic = createGetSymbolAccessibilityDiagnosticForNode(clause.types[0]);
-                    const newClause = factory2.updateHeritageClause(clause, map3(clause.types, (t) => factory2.updateExpressionWithTypeArguments(t, newId, visitNodes2(t.typeArguments, visitDeclarationSubtree, isTypeNode))));
+                    const newClause = factory2.updateHeritageClause(clause, map3(clause.types, (t2) => factory2.updateExpressionWithTypeArguments(t2, newId, visitNodes2(t2.typeArguments, visitDeclarationSubtree, isTypeNode))));
                     getSymbolAccessibilityDiagnostic = oldDiag2;
                     return newClause;
                   }
                   return factory2.updateHeritageClause(clause, visitNodes2(factory2.createNodeArray(filter(
                     clause.types,
-                    (t) => isEntityNameExpression(t.expression) || t.expression.kind === 106
+                    (t2) => isEntityNameExpression(t2.expression) || t2.expression.kind === 106
                     /* NullKeyword */
                   )), visitDeclarationSubtree, isExpressionWithTypeArguments));
                 }));
@@ -144274,8 +144274,8 @@ ${lanes.join("\n")}
             map3(nodes, (clause) => factory2.updateHeritageClause(
               clause,
               visitNodes2(
-                factory2.createNodeArray(filter(clause.types, (t) => {
-                  return isEntityNameExpression(t.expression) || clause.token === 96 && t.expression.kind === 106;
+                factory2.createNodeArray(filter(clause.types, (t2) => {
+                  return isEntityNameExpression(t2.expression) || clause.token === 96 && t2.expression.kind === 106;
                 })),
                 visitDeclarationSubtree,
                 isExpressionWithTypeArguments
@@ -144535,7 +144535,7 @@ ${lanes.join("\n")}
           disposeEmitNodes(getSourceFileOfNode(getParseTreeNode(node)));
         }
         mark("beforeTransform");
-        const transformersWithContext = transformers.map((t) => t(context));
+        const transformersWithContext = transformers.map((t2) => t2(context));
         const transformation = (node) => {
           for (const transform22 of transformersWithContext) {
             node = transform22(node);
@@ -162658,18 +162658,18 @@ ${lanes.join("\n")}
               return factory.createArrayTypeNode(visitNode(node.type, visitExistingNodeTreeSymbols, isTypeNode));
             }
             if (isJSDocTypeLiteral(node)) {
-              return factory.createTypeLiteralNode(map3(node.jsDocPropertyTags, (t) => {
-                const name = visitNode(isIdentifier(t.name) ? t.name : t.name.right, visitExistingNodeTreeSymbols, isIdentifier);
-                const overrideTypeNode = resolver.getJsDocPropertyOverride(context, node, t);
+              return factory.createTypeLiteralNode(map3(node.jsDocPropertyTags, (t2) => {
+                const name = visitNode(isIdentifier(t2.name) ? t2.name : t2.name.right, visitExistingNodeTreeSymbols, isIdentifier);
+                const overrideTypeNode = resolver.getJsDocPropertyOverride(context, node, t2);
                 return factory.createPropertySignature(
                   /*modifiers*/
                   void 0,
                   name,
-                  t.isBracketed || t.typeExpression && isJSDocOptionalType(t.typeExpression.type) ? factory.createToken(
+                  t2.isBracketed || t2.typeExpression && isJSDocOptionalType(t2.typeExpression.type) ? factory.createToken(
                     58
                     /* QuestionToken */
                   ) : void 0,
-                  overrideTypeNode || t.typeExpression && visitNode(t.typeExpression.type, visitExistingNodeTreeSymbols, isTypeNode) || factory.createKeywordTypeNode(
+                  overrideTypeNode || t2.typeExpression && visitNode(t2.typeExpression.type, visitExistingNodeTreeSymbols, isTypeNode) || factory.createKeywordTypeNode(
                     133
                     /* AnyKeyword */
                   )
@@ -171797,7 +171797,7 @@ interface Symbol {
           Debug.assert(actionName2 === defaultToNamedAction.name || actionName2 === namedToDefaultAction.name, "Unexpected action name");
           const info = getInfo2(context);
           Debug.assert(info && !isRefactorErrorInfo(info), "Expected applicable refactor info");
-          const edits = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange(context.file, context.program, info, t, context.cancellationToken));
+          const edits = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange(context.file, context.program, info, t2, context.cancellationToken));
           return { edits, renameFilename: void 0, renameLocation: void 0 };
         }
       });
@@ -172062,7 +172062,7 @@ interface Symbol {
           Debug.assert(some(getOwnValues(actions), (action) => action.name === actionName2), "Unexpected action name");
           const info = getImportConversionInfo(context);
           Debug.assert(info && !isRefactorErrorInfo(info), "Expected applicable refactor info");
-          const edits = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange2(context.file, context.program, t, info));
+          const edits = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange2(context.file, context.program, t2, info));
           return { edits, renameFilename: void 0, renameLocation: void 0 };
         }
       });
@@ -172418,8 +172418,8 @@ interface Symbol {
         const result = [];
         const selectionArray = toArray2(selection);
         const selectionRange = { pos: selectionArray[0].getStart(file2), end: selectionArray[selectionArray.length - 1].end };
-        for (const t of selectionArray) {
-          if (visitor(t)) return { typeParameters: void 0, affectedTextRange: void 0 };
+        for (const t2 of selectionArray) {
+          if (visitor(t2)) return { typeParameters: void 0, affectedTextRange: void 0 };
         }
         return { typeParameters: result, affectedTextRange: selectionRange };
         function visitor(node) {
@@ -172667,7 +172667,7 @@ interface Symbol {
             if (host.fileExists(targetFile) && program2.getSourceFile(targetFile) === void 0) {
               return error51(getLocaleSpecificMessage(Diagnostics.Cannot_move_statements_to_the_selected_file));
             }
-            const edits = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange3(context, context.file, interactiveRefactorArguments.targetFile, context.program, statements, t, context.host, context.preferences));
+            const edits = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange3(context, context.file, interactiveRefactorArguments.targetFile, context.program, statements, t2, context.host, context.preferences));
             return { edits, renameFilename: void 0, renameLocation: void 0 };
           }
           return error51(getLocaleSpecificMessage(Diagnostics.Cannot_move_to_file_selected_file_is_invalid));
@@ -173696,7 +173696,7 @@ interface Symbol {
         getEditsForAction: function getRefactorEditsToMoveToNewFile(context, actionName2) {
           Debug.assert(actionName2 === refactorName5, "Wrong refactor invoked");
           const statements = Debug.checkDefined(getStatementsToMove(context));
-          const edits = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange4(context.file, context.program, statements, t, context.host, context, context.preferences));
+          const edits = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange4(context.file, context.program, statements, t2, context.host, context, context.preferences));
           return { edits, renameFilename: void 0, renameLocation: void 0 };
         }
       });
@@ -173813,8 +173813,8 @@ interface Symbol {
         if (updated === lastDeclaration) {
           return;
         }
-        const edits = ts_textChanges_exports.ChangeTracker.with(context, (t) => {
-          t.replaceNodeRange(file2, signatureDecls[0], signatureDecls[signatureDecls.length - 1], updated);
+        const edits = ts_textChanges_exports.ChangeTracker.with(context, (t2) => {
+          t2.replaceNodeRange(file2, signatureDecls[0], signatureDecls[signatureDecls.length - 1], updated);
         });
         return { renameFilename: void 0, renameLocation: void 0, edits };
         function getNewParametersForCombinedSignature(signatureDeclarations) {
@@ -174025,8 +174025,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         } else {
           Debug.fail("invalid action");
         }
-        const edits = ts_textChanges_exports.ChangeTracker.with(context, (t) => {
-          t.replaceNode(file2, func.body, body);
+        const edits = ts_textChanges_exports.ChangeTracker.with(context, (t2) => {
+          t2.replaceNode(file2, func.body, body);
         });
         return { renameFilename: void 0, renameLocation: void 0, edits };
       }
@@ -174235,7 +174235,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           func.type,
           body
         );
-        return ts_textChanges_exports.ChangeTracker.with(context, (t) => t.replaceNode(file2, func, newNode));
+        return ts_textChanges_exports.ChangeTracker.with(context, (t2) => t2.replaceNode(file2, func, newNode));
       }
       function getEditInfoForConvertToNamedFunction(context, func, variableInfo) {
         const { file: file2 } = context;
@@ -174246,11 +174246,11 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const modifiers = factory.createModifiersFromModifierFlags(modifiersFlags);
         const newNode = factory.createFunctionDeclaration(length(modifiers) ? modifiers : void 0, func.asteriskToken, name, func.typeParameters, func.parameters, func.type, body);
         if (variableDeclarationList.declarations.length === 1) {
-          return ts_textChanges_exports.ChangeTracker.with(context, (t) => t.replaceNode(file2, statement, newNode));
+          return ts_textChanges_exports.ChangeTracker.with(context, (t2) => t2.replaceNode(file2, statement, newNode));
         } else {
-          return ts_textChanges_exports.ChangeTracker.with(context, (t) => {
-            t.delete(file2, variableDeclaration);
-            t.insertNodeAfter(file2, statement, newNode);
+          return ts_textChanges_exports.ChangeTracker.with(context, (t2) => {
+            t2.delete(file2, variableDeclaration);
+            t2.insertNodeAfter(file2, statement, newNode);
           });
         }
       }
@@ -174270,7 +174270,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           39
           /* EqualsGreaterThanToken */
         ), body);
-        return ts_textChanges_exports.ChangeTracker.with(context, (t) => t.replaceNode(file2, func, newNode));
+        return ts_textChanges_exports.ChangeTracker.with(context, (t2) => t2.replaceNode(file2, func, newNode));
       }
       function canBeConvertedToExpression(body, head) {
         return body.statements.length === 1 && (isReturnStatement(head) && !!head.expression);
@@ -174311,7 +174311,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         if (!functionDeclaration || !cancellationToken) return void 0;
         const groupedReferences = getGroupedReferences(functionDeclaration, program2, cancellationToken);
         if (groupedReferences.valid) {
-          const edits = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange5(file2, program2, host, t, functionDeclaration, groupedReferences));
+          const edits = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange5(file2, program2, host, t2, functionDeclaration, groupedReferences));
           return { renameFilename: void 0, renameLocation: void 0, edits };
         }
         return { edits: [] };
@@ -174887,12 +174887,12 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         if (trailingCommentRanges) {
           const lastComment = trailingCommentRanges[trailingCommentRanges.length - 1];
           const trailingRange = { pos: trailingCommentRanges[0].pos, end: lastComment.end };
-          return ts_textChanges_exports.ChangeTracker.with(context, (t) => {
-            t.deleteRange(file2, trailingRange);
-            t.replaceNode(file2, maybeBinary, templateLiteral2);
+          return ts_textChanges_exports.ChangeTracker.with(context, (t2) => {
+            t2.deleteRange(file2, trailingRange);
+            t2.replaceNode(file2, maybeBinary, templateLiteral2);
           });
         } else {
-          return ts_textChanges_exports.ChangeTracker.with(context, (t) => t.replaceNode(file2, maybeBinary, templateLiteral2));
+          return ts_textChanges_exports.ChangeTracker.with(context, (t2) => t2.replaceNode(file2, maybeBinary, templateLiteral2));
         }
       }
       function isNotEqualsOperator(node) {
@@ -175083,7 +175083,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       function getRefactorEditsToConvertToOptionalChain(context, actionName2) {
         const info = getInfo3(context);
         Debug.assert(info && !isRefactorErrorInfo(info), "Expected applicable refactor info");
-        const edits = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange6(context.file, context.program.getTypeChecker(), t, info, actionName2));
+        const edits = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange6(context.file, context.program.getTypeChecker(), t2, info, actionName2));
         return { edits, renameFilename: void 0, renameLocation: void 0 };
       }
       function isValidExpression(node) {
@@ -176232,7 +176232,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           }
           return isUnionTypeNode(withoutParens) && find(
             withoutParens.types,
-            (t) => t.kind === 157
+            (t2) => t2.kind === 157
             /* UndefinedKeyword */
           ) ? clone22 : factory.createUnionTypeNode([clone22, factory.createKeywordTypeNode(
             157
@@ -177012,7 +177012,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       function getRefactorEditsToInferReturnType(context) {
         const info = getInfo4(context);
         if (info && !isRefactorErrorInfo(info)) {
-          const edits = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange7(context.file, t, info.declaration, info.returnTypeNode));
+          const edits = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange7(context.file, t2, info.declaration, info.returnTypeNode));
           return { renameFilename: void 0, renameLocation: void 0, edits };
         }
         return void 0;
@@ -177277,10 +177277,10 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             const test = (condition) => {
               return condition(type2) || type2.isUnion() && type2.types.some(condition);
             };
-            if (typeIdx !== 6 && test((t) => t.getConstructSignatures().length > 0)) {
+            if (typeIdx !== 6 && test((t2) => t2.getConstructSignatures().length > 0)) {
               return 0;
             }
-            if (test((t) => t.getCallSignatures().length > 0) && !test((t) => t.getProperties().length > 0) || isExpressionInCallExpression(node)) {
+            if (test((t2) => t2.getCallSignatures().length > 0) && !test((t2) => t2.getProperties().length > 0) || isExpressionInCallExpression(node)) {
               return typeIdx === 9 ? 11 : 10;
             }
           }
@@ -179796,14 +179796,14 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const symbol2 = contextualType.getProperty(name);
           return symbol2 ? [symbol2] : emptyArray;
         }
-        const filteredTypes = isObjectLiteralExpression(node.parent) || isJsxAttributes(node.parent) ? filter(contextualType.types, (t) => !checker.isTypeInvalidDueToUnionDiscriminant(t, node.parent)) : contextualType.types;
-        const discriminatedPropertySymbols = mapDefined(filteredTypes, (t) => t.getProperty(name));
+        const filteredTypes = isObjectLiteralExpression(node.parent) || isJsxAttributes(node.parent) ? filter(contextualType.types, (t2) => !checker.isTypeInvalidDueToUnionDiscriminant(t2, node.parent)) : contextualType.types;
+        const discriminatedPropertySymbols = mapDefined(filteredTypes, (t2) => t2.getProperty(name));
         if (unionSymbolOk && (discriminatedPropertySymbols.length === 0 || discriminatedPropertySymbols.length === contextualType.types.length)) {
           const symbol2 = contextualType.getProperty(name);
           if (symbol2) return [symbol2];
         }
         if (!filteredTypes.length && !discriminatedPropertySymbols.length) {
-          return mapDefined(contextualType.types, (t) => t.getProperty(name));
+          return mapDefined(contextualType.types, (t2) => t2.getProperty(name));
         }
         return deduplicate(discriminatedPropertySymbols, equateValues);
       }
@@ -180909,7 +180909,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       }
       function codeFixAll(context, errorCodes68, use) {
         const commands = [];
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => eachDiagnostic(context, errorCodes68, (diag2) => use(t, diag2, commands)));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => eachDiagnostic(context, errorCodes68, (diag2) => use(t2, diag2, commands)));
         return createCombinedCodeActions(changes, commands.length === 0 ? void 0 : commands);
       }
       function eachDiagnostic(context, errorCodes68, cb) {
@@ -180939,7 +180939,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions: function getCodeActionsToAddConvertToUnknownForNonOverlappingTypes(context) {
           const assertion = getAssertion(context.sourceFile, context.span.start);
           if (assertion === void 0) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => makeChange(t, context.sourceFile, assertion));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => makeChange(t2, context.sourceFile, assertion));
           return [createCodeFixAction(fixId, changes, Diagnostics.Add_unknown_conversion_for_non_overlapping_types, fixId, Diagnostics.Add_unknown_to_all_conversions_of_non_overlapping_types)];
         },
         fixIds: [fixId],
@@ -181010,19 +181010,19 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getAllCodeActions: (context) => {
           const { sourceFile } = context;
           const fixedDeclarations = /* @__PURE__ */ new Set();
-          return codeFixAll(context, errorCodes2, (t, diagnostic) => {
+          return codeFixAll(context, errorCodes2, (t2, diagnostic) => {
             const span = diagnostic.relatedInformation && find(diagnostic.relatedInformation, (r) => r.code === Diagnostics.Did_you_mean_to_mark_this_function_as_async.code);
             const decl = getFixableErrorSpanDeclaration(sourceFile, span);
             if (!decl) {
               return;
             }
-            const trackChanges = (cb) => (cb(t), []);
+            const trackChanges = (cb) => (cb(t2), []);
             return getFix(context, decl, trackChanges, fixedDeclarations);
           });
         }
       });
       function getFix(context, decl, trackChanges, fixedDeclarations) {
-        const changes = trackChanges((t) => makeChange2(t, context.sourceFile, decl, fixedDeclarations));
+        const changes = trackChanges((t2) => makeChange2(t2, context.sourceFile, decl, fixedDeclarations));
         return createCodeFixAction(fixId2, changes, Diagnostics.Add_async_modifier_to_containing_function, fixId2, Diagnostics.Add_all_missing_async_modifiers);
       }
       function makeChange2(changeTracker, sourceFile, insertionSite, fixedDeclarations) {
@@ -181108,12 +181108,12 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, program: program2, cancellationToken } = context;
           const checker = context.program.getTypeChecker();
           const fixedDeclarations = /* @__PURE__ */ new Set();
-          return codeFixAll(context, errorCodes3, (t, diagnostic) => {
+          return codeFixAll(context, errorCodes3, (t2, diagnostic) => {
             const expression = getAwaitErrorSpanExpression(sourceFile, diagnostic.code, diagnostic, cancellationToken, program2);
             if (!expression) {
               return;
             }
-            const trackChanges = (cb) => (cb(t), []);
+            const trackChanges = (cb) => (cb(t2), []);
             return getDeclarationSiteFix(context, expression, diagnostic.code, checker, trackChanges, fixedDeclarations) || getUseSiteFix(context, expression, diagnostic.code, checker, trackChanges, fixedDeclarations);
           });
         }
@@ -181126,10 +181126,10 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const { sourceFile, program: program2, cancellationToken } = context;
         const awaitableInitializers = findAwaitableInitializers(expression, sourceFile, cancellationToken, program2, checker);
         if (awaitableInitializers) {
-          const initializerChanges = trackChanges((t) => {
-            forEach(awaitableInitializers.initializers, ({ expression: expression2 }) => makeChange3(t, errorCode, sourceFile, checker, expression2, fixedDeclarations));
+          const initializerChanges = trackChanges((t2) => {
+            forEach(awaitableInitializers.initializers, ({ expression: expression2 }) => makeChange3(t2, errorCode, sourceFile, checker, expression2, fixedDeclarations));
             if (fixedDeclarations && awaitableInitializers.needsSecondPassForFixAll) {
-              makeChange3(t, errorCode, sourceFile, checker, expression, fixedDeclarations);
+              makeChange3(t2, errorCode, sourceFile, checker, expression, fixedDeclarations);
             }
           });
           return createCodeFixActionWithoutFixAll(
@@ -181140,7 +181140,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         }
       }
       function getUseSiteFix(context, expression, errorCode, checker, trackChanges, fixedDeclarations) {
-        const changes = trackChanges((t) => makeChange3(t, errorCode, context.sourceFile, checker, expression, fixedDeclarations));
+        const changes = trackChanges((t2) => makeChange3(t2, errorCode, context.sourceFile, checker, expression, fixedDeclarations));
         return createCodeFixAction(fixId3, changes, Diagnostics.Add_await, fixId3, Diagnostics.Fix_all_expressions_possibly_missing_await);
       }
       function isMissingAwaitError(sourceFile, errorCode, span, cancellationToken, program2) {
@@ -181302,7 +181302,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes4,
         getCodeActions: function getCodeActionsToAddMissingConst(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => makeChange4(t, context.sourceFile, context.span.start, context.program));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => makeChange4(t2, context.sourceFile, context.span.start, context.program));
           if (changes.length > 0) {
             return [createCodeFixAction(fixId4, changes, Diagnostics.Add_const_to_unresolved_variable, fixId4, Diagnostics.Add_const_to_all_unresolved_variables)];
           }
@@ -181388,7 +181388,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes5,
         getCodeActions: function getCodeActionsToAddMissingDeclareOnProperty(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => makeChange5(t, context.sourceFile, context.span.start));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => makeChange5(t2, context.sourceFile, context.span.start));
           if (changes.length > 0) {
             return [createCodeFixAction(fixId5, changes, Diagnostics.Prefix_with_declare, fixId5, Diagnostics.Prefix_all_incorrect_property_declarations_with_declare)];
           }
@@ -181414,7 +181414,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes6,
         getCodeActions: function getCodeActionsToAddMissingInvocationForDecorator(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => makeChange6(t, context.sourceFile, context.span.start));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => makeChange6(t2, context.sourceFile, context.span.start));
           return [createCodeFixAction(fixId6, changes, Diagnostics.Call_decorator_expression, fixId6, Diagnostics.Add_to_all_uncalled_decorators)];
         },
         fixIds: [fixId6],
@@ -181441,7 +181441,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes7,
         getCodeActions: function getCodeActionsToAddMissingResolutionModeImportAttribute(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => makeChange7(t, context.sourceFile, context.span.start, context.program, context.host, context.preferences));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => makeChange7(t2, context.sourceFile, context.span.start, context.program, context.host, context.preferences));
           return [createCodeFixAction(fixId7, changes, Diagnostics.Add_resolution_mode_import_attribute, fixId7, Diagnostics.Add_resolution_mode_import_attribute_to_all_type_only_imports_that_need_it)];
         },
         fixIds: [fixId7],
@@ -181517,7 +181517,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes8,
         getCodeActions: function getCodeActionsToAddNameToNamelessParameter(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => makeChange8(t, context.sourceFile, context.span.start));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => makeChange8(t2, context.sourceFile, context.span.start));
           return [createCodeFixAction(fixId8, changes, Diagnostics.Add_parameter_name, fixId8, Diagnostics.Add_names_to_all_parameters_without_names)];
         },
         fixIds: [fixId8],
@@ -181575,7 +181575,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (!toAdd.length) {
             return void 0;
           }
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addUndefinedToOptionalProperty(t, toAdd));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addUndefinedToOptionalProperty(t2, toAdd));
           return [createCodeFixActionWithoutFixAll(addOptionalPropertyUndefined, changes, Diagnostics.Add_undefined_to_optional_property_type)];
         },
         fixIds: [addOptionalPropertyUndefined]
@@ -181629,11 +181629,11 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         for (const add of toAdd) {
           const d = add.valueDeclaration;
           if (d && (isPropertySignature(d) || isPropertyDeclaration(d)) && d.type) {
-            const t = factory.createUnionTypeNode([
+            const t2 = factory.createUnionTypeNode([
               ...d.type.kind === 193 ? d.type.types : [d.type],
               factory.createTypeReferenceNode("undefined")
             ]);
-            changes.replaceNode(d.getSourceFile(), d.type, t);
+            changes.replaceNode(d.getSourceFile(), d.type, t2);
           }
         }
       }
@@ -181644,7 +181644,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context) {
           const decl = getDeclaration(context.sourceFile, context.span.start);
           if (!decl) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange8(t, context.sourceFile, decl));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange8(t2, context.sourceFile, decl));
           return [createCodeFixAction(fixId9, changes, Diagnostics.Annotate_with_type_from_JSDoc, fixId9, Diagnostics.Annotate_everything_with_types_from_JSDoc)];
         },
         fixIds: [fixId9],
@@ -181838,7 +181838,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes11,
         getCodeActions(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange9(t, context.sourceFile, context.span.start, context.program.getTypeChecker(), context.preferences, context.program.getCompilerOptions()));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange9(t2, context.sourceFile, context.span.start, context.program.getTypeChecker(), context.preferences, context.program.getCompilerOptions()));
           return [createCodeFixAction(fixId10, changes, Diagnostics.Convert_function_to_an_ES2015_class, fixId10, Diagnostics.Convert_all_constructor_functions_to_classes)];
         },
         fixIds: [fixId10],
@@ -182142,7 +182142,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         errorCodes: errorCodes12,
         getCodeActions(context) {
           codeActionSucceeded = true;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => convertToAsyncFunction(t, context.sourceFile, context.span.start, context.program.getTypeChecker()));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => convertToAsyncFunction(t2, context.sourceFile, context.span.start, context.program.getTypeChecker()));
           return codeActionSucceeded ? [createCodeFixAction(fixId11, changes, Diagnostics.Convert_to_async_function, fixId11, Diagnostics.Convert_all_to_async_functions)] : [];
         },
         fixIds: [fixId11],
@@ -183428,7 +183428,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context) {
           const qualifiedName = getQualifiedName(context.sourceFile, context.span.start);
           if (!qualifiedName) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange10(t, context.sourceFile, qualifiedName));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange10(t2, context.sourceFile, qualifiedName));
           const newText = `${qualifiedName.left.text}["${qualifiedName.right.text}"]`;
           return [createCodeFixAction(fixId12, changes, [Diagnostics.Rewrite_as_the_indexed_access_type_0, newText], fixId12, Diagnostics.Rewrite_all_as_indexed_access_types)];
         },
@@ -183462,7 +183462,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes14,
         getCodeActions: function getCodeActionsToConvertToTypeOnlyExport(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => fixSingleExportDeclaration(t, getExportSpecifierForDiagnosticSpan(context.span, context.sourceFile), context));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => fixSingleExportDeclaration(t2, getExportSpecifierForDiagnosticSpan(context.span, context.sourceFile), context));
           if (changes.length) {
             return [createCodeFixAction(fixId13, changes, Diagnostics.Convert_to_type_only_export, fixId13, Diagnostics.Convert_all_re_exported_types_to_type_only_exports)];
           }
@@ -183543,8 +183543,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           var _a3;
           const declaration = getDeclaration2(context.sourceFile, context.span.start);
           if (declaration) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange11(t, context.sourceFile, declaration));
-            const importDeclarationChanges = declaration.kind === 277 && isImportDeclaration(declaration.parent.parent.parent) && canConvertImportDeclarationForSpecifier(declaration, context.sourceFile, context.program) ? ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange11(t, context.sourceFile, declaration.parent.parent.parent)) : void 0;
+            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange11(t2, context.sourceFile, declaration));
+            const importDeclarationChanges = declaration.kind === 277 && isImportDeclaration(declaration.parent.parent.parent) && canConvertImportDeclarationForSpecifier(declaration, context.sourceFile, context.program) ? ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange11(t2, context.sourceFile, declaration.parent.parent.parent)) : void 0;
             const mainAction = createCodeFixAction(
               fixId14,
               changes,
@@ -183700,7 +183700,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             context.span.start
           );
           if (!node) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange12(t, node, context.sourceFile, newLineCharacter));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange12(t2, node, context.sourceFile, newLineCharacter));
           if (changes.length > 0) {
             return [
               createCodeFixAction(
@@ -183870,7 +183870,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             return void 0;
           }
           const { name, constraint } = info;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange13(t, sourceFile, info));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange13(t2, sourceFile, info));
           return [createCodeFixAction(fixId16, changes, [Diagnostics.Convert_0_to_1_in_0, constraint, name], fixId16, Diagnostics.Convert_all_type_literals_to_mapped_type)];
         },
         fixIds: [fixId16],
@@ -183929,7 +183929,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span } = context;
           const classDeclaration = getClass(sourceFile, span.start);
           return mapDefined(getEffectiveImplementsTypeNodes(classDeclaration), (implementedTypeNode) => {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addMissingDeclarations(context, implementedTypeNode, sourceFile, classDeclaration, t, context.preferences));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addMissingDeclarations(context, implementedTypeNode, sourceFile, classDeclaration, t2, context.preferences));
             return changes.length === 0 ? void 0 : createCodeFixAction(fixId17, changes, [Diagnostics.Implement_interface_0, implementedTypeNode.getText(sourceFile)], fixId17, Diagnostics.Implement_all_unimplemented_interfaces);
           });
         },
@@ -185659,7 +185659,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span, program: program2, preferences, host } = context;
           const info = getInfo6(program2, sourceFile, span);
           if (info === void 0) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addMissingConstraint(t, program2, preferences, host, sourceFile, info));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addMissingConstraint(t2, program2, preferences, host, sourceFile, info));
           return [createCodeFixAction(fixId18, changes, Diagnostics.Add_extends_constraint, fixId18, Diagnostics.Add_extends_constraint_to_all_type_parameters)];
         },
         fixIds: [fixId18],
@@ -185907,7 +185907,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context) {
           const { sourceFile, span, preferences } = context;
           const property = getPropertyAccessExpression(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange14(t, context.sourceFile, property, preferences));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange14(t2, context.sourceFile, property, preferences));
           return [createCodeFixAction(fixId19, changes, [Diagnostics.Use_element_access_for_0, property.name.text], fixId19, Diagnostics.Use_element_access_for_all_undeclared_properties)];
         },
         getAllCodeActions: (context) => codeFixAll(context, errorCodes22, (changes, diag2) => doChange14(changes, diag2.file, getPropertyAccessExpression(diag2.file, diag2.start), context.preferences))
@@ -185935,8 +185935,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions: function getCodeActionsToFixImplicitThis(context) {
           const { sourceFile, program: program2, span } = context;
           let diagnostic;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => {
-            diagnostic = doChange15(t, sourceFile, span.start, program2.getTypeChecker());
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => {
+            diagnostic = doChange15(t2, sourceFile, span.start, program2.getTypeChecker());
           });
           return diagnostic ? [createCodeFixAction(fixId20, changes, diagnostic, fixId20, Diagnostics.Fix_all_implicit_this_errors)] : emptyArray;
         },
@@ -185998,7 +185998,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span, program: program2 } = context;
           const info = getInfo7(sourceFile, span.start, program2);
           if (info === void 0) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange16(t, program2, info));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange16(t2, program2, info));
           return [createCodeFixAction(fixId21, changes, [Diagnostics.Export_0_from_module_1, info.exportName.node.text, info.moduleSpecifier], fixId21, Diagnostics.Export_all_referenced_locals)];
         },
         getAllCodeActions(context) {
@@ -186153,7 +186153,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions: function getCodeActionsToFixIncorrectNamedTupleSyntax(context) {
           const { sourceFile, span } = context;
           const namedTupleMember = getNamedTupleMember(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange17(t, sourceFile, namedTupleMember));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange17(t2, sourceFile, namedTupleMember));
           return [createCodeFixAction(fixId22, changes, Diagnostics.Move_labeled_tuple_element_modifiers_to_labels, fixId22, Diagnostics.Move_labeled_tuple_element_modifiers_to_labels)];
         },
         fixIds: [fixId22]
@@ -186162,7 +186162,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const token = getTokenAtPosition(sourceFile, pos);
         return findAncestor(
           token,
-          (t) => t.kind === 203
+          (t2) => t2.kind === 203
           /* NamedTupleMember */
         );
       }
@@ -186224,7 +186224,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (!info) return void 0;
           const { node, suggestedSymbol } = info;
           const target = getEmitScriptTarget(context.host.getCompilationSettings());
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange18(t, sourceFile, node, suggestedSymbol, target));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange18(t2, sourceFile, node, suggestedSymbol, target));
           return [createCodeFixAction("spelling", changes, [Diagnostics.Change_spelling_to_0, symbolName(suggestedSymbol)], fixId23, Diagnostics.Fix_all_detected_spelling_errors)];
         },
         fixIds: [fixId23],
@@ -186542,12 +186542,12 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         changes.replaceNode(sourceFile, declaration.body, factory.createParenthesizedExpression(expression));
       }
       function getActionForfixAddReturnStatement(context, expression, statement) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addReturnStatement(t, context.sourceFile, expression, statement));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addReturnStatement(t2, context.sourceFile, expression, statement));
         return createCodeFixAction(fixId24, changes, Diagnostics.Add_a_return_statement, fixIdAddReturnStatement, Diagnostics.Add_all_missing_return_statement);
       }
       function getActionForFixRemoveBracesFromArrowFunctionBody(context, declaration, expression, commentSource) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => removeBlockBodyBrace(
-          t,
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => removeBlockBodyBrace(
+          t2,
           context.sourceFile,
           declaration,
           expression,
@@ -186558,7 +186558,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         return createCodeFixAction(fixId24, changes, Diagnostics.Remove_braces_from_arrow_function_body, fixRemoveBracesFromArrowFunctionBody, Diagnostics.Remove_braces_from_all_arrow_function_bodies_with_relevant_issues);
       }
       function getActionForfixWrapTheBlockWithParen(context, declaration, expression) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => wrapBlockWithParen(t, context.sourceFile, declaration, expression));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => wrapBlockWithParen(t2, context.sourceFile, declaration, expression));
         return createCodeFixAction(fixId24, changes, Diagnostics.Wrap_the_following_body_with_parentheses_which_should_be_an_object_literal, fixIdWrapTheBlockWithParen, Diagnostics.Wrap_all_object_literal_with_parentheses);
       }
       var fixMissingMember = "fixMissingMember";
@@ -186584,19 +186584,19 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             return void 0;
           }
           if (info.kind === 3) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addObjectLiteralProperties(t, context, info));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addObjectLiteralProperties(t2, context, info));
             return [createCodeFixAction(fixMissingProperties, changes, Diagnostics.Add_missing_properties, fixMissingProperties, Diagnostics.Add_all_missing_properties)];
           }
           if (info.kind === 4) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addJsxAttributes(t, context, info));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addJsxAttributes(t2, context, info));
             return [createCodeFixAction(fixMissingAttributes, changes, Diagnostics.Add_missing_attributes, fixMissingAttributes, Diagnostics.Add_all_missing_attributes)];
           }
           if (info.kind === 2 || info.kind === 5) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addFunctionDeclaration(t, context, info));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addFunctionDeclaration(t2, context, info));
             return [createCodeFixAction(fixMissingFunctionDeclaration, changes, [Diagnostics.Add_missing_function_declaration_0, info.token.text], fixMissingFunctionDeclaration, Diagnostics.Add_all_missing_function_declarations)];
           }
           if (info.kind === 1) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addEnumMemberDeclaration(t, context.program.getTypeChecker(), info));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addEnumMemberDeclaration(t2, context.program.getTypeChecker(), info));
             return [createCodeFixAction(fixMissingMember, changes, [Diagnostics.Add_missing_enum_member_0, info.token.text], fixMissingMember, Diagnostics.Add_all_missing_members)];
           }
           return concatenate(getActionsForMissingMethodDeclaration(context, info), getActionsForMissingMemberDeclaration(context, info));
@@ -186778,7 +186778,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         if (isInterfaceDeclaration(parentDeclaration) || isTypeLiteralNode(parentDeclaration)) {
           return void 0;
         }
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addMissingMemberInJs(t, declSourceFile, parentDeclaration, token, !!(modifierFlags & 256)));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addMissingMemberInJs(t2, declSourceFile, parentDeclaration, token, !!(modifierFlags & 256)));
         if (changes.length === 0) {
           return void 0;
         }
@@ -186828,7 +186828,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const memberName = token.text;
         const isStatic2 = modifierFlags & 256;
         const typeNode = getTypeNode2(context.program.getTypeChecker(), parentDeclaration, token);
-        const addPropertyDeclarationChanges = (modifierFlags2) => ts_textChanges_exports.ChangeTracker.with(context, (t) => addPropertyDeclaration(t, declSourceFile, parentDeclaration, memberName, typeNode, modifierFlags2));
+        const addPropertyDeclarationChanges = (modifierFlags2) => ts_textChanges_exports.ChangeTracker.with(context, (t2) => addPropertyDeclaration(t2, declSourceFile, parentDeclaration, memberName, typeNode, modifierFlags2));
         const actions2 = [createCodeFixAction(fixMissingMember, addPropertyDeclarationChanges(
           modifierFlags & 256
           /* Static */
@@ -186930,7 +186930,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           [indexingParameter],
           typeNode
         );
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => t.insertMemberAtStart(sourceFile, node, indexSignature));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => t2.insertMemberAtStart(sourceFile, node, indexSignature));
         return createCodeFixActionWithoutFixAll(fixMissingMember, changes, [Diagnostics.Add_index_signature_for_property_0, tokenName]);
       }
       function getActionsForMissingMethodDeclaration(context, info) {
@@ -186939,7 +186939,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           return void 0;
         }
         const methodName = token.text;
-        const addMethodDeclarationChanges = (modifierFlags2) => ts_textChanges_exports.ChangeTracker.with(context, (t) => addMethodDeclaration(context, t, call, token, modifierFlags2, parentDeclaration, declSourceFile));
+        const addMethodDeclarationChanges = (modifierFlags2) => ts_textChanges_exports.ChangeTracker.with(context, (t2) => addMethodDeclaration(context, t2, call, token, modifierFlags2, parentDeclaration, declSourceFile));
         const actions2 = [createCodeFixAction(fixMissingMember, addMethodDeclarationChanges(
           modifierFlags & 256
           /* Static */
@@ -187110,7 +187110,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           return factory.createNull();
         }
         if (type2.flags & 134217728) {
-          const expression = firstDefined(type2.types, (t) => tryGetValueFromType(context, checker, importAdder, quotePreference, t, enclosingDeclaration));
+          const expression = firstDefined(type2.types, (t2) => tryGetValueFromType(context, checker, importAdder, quotePreference, t2, enclosingDeclaration));
           return expression ?? createUndefined();
         }
         if (checker.isArrayLikeType(type2)) {
@@ -187257,7 +187257,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         errorCodes: errorCodes29,
         getCodeActions(context) {
           const { sourceFile, span } = context;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addMissingNewOperator(t, sourceFile, span));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addMissingNewOperator(t2, sourceFile, span));
           return [createCodeFixAction(fixId25, changes, Diagnostics.Add_missing_new_operator_to_call, fixId25, Diagnostics.Add_missing_new_operator_to_all_calls)];
         },
         fixIds: [fixId25],
@@ -187292,7 +187292,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
               actions2,
               createCodeFixAction(
                 addMissingParamFixId,
-                ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange19(t, context.program, context.preferences, context.host, declarations, newParameters)),
+                ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange19(t2, context.program, context.preferences, context.host, declarations, newParameters)),
                 [length(newParameters) > 1 ? Diagnostics.Add_missing_parameters_to_0 : Diagnostics.Add_missing_parameter_to_0, name],
                 addMissingParamFixId,
                 Diagnostics.Add_all_missing_parameters
@@ -187304,7 +187304,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
               actions2,
               createCodeFixAction(
                 addOptionalParamFixId,
-                ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange19(t, context.program, context.preferences, context.host, declarations, newOptionalParameters)),
+                ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange19(t2, context.program, context.preferences, context.host, declarations, newOptionalParameters)),
                 [length(newOptionalParameters) > 1 ? Diagnostics.Add_optional_parameters_to_0 : Diagnostics.Add_optional_parameter_to_0, name],
                 addOptionalParamFixId,
                 Diagnostics.Add_all_optional_parameters
@@ -187606,7 +187606,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         errorCodes: errorCodes32,
         getCodeActions: function getCodeActionsToFixClassNotImplementingInheritedMembers(context) {
           const { sourceFile, span } = context;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addMissingMembers(getClass2(sourceFile, span.start), sourceFile, context, t, context.preferences));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addMissingMembers(getClass2(sourceFile, span.start), sourceFile, context, t2, context.preferences));
           return changes.length === 0 ? void 0 : [createCodeFixAction(fixId26, changes, Diagnostics.Implement_inherited_abstract_class, fixId26, Diagnostics.Implement_all_inherited_abstract_classes)];
         },
         fixIds: [fixId26],
@@ -187646,7 +187646,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const nodes = getNodes(sourceFile, span.start);
           if (!nodes) return void 0;
           const { constructor, superCall } = nodes;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange20(t, sourceFile, constructor, superCall));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange20(t2, sourceFile, constructor, superCall));
           return [createCodeFixAction(fixId27, changes, Diagnostics.Make_super_call_the_first_statement_in_the_constructor, fixId27, Diagnostics.Make_all_super_calls_the_first_statement_in_their_constructor)];
         },
         fixIds: [fixId27],
@@ -187684,7 +187684,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context) {
           const { sourceFile, span } = context;
           const ctr = getNode(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange21(t, sourceFile, ctr));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange21(t2, sourceFile, ctr));
           return [createCodeFixAction(fixId28, changes, Diagnostics.Add_missing_super_call, fixId28, Diagnostics.Add_all_missing_super_calls)];
         },
         fixIds: [fixId28],
@@ -187742,7 +187742,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const info = getInfo12(program2, sourceFile, span);
           if (info === void 0) return;
           const { suggestion, expression, arg } = info;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange23(t, sourceFile, arg, expression));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange23(t2, sourceFile, arg, expression));
           return [createCodeFixAction(fixId29, changes, [Diagnostics.Use_0, suggestion], fixId29, Diagnostics.Use_Number_isNaN_in_all_conditions)];
         },
         fixIds: [fixId29],
@@ -187833,7 +187833,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context) {
           const { sourceFile, span } = context;
           const property = getProperty2(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange24(t, context.sourceFile, property));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange24(t2, context.sourceFile, property));
           return [createCodeFixAction(fixId30, changes, [Diagnostics.Change_0_to_1, "=", ":"], fixId30, [Diagnostics.Switch_each_misused_0_to_1, "=", ":"])];
         },
         getAllCodeActions: (context) => codeFixAll(context, errorCodes37, (changes, diag2) => doChange24(changes, diag2.file, getProperty2(diag2.file, diag2.start)))
@@ -187853,7 +187853,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const nodes = getNodes2(sourceFile, context.span.start);
           if (!nodes) return void 0;
           const { extendsToken, heritageClauses } = nodes;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChanges2(t, sourceFile, extendsToken, heritageClauses));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChanges2(t2, sourceFile, extendsToken, heritageClauses));
           return [createCodeFixAction(fixId31, changes, Diagnostics.Change_extends_to_implements, fixId31, Diagnostics.Change_all_extended_interfaces_to_implements)];
         },
         fixIds: [fixId31],
@@ -187903,7 +187903,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (!info) {
             return void 0;
           }
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange25(t, sourceFile, info));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange25(t2, sourceFile, info));
           return [createCodeFixAction(fixId32, changes, [Diagnostics.Add_0_to_unresolved_variable, info.className || "this"], fixId32, Diagnostics.Add_qualifier_to_all_unresolved_variables_matching_a_member_name)];
         },
         fixIds: [fixId32],
@@ -187933,16 +187933,16 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         fixIds: [fixIdExpression, fixIdHtmlEntity],
         getCodeActions(context) {
           const { sourceFile, preferences, span } = context;
-          const changeToExpression = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange26(
-            t,
+          const changeToExpression = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange26(
+            t2,
             preferences,
             sourceFile,
             span.start,
             /*useHtmlEntity*/
             false
           ));
-          const changeToHtmlEntity = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange26(
-            t,
+          const changeToHtmlEntity = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange26(
+            t2,
             preferences,
             sourceFile,
             span.start,
@@ -188004,14 +188004,14 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             tagsToSignature.forEach((tags, signature) => {
               if (context.fixId === deleteUnmatchedParameter) {
                 const tagsSet = new Set(tags);
-                changes.filterJSDocTags(signature.getSourceFile(), signature, (t) => !tagsSet.has(t));
+                changes.filterJSDocTags(signature.getSourceFile(), signature, (t2) => !tagsSet.has(t2));
               }
             });
           }));
         }
       });
       function getDeleteAction(context, { name, jsDocHost, jsDocParameterTag }) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (changeTracker) => changeTracker.filterJSDocTags(context.sourceFile, jsDocHost, (t) => t !== jsDocParameterTag));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (changeTracker) => changeTracker.filterJSDocTags(context.sourceFile, jsDocHost, (t2) => t2 !== jsDocParameterTag));
         return createCodeFixAction(
           deleteUnmatchedParameter,
           changes,
@@ -188041,7 +188041,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           jsDocParameterTag.isNameFirst,
           jsDocParameterTag.comment
         );
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (changeTracker) => changeTracker.replaceJSDocComment(sourceFile, jsDocHost, map3(tags, (t) => t === jsDocParameterTag ? newJSDocParameterTag : t)));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (changeTracker) => changeTracker.replaceJSDocComment(sourceFile, jsDocHost, map3(tags, (t2) => t2 === jsDocParameterTag ? newJSDocParameterTag : t2)));
         return createCodeFixActionWithoutFixAll(renameUnmatchedParameter, changes, [Diagnostics.Rename_param_tag_name_0_to_1, name.getText(sourceFile), parameterName]);
       }
       function getInfo14(sourceFile, pos) {
@@ -188063,8 +188063,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions: (context) => {
           const importDeclaration = getImportDeclaration(context.sourceFile, context.program, context.span.start);
           if (!importDeclaration) return;
-          const namespaceChanges = ts_textChanges_exports.ChangeTracker.with(context, (t) => importDeclaration.kind === 277 && doNamespaceImportChange(t, context.sourceFile, importDeclaration, context.program));
-          const typeOnlyChanges = ts_textChanges_exports.ChangeTracker.with(context, (t) => doTypeOnlyImportChange(t, context.sourceFile, importDeclaration, context.program));
+          const namespaceChanges = ts_textChanges_exports.ChangeTracker.with(context, (t2) => importDeclaration.kind === 277 && doNamespaceImportChange(t2, context.sourceFile, importDeclaration, context.program));
+          const typeOnlyChanges = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doTypeOnlyImportChange(t2, context.sourceFile, importDeclaration, context.program));
           let actions2;
           if (namespaceChanges.length) {
             actions2 = append(actions2, createCodeFixActionWithoutFixAll(fixId33, namespaceChanges, Diagnostics.Convert_named_imports_to_namespace_import));
@@ -188126,21 +188126,21 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const sourceFiles = program2.getSourceFiles();
           const token = getTokenAtPosition(sourceFile, context.span.start);
           if (isJSDocTemplateTag(token)) {
-            return [createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context, (t) => t.delete(sourceFile, token)), Diagnostics.Remove_template_tag)];
+            return [createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context, (t2) => t2.delete(sourceFile, token)), Diagnostics.Remove_template_tag)];
           }
           if (token.kind === 30) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => deleteTypeParameters(t, sourceFile, token));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => deleteTypeParameters(t2, sourceFile, token));
             return [createDeleteFix(changes, Diagnostics.Remove_type_parameters)];
           }
           const importDecl = tryGetFullImport(token);
           if (importDecl) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => t.delete(sourceFile, importDecl));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => t2.delete(sourceFile, importDecl));
             return [createCodeFixAction(fixName3, changes, [Diagnostics.Remove_import_from_0, showModuleSpecifier(importDecl)], fixIdDeleteImports, Diagnostics.Delete_all_unused_imports)];
           } else if (isImport(token)) {
-            const deletion = ts_textChanges_exports.ChangeTracker.with(context, (t) => tryDeleteDeclaration(
+            const deletion = ts_textChanges_exports.ChangeTracker.with(context, (t2) => tryDeleteDeclaration(
               sourceFile,
               token,
-              t,
+              t2,
               checker,
               sourceFiles,
               program2,
@@ -188160,31 +188160,31 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
                 map3(elements, (e) => e.getText(sourceFile)).join(", ")
               ];
               return [
-                createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context, (t) => deleteDestructuringElements(t, sourceFile, token.parent)), diagnostic)
+                createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context, (t2) => deleteDestructuringElements(t2, sourceFile, token.parent)), diagnostic)
               ];
             }
             return [
-              createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context, (t) => deleteDestructuring(context, t, sourceFile, token.parent)), Diagnostics.Remove_unused_destructuring_declaration)
+              createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context, (t2) => deleteDestructuring(context, t2, sourceFile, token.parent)), Diagnostics.Remove_unused_destructuring_declaration)
             ];
           }
           if (canDeleteEntireVariableStatement(sourceFile, token)) {
             return [
-              createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context, (t) => deleteEntireVariableStatement(t, sourceFile, token.parent)), Diagnostics.Remove_variable_statement)
+              createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context, (t2) => deleteEntireVariableStatement(t2, sourceFile, token.parent)), Diagnostics.Remove_variable_statement)
             ];
           }
           if (isIdentifier(token) && isFunctionDeclaration(token.parent)) {
-            return [createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context, (t) => deleteFunctionLikeDeclaration(t, sourceFile, token.parent)), [Diagnostics.Remove_unused_declaration_for_Colon_0, token.getText(sourceFile)])];
+            return [createDeleteFix(ts_textChanges_exports.ChangeTracker.with(context, (t2) => deleteFunctionLikeDeclaration(t2, sourceFile, token.parent)), [Diagnostics.Remove_unused_declaration_for_Colon_0, token.getText(sourceFile)])];
           }
           const result = [];
           if (token.kind === 140) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => changeInferToUnknown(t, sourceFile, token));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => changeInferToUnknown(t2, sourceFile, token));
             const name = cast(token.parent, isInferTypeNode).typeParameter.name.text;
             result.push(createCodeFixAction(fixName3, changes, [Diagnostics.Replace_infer_0_with_unknown, name], fixIdInfer, Diagnostics.Replace_all_unused_infer_with_unknown));
           } else {
-            const deletion = ts_textChanges_exports.ChangeTracker.with(context, (t) => tryDeleteDeclaration(
+            const deletion = ts_textChanges_exports.ChangeTracker.with(context, (t2) => tryDeleteDeclaration(
               sourceFile,
               token,
-              t,
+              t2,
               checker,
               sourceFiles,
               program2,
@@ -188197,7 +188197,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
               result.push(createDeleteFix(deletion, [Diagnostics.Remove_unused_declaration_for_Colon_0, name.getText(sourceFile)]));
             }
           }
-          const prefix = ts_textChanges_exports.ChangeTracker.with(context, (t) => tryPrefixDeclaration(t, errorCode, sourceFile, token));
+          const prefix = ts_textChanges_exports.ChangeTracker.with(context, (t2) => tryPrefixDeclaration(t2, errorCode, sourceFile, token));
           if (prefix.length) {
             result.push(createCodeFixAction(fixName3, prefix, [Diagnostics.Prefix_0_with_an_underscore, token.getText(sourceFile)], fixIdPrefix, Diagnostics.Prefix_all_unused_declarations_with_where_possible));
           }
@@ -188458,7 +188458,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions(context) {
           const syntacticDiagnostics = context.program.getSyntacticDiagnostics(context.sourceFile, context.cancellationToken);
           if (syntacticDiagnostics.length) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange27(t, context.sourceFile, context.span.start, context.span.length, context.errorCode));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange27(t2, context.sourceFile, context.span.start, context.span.length, context.errorCode));
           return [createCodeFixAction(fixId34, changes, Diagnostics.Remove_unreachable_code, fixId34, Diagnostics.Remove_all_unreachable_code)];
         },
         fixIds: [fixId34],
@@ -188517,7 +188517,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes45,
         getCodeActions(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange28(t, context.sourceFile, context.span.start));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange28(t2, context.sourceFile, context.span.start));
           return [createCodeFixAction(fixId35, changes, Diagnostics.Remove_unused_label, fixId35, Diagnostics.Remove_all_unused_labels)];
         },
         fixIds: [fixId35],
@@ -188558,7 +188558,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           }
           return actions2;
           function fix(type22, fixId56, fixAllDescription) {
-            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange29(t, sourceFile, typeNode, type22, checker));
+            const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange29(t2, sourceFile, typeNode, type22, checker));
             return createCodeFixAction("jdocTypes", changes, [Diagnostics.Change_0_to_1, original, checker.typeToString(type22)], fixId56, fixAllDescription);
           }
         },
@@ -188639,7 +188639,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span } = context;
           const callName = getCallName(sourceFile, span.start);
           if (!callName) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange30(t, context.sourceFile, callName));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange30(t2, context.sourceFile, callName));
           return [createCodeFixAction(fixId36, changes, Diagnostics.Add_missing_call_parentheses, fixId36, Diagnostics.Add_all_missing_call_parentheses)];
         },
         getAllCodeActions: (context) => codeFixAll(context, errorCodes47, (changes, diag2) => {
@@ -189652,7 +189652,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span } = context;
           const nodes = getNodes3(sourceFile, span.start);
           if (!nodes) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange31(t, sourceFile, nodes));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange31(t2, sourceFile, nodes));
           return [createCodeFixAction(fixId38, changes, Diagnostics.Add_async_modifier_to_containing_function, fixId38, Diagnostics.Add_all_missing_async_modifiers)];
         },
         fixIds: [fixId38],
@@ -190174,8 +190174,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const builtinConstructors = {
           string: () => checker.getStringType(),
           number: () => checker.getNumberType(),
-          Array: (t) => checker.createArrayType(t),
-          Promise: (t) => checker.createPromiseType(t)
+          Array: (t2) => checker.createArrayType(t2),
+          Promise: (t2) => checker.createPromiseType(t2)
         };
         const builtins = [
           checker.getStringType(),
@@ -190534,16 +190534,16 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const stringNumber = checker.getUnionType([checker.getStringType(), checker.getNumberType()]);
           const priorities = [
             {
-              high: (t) => t === checker.getStringType() || t === checker.getNumberType(),
-              low: (t) => t === stringNumber
+              high: (t2) => t2 === checker.getStringType() || t2 === checker.getNumberType(),
+              low: (t2) => t2 === stringNumber
             },
             {
-              high: (t) => !(t.flags & (1 | 16)),
-              low: (t) => !!(t.flags & (1 | 16))
+              high: (t2) => !(t2.flags & (1 | 16)),
+              low: (t2) => !!(t2.flags & (1 | 16))
             },
             {
-              high: (t) => !(t.flags & (12 | 1 | 16)) && !(getObjectFlags(t) & 16),
-              low: (t) => !!(getObjectFlags(t) & 16)
+              high: (t2) => !(t2.flags & (12 | 1 | 16)) && !(getObjectFlags(t2) & 16),
+              low: (t2) => !!(getObjectFlags(t2) & 16)
             }
           ];
           let good = removeLowPriorityInferences(inferences, priorities);
@@ -190640,7 +190640,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (((_a3 = usage.properties) == null ? void 0 : _a3.size) || ((_b = usage.constructs) == null ? void 0 : _b.length) || usage.stringIndex) {
             types2.push(inferStructuralType(usage));
           }
-          const candidateTypes = (usage.candidateTypes || []).map((t) => checker.getBaseTypeOfLiteralType(t));
+          const candidateTypes = (usage.candidateTypes || []).map((t2) => checker.getBaseTypeOfLiteralType(t2));
           const callsType = ((_c = usage.calls) == null ? void 0 : _c.length) ? inferStructuralType(usage) : void 0;
           if (callsType && candidateTypes) {
             types2.push(checker.getUnionType(
@@ -190687,9 +190687,9 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         }
         function inferNamedTypesFromProperties(usage) {
           if (!usage.properties || !usage.properties.size) return [];
-          const types2 = builtins.filter((t) => allPropertiesAreAssignableToUsage(t, usage));
+          const types2 = builtins.filter((t2) => allPropertiesAreAssignableToUsage(t2, usage));
           if (0 < types2.length && types2.length < 3) {
-            return types2.map((t) => inferInstantiationFromUsage(t, usage));
+            return types2.map((t2) => inferInstantiationFromUsage(t2, usage));
           }
           return [];
         }
@@ -190731,7 +190731,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (genericType === typeParameter) {
             return [usageType];
           } else if (genericType.flags & 402653184) {
-            return flatMap(genericType.types, (t) => inferTypeParameters(t, usageType, typeParameter));
+            return flatMap(genericType.types, (t2) => inferTypeParameters(t2, usageType, typeParameter));
           } else if (getObjectFlags(genericType) & 4 && getObjectFlags(usageType) & 4) {
             const genericArgs = checker.getTypeArguments(genericType);
             const usageArgs = checker.getTypeArguments(usageType);
@@ -190847,7 +190847,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             return void 0;
           }
           const { returnTypeNode, returnType, promisedTypeNode, promisedType } = info;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange34(t, sourceFile, returnTypeNode, promisedTypeNode));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange34(t2, sourceFile, returnTypeNode, promisedTypeNode));
           return [createCodeFixAction(
             fixId41,
             changes,
@@ -190917,7 +190917,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             )
           ];
           if (ts_textChanges_exports.isValidLocationToAddComment(sourceFile, span.start)) {
-            fixes.unshift(createCodeFixAction(fixName4, ts_textChanges_exports.ChangeTracker.with(context, (t) => makeChange9(t, sourceFile, span.start)), Diagnostics.Ignore_this_error_message, fixId42, Diagnostics.Add_ts_ignore_to_all_error_messages));
+            fixes.unshift(createCodeFixAction(fixName4, ts_textChanges_exports.ChangeTracker.with(context, (t2) => makeChange9(t2, sourceFile, span.start)), Diagnostics.Ignore_this_error_message, fixId42, Diagnostics.Add_ts_ignore_to_all_error_messages));
           }
           return fixes;
         },
@@ -191062,7 +191062,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           case 174:
           case 175:
             Debug.assertIsDefined(declarations);
-            const signatures = type2.isUnion() ? flatMap(type2.types, (t) => t.getCallSignatures()) : type2.getCallSignatures();
+            const signatures = type2.isUnion() ? flatMap(type2.types, (t2) => t2.getCallSignatures()) : type2.getCallSignatures();
             if (!some(signatures)) {
               break;
             }
@@ -191939,7 +191939,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         return variations;
       }
       function createAction(context, sourceFile, node, replacement) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => t.replaceNode(sourceFile, node, replacement));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => t2.replaceNode(sourceFile, node, replacement));
         return createCodeFixActionWithoutFixAll(fixName5, changes, [Diagnostics.Replace_import_with_0, changes[0].textChanges[0].newText]);
       }
       registerCodeFix({
@@ -191996,7 +191996,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         }
         if (isExpression(expr) && !(isNamedDeclaration(expr.parent) && expr.parent.name === expr)) {
           const sourceFile = context.sourceFile;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => t.replaceNode(sourceFile, expr, factory.createPropertyAccessExpression(expr, "default"), {}));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => t2.replaceNode(sourceFile, expr, factory.createPropertyAccessExpression(expr, "default"), {}));
           fixes.push(createCodeFixActionWithoutFixAll(fixName5, changes, Diagnostics.Use_synthetic_default_member));
         }
         return fixes;
@@ -192053,7 +192053,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       }
       function getActionForAddMissingDefiniteAssignmentAssertion(context, info) {
         if (info.isJs) return void 0;
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addDefiniteAssignmentAssertion(t, context.sourceFile, info.prop));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addDefiniteAssignmentAssertion(t2, context.sourceFile, info.prop));
         return createCodeFixAction(fixName6, changes, [Diagnostics.Add_definite_assignment_assertion_to_property_0, info.prop.getText()], fixIdAddDefiniteAssignmentAssertions, Diagnostics.Add_definite_assignment_assertions_to_all_uninitialized_properties);
       }
       function addDefiniteAssignmentAssertion(changeTracker, propertyDeclarationSourceFile, propertyDeclaration) {
@@ -192072,7 +192072,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         changeTracker.replaceNode(propertyDeclarationSourceFile, propertyDeclaration, property);
       }
       function getActionForAddMissingUndefinedType(context, info) {
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addUndefinedType(t, context.sourceFile, info));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addUndefinedType(t2, context.sourceFile, info));
         return createCodeFixAction(fixName6, changes, [Diagnostics.Add_undefined_type_to_property_0, info.prop.name.getText()], fixIdAddUndefinedType, Diagnostics.Add_undefined_type_to_all_uninitialized_properties);
       }
       function addUndefinedType(changeTracker, sourceFile, info) {
@@ -192097,7 +192097,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const checker = context.program.getTypeChecker();
         const initializer3 = getInitializer(checker, info.prop);
         if (!initializer3) return void 0;
-        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => addInitializer(t, context.sourceFile, info.prop, initializer3));
+        const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => addInitializer(t2, context.sourceFile, info.prop, initializer3));
         return createCodeFixAction(fixName6, changes, [Diagnostics.Add_initializer_to_property_0, info.prop.name.getText()], fixIdAddInitializer, Diagnostics.Add_initializers_to_all_uninitialized_properties);
       }
       function addInitializer(changeTracker, propertyDeclarationSourceFile, propertyDeclaration, initializer3) {
@@ -192128,7 +192128,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         } else if (type2.flags & 4096) {
           return factory.createBigIntLiteral(type2.value);
         } else if (type2.isUnion()) {
-          return firstDefined(type2.types, (t) => getDefaultValueFromType(checker, t));
+          return firstDefined(type2.types, (t2) => getDefaultValueFromType(checker, t2));
         } else if (type2.isClass()) {
           const classDeclaration = getClassLikeDeclarationOfSymbol(type2.symbol);
           if (!classDeclaration || hasSyntacticModifier(
@@ -192159,7 +192159,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (!info) {
             return void 0;
           }
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange35(t, context.sourceFile, info));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange35(t2, context.sourceFile, info));
           return [createCodeFixAction(fixId43, changes, Diagnostics.Convert_require_to_import, fixId43, Diagnostics.Convert_all_require_to_import)];
         },
         fixIds: [fixId43],
@@ -192250,7 +192250,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span: { start } } = context;
           const info = getInfo19(sourceFile, start);
           if (!info) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange36(t, sourceFile, info, context.preferences));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange36(t2, sourceFile, info, context.preferences));
           return [createCodeFixAction(fixId44, changes, Diagnostics.Convert_to_default_import, fixId44, Diagnostics.Convert_all_to_default_imports)];
         },
         fixIds: [fixId44],
@@ -192286,7 +192286,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes57,
         getCodeActions: function getCodeActionsToUseBigintLiteral(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => makeChange10(t, context.sourceFile, context.span));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => makeChange10(t2, context.sourceFile, context.span));
           if (changes.length > 0) {
             return [createCodeFixAction(fixId45, changes, Diagnostics.Convert_to_a_bigint_numeric_literal, fixId45, Diagnostics.Convert_all_to_bigint_numeric_literals)];
           }
@@ -192312,7 +192312,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         getCodeActions: function getCodeActionsToAddMissingTypeof(context) {
           const { sourceFile, span } = context;
           const importType = getImportTypeNode(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange37(t, sourceFile, importType));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange37(t2, sourceFile, importType));
           return [createCodeFixAction(fixId46, changes, Diagnostics.Add_missing_typeof, fixId46, Diagnostics.Add_missing_typeof)];
         },
         fixIds: [fixId46],
@@ -192344,7 +192344,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span } = context;
           const node = findNodeToFix(sourceFile, span.start);
           if (!node) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange38(t, sourceFile, node));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange38(t2, sourceFile, node));
           return [createCodeFixAction(fixID2, changes, Diagnostics.Wrap_in_JSX_fragment, fixID2, Diagnostics.Wrap_all_unparented_JSX_in_JSX_fragment)];
         },
         fixIds: [fixID2],
@@ -192390,7 +192390,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes60,
         getCodeActions: function getCodeActionsToWrapDecoratorExpressionInParentheses(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => makeChange11(t, context.sourceFile, context.span.start));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => makeChange11(t2, context.sourceFile, context.span.start));
           return [createCodeFixAction(fixId47, changes, Diagnostics.Wrap_in_parentheses, fixId47, Diagnostics.Wrap_all_invalid_decorator_expressions_in_parentheses)];
         },
         fixIds: [fixId47],
@@ -192411,7 +192411,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span } = context;
           const info = getInfo20(sourceFile, span.start);
           if (!info) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange39(t, sourceFile, info));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange39(t2, sourceFile, info));
           const name = idText(info.container.name);
           return [createCodeFixAction(fixId48, changes, [Diagnostics.Convert_0_to_mapped_object_type, name], fixId48, [Diagnostics.Convert_0_to_mapped_object_type, name])];
         },
@@ -192473,8 +192473,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           if (!callExpression) {
             return void 0;
           }
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => {
-            t.deleteRange(context.sourceFile, { pos: callExpression.expression.end, end: callExpression.end });
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => {
+            t2.deleteRange(context.sourceFile, { pos: callExpression.expression.end, end: callExpression.end });
           });
           return [createCodeFixActionWithoutFixAll(fixId49, changes, Diagnostics.Remove_parentheses)];
         },
@@ -192487,7 +192487,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       registerCodeFix({
         errorCodes: errorCodes63,
         getCodeActions: function getCodeActionsToRemoveUnnecessaryAwait(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => makeChange12(t, context.sourceFile, context.span));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => makeChange12(t2, context.sourceFile, context.span));
           if (changes.length > 0) {
             return [createCodeFixAction(fixId50, changes, Diagnostics.Remove_unnecessary_await, fixId50, Diagnostics.Remove_all_unnecessary_uses_of_await)];
           }
@@ -192530,8 +192530,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         errorCodes: errorCodes64,
         fixIds: [fixId51],
         getCodeActions: function getCodeActionsToSplitTypeOnlyImport(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => {
-            return splitTypeOnlyImport(t, getImportDeclaration2(context.sourceFile, context.span), context);
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => {
+            return splitTypeOnlyImport(t2, getImportDeclaration2(context.sourceFile, context.span), context);
           });
           if (changes.length) {
             return [createCodeFixAction(fixId51, changes, Diagnostics.Split_into_two_separate_import_declarations, fixId51, Diagnostics.Split_all_invalid_type_only_imports)];
@@ -192592,7 +192592,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile, span, program: program2 } = context;
           const info = getInfo21(sourceFile, span.start, program2);
           if (info === void 0) return;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange40(t, sourceFile, info.token));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange40(t2, sourceFile, info.token));
           return [createCodeFixActionMaybeFixAll(fixId52, changes, Diagnostics.Convert_const_to_let, fixId52, Diagnostics.Convert_all_const_to_let)];
         },
         getAllCodeActions: (context) => {
@@ -192638,7 +192638,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const { sourceFile } = context;
           const info = getInfo22(sourceFile, context.span.start, context.errorCode);
           if (!info) return void 0;
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => doChange41(t, sourceFile, info));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => doChange41(t2, sourceFile, info));
           return [createCodeFixAction(
             fixId53,
             changes,
@@ -192674,7 +192674,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         errorCodes: errorCodes67,
         fixIds: [fixId54],
         getCodeActions(context) {
-          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t) => makeChange13(t, context.sourceFile, context.span, context.program));
+          const changes = ts_textChanges_exports.ChangeTracker.with(context, (t2) => makeChange13(t2, context.sourceFile, context.span, context.program));
           if (changes.length > 0) {
             return [createCodeFixAction(fixName7, changes, Diagnostics.Add_void_to_Promise_resolved_without_a_value, fixId54, Diagnostics.Add_void_to_all_Promises_resolved_without_a_value)];
           }
@@ -195157,7 +195157,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const isLiteralExpected = !tryCast(previousToken, isStringLiteralLike) && !isJsxIdentifierExpected;
         const literals = !isLiteralExpected ? [] : mapDefined(
           contextualTypeOrConstraint && (contextualTypeOrConstraint.isUnion() ? contextualTypeOrConstraint.types : [contextualTypeOrConstraint]),
-          (t) => t.isLiteral() && !(t.flags & 32768) ? t.value : void 0
+          (t2) => t2.isLiteral() && !(t2.flags & 32768) ? t2.value : void 0
         );
         const recommendedCompletion = previousToken && contextualTypeOrConstraint && getRecommendedCompletion(previousToken, contextualTypeOrConstraint, typeChecker);
         return {
@@ -196616,7 +196616,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const promiseFilteredContextualType = checker.getUnionType(
           filter(
             contextualType.flags & 134217728 ? contextualType.types : [contextualType],
-            (t) => !checker.getPromisedTypeOfPromise(t)
+            (t2) => !checker.getPromisedTypeOfPromise(t2)
           )
         );
         const type2 = hasCompletionsType && !(completionsType.flags & 3) ? checker.getUnionType([promiseFilteredContextualType, completionsType]) : promiseFilteredContextualType;
@@ -196719,22 +196719,22 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const constraint = checker.getTypeArgumentConstraint(node);
           if (constraint) return constraint;
         }
-        const t = getConstraintOfTypeArgumentProperty(node.parent, checker);
-        if (!t) return void 0;
+        const t2 = getConstraintOfTypeArgumentProperty(node.parent, checker);
+        if (!t2) return void 0;
         switch (node.kind) {
           case 172:
-            return checker.getTypeOfPropertyOfContextualType(t, node.symbol.escapedName);
+            return checker.getTypeOfPropertyOfContextualType(t2, node.symbol.escapedName);
           case 59:
             if (node.parent.kind === 172) {
-              return t;
+              return t2;
             }
             break;
           case 194:
           case 188:
           case 193:
-            return t;
+            return t2;
           case 23:
-            return checker.getElementTypeOfArrayType(t);
+            return checker.getElementTypeOfArrayType(t2);
         }
       }
       function isFromObjectTypeDeclaration(node) {
@@ -197138,7 +197138,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             return match && createCompletionDetailsForSymbol(match, match.name, checker, sourceFile, location, cancellationToken);
           }
           case 2:
-            return find(completion.types, (t) => t.value === name) ? createCompletionDetails(name, "", "string", [textPart(name)]) : void 0;
+            return find(completion.types, (t2) => t2.value === name) ? createCompletionDetails(name, "", "string", [textPart(name)]) : void 0;
           default:
             return Debug.assertNever(completion);
         }
@@ -197322,7 +197322,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
               if (result.kind === 1) {
                 return { kind: 1, symbols: result.symbols.filter((sym) => !contains(alreadyUsedTypes, sym.name)), hasIndexSignature: result.hasIndexSignature };
               }
-              return { kind: 2, types: result.types.filter((t) => !contains(alreadyUsedTypes, t.value)), isNewIdentifier: false };
+              return { kind: 2, types: result.types.filter((t2) => !contains(alreadyUsedTypes, t2.value)), isNewIdentifier: false };
             }
             default:
               return void 0;
@@ -197397,7 +197397,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       function getStringLiteralTypes(type2, uniques = /* @__PURE__ */ new Set()) {
         if (!type2) return emptyArray;
         type2 = skipConstraint(type2);
-        return type2.isUnion() ? flatMap(type2.types, (t) => getStringLiteralTypes(t, uniques)) : type2.isStringLiteral() && !(type2.flags & 32768) && addToSeen(uniques, type2.value) ? [type2] : emptyArray;
+        return type2.isUnion() ? flatMap(type2.types, (t2) => getStringLiteralTypes(t2, uniques)) : type2.isStringLiteral() && !(type2.flags & 32768) && addToSeen(uniques, type2.value) ? [type2] : emptyArray;
       }
       function nameAndKind(name, kind, extension) {
         return { name, kind, extension };
@@ -200666,7 +200666,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         function getParentSymbolsOfPropertyAccess(location, symbol2, checker) {
           const propertyAccessExpression = isRightSideOfPropertyAccess(location) ? location.parent : void 0;
           const lhsType = propertyAccessExpression && checker.getTypeAtLocation(propertyAccessExpression.expression);
-          const res = mapDefined(lhsType && (lhsType.isUnionOrIntersection() ? lhsType.types : lhsType.symbol === symbol2.parent ? void 0 : [lhsType]), (t) => t.symbol && t.symbol.flags & (32 | 64) ? t.symbol : void 0);
+          const res = mapDefined(lhsType && (lhsType.isUnionOrIntersection() ? lhsType.types : lhsType.symbol === symbol2.parent ? void 0 : [lhsType]), (t2) => t2.symbol && t2.symbol.flags & (32 | 64) ? t2.symbol : void 0);
           return res.length === 0 ? void 0 : res;
         }
         function isForRenameWithPrefixAndSuffixText(options) {
@@ -200815,8 +200815,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         if (isPropertyName(node) && isBindingElement(parent2) && isObjectBindingPattern(parent2.parent) && node === (parent2.propertyName || parent2.name)) {
           const name = getNameFromPropertyName(node);
           const type2 = typeChecker.getTypeAtLocation(parent2.parent);
-          return name === void 0 ? emptyArray : flatMap(type2.isUnion() ? type2.types : [type2], (t) => {
-            const prop = t.getProperty(name);
+          return name === void 0 ? emptyArray : flatMap(type2.isUnion() ? type2.types : [type2], (t2) => {
+            const prop = t2.getProperty(name);
             return prop && getDefinitionFromSymbol(typeChecker, prop, node);
           });
         }
@@ -201031,7 +201031,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         return typeDefinitions.length ? [...getFirstTypeArgumentDefinitions(typeChecker, resolvedType, node, failedAliasResolution), ...typeDefinitions] : !(symbol2.flags & 111551) && symbol2.flags & 788968 ? getDefinitionFromSymbol(typeChecker, skipAlias(symbol2, typeChecker), node, failedAliasResolution) : void 0;
       }
       function definitionFromType(type2, checker, node, failedAliasResolution) {
-        return flatMap(type2.isUnion() && !(type2.flags & 65536) ? type2.types : [type2], (t) => t.symbol && getDefinitionFromSymbol(checker, t.symbol, node, failedAliasResolution));
+        return flatMap(type2.isUnion() && !(type2.flags & 65536) ? type2.types : [type2], (t2) => t2.symbol && getDefinitionFromSymbol(checker, t2.symbol, node, failedAliasResolution));
       }
       function tryGetReturnTypeOfFunction(symbol2, type2, checker) {
         if (type2.symbol === symbol2 || // At `const f = () => {}`, the symbol is `f` and the type symbol is at `() => {}`
@@ -202172,12 +202172,12 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const parts = [];
         forEachUnique(declarations, (declaration) => {
           for (const jsdoc of getCommentHavingNodes(declaration)) {
-            const inheritDoc = isJSDoc(jsdoc) && jsdoc.tags && find(jsdoc.tags, (t) => t.kind === 328 && (t.tagName.escapedText === "inheritDoc" || t.tagName.escapedText === "inheritdoc"));
+            const inheritDoc = isJSDoc(jsdoc) && jsdoc.tags && find(jsdoc.tags, (t2) => t2.kind === 328 && (t2.tagName.escapedText === "inheritDoc" || t2.tagName.escapedText === "inheritdoc"));
             if (jsdoc.comment === void 0 && !inheritDoc || isJSDoc(jsdoc) && declaration.kind !== 347 && declaration.kind !== 339 && jsdoc.tags && jsdoc.tags.some(
-              (t) => t.kind === 347 || t.kind === 339
+              (t2) => t2.kind === 347 || t2.kind === 339
               /* JSDocCallbackTag */
             ) && !jsdoc.tags.some(
-              (t) => t.kind === 342 || t.kind === 343
+              (t2) => t2.kind === 342 || t2.kind === 343
               /* JSDocReturnTag */
             )) {
               continue;
@@ -202218,10 +202218,10 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         forEachUnique(declarations, (declaration) => {
           const tags = getJSDocTags(declaration);
           if (tags.some(
-            (t) => t.kind === 347 || t.kind === 339
+            (t2) => t2.kind === 347 || t2.kind === 339
             /* JSDocCallbackTag */
           ) && !tags.some(
-            (t) => t.kind === 342 || t.kind === 343
+            (t2) => t2.kind === 342 || t2.kind === 343
             /* JSDocReturnTag */
           )) {
             return;
@@ -202371,7 +202371,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         return mapDefined(fn.parameters, (param) => {
           if (!isIdentifier(param.name)) return void 0;
           const name = param.name.text;
-          if (jsdoc.tags.some((t) => t !== tag && isJSDocParameterTag(t) && isIdentifier(t.name) && t.name.escapedText === name) || nameThusFar !== void 0 && !startsWith(name, nameThusFar)) {
+          if (jsdoc.tags.some((t2) => t2 !== tag && isJSDocParameterTag(t2) && isIdentifier(t2.name) && t2.name.escapedText === name) || nameThusFar !== void 0 && !startsWith(name, nameThusFar)) {
             return void 0;
           }
           return { name, kind: "parameter", kindModifiers: "", sortText: ts_Completions_exports.SortText.LocationPriority };
@@ -204379,7 +204379,7 @@ ${content}
       function getTypeHelpItem(symbol2, typeParameters, checker, enclosingDeclaration, sourceFile) {
         const typeSymbolDisplay = symbolToDisplayParts(checker, symbol2);
         const printer = createPrinterWithRemoveComments();
-        const parameters = typeParameters.map((t) => createSignatureHelpParameterForTypeParameter(t, checker, enclosingDeclaration, sourceFile, printer));
+        const parameters = typeParameters.map((t2) => createSignatureHelpParameterForTypeParameter(t2, checker, enclosingDeclaration, sourceFile, printer));
         const documentation = symbol2.getDocumentationComment(checker);
         const tags = symbol2.getJsDocTags(checker);
         const prefixDisplayParts = [...typeSymbolDisplay, punctuationPart(
@@ -204432,7 +204432,7 @@ ${content}
       function itemInfoForTypeParameters(candidateSignature, checker, enclosingDeclaration, sourceFile) {
         const typeParameters = (candidateSignature.target || candidateSignature).typeParameters;
         const printer = createPrinterWithRemoveComments();
-        const parameters = (typeParameters || emptyArray).map((t) => createSignatureHelpParameterForTypeParameter(t, checker, enclosingDeclaration, sourceFile, printer));
+        const parameters = (typeParameters || emptyArray).map((t2) => createSignatureHelpParameterForTypeParameter(t2, checker, enclosingDeclaration, sourceFile, printer));
         const thisParameter = candidateSignature.thisParameter ? [checker.symbolToParameterDeclaration(candidateSignature.thisParameter, enclosingDeclaration, signatureHelpNodeBuilderFlags)] : [];
         return checker.getExpandedParameters(candidateSignature).map((paramList) => {
           const params = factory.createNodeArray([...thisParameter, ...map3(paramList, (param) => checker.symbolToParameterDeclaration(param, enclosingDeclaration, signatureHelpNodeBuilderFlags))]);
@@ -205425,8 +205425,8 @@ ${content}
           if (isIdentifier(name) && isObjectBindingPattern(parent2)) {
             const propertyName = getTextOfIdentifierOrLiteral(name);
             const objectType = typeChecker.getTypeAtLocation(parent2);
-            documentation = firstDefined(objectType.isUnion() ? objectType.types : [objectType], (t) => {
-              const prop = t.getProperty(propertyName);
+            documentation = firstDefined(objectType.isUnion() ? objectType.types : [objectType], (t2) => {
+              const prop = t2.getProperty(propertyName);
               return prop ? prop.getDocumentationComment(typeChecker) : void 0;
             }) || emptyArray;
           }
@@ -207255,15 +207255,15 @@ ${options.prefix}` : "\n" : options.prefix
           trailingTrivia = void 0;
           let pos = scanner2.getTokenFullStart();
           while (pos < endPos) {
-            const t = scanner2.getToken();
-            if (!isTrivia(t)) {
+            const t2 = scanner2.getToken();
+            if (!isTrivia(t2)) {
               break;
             }
             scanner2.scan();
             const item2 = {
               pos,
               end: scanner2.getTokenFullStart(),
-              kind: t
+              kind: t2
             };
             pos = scanner2.getTokenFullStart();
             leadingTrivia = append(leadingTrivia, item2);
@@ -207305,8 +207305,8 @@ ${options.prefix}` : "\n" : options.prefix
         function shouldRescanJsxAttributeValue(node) {
           return node.parent && isJsxAttribute(node.parent) && node.parent.initializer === node;
         }
-        function startsWithSlashToken(t) {
-          return t === 44 || t === 69;
+        function startsWithSlashToken(t2) {
+          return t2 === 44 || t2 === 69;
         }
         function readTokenInfo(n) {
           Debug.assert(isOnToken());
@@ -207468,7 +207468,7 @@ ${options.prefix}` : "\n" : options.prefix
           }
         }
         function anyTokenExcept(...tokens) {
-          return { tokens: allTokens.filter((t) => !tokens.some((t2) => t2 === t)), isSpecific: false };
+          return { tokens: allTokens.filter((t2) => !tokens.some((t22) => t22 === t2)), isSpecific: false };
         }
         const anyToken = { tokens: allTokens, isSpecific: false };
         const anyTokenIncludingMultilineComments = tokenRangeFrom([
@@ -230069,8 +230069,8 @@ var require_parse2 = __commonJS({
             brace.value = brace.output = "\\{";
             value = output = "\\}";
             state.output = out;
-            for (const t of toks) {
-              state.output += t.output || t.value;
+            for (const t2 of toks) {
+              state.output += t2.output || t2.value;
             }
           }
           push2({ type: "brace", value, output });
@@ -233223,6 +233223,320 @@ var {
 
 // src/generated/version.ts
 var boardReadyVersion = "1.0.2";
+
+// src/i18n/en.ts
+var en = {
+  "cli.baseline.captured": "Captured {count} {findingWord} in {path}.",
+  "cli.baseline.diff": "Added: {added}\nRemoved: {removed}\nUnchanged: {unchanged}",
+  "cli.baseline.notFound": "Baseline not found: {path}.",
+  "cli.baseline.pruned": "Pruned {count} baseline {findingWord}.",
+  "cli.baseline.removed": "Removed {path}.",
+  "cli.error.configuration": "Configuration error: {error}",
+  "cli.error.concurrencyPositiveInteger": "concurrency must be a positive integer",
+  "cli.error.environment.kicadMissing": "Environment error: kicad-cli not available.",
+  "cli.error.unexpected": "unexpected CLI error",
+  "cli.explain.error.unknownRule": "Unknown rule: {ruleId}",
+  "cli.explain.error.unsupportedRule": "Rule {ruleId} does not support explanation.",
+  "cli.init.created": "created boardreadyops.yml",
+  "cli.init.exists": "boardreadyops.yml already exists",
+  "doctor.check.action": "Action / Workflow",
+  "doctor.check.adapters": "Adapters",
+  "doctor.check.kicad": "KiCad",
+  "doctor.check.repository": "Repository",
+  "doctor.check.runtime": "Runtime",
+  "doctor.check.suppressions": "Suppressions",
+  "doctor.error.unknownCheck": "Unknown doctor check: {check}. Available checks: {checks}",
+  "doctor.error.unknownFormat": "Unknown doctor format: {format}. Available formats: text, json",
+  "doctor.recommendation.action.noWorkflow": "Add the BoardReadyOps GitHub Action workflow for pull request preflight.",
+  "doctor.recommendation.action.permissions": "Add `permissions: { pull-requests: write }` or `permissions: { issues: write }` to the BoardReadyOps job.",
+  "doctor.recommendation.action.pinCheckout": "Pin actions/checkout to an immutable commit SHA.",
+  "doctor.recommendation.action.workflowYaml": "Fix the BoardReadyOps workflow YAML before relying on action diagnostics.",
+  "doctor.recommendation.adapters.nexar": "Set NEXAR_CLIENT_ID and NEXAR_CLIENT_SECRET for Nexar-backed lifecycle checks.",
+  "doctor.recommendation.kicad": "Install KiCad CLI to run DRC and ERC checks.",
+  "doctor.recommendation.repository.config": "Fix boardreadyops.yml before running repository checks.",
+  "doctor.recommendation.repository.gerbers": "Generate Gerber outputs from KiCad before CI.",
+  "doctor.recommendation.repository.projects": "Add a .kicad_pro project before CI.",
+  "doctor.recommendation.runtime.node": "Install a supported Node.js 22 or 24 runtime.",
+  "doctor.recommendation.runtime.npm": "Install npm for package-based BoardReadyOps workflows.",
+  "doctor.recommendations": "Recommendations",
+  "doctor.severity.fail": "fail",
+  "doctor.severity.info": "info",
+  "doctor.severity.pass": "pass",
+  "doctor.severity.warn": "warn",
+  "doctor.title": "BoardReadyOps Doctor - Environment & Repository Diagnosis",
+  "doctor.action.checkoutPinned": "actions/checkout is SHA-pinned.",
+  "doctor.action.checkoutUnpinned": "actions/checkout is not SHA-pinned.",
+  "doctor.action.noWorkflow": "No .github/workflows/boardreadyops.yml workflow found.",
+  "doctor.action.permissionsConfigured": "permissions: pull-requests or issues write configured.",
+  "doctor.action.permissionsMissing": "permissions: pull-requests or issues write missing for PR comments.",
+  "doctor.action.workflowFound": "{path} found.",
+  "doctor.action.workflowUnreadable": "Unable to read or parse {path} workflow.",
+  "doctor.adapters.nexarMissing": "Nexar credentials not present.",
+  "doctor.adapters.nexarPresent": "Nexar credentials present.",
+  "doctor.kicad.drcAvailable": "DRC available.",
+  "doctor.kicad.ercAvailable": "ERC available.",
+  "doctor.kicad.found": "kicad-cli{version} found at {path}.",
+  "doctor.kicad.missing": "kicad-cli not found.",
+  "doctor.repository.configFound": "{file} found and valid.",
+  "doctor.repository.configInvalid": "boardreadyops configuration is invalid: {errors}",
+  "doctor.repository.gerberOutput.word": "output",
+  "doctor.repository.gerberOutput.word.plural": "outputs",
+  "doctor.repository.gerbersDiscovered": "{count} Gerber {outputWord} found.",
+  "doctor.repository.noConfig": "No boardreadyops configuration file found; defaults are valid.",
+  "doctor.repository.noGerbers": "No Gerber outputs found.",
+  "doctor.repository.noProjects": "No KiCad projects discovered.",
+  "doctor.repository.project.word": "project",
+  "doctor.repository.project.word.plural": "projects",
+  "doctor.repository.projectsDiscovered": "{count} KiCad {projectWord} discovered.",
+  "doctor.runtime.boardreadyops": "boardreadyops: v{version}",
+  "doctor.runtime.node": "Node: {version} (supported majors: {majors})",
+  "doctor.runtime.npm": "npm: v{version}",
+  "doctor.runtime.npmMissing": "npm not found.",
+  "doctor.suppressions.baselineFound": "{file} baseline found.",
+  "doctor.suppressions.noBaseline": "No baseline captured.",
+  "doctor.suppressions.noSuppressions": "No suppressions file found.",
+  "doctor.suppressions.suppressionsFound": "{file} suppressions file found.",
+  "report.allProjects": "All projects",
+  "report.allRules": "All rules",
+  "report.allSeverities": "All severities",
+  "report.artifacts": "Artifacts",
+  "report.bom": "BOM",
+  "report.bomDiffTruncated": "BOM diff truncated.",
+  "report.confidence": "Confidence",
+  "report.context": "Context",
+  "report.count": "Count",
+  "report.current": "Current",
+  "report.details": "Details",
+  "report.fabricationChanges": "Fabrication Changes",
+  "report.filterFindings": "Filter findings",
+  "report.filterableFindingList": "Filterable finding list",
+  "report.finding": "Finding",
+  "report.finding.count": "{count} {findingWord}",
+  "report.finding.word": "finding",
+  "report.finding.word.plural": "findings",
+  "report.findings": "Findings",
+  "report.fix": "Fix",
+  "report.generatedMetadata": "Generated {date} by {tool} {version}. {threshold}",
+  "report.groupedByRule": "Findings grouped by rule",
+  "report.location.board": "board",
+  "report.location.column": "column {column}",
+  "report.location.line": "line {line}",
+  "report.location.lines": "lines {startLine}-{endLine}",
+  "report.manufacturingOutputs": "Manufacturing Outputs",
+  "report.metric": "Metric",
+  "report.moreNewFindings": "...and {count} more new {findingWord}.",
+  "report.newFindings": "New Findings",
+  "report.noBomChanges": "No BOM changes recorded.",
+  "report.noFindings": "No findings.",
+  "report.noFix": "No fix suggestion provided.",
+  "report.noLocation": "No location provided.",
+  "report.noProjects": "No projects were reported.",
+  "report.noReferences": "No references provided.",
+  "report.noRules": "No rules produced findings.",
+  "report.output.added": "{count} added",
+  "report.output.changed": "{count} changed",
+  "report.output.removed": "{count} removed",
+  "report.perProjectBreakdown": "Per-project Breakdown",
+  "report.perRuleGrouping": "Per-rule Grouping",
+  "report.previous": "Previous",
+  "report.project": "Project",
+  "report.ref": "Ref",
+  "report.references": "References",
+  "report.resource": "Resource",
+  "report.rule": "Rule",
+  "report.severity": "Severity",
+  "report.severityCounts": "Severity counts",
+  "report.status": "Status",
+  "report.summaryBySeverity": "Summary by Severity",
+  "report.threshold.failed": "Threshold failed.",
+  "report.threshold.passed": "Threshold passed.",
+  "report.title": "BoardReadyOps Report",
+  "report.topFindings": "Top Findings",
+  "report.total": "Total",
+  "report.unassigned": "Unassigned",
+  "severity.critical": "Critical",
+  "severity.high": "High",
+  "severity.info": "Info",
+  "severity.low": "Low",
+  "severity.medium": "Medium"
+};
+
+// src/i18n/tr.ts
+var tr = {
+  "cli.baseline.captured": "{count} {findingWord} {path} i\xE7inde kaydedildi.",
+  "cli.baseline.diff": "Eklenen: {added}\nKald\u0131r\u0131lan: {removed}\nDe\u011Fi\u015Fmeyen: {unchanged}",
+  "cli.baseline.notFound": "Temel liste bulunamad\u0131: {path}.",
+  "cli.baseline.pruned": "{count} temel liste {findingWord} budand\u0131.",
+  "cli.baseline.removed": "{path} kald\u0131r\u0131ld\u0131.",
+  "cli.error.configuration": "Yap\u0131land\u0131rma hatas\u0131: {error}",
+  "cli.error.concurrencyPositiveInteger": "concurrency pozitif bir tam say\u0131 olmal\u0131",
+  "cli.error.environment.kicadMissing": "Ortam hatas\u0131: kicad-cli kullan\u0131lam\u0131yor.",
+  "cli.error.unexpected": "beklenmeyen CLI hatas\u0131",
+  "cli.explain.error.unknownRule": "Bilinmeyen kural: {ruleId}",
+  "cli.explain.error.unsupportedRule": "{ruleId} kural\u0131 a\xE7\u0131klamay\u0131 desteklemiyor.",
+  "cli.init.created": "boardreadyops.yml olu\u015Fturuldu",
+  "cli.init.exists": "boardreadyops.yml zaten var",
+  "doctor.check.action": "Action / Workflow",
+  "doctor.check.adapters": "Ba\u011Fda\u015Ft\u0131r\u0131c\u0131lar",
+  "doctor.check.kicad": "KiCad",
+  "doctor.check.repository": "Depo",
+  "doctor.check.runtime": "\xC7al\u0131\u015Fma Zaman\u0131",
+  "doctor.check.suppressions": "Bast\u0131rmalar",
+  "doctor.error.unknownCheck": "Bilinmeyen doktor denetimi: {check}. Kullan\u0131labilir denetimler: {checks}",
+  "doctor.error.unknownFormat": "Bilinmeyen doktor bi\xE7imi: {format}. Kullan\u0131labilir bi\xE7imler: text, json",
+  "doctor.recommendation.action.noWorkflow": "Pull request \xF6n denetimi i\xE7in BoardReadyOps GitHub Action workflow dosyas\u0131n\u0131 ekleyin.",
+  "doctor.recommendation.action.permissions": "BoardReadyOps job'una `permissions: { pull-requests: write }` veya `permissions: { issues: write }` ekleyin.",
+  "doctor.recommendation.action.pinCheckout": "actions/checkout kullan\u0131m\u0131n\u0131 de\u011Fi\u015Fmez bir commit SHA de\u011Ferine sabitleyin.",
+  "doctor.recommendation.action.workflowYaml": "Action tan\u0131lar\u0131na g\xFCvenmeden \xF6nce BoardReadyOps workflow YAML dosyas\u0131n\u0131 d\xFCzeltin.",
+  "doctor.recommendation.adapters.nexar": "Nexar destekli ya\u015Fam d\xF6ng\xFCs\xFC denetimleri i\xE7in NEXAR_CLIENT_ID ve NEXAR_CLIENT_SECRET ayarlay\u0131n.",
+  "doctor.recommendation.kicad": "DRC ve ERC denetimlerini \xE7al\u0131\u015Ft\u0131rmak i\xE7in KiCad CLI kurun.",
+  "doctor.recommendation.repository.config": "Depo denetimlerini \xE7al\u0131\u015Ft\u0131rmadan \xF6nce boardreadyops.yml dosyas\u0131n\u0131 d\xFCzeltin.",
+  "doctor.recommendation.repository.gerbers": "CI'dan \xF6nce KiCad ile Gerber \xE7\u0131kt\u0131lar\u0131n\u0131 \xFCretin.",
+  "doctor.recommendation.repository.projects": "CI'dan \xF6nce bir .kicad_pro projesi ekleyin.",
+  "doctor.recommendation.runtime.node": "Desteklenen Node.js 22 veya 24 \xE7al\u0131\u015Fma zaman\u0131 kurun.",
+  "doctor.recommendation.runtime.npm": "Paket tabanl\u0131 BoardReadyOps ak\u0131\u015Flar\u0131 i\xE7in npm kurun.",
+  "doctor.recommendations": "\xD6neriler",
+  "doctor.severity.fail": "ba\u015Far\u0131s\u0131z",
+  "doctor.severity.info": "bilgi",
+  "doctor.severity.pass": "ge\xE7ti",
+  "doctor.severity.warn": "uyar\u0131",
+  "doctor.title": "BoardReadyOps Doktoru - Ortam ve Depo Tan\u0131s\u0131",
+  "doctor.action.checkoutPinned": "actions/checkout SHA'ya sabitlenmi\u015F.",
+  "doctor.action.checkoutUnpinned": "actions/checkout SHA'ya sabitlenmemi\u015F.",
+  "doctor.action.noWorkflow": ".github/workflows/boardreadyops.yml workflow dosyas\u0131 bulunamad\u0131.",
+  "doctor.action.permissionsConfigured": "permissions: pull-requests veya issues write yap\u0131land\u0131r\u0131lm\u0131\u015F.",
+  "doctor.action.permissionsMissing": "PR yorumlar\u0131 i\xE7in permissions: pull-requests veya issues write eksik.",
+  "doctor.action.workflowFound": "{path} bulundu.",
+  "doctor.action.workflowUnreadable": "{path} workflow dosyas\u0131 okunamad\u0131 veya ayr\u0131\u015Ft\u0131r\u0131lamad\u0131.",
+  "doctor.adapters.nexarMissing": "Nexar kimlik bilgileri yok.",
+  "doctor.adapters.nexarPresent": "Nexar kimlik bilgileri var.",
+  "doctor.kicad.drcAvailable": "DRC kullan\u0131labilir.",
+  "doctor.kicad.ercAvailable": "ERC kullan\u0131labilir.",
+  "doctor.kicad.found": "kicad-cli{version} {path} konumunda bulundu.",
+  "doctor.kicad.missing": "kicad-cli bulunamad\u0131.",
+  "doctor.repository.configFound": "{file} bulundu ve ge\xE7erli.",
+  "doctor.repository.configInvalid": "boardreadyops yap\u0131land\u0131rmas\u0131 ge\xE7ersiz: {errors}",
+  "doctor.repository.gerberOutput.word": "\xE7\u0131kt\u0131s\u0131",
+  "doctor.repository.gerberOutput.word.plural": "\xE7\u0131kt\u0131s\u0131",
+  "doctor.repository.gerbersDiscovered": "{count} Gerber {outputWord} bulundu.",
+  "doctor.repository.noConfig": "BoardReadyOps yap\u0131land\u0131rma dosyas\u0131 bulunamad\u0131; varsay\u0131lanlar ge\xE7erli.",
+  "doctor.repository.noGerbers": "Gerber \xE7\u0131kt\u0131s\u0131 bulunamad\u0131.",
+  "doctor.repository.noProjects": "KiCad projesi ke\u015Ffedilmedi.",
+  "doctor.repository.project.word": "projesi",
+  "doctor.repository.project.word.plural": "projesi",
+  "doctor.repository.projectsDiscovered": "{count} KiCad {projectWord} ke\u015Ffedildi.",
+  "doctor.runtime.boardreadyops": "boardreadyops: v{version}",
+  "doctor.runtime.node": "Node: {version} (desteklenen ana s\xFCr\xFCmler: {majors})",
+  "doctor.runtime.npm": "npm: v{version}",
+  "doctor.runtime.npmMissing": "npm bulunamad\u0131.",
+  "doctor.suppressions.baselineFound": "{file} temel listesi bulundu.",
+  "doctor.suppressions.noBaseline": "Temel liste kaydedilmemi\u015F.",
+  "doctor.suppressions.noSuppressions": "Bast\u0131rma dosyas\u0131 bulunamad\u0131.",
+  "doctor.suppressions.suppressionsFound": "{file} bast\u0131rma dosyas\u0131 bulundu.",
+  "report.allProjects": "T\xFCm projeler",
+  "report.allRules": "T\xFCm kurallar",
+  "report.allSeverities": "T\xFCm \xF6nem dereceleri",
+  "report.artifacts": "Artifaktlar",
+  "report.bom": "BOM",
+  "report.bomDiffTruncated": "BOM fark\u0131 k\u0131salt\u0131ld\u0131.",
+  "report.confidence": "G\xFCven",
+  "report.context": "Ba\u011Flam",
+  "report.count": "Say\u0131",
+  "report.current": "Mevcut",
+  "report.details": "Ayr\u0131nt\u0131lar",
+  "report.fabricationChanges": "Fabrikasyon De\u011Fi\u015Fiklikleri",
+  "report.filterFindings": "Bulgular\u0131 filtrele",
+  "report.filterableFindingList": "Filtrelenebilir bulgu listesi",
+  "report.finding": "Bulgu",
+  "report.finding.count": "{count} {findingWord}",
+  "report.finding.word": "bulgu",
+  "report.finding.word.plural": "bulgu",
+  "report.findings": "Bulgular",
+  "report.fix": "\xC7\xF6z\xFCm",
+  "report.generatedMetadata": "{date} tarihinde {tool} {version} taraf\u0131ndan \xFCretildi. {threshold}",
+  "report.groupedByRule": "Kurala g\xF6re gruplanm\u0131\u015F bulgular",
+  "report.location.board": "kart",
+  "report.location.column": "s\xFCtun {column}",
+  "report.location.line": "sat\u0131r {line}",
+  "report.location.lines": "{startLine}-{endLine} sat\u0131rlar\u0131",
+  "report.manufacturingOutputs": "\xDCretim \xC7\u0131kt\u0131lar\u0131",
+  "report.metric": "\xD6l\xE7\xFCt",
+  "report.moreNewFindings": "...ve {count} yeni {findingWord} daha.",
+  "report.newFindings": "Yeni Bulgular",
+  "report.noBomChanges": "BOM de\u011Fi\u015Fikli\u011Fi kaydedilmedi.",
+  "report.noFindings": "Bulgu yok.",
+  "report.noFix": "\xC7\xF6z\xFCm \xF6nerisi yok.",
+  "report.noLocation": "Konum belirtilmedi.",
+  "report.noProjects": "Proje raporlanmad\u0131.",
+  "report.noReferences": "Referans belirtilmedi.",
+  "report.noRules": "Hi\xE7bir kural bulgu \xFCretmedi.",
+  "report.output.added": "{count} eklendi",
+  "report.output.changed": "{count} de\u011Fi\u015Fti",
+  "report.output.removed": "{count} kald\u0131r\u0131ld\u0131",
+  "report.perProjectBreakdown": "Proje Baz\u0131nda Da\u011F\u0131l\u0131m",
+  "report.perRuleGrouping": "Kural Baz\u0131nda Gruplama",
+  "report.previous": "\xD6nceki",
+  "report.project": "Proje",
+  "report.ref": "Ref",
+  "report.references": "Referanslar",
+  "report.resource": "Kaynak",
+  "report.rule": "Kural",
+  "report.severity": "\xD6nem Derecesi",
+  "report.severityCounts": "\xD6nem derecesi say\u0131lar\u0131",
+  "report.status": "Durum",
+  "report.summaryBySeverity": "\xD6nem Derecesine G\xF6re \xD6zet",
+  "report.threshold.failed": "E\u015Fik ba\u015Far\u0131s\u0131z.",
+  "report.threshold.passed": "E\u015Fik ge\xE7ti.",
+  "report.title": "BoardReadyOps Raporu",
+  "report.topFindings": "\xD6ne \xC7\u0131kan Bulgular",
+  "report.total": "Toplam",
+  "report.unassigned": "Atanmam\u0131\u015F",
+  "severity.critical": "Kritik",
+  "severity.high": "Y\xFCksek",
+  "severity.info": "Bilgi",
+  "severity.low": "D\xFC\u015F\xFCk",
+  "severity.medium": "Orta"
+};
+
+// src/i18n/catalog.ts
+var catalogs = {
+  en,
+  tr
+};
+
+// src/i18n/t.ts
+function resolveLocale(env = process.env) {
+  return normalizeLocale(env.BOARDREADY_LOCALE) ?? normalizeLocale(env.LANG) ?? "en";
+}
+function t(key, params = {}, locale = resolveLocale()) {
+  const catalog = locale === "__PSEUDO__" ? catalogs.en : catalogs[locale];
+  const template = catalog[key];
+  const values = { ...params };
+  if (template.includes("{findingWord}")) {
+    values.findingWord = typeof params.count === "number" && params.count === 1 ? catalog["report.finding.word"] : catalog["report.finding.word.plural"];
+  }
+  const rendered = template.replace(/\{([a-zA-Z0-9_]+)\}/g, (match, name) => {
+    const value = values[name];
+    return value === void 0 ? match : String(value);
+  });
+  return locale === "__PSEUDO__" ? `[[${rendered}]]` : rendered;
+}
+function normalizeLocale(value) {
+  if (!value) {
+    return void 0;
+  }
+  if (value === "__PSEUDO__") {
+    return "__PSEUDO__";
+  }
+  const normalized = value.toLowerCase().replace(/_/g, "-");
+  if (normalized === "tr" || normalized.startsWith("tr-")) {
+    return "tr";
+  }
+  if (normalized === "en" || normalized.startsWith("en-")) {
+    return "en";
+  }
+  return void 0;
+}
 
 // src/cli/commands/baseline.ts
 var import_promises9 = __toESM(require("node:fs/promises"), 1);
@@ -238458,8 +238772,8 @@ function numKeys(data) {
   return keyCount;
 }
 var getParsedType = (data) => {
-  const t = typeof data;
-  switch (t) {
+  const t2 = typeof data;
+  switch (t2) {
     case "undefined":
       return "undefined";
     case "string":
@@ -238498,7 +238812,7 @@ var getParsedType = (data) => {
       }
       return "object";
     default:
-      throw new Error(`Unknown data type: ${t}`);
+      throw new Error(`Unknown data type: ${t2}`);
   }
 };
 var propertyKeyTypes = /* @__PURE__ */ new Set(["string", "number", "symbol"]);
@@ -238821,8 +239135,8 @@ function getLengthableOrigin(input) {
   return "unknown";
 }
 function parsedType(data) {
-  const t = typeof data;
-  switch (t) {
+  const t2 = typeof data;
+  switch (t2) {
     case "number": {
       return Number.isNaN(data) ? "nan" : "number";
     }
@@ -238839,7 +239153,7 @@ function parsedType(data) {
       }
     }
   }
-  return t;
+  return t2;
 }
 function issue(...args) {
   const [iss, input, inst] = args;
@@ -240581,7 +240895,7 @@ function handleCatchall(proms, input, payload, ctx, def, inst) {
   const unrecognized = [];
   const keySet = def.keySet;
   const _catchall = def.catchall._zod;
-  const t = _catchall.def.type;
+  const t2 = _catchall.def.type;
   const isOptionalIn = _catchall.optin === "optional";
   const isOptionalOut = _catchall.optout === "optional";
   for (const key in input) {
@@ -240589,7 +240903,7 @@ function handleCatchall(proms, input, payload, ctx, def, inst) {
       continue;
     if (keySet.has(key))
       continue;
-    if (t === "never") {
+    if (t2 === "never") {
       unrecognized.push(key);
       continue;
     }
@@ -243922,16 +244236,16 @@ var error17 = () => {
     number: { unit: "", shortLabel: "\u05E7\u05D8\u05DF", longLabel: "\u05D2\u05D3\u05D5\u05DC" }
     // no unit
   };
-  const typeEntry = (t) => t ? TypeNames[t] : void 0;
-  const typeLabel = (t) => {
-    const e = typeEntry(t);
+  const typeEntry = (t2) => t2 ? TypeNames[t2] : void 0;
+  const typeLabel = (t2) => {
+    const e = typeEntry(t2);
     if (e)
       return e.label;
-    return t ?? TypeNames.unknown.label;
+    return t2 ?? TypeNames.unknown.label;
   };
-  const withDefinite = (t) => `\u05D4${typeLabel(t)}`;
-  const verbFor = (t) => {
-    const e = typeEntry(t);
+  const withDefinite = (t2) => `\u05D4${typeLabel(t2)}`;
+  const verbFor = (t2) => {
+    const e = typeEntry(t2);
     const gender = e?.gender ?? "m";
     return gender === "f" ? "\u05E6\u05E8\u05D9\u05DB\u05D4 \u05DC\u05D4\u05D9\u05D5\u05EA" : "\u05E6\u05E8\u05D9\u05DA \u05DC\u05D4\u05D9\u05D5\u05EA";
   };
@@ -251783,8 +252097,8 @@ function convertBaseSchema(schema2, ctx) {
   }
   const type2 = schema2.type;
   if (Array.isArray(type2)) {
-    const typeSchemas = type2.map((t) => {
-      const typeSchema = { ...schema2, type: t };
+    const typeSchemas = type2.map((t2) => {
+      const typeSchema = { ...schema2, type: t2 };
       return convertBaseSchema(typeSchema, ctx);
     });
     if (typeSchemas.length === 0) {
@@ -254077,8 +254391,10 @@ var captureBaselineCommand = async (pathInput, options, streams) => {
     const result = await currentResult(root, options.config, true);
     const baseline = createBaseline(result.findings);
     await writeBaseline(file2, baseline);
-    streams.stdout.write(`Captured ${baseline.findings.length} finding(s) in ${baselineDisplayPath(root, file2)}.
-`);
+    streams.stdout.write(
+      `${t("cli.baseline.captured", { count: baseline.findings.length, path: baselineDisplayPath(root, file2) })}
+`
+    );
     return 0;
   });
 };
@@ -254090,9 +254406,11 @@ var diffBaselineCommand = async (pathInput, options, streams) => {
     }
     const diff = diffBaseline((await currentResult(root, options.config)).findings, baseline);
     streams.stdout.write(
-      `Added: ${diff.added.length}
-Removed: ${diff.removed.length}
-Unchanged: ${diff.unchanged.length}
+      `${t("cli.baseline.diff", {
+        added: diff.added.length,
+        removed: diff.removed.length,
+        unchanged: diff.unchanged.length
+      })}
 `
     );
     return 0;
@@ -254101,7 +254419,7 @@ Unchanged: ${diff.unchanged.length}
 var clearBaselineCommand = async (pathInput, options, streams) => {
   return withBaselineRoot(pathInput, options.config, streams, async (root, file2) => {
     await import_promises9.default.rm(file2, { force: true });
-    streams.stdout.write(`Removed ${baselineDisplayPath(root, file2)}.
+    streams.stdout.write(`${t("cli.baseline.removed", { path: baselineDisplayPath(root, file2) })}
 `);
     return 0;
   });
@@ -254126,17 +254444,18 @@ var pruneBaselineCommand = async (pathInput, options, streams) => {
     const current = new Set((await currentResult(root, options.config)).findings.map((finding2) => finding2.fingerprint));
     const findings = baseline.findings.filter((finding2) => current.has(finding2.fingerprint));
     await writeBaseline(file2, { ...baseline, findings });
-    streams.stdout.write(`Pruned ${baseline.findings.length - findings.length} baseline finding(s).
+    streams.stdout.write(`${t("cli.baseline.pruned", { count: baseline.findings.length - findings.length })}
 `);
     return 0;
   });
 };
 async function withBaselineRoot(pathInput, configInput, streams, command) {
+  const locale = resolveLocale();
   const root = await canonicalRoot(import_node_path30.default.resolve(pathInput ?? "."));
   const loaded = await loadConfig(root, configInput);
   if (loaded.errors.length > 0) {
     for (const error51 of loaded.errors) {
-      streams.stderr.write(`Configuration error: ${error51}
+      streams.stderr.write(`${t("cli.error.configuration", { error: error51 }, locale)}
 `);
     }
     return 2;
@@ -254156,7 +254475,7 @@ async function currentResult(root, configInput, ignoreBaseline = false) {
 async function requiredBaseline(file2, root, streams) {
   const baseline = await readBaseline(file2);
   if (!baseline) {
-    streams.stderr.write(`Baseline not found: ${baselineDisplayPath(root, file2)}.
+    streams.stderr.write(`${t("cli.baseline.notFound", { path: baselineDisplayPath(root, file2) })}
 `);
   }
   return baseline;
@@ -254647,14 +254966,14 @@ mustache.Writer = Writer;
 var mustache_default = mustache;
 
 // src/report/templates/pr-comment.mustache
-var pr_comment_default = "<!-- boardreadyops:sticky:v1 -->\n{{> summary}}\n\n{{#hasFindings}}\n## Top Findings\n\n{{#topFindings}}\n- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}\n{{/topFindings}}\n{{/hasFindings}}\n{{^hasFindings}}\nNo findings.\n{{/hasFindings}}\n{{#hasFixes}}\n\n## Fix\n\n{{#fixFindings}}\n- `{{ruleId}}` in `{{resource.path}}`: {{fix.description}}\n{{#fix.steps}}\n  1. {{.}}\n{{/fix.steps}}\n{{/fixFindings}}\n{{/hasFixes}}\n\n{{#hasFabricationDiff}}\n## Fabrication Changes\n\n### BOM\n{{#fabrication.bom.hasRows}}\n| Ref | Previous | Current | Status |\n| --- | --- | --- | --- |\n{{#fabrication.bom.rows}}\n| {{reference}} | {{previous}} | {{current}} | {{status}} |\n{{/fabrication.bom.rows}}\n{{#fabrication.bom.truncated}}\n_BOM diff truncated._\n{{/fabrication.bom.truncated}}\n{{/fabrication.bom.hasRows}}\n{{^fabrication.bom.hasRows}}\nNo BOM changes recorded.\n{{/fabrication.bom.hasRows}}\n\n### Manufacturing Outputs\n{{#fabrication.outputs}}\n- {{kind}}: {{status}}{{#summary}} ({{summary}}){{/summary}}\n{{/fabrication.outputs}}\n\n{{#fabrication.findings.hasAdded}}\n### New Findings\n{{#fabrication.findings.added}}\n- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}\n{{/fabrication.findings.added}}\n{{#fabrication.findings.addedTruncated}}\n_...and {{fabrication.findings.addedRemaining}} more new findings._\n{{/fabrication.findings.addedTruncated}}\n{{/fabrication.findings.hasAdded}}\n{{/hasFabricationDiff}}\n\n{{#hasArtifacts}}\n## Artifacts\n\n{{#artifacts}}\n- [{{label}}]({{{url}}})\n{{/artifacts}}\n{{/hasArtifacts}}\n";
+var pr_comment_default = "<!-- boardreadyops:sticky:v1 -->\n{{> summary}}\n\n{{#hasFindings}}\n## {{labels.topFindings}}\n\n{{#topFindings}}\n- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}\n{{/topFindings}}\n{{/hasFindings}}\n{{^hasFindings}}\n{{labels.noFindings}}\n{{/hasFindings}}\n{{#hasFixes}}\n\n## {{labels.fix}}\n\n{{#fixFindings}}\n- `{{ruleId}}` in `{{resource.path}}`: {{fix.description}}\n{{#fix.steps}}\n  1. {{.}}\n{{/fix.steps}}\n{{/fixFindings}}\n{{/hasFixes}}\n\n{{#hasFabricationDiff}}\n## {{labels.fabricationChanges}}\n\n### {{labels.bom}}\n{{#fabrication.bom.hasRows}}\n| {{labels.ref}} | {{labels.previous}} | {{labels.current}} | {{labels.status}} |\n| --- | --- | --- | --- |\n{{#fabrication.bom.rows}}\n| {{reference}} | {{previous}} | {{current}} | {{status}} |\n{{/fabrication.bom.rows}}\n{{#fabrication.bom.truncated}}\n_{{labels.bomDiffTruncated}}_\n{{/fabrication.bom.truncated}}\n{{/fabrication.bom.hasRows}}\n{{^fabrication.bom.hasRows}}\n{{labels.noBomChanges}}\n{{/fabrication.bom.hasRows}}\n\n### {{labels.manufacturingOutputs}}\n{{#fabrication.outputs}}\n- {{kind}}: {{status}}{{#summary}} ({{summary}}){{/summary}}\n{{/fabrication.outputs}}\n\n{{#fabrication.findings.hasAdded}}\n### {{labels.newFindings}}\n{{#fabrication.findings.added}}\n- **{{severity}}** `{{ruleId}}` in `{{resource.path}}`: {{message}}\n{{/fabrication.findings.added}}\n{{#fabrication.findings.addedTruncated}}\n_{{fabrication.findings.addedRemainingLabel}}_\n{{/fabrication.findings.addedTruncated}}\n{{/fabrication.findings.hasAdded}}\n{{/hasFabricationDiff}}\n\n{{#hasArtifacts}}\n## {{labels.artifacts}}\n\n{{#artifacts}}\n- [{{label}}]({{{url}}})\n{{/artifacts}}\n{{/hasArtifacts}}\n";
 
 // src/report/templates/summary.mustache
-var summary_default = "# BoardReadyOps Report\n\n| Metric | Count |\n| --- | ---: |\n| Total | {{summary.total}} |\n| Critical | {{summary.critical}} |\n| High | {{summary.high}} |\n| Medium | {{summary.medium}} |\n| Low | {{summary.low}} |\n| Info | {{summary.info}} |\n";
+var summary_default = "# {{labels.reportTitle}}\n\n| {{labels.metric}} | {{labels.count}} |\n| --- | ---: |\n| {{labels.total}} | {{summary.total}} |\n| {{labels.critical}} | {{summary.critical}} |\n| {{labels.high}} | {{summary.high}} |\n| {{labels.medium}} | {{summary.medium}} |\n| {{labels.low}} | {{summary.low}} |\n| {{labels.info}} | {{summary.info}} |\n";
 
 // src/report/markdown.ts
-function formatMarkdown(result, artifacts = [], fabrication) {
-  const fabricationView = fabrication ? formatFabricationDiff(fabrication) : void 0;
+function formatMarkdown(result, artifacts = [], fabrication, locale = "en") {
+  const fabricationView = fabrication ? formatFabricationDiff(fabrication, locale) : void 0;
   const topFindings = result.findings.slice(0, 10);
   const fixFindings = result.findings.filter((finding2) => finding2.fix).slice(0, 10);
   return mustache_default.render(
@@ -254668,12 +254987,13 @@ function formatMarkdown(result, artifacts = [], fabrication) {
       hasArtifacts: artifacts.length > 0,
       artifacts,
       hasFabricationDiff: Boolean(fabricationView),
-      fabrication: fabricationView
+      fabrication: fabricationView,
+      labels: markdownLabels(locale)
     },
     { summary: summary_default }
   );
 }
-function formatFabricationDiff(diff) {
+function formatFabricationDiff(diff, locale) {
   const addedFindings = diff.findings.added.slice(0, 10);
   return {
     ...diff,
@@ -254688,26 +255008,58 @@ function formatFabricationDiff(diff) {
     },
     outputs: diff.outputs.map((output) => ({
       ...output,
-      summary: outputSummary(output)
+      summary: outputSummary(output, locale)
     })),
     findings: {
       ...diff.findings,
       hasAdded: diff.findings.added.length > 0,
       added: addedFindings,
       addedTruncated: diff.findings.added.length > addedFindings.length,
-      addedRemaining: diff.findings.added.length - addedFindings.length
+      addedRemaining: diff.findings.added.length - addedFindings.length,
+      addedRemainingLabel: t(
+        "report.moreNewFindings",
+        { count: diff.findings.added.length - addedFindings.length },
+        locale
+      )
     }
   };
 }
-function outputSummary(output) {
+function outputSummary(output, locale) {
   if (output.status === "unchanged" || output.status === "added" || output.status === "removed") {
     return "";
   }
   return [
-    output.changed > 0 ? `${output.changed} changed` : "",
-    output.added > 0 ? `${output.added} added` : "",
-    output.removed > 0 ? `${output.removed} removed` : ""
+    output.changed > 0 ? t("report.output.changed", { count: output.changed }, locale) : "",
+    output.added > 0 ? t("report.output.added", { count: output.added }, locale) : "",
+    output.removed > 0 ? t("report.output.removed", { count: output.removed }, locale) : ""
   ].filter(Boolean).join(", ");
+}
+function markdownLabels(locale) {
+  return {
+    artifacts: t("report.artifacts", {}, locale),
+    bom: t("report.bom", {}, locale),
+    bomDiffTruncated: t("report.bomDiffTruncated", {}, locale),
+    count: t("report.count", {}, locale),
+    critical: t("severity.critical", {}, locale),
+    current: t("report.current", {}, locale),
+    fabricationChanges: t("report.fabricationChanges", {}, locale),
+    fix: t("report.fix", {}, locale),
+    high: t("severity.high", {}, locale),
+    info: t("severity.info", {}, locale),
+    low: t("severity.low", {}, locale),
+    manufacturingOutputs: t("report.manufacturingOutputs", {}, locale),
+    medium: t("severity.medium", {}, locale),
+    metric: t("report.metric", {}, locale),
+    newFindings: t("report.newFindings", {}, locale),
+    noBomChanges: t("report.noBomChanges", {}, locale),
+    noFindings: t("report.noFindings", {}, locale),
+    previous: t("report.previous", {}, locale),
+    ref: t("report.ref", {}, locale),
+    reportTitle: t("report.title", {}, locale),
+    status: t("report.status", {}, locale),
+    topFindings: t("report.topFindings", {}, locale),
+    total: t("report.total", {}, locale)
+  };
 }
 
 // src/cli/output.ts
@@ -254715,17 +255067,22 @@ var import_node_path31 = __toESM(require("node:path"), 1);
 
 // src/report/html.ts
 var severities = ["critical", "high", "medium", "low", "info"];
-function formatHtml(result) {
+function formatHtml(result, locale = "en") {
+  const labels = htmlLabels(locale);
   const projectRows = projectBreakdown(result);
   const ruleRows = ruleBreakdown(result.findings);
-  const filter = filterOptions(result.findings);
-  const visibleCount = `${result.findings.length} ${plural("finding", result.findings.length)}`;
+  const filter = filterOptions(result.findings, locale);
+  const visibleCount = t("report.finding.count", { count: result.findings.length }, locale);
+  const lang = locale === "tr" ? "tr" : "en";
+  const pluralScript = locale === "en" ? 'const plural = (count) => count === 1 ? "finding" : "findings";' : `const singularFinding = ${JSON.stringify(t("report.finding.word", {}, locale))};
+    const pluralFinding = ${JSON.stringify(t("report.finding.word.plural", {}, locale))};
+    const plural = (count) => count === 1 ? singularFinding : pluralFinding;`;
   const html = `<!DOCTYPE html>
-<html lang="en">
+<html lang="${lang}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BoardReadyOps Report</title>
+  <title>${escapeHtml2(labels.title)}</title>
   <style>
     :root {
       color-scheme: light;
@@ -255016,71 +255373,86 @@ function formatHtml(result) {
 </head>
 <body>
   <header>
-    <h1>BoardReadyOps Report</h1>
-    <p class="metadata">Generated ${escapeHtml2(result.generatedAt)} by ${escapeHtml2(result.tool.name)} ${escapeHtml2(
-    result.tool.version
-  )}. ${result.summary.failed ? "Threshold failed." : "Threshold passed."}</p>
+    <h1>${escapeHtml2(labels.title)}</h1>
+    <p class="metadata">${escapeHtml2(
+    t(
+      "report.generatedMetadata",
+      {
+        date: result.generatedAt,
+        tool: result.tool.name,
+        version: result.tool.version,
+        threshold: result.summary.failed ? labels.thresholdFailed : labels.thresholdPassed
+      },
+      locale
+    )
+  )}</p>
   </header>
   <main>
     <section aria-labelledby="summary-heading">
-      <h2 id="summary-heading">Summary by Severity</h2>
+      <h2 id="summary-heading">${escapeHtml2(labels.summaryBySeverity)}</h2>
       <div class="summary-grid">
-        ${summaryCards(result)}
+        ${summaryCards(result, locale)}
       </div>
     </section>
 
     <section aria-labelledby="project-heading">
-      <h2 id="project-heading">Per-project Breakdown</h2>
+      <h2 id="project-heading">${escapeHtml2(labels.perProjectBreakdown)}</h2>
       <div class="breakdown-grid">
-        ${projectRows.length > 0 ? projectRows.map(renderProjectPanel).join("\n        ") : emptyPanel("No projects were reported.")}
+        ${projectRows.length > 0 ? projectRows.map((row) => renderProjectPanel(row, locale)).join("\n        ") : emptyPanel(labels.noProjects)}
       </div>
     </section>
 
     <section aria-labelledby="rule-heading">
-      <h2 id="rule-heading">Per-rule Grouping</h2>
+      <h2 id="rule-heading">${escapeHtml2(labels.perRuleGrouping)}</h2>
       ${ruleRows.length > 0 ? `<table>
-        <caption>Findings grouped by rule</caption>
+        <caption>${escapeHtml2(labels.groupedByRule)}</caption>
         <thead>
-          <tr><th scope="col">Rule</th><th scope="col">Total</th><th scope="col">Severity counts</th></tr>
+          <tr><th scope="col">${escapeHtml2(labels.rule)}</th><th scope="col">${escapeHtml2(
+    labels.total
+  )}</th><th scope="col">${escapeHtml2(labels.severityCounts)}</th></tr>
         </thead>
         <tbody>
-          ${ruleRows.map(renderRuleRow).join("\n          ")}
+          ${ruleRows.map((row) => renderRuleRow(row, locale)).join("\n          ")}
         </tbody>
-      </table>` : emptyPanel("No rules produced findings.")}
+      </table>` : emptyPanel(labels.noRules)}
     </section>
 
     <section aria-labelledby="findings-heading">
-      <h2 id="findings-heading">Findings</h2>
-      <section class="filter-bar" aria-label="Filter findings">
-        <label>Severity
+      <h2 id="findings-heading">${escapeHtml2(labels.findings)}</h2>
+      <section class="filter-bar" aria-label="${attr(labels.filterFindings)}">
+        <label>${escapeHtml2(labels.severity)}
           <select id="severity-filter" data-filter="severity">
-            <option value="">All severities</option>
-            ${filter.severities.map((severity) => `<option value="${attr(severity)}">${escapeHtml2(severity)}</option>`).join("\n            ")}
+            <option value="">${escapeHtml2(labels.allSeverities)}</option>
+            ${filter.severities.map((severity) => `<option value="${attr(severity)}">${escapeHtml2(severityLabel(severity, locale))}</option>`).join("\n            ")}
           </select>
         </label>
-        <label>Rule
+        <label>${escapeHtml2(labels.rule)}
           <select id="rule-filter" data-filter="rule">
-            <option value="">All rules</option>
+            <option value="">${escapeHtml2(labels.allRules)}</option>
             ${filter.rules.map((rule2) => `<option value="${attr(rule2)}">${escapeHtml2(rule2)}</option>`).join("\n            ")}
           </select>
         </label>
-        <label>Project
+        <label>${escapeHtml2(labels.project)}
           <select id="project-filter" data-filter="project">
-            <option value="">All projects</option>
+            <option value="">${escapeHtml2(labels.allProjects)}</option>
             ${filter.projects.map((project) => `<option value="${attr(project)}">${escapeHtml2(project)}</option>`).join("\n            ")}
           </select>
         </label>
         <output class="count" id="visible-count" aria-live="polite">${escapeHtml2(visibleCount)}</output>
       </section>
       ${result.findings.length > 0 ? `<table id="findings-table">
-        <caption>Filterable finding list</caption>
+        <caption>${escapeHtml2(labels.filterableFindingList)}</caption>
         <thead>
-          <tr><th scope="col">Severity</th><th scope="col">Rule</th><th scope="col">Project</th><th scope="col">Finding</th></tr>
+          <tr><th scope="col">${escapeHtml2(labels.severity)}</th><th scope="col">${escapeHtml2(
+    labels.rule
+  )}</th><th scope="col">${escapeHtml2(labels.project)}</th><th scope="col">${escapeHtml2(
+    labels.finding
+  )}</th></tr>
         </thead>
         <tbody>
-          ${result.findings.map(renderFindingRow).join("\n          ")}
+          ${result.findings.map((finding2) => renderFindingRow(finding2, locale)).join("\n          ")}
         </tbody>
-      </table>` : emptyPanel("No findings.")}
+      </table>` : emptyPanel(labels.noFindings)}
     </section>
   </main>
   <script>
@@ -255088,7 +255460,7 @@ function formatHtml(result) {
     const filters = Array.from(document.querySelectorAll("[data-filter]"));
     const rows = Array.from(document.querySelectorAll("#findings-table tbody tr"));
     const counter = document.getElementById("visible-count");
-    const plural = (count) => count === 1 ? "finding" : "findings";
+    ${pluralScript}
     const applyFilters = () => {
       const active = Object.fromEntries(filters.map((filter) => [filter.dataset.filter, filter.value]));
       let visible = 0;
@@ -255116,10 +255488,10 @@ function formatHtml(result) {
   return `${html.replace(/[ \t]+$/gm, "").trimEnd()}
 `;
 }
-function summaryCards(result) {
+function summaryCards(result, locale) {
   const metrics = [
-    { label: "Total", count: result.summary.total },
-    ...severities.map((severity) => ({ label: severity, count: result.summary[severity] }))
+    { label: t("report.total", {}, locale), count: result.summary.total },
+    ...severities.map((severity) => ({ label: severityLabel(severity, locale), count: result.summary[severity] }))
   ];
   return metrics.map(
     (metric) => `<article class="metric">
@@ -255159,114 +255531,126 @@ function emptyBreakdown(label) {
     counts: { critical: 0, high: 0, medium: 0, low: 0, info: 0 }
   };
 }
-function renderProjectPanel(project) {
+function renderProjectPanel(project, locale) {
   return `<article class="panel">
           <h3><code>${escapeHtml2(project.label)}</code></h3>
-          <p><strong>${project.total}</strong> ${escapeHtml2(plural("finding", project.total))}</p>
-          <p class="muted">${severityCounts(project)}</p>
+          <p><strong>${project.total}</strong> ${escapeHtml2(findingWord(project.total, locale))}</p>
+          <p class="muted">${severityCounts(project, locale)}</p>
         </article>`;
 }
-function renderRuleRow(rule2) {
+function renderRuleRow(rule2, locale) {
+  const labels = htmlLabels(locale);
   return `<tr>
-            <td data-label="Rule"><code>${escapeHtml2(rule2.label)}</code></td>
-            <td data-label="Total">${rule2.total}</td>
-            <td data-label="Severity counts">${severityCounts(rule2)}</td>
+            <td data-label="${attr(labels.rule)}"><code>${escapeHtml2(rule2.label)}</code></td>
+            <td data-label="${attr(labels.total)}">${rule2.total}</td>
+            <td data-label="${attr(labels.severityCounts)}">${severityCounts(rule2, locale)}</td>
           </tr>`;
 }
-function renderFindingRow(finding2) {
-  const project = finding2.project ?? "Unassigned";
+function renderFindingRow(finding2, locale) {
+  const labels = htmlLabels(locale);
+  const project = finding2.project ?? t("report.unassigned", {}, locale);
   return `<tr data-severity="${attr(finding2.severity)}" data-rule="${attr(finding2.ruleId)}" data-project="${attr(project)}">
-            <td data-label="Severity"><span class="badge severity-${attr(finding2.severity)}">${escapeHtml2(finding2.severity)}</span></td>
-            <td data-label="Rule"><code>${escapeHtml2(finding2.ruleId)}</code></td>
-            <td data-label="Project"><code>${escapeHtml2(project)}</code></td>
-            <td data-label="Finding">
+            <td data-label="${attr(labels.severity)}"><span class="badge severity-${attr(finding2.severity)}">${escapeHtml2(severityLabel(finding2.severity, locale))}</span></td>
+            <td data-label="${attr(labels.rule)}"><code>${escapeHtml2(finding2.ruleId)}</code></td>
+            <td data-label="${attr(labels.project)}"><code>${escapeHtml2(project)}</code></td>
+            <td data-label="${attr(labels.finding)}">
               ${escapeHtml2(finding2.message)}
               <details>
-                <summary>Details</summary>
+                <summary>${escapeHtml2(labels.details)}</summary>
                 <div class="detail-grid">
                   <section>
-                    <h3>Resource</h3>
+                    <h3>${escapeHtml2(labels.resource)}</h3>
                     <p><code>${escapeHtml2(finding2.resource.path)}</code> <span class="muted">(${escapeHtml2(finding2.resource.kind)})</span></p>
-                    ${locationHtml(finding2)}
+                    ${locationHtml(finding2, locale)}
                   </section>
-                  ${detailsHtml(finding2)}
-                  ${fixHtml(finding2)}
-                  ${referencesHtml(finding2)}
+                  ${detailsHtml(finding2, locale)}
+                  ${fixHtml(finding2, locale)}
+                  ${referencesHtml(finding2, locale)}
                 </div>
               </details>
             </td>
           </tr>`;
 }
-function locationHtml(finding2) {
+function locationHtml(finding2, locale) {
   const values = [];
   if (finding2.location?.region) {
-    values.push(`lines ${finding2.location.region.startLine}-${finding2.location.region.endLine}`);
+    values.push(
+      t(
+        "report.location.lines",
+        {
+          startLine: finding2.location.region.startLine,
+          endLine: finding2.location.region.endLine
+        },
+        locale
+      )
+    );
   } else if (finding2.location?.line) {
-    values.push(`line ${finding2.location.line}`);
+    values.push(t("report.location.line", { line: finding2.location.line }, locale));
   }
   if (finding2.location?.column) {
-    values.push(`column ${finding2.location.column}`);
+    values.push(t("report.location.column", { column: finding2.location.column }, locale));
   }
   if (finding2.location?.boardCoordinates) {
     const coordinates = finding2.location.boardCoordinates;
     values.push(
-      `${coordinates.layer ?? "board"} (${formatNumber(coordinates.x)}${coordinates.units}, ${formatNumber(
+      `${coordinates.layer ?? t("report.location.board", {}, locale)} (${formatNumber(coordinates.x)}${coordinates.units}, ${formatNumber(
         coordinates.y
       )}${coordinates.units})`
     );
   }
-  return values.length > 0 ? `<p>${escapeHtml2(values.join(", "))}</p>` : '<p class="muted">No location provided.</p>';
+  return values.length > 0 ? `<p>${escapeHtml2(values.join(", "))}</p>` : `<p class="muted">${escapeHtml2(t("report.noLocation", {}, locale))}</p>`;
 }
-function detailsHtml(finding2) {
+function detailsHtml(finding2, locale) {
   if (!finding2.details && !finding2.confidence) {
     return "";
   }
   const detail = JSON.stringify(finding2.details ?? {}, null, 2);
   return `<section>
-                    <h3>Context</h3>
-                    ${finding2.confidence ? `<p>Confidence: ${escapeHtml2(finding2.confidence)}</p>` : ""}
+                    <h3>${escapeHtml2(t("report.context", {}, locale))}</h3>
+                    ${finding2.confidence ? `<p>${escapeHtml2(t("report.confidence", {}, locale))}: ${escapeHtml2(finding2.confidence)}</p>` : ""}
                     ${finding2.details ? `<pre><code>${escapeHtml2(detail)}</code></pre>` : ""}
                   </section>`;
 }
-function fixHtml(finding2) {
+function fixHtml(finding2, locale) {
   if (!finding2.fix) {
-    return '<section><h3>Fix</h3><p class="muted">No fix suggestion provided.</p></section>';
+    return `<section><h3>${escapeHtml2(t("report.fix", {}, locale))}</h3><p class="muted">${escapeHtml2(
+      t("report.noFix", {}, locale)
+    )}</p></section>`;
   }
   const steps = finding2.fix.steps && finding2.fix.steps.length > 0 ? `<ol>${finding2.fix.steps.map((step) => `<li>${escapeHtml2(step)}</li>`).join("")}</ol>` : "";
   return `<section>
-                    <h3>Fix</h3>
+                    <h3>${escapeHtml2(t("report.fix", {}, locale))}</h3>
                     <p>${escapeHtml2(finding2.fix.description)}</p>
                     ${steps}
                   </section>`;
 }
-function referencesHtml(finding2) {
+function referencesHtml(finding2, locale) {
   const references = [...finding2.references ?? [], ...finding2.fix?.references ?? []];
   if (references.length === 0) {
-    return '<section><h3>References</h3><p class="muted">No references provided.</p></section>';
+    return `<section><h3>${escapeHtml2(t("report.references", {}, locale))}</h3><p class="muted">${escapeHtml2(
+      t("report.noReferences", {}, locale)
+    )}</p></section>`;
   }
   return `<section>
-                    <h3>References</h3>
+                    <h3>${escapeHtml2(t("report.references", {}, locale))}</h3>
                     <ul>${references.map((reference) => `<li><a href="${attr(reference)}">${escapeHtml2(reference)}</a></li>`).join("")}</ul>
                   </section>`;
 }
-function filterOptions(findings) {
+function filterOptions(findings, locale) {
   return {
     severities: severities.filter((severity) => findings.some((finding2) => finding2.severity === severity)),
     rules: uniqueSorted(findings.map((finding2) => finding2.ruleId)),
-    projects: uniqueSorted(findings.map((finding2) => finding2.project ?? "Unassigned"))
+    projects: uniqueSorted(findings.map((finding2) => finding2.project ?? t("report.unassigned", {}, locale)))
   };
 }
-function severityCounts(row) {
-  return severities.filter((severity) => row.counts[severity] > 0).map((severity) => `${row.counts[severity]} ${severity}`).join(", ") || "0 findings";
+function severityCounts(row, locale) {
+  return severities.filter((severity) => row.counts[severity] > 0).map((severity) => `${row.counts[severity]} ${severityLabel(severity, locale)}`).join(", ") || t("report.finding.count", { count: 0 }, locale);
 }
 function emptyPanel(message) {
   return `<div class="panel empty">${escapeHtml2(message)}</div>`;
 }
 function uniqueSorted(values) {
   return [...new Set(values)].sort((a, b) => a.localeCompare(b));
-}
-function plural(word, count) {
-  return count === 1 ? word : `${word}s`;
 }
 function formatNumber(value) {
   return Object.is(value, -0) ? "0" : Number.isInteger(value) ? value.toString() : value.toFixed(6).replace(/0+$/, "").replace(/\.$/, "");
@@ -255276,6 +255660,54 @@ function attr(value) {
 }
 function escapeHtml2(value) {
   return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+function findingWord(count, locale) {
+  return count === 1 ? t("report.finding.word", {}, locale) : t("report.finding.word.plural", {}, locale);
+}
+function severityLabel(severity, locale) {
+  if (locale === "en") {
+    return severity;
+  }
+  switch (severity) {
+    case "critical":
+      return t("severity.critical", {}, locale);
+    case "high":
+      return t("severity.high", {}, locale);
+    case "medium":
+      return t("severity.medium", {}, locale);
+    case "low":
+      return t("severity.low", {}, locale);
+    case "info":
+      return t("severity.info", {}, locale);
+  }
+}
+function htmlLabels(locale) {
+  return {
+    allProjects: t("report.allProjects", {}, locale),
+    allRules: t("report.allRules", {}, locale),
+    allSeverities: t("report.allSeverities", {}, locale),
+    details: t("report.details", {}, locale),
+    filterFindings: t("report.filterFindings", {}, locale),
+    filterableFindingList: t("report.filterableFindingList", {}, locale),
+    finding: t("report.finding", {}, locale),
+    findings: t("report.findings", {}, locale),
+    groupedByRule: t("report.groupedByRule", {}, locale),
+    noFindings: t("report.noFindings", {}, locale),
+    noProjects: t("report.noProjects", {}, locale),
+    noRules: t("report.noRules", {}, locale),
+    perProjectBreakdown: t("report.perProjectBreakdown", {}, locale),
+    perRuleGrouping: t("report.perRuleGrouping", {}, locale),
+    project: t("report.project", {}, locale),
+    resource: t("report.resource", {}, locale),
+    rule: t("report.rule", {}, locale),
+    severity: t("report.severity", {}, locale),
+    severityCounts: t("report.severityCounts", {}, locale),
+    summaryBySeverity: t("report.summaryBySeverity", {}, locale),
+    thresholdFailed: t("report.threshold.failed", {}, locale),
+    thresholdPassed: t("report.threshold.passed", {}, locale),
+    title: t("report.title", {}, locale),
+    total: t("report.total", {}, locale)
+  };
 }
 
 // src/report/json.ts
@@ -255417,7 +255849,7 @@ function sarifHelp(fix) {
 }
 
 // src/cli/output.ts
-async function writeReports(result, root, outputs, loaded, stdout) {
+async function writeReports(result, root, outputs, loaded, stdout, locale = "en") {
   const targets = {
     json: outputs.json ?? configOutput(loaded, "json"),
     sarif: outputs.sarif ?? configOutput(loaded, "sarif"),
@@ -255433,13 +255865,18 @@ async function writeReports(result, root, outputs, loaded, stdout) {
     written.sarif = await writeOrStdout(root, targets.sarif, formatSarif(result), stdout);
   }
   if (targets.markdown) {
-    written.markdown = await writeOrStdout(root, targets.markdown, formatMarkdown(result), stdout);
+    written.markdown = await writeOrStdout(
+      root,
+      targets.markdown,
+      formatMarkdown(result, [], void 0, locale),
+      stdout
+    );
   }
   if (targets.junit) {
     written.junit = await writeOrStdout(root, targets.junit, formatJunit(result), stdout);
   }
   if (targets.html) {
-    written.html = await writeOrStdout(root, targets.html, formatHtml(result), stdout);
+    written.html = await writeOrStdout(root, targets.html, formatHtml(result, locale), stdout);
   }
   return written;
 }
@@ -255459,11 +255896,12 @@ async function writeOrStdout(root, target, content, stdout) {
 
 // src/cli/commands/run.ts
 async function runCommand(pathInput, options, streams) {
+  const locale = resolveLocale();
   const root = await canonicalRoot(import_node_path32.default.resolve(normalizePathInput(pathInput ?? ".")));
   const loaded = await loadConfig(root, options.config);
   if (loaded.errors.length > 0) {
     for (const error51 of loaded.errors) {
-      streams.stderr.write(`Configuration error: ${error51}
+      streams.stderr.write(`${t("cli.error.configuration", { error: error51 }, locale)}
 `);
     }
     return 2;
@@ -255471,7 +255909,8 @@ async function runCommand(pathInput, options, streams) {
   if (options.requireKicad) {
     const kicad = await detectKicadCli(options.kicadCli);
     if (!kicad.found) {
-      streams.stderr.write("Environment error: kicad-cli not available.\n");
+      streams.stderr.write(`${t("cli.error.environment.kicadMissing", {}, locale)}
+`);
       return 3;
     }
   }
@@ -255496,9 +255935,9 @@ async function runCommand(pathInput, options, streams) {
     verbose: options.verbose ?? false,
     color: options.color ?? "auto"
   });
-  await writeReports(result, root, outputOptions(options), loaded, streams.stdout);
+  await writeReports(result, root, outputOptions(options), loaded, streams.stdout, locale);
   if (!hasExplicitReportOutput(options)) {
-    streams.stdout.write(formatMarkdown(result));
+    streams.stdout.write(formatMarkdown(result, [], void 0, locale));
   }
   if (options.annotations !== false) {
     emitAnnotations(result.findings, streams.stderr);
@@ -255513,7 +255952,7 @@ function collect2(value, previous) {
 }
 function positiveInteger(value) {
   if (!/^[1-9]\d*$/.test(value)) {
-    throw new InvalidArgumentError("concurrency must be a positive integer");
+    throw new InvalidArgumentError(t("cli.error.concurrencyPositiveInteger"));
   }
   return Number.parseInt(value, 10);
 }
@@ -255555,8 +255994,10 @@ var supportedNodeMajors = /* @__PURE__ */ new Set([22, 24]);
 async function doctorCommand(options, streams) {
   const format = parseDoctorFormat(options.format);
   const report = await createDoctorReport(options.check);
-  streams.stdout.write(format === "json" ? `${JSON.stringify(report, null, 2)}
-` : renderText(report));
+  streams.stdout.write(
+    format === "json" ? `${JSON.stringify(publicDoctorReport(report), null, 2)}
+` : renderText(report, resolveLocale())
+  );
   return 0;
 }
 async function createDoctorReport(selected) {
@@ -255582,14 +256023,17 @@ async function createDoctorReport(selected) {
     recommendations: collectRecommendations(checks)
   };
 }
-function renderText(report) {
-  const checks = report.checks.map((check2) => `${check2.title}
-${check2.items.map((entry) => `  ${renderItem(entry)}`).join("\n")}`).join("\n\n");
-  const recommendations = report.recommendations.length === 0 ? "" : `
+function renderText(report, locale) {
+  const checks = report.checks.map(
+    (check2) => `${localizedCheckTitle(check2.name, locale)}
+${check2.items.map((entry) => `  ${renderItem(entry, locale)}`).join("\n")}`
+  ).join("\n\n");
+  const localizedRecommendations = collectLocalizedRecommendations(report.checks, locale);
+  const recommendations = localizedRecommendations.length === 0 ? "" : `
 
-Recommendations
-${report.recommendations.map((recommendation, index) => `  ${index + 1}. ${recommendation}`).join("\n")}`;
-  return `BoardReadyOps Doctor - Environment & Repository Diagnosis
+${t("doctor.recommendations", {}, locale)}
+${localizedRecommendations.map((recommendation, index) => `  ${index + 1}. ${recommendation}`).join("\n")}`;
+  return `${t("doctor.title", {}, locale)}
 
 ${checks}${recommendations}
 `;
@@ -255603,31 +256047,55 @@ async function runtimeCheck() {
   const supportedNode = supportsDoctorNodeVersion(process.versions.node);
   return [
     item(supportedNode ? "pass" : "fail", `Node: ${process.version} (supported majors: 22, 24)`, {
-      recommendation: supportedNode ? void 0 : "Install a supported Node.js 22 or 24 runtime."
+      recommendation: supportedNode ? void 0 : "Install a supported Node.js 22 or 24 runtime.",
+      messageKey: "doctor.runtime.node",
+      messageParams: { version: process.version, majors: "22, 24" },
+      recommendationKey: supportedNode ? void 0 : "doctor.recommendation.runtime.node"
     }),
-    item("pass", `boardreadyops: v${boardReadyVersion}`),
-    npmVersion.code === 0 ? item("pass", `npm: v${npmVersion.stdout.trim()}`) : item("warn", "npm not found.", { recommendation: "Install npm for package-based BoardReadyOps workflows." })
+    item("pass", `boardreadyops: v${boardReadyVersion}`, {
+      messageKey: "doctor.runtime.boardreadyops",
+      messageParams: { version: boardReadyVersion }
+    }),
+    npmVersion.code === 0 ? item("pass", `npm: v${npmVersion.stdout.trim()}`, {
+      messageKey: "doctor.runtime.npm",
+      messageParams: { version: npmVersion.stdout.trim() }
+    }) : item("warn", "npm not found.", {
+      recommendation: "Install npm for package-based BoardReadyOps workflows.",
+      messageKey: "doctor.runtime.npmMissing",
+      recommendationKey: "doctor.recommendation.runtime.npm"
+    })
   ];
 }
 async function kicadCheck() {
   const kicad = await detectKicadCli();
   if (!kicad.found) {
-    return [item("warn", "kicad-cli not found.", { recommendation: "Install KiCad CLI to run DRC and ERC checks." })];
+    return [
+      item("warn", "kicad-cli not found.", {
+        recommendation: "Install KiCad CLI to run DRC and ERC checks.",
+        messageKey: "doctor.kicad.missing",
+        recommendationKey: "doctor.recommendation.kicad"
+      })
+    ];
   }
   const version2 = kicad.version ? ` ${kicad.version}` : "";
   return [
-    item("pass", `kicad-cli${version2} found at ${kicad.path}.`),
-    item("pass", "DRC available."),
-    item("pass", "ERC available.")
+    item("pass", `kicad-cli${version2} found at ${kicad.path}.`, {
+      messageKey: "doctor.kicad.found",
+      messageParams: { version: version2, path: kicad.path ?? "" }
+    }),
+    item("pass", "DRC available.", { messageKey: "doctor.kicad.drcAvailable" }),
+    item("pass", "ERC available.", { messageKey: "doctor.kicad.ercAvailable" })
   ];
 }
 async function adaptersCheck() {
   if (process.env.NEXAR_CLIENT_ID && process.env.NEXAR_CLIENT_SECRET) {
-    return [item("pass", "Nexar credentials present.")];
+    return [item("pass", "Nexar credentials present.", { messageKey: "doctor.adapters.nexarPresent" })];
   }
   return [
     item("warn", "Nexar credentials not present.", {
-      recommendation: "Set NEXAR_CLIENT_ID and NEXAR_CLIENT_SECRET for Nexar-backed lifecycle checks."
+      recommendation: "Set NEXAR_CLIENT_ID and NEXAR_CLIENT_SECRET for Nexar-backed lifecycle checks.",
+      messageKey: "doctor.adapters.nexarMissing",
+      recommendationKey: "doctor.recommendation.adapters.nexar"
     })
   ];
 }
@@ -255638,22 +256106,49 @@ async function repositoryCheck(root) {
   if (loaded.errors.length > 0) {
     items.push(
       item("fail", `boardreadyops configuration is invalid: ${loaded.errors.join("; ")}`, {
-        recommendation: "Fix boardreadyops.yml before running repository checks."
+        recommendation: "Fix boardreadyops.yml before running repository checks.",
+        messageKey: "doctor.repository.configInvalid",
+        messageParams: { errors: loaded.errors.join("; ") },
+        recommendationKey: "doctor.recommendation.repository.config"
       })
     );
   } else if (loaded.path) {
-    items.push(item("pass", `${import_node_path33.default.basename(loaded.path)} found and valid.`));
+    items.push(
+      item("pass", `${import_node_path33.default.basename(loaded.path)} found and valid.`, {
+        messageKey: "doctor.repository.configFound",
+        messageParams: { file: import_node_path33.default.basename(loaded.path) }
+      })
+    );
   } else {
-    items.push(item("info", "No boardreadyops configuration file found; defaults are valid."));
+    items.push(
+      item("info", "No boardreadyops configuration file found; defaults are valid.", {
+        messageKey: "doctor.repository.noConfig"
+      })
+    );
   }
   items.push(
-    projects.length === 0 ? item("warn", "No KiCad projects discovered.", { recommendation: "Add a .kicad_pro project before CI." }) : item(
+    projects.length === 0 ? item("warn", "No KiCad projects discovered.", {
+      recommendation: "Add a .kicad_pro project before CI.",
+      messageKey: "doctor.repository.noProjects",
+      recommendationKey: "doctor.recommendation.repository.projects"
+    }) : item(
       projects.length === 1 ? "pass" : "warn",
-      `${projects.length} KiCad project${plural2(projects.length)} discovered.`
+      `${projects.length} KiCad project${plural(projects.length)} discovered.`,
+      {
+        messageKey: "doctor.repository.projectsDiscovered",
+        messageParams: { count: projects.length }
+      }
     )
   );
   items.push(
-    gerbers.length === 0 ? item("fail", "No Gerber outputs found.", { recommendation: "Generate Gerber outputs from KiCad before CI." }) : item("pass", `${gerbers.length} Gerber output${plural2(gerbers.length)} found.`)
+    gerbers.length === 0 ? item("fail", "No Gerber outputs found.", {
+      recommendation: "Generate Gerber outputs from KiCad before CI.",
+      messageKey: "doctor.repository.noGerbers",
+      recommendationKey: "doctor.recommendation.repository.gerbers"
+    }) : item("pass", `${gerbers.length} Gerber output${plural(gerbers.length)} found.`, {
+      messageKey: "doctor.repository.gerbersDiscovered",
+      messageParams: { count: gerbers.length }
+    })
   );
   return items;
 }
@@ -255667,8 +256162,14 @@ async function suppressionsCheck(root) {
     firstExisting(root, [".boardreadyops-baseline.json"])
   ]);
   return [
-    suppressionsFile ? item("info", `${suppressionsFile} suppressions file found.`) : item("pass", "No suppressions file found."),
-    baselineFile ? item("info", `${baselineFile} baseline found.`) : item("info", "No baseline captured.")
+    suppressionsFile ? item("info", `${suppressionsFile} suppressions file found.`, {
+      messageKey: "doctor.suppressions.suppressionsFound",
+      messageParams: { file: suppressionsFile }
+    }) : item("pass", "No suppressions file found.", { messageKey: "doctor.suppressions.noSuppressions" }),
+    baselineFile ? item("info", `${baselineFile} baseline found.`, {
+      messageKey: "doctor.suppressions.baselineFound",
+      messageParams: { file: baselineFile }
+    }) : item("info", "No baseline captured.", { messageKey: "doctor.suppressions.noBaseline" })
   ];
 }
 async function actionCheck(root) {
@@ -255676,7 +256177,9 @@ async function actionCheck(root) {
   if (!workflow) {
     return [
       item("warn", "No .github/workflows/boardreadyops.yml workflow found.", {
-        recommendation: "Add the BoardReadyOps GitHub Action workflow for pull request preflight."
+        recommendation: "Add the BoardReadyOps GitHub Action workflow for pull request preflight.",
+        messageKey: "doctor.action.noWorkflow",
+        recommendationKey: "doctor.recommendation.action.noWorkflow"
       })
     ];
   }
@@ -255686,25 +256189,37 @@ async function actionCheck(root) {
   } catch {
     return [
       item("warn", `Unable to read or parse ${workflow.relativePath} workflow.`, {
-        recommendation: "Fix the BoardReadyOps workflow YAML before relying on action diagnostics."
+        recommendation: "Fix the BoardReadyOps workflow YAML before relying on action diagnostics.",
+        messageKey: "doctor.action.workflowUnreadable",
+        messageParams: { path: workflow.relativePath },
+        recommendationKey: "doctor.recommendation.action.workflowYaml"
       })
     ];
   }
   return [
-    item("pass", `${workflow.relativePath} found.`),
+    item("pass", `${workflow.relativePath} found.`, {
+      messageKey: "doctor.action.workflowFound",
+      messageParams: { path: workflow.relativePath }
+    }),
     checkoutPinnedItem(document),
-    hasPullRequestCommentPermission(document) ? item("pass", "permissions: pull-requests or issues write configured.") : item("warn", "permissions: pull-requests or issues write missing for PR comments.", {
-      recommendation: "Add `permissions: { pull-requests: write }` or `permissions: { issues: write }` to the BoardReadyOps job."
+    hasPullRequestCommentPermission(document) ? item("pass", "permissions: pull-requests or issues write configured.", {
+      messageKey: "doctor.action.permissionsConfigured"
+    }) : item("warn", "permissions: pull-requests or issues write missing for PR comments.", {
+      recommendation: "Add `permissions: { pull-requests: write }` or `permissions: { issues: write }` to the BoardReadyOps job.",
+      messageKey: "doctor.action.permissionsMissing",
+      recommendationKey: "doctor.recommendation.action.permissions"
     })
   ];
 }
 function checkoutPinnedItem(workflow) {
   const checkoutUses = workflowUses(workflow).filter(isCheckoutUse);
   if (checkoutUses.length > 0 && checkoutUses.every(isPinnedCheckoutUse)) {
-    return item("pass", "actions/checkout is SHA-pinned.");
+    return item("pass", "actions/checkout is SHA-pinned.", { messageKey: "doctor.action.checkoutPinned" });
   }
   return item("warn", "actions/checkout is not SHA-pinned.", {
-    recommendation: "Pin actions/checkout to an immutable commit SHA."
+    recommendation: "Pin actions/checkout to an immutable commit SHA.",
+    messageKey: "doctor.action.checkoutUnpinned",
+    recommendationKey: "doctor.recommendation.action.pinCheckout"
   });
 }
 function supportsDoctorNodeVersion(version2) {
@@ -255716,7 +256231,7 @@ function parseDoctorFormat(format) {
   if (candidate === "text" || candidate === "json") {
     return candidate;
   }
-  throw new Error(`Unknown doctor format: ${candidate}. Available formats: text, json`);
+  throw new Error(t("doctor.error.unknownFormat", { format: candidate }));
 }
 function parseDoctorCheck(check2) {
   if (!check2) {
@@ -255725,7 +256240,7 @@ function parseDoctorCheck(check2) {
   if (isDoctorCheckName(check2)) {
     return check2;
   }
-  throw new Error(`Unknown doctor check: ${check2}. Available checks: ${doctorChecks.join(", ")}`);
+  throw new Error(t("doctor.error.unknownCheck", { check: check2, checks: doctorChecks.join(", ") }));
 }
 function isDoctorCheckName(value) {
   return doctorChecks.some((check2) => check2 === value);
@@ -255805,7 +256320,15 @@ function asRecord(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value) ? value : void 0;
 }
 function item(severity, message, options = {}) {
-  return { severity, message, recommendation: options.recommendation };
+  return {
+    severity,
+    message,
+    recommendation: options.recommendation,
+    messageKey: options.messageKey,
+    messageParams: options.messageParams,
+    recommendationKey: options.recommendationKey,
+    recommendationParams: options.recommendationParams
+  };
 }
 function collectRecommendations(checks) {
   return [
@@ -255814,21 +256337,94 @@ function collectRecommendations(checks) {
     )
   ];
 }
-function renderItem(entry) {
-  return `[${entry.severity}] ${entry.message}`;
+function publicDoctorReport(report) {
+  return {
+    ...report,
+    checks: report.checks.map((check2) => ({
+      ...check2,
+      items: check2.items.map((entry) => ({
+        severity: entry.severity,
+        message: entry.message,
+        ...entry.recommendation ? { recommendation: entry.recommendation } : {}
+      }))
+    }))
+  };
 }
-function plural2(count) {
+function renderItem(entry, locale) {
+  return `[${t(severityKey(entry.severity), {}, locale)}] ${localizedMessage(entry, locale)}`;
+}
+function localizedMessage(entry, locale) {
+  return entry.messageKey ? t(entry.messageKey, localizedDoctorParams(entry.messageKey, entry.messageParams, locale), locale) : entry.message;
+}
+function localizedRecommendation(entry, locale) {
+  if (entry.recommendationKey) {
+    return t(entry.recommendationKey, entry.recommendationParams ?? {}, locale);
+  }
+  return entry.recommendation;
+}
+function collectLocalizedRecommendations(checks, locale) {
+  return [
+    ...new Set(
+      checks.flatMap(
+        (check2) => check2.items.flatMap((entry) => {
+          const recommendation = localizedRecommendation(entry, locale);
+          return recommendation ? [recommendation] : [];
+        })
+      )
+    )
+  ];
+}
+function localizedDoctorParams(key, params, locale) {
+  const values = { ...params ?? {} };
+  if (key === "doctor.repository.projectsDiscovered" && typeof values.count === "number") {
+    values.projectWord = values.count === 1 ? t("doctor.repository.project.word", {}, locale) : t("doctor.repository.project.word.plural", {}, locale);
+  }
+  if (key === "doctor.repository.gerbersDiscovered" && typeof values.count === "number") {
+    values.outputWord = values.count === 1 ? t("doctor.repository.gerberOutput.word", {}, locale) : t("doctor.repository.gerberOutput.word.plural", {}, locale);
+  }
+  return values;
+}
+function localizedCheckTitle(name, locale) {
+  switch (name) {
+    case "runtime":
+      return t("doctor.check.runtime", {}, locale);
+    case "kicad":
+      return t("doctor.check.kicad", {}, locale);
+    case "adapters":
+      return t("doctor.check.adapters", {}, locale);
+    case "repository":
+      return t("doctor.check.repository", {}, locale);
+    case "suppressions":
+      return t("doctor.check.suppressions", {}, locale);
+    case "action":
+      return t("doctor.check.action", {}, locale);
+  }
+}
+function severityKey(severity) {
+  switch (severity) {
+    case "pass":
+      return "doctor.severity.pass";
+    case "warn":
+      return "doctor.severity.warn";
+    case "fail":
+      return "doctor.severity.fail";
+    case "info":
+      return "doctor.severity.info";
+  }
+}
+function plural(count) {
   return count === 1 ? "" : "s";
 }
 
 // src/cli/commands/explain.ts
 var import_node_path34 = __toESM(require("node:path"), 1);
 async function explainCommand(ruleId, pathInput, streams) {
+  const locale = resolveLocale();
   const root = await canonicalRoot(import_node_path34.default.resolve(pathInput ?? "."));
   const loaded = await loadConfig(root);
   if (loaded.errors.length > 0) {
     for (const error51 of loaded.errors) {
-      streams.stderr.write(`Configuration error: ${error51}
+      streams.stderr.write(`${t("cli.error.configuration", { error: error51 }, locale)}
 `);
     }
     return 2;
@@ -255836,12 +256432,12 @@ async function explainCommand(ruleId, pathInput, streams) {
   registerPipelineRules();
   const selected = listRules().find((candidate) => candidate.meta.id === ruleId);
   if (!selected) {
-    streams.stderr.write(`Unknown rule: ${ruleId}
+    streams.stderr.write(`${t("cli.explain.error.unknownRule", { ruleId }, locale)}
 `);
     return 2;
   }
   if (!selected.explain) {
-    streams.stderr.write(`Rule ${ruleId} does not support explanation.
+    streams.stderr.write(`${t("cli.explain.error.unsupportedRule", { ruleId }, locale)}
 `);
     return 2;
   }
@@ -255929,11 +256525,13 @@ report:
 async function initCommand(cwd, streams) {
   const file2 = import_node_path35.default.resolve(cwd, "boardreadyops.yml");
   if (await pathExists(file2)) {
-    streams.stdout.write("boardreadyops.yml already exists\n");
+    streams.stdout.write(`${t("cli.init.exists")}
+`);
     return 0;
   }
   await writeTextFile(file2, starter);
-  streams.stdout.write("created boardreadyops.yml\n");
+  streams.stdout.write(`${t("cli.init.created")}
+`);
   return 0;
 }
 
@@ -256612,7 +257210,7 @@ async function runCli(argv, streams = {
     if (isCommanderDisplay(error51)) {
       return 0;
     }
-    streams.stderr.write(`${error51 instanceof Error ? error51.message : "unexpected CLI error"}
+    streams.stderr.write(`${error51 instanceof Error ? error51.message : t("cli.error.unexpected")}
 `);
     return 2;
   }

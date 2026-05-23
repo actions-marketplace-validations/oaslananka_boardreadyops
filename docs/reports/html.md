@@ -10,6 +10,14 @@ report:
   html: build/boardreadyops.report.html
 ```
 
+When the HTML report is written by the CLI, its headings, controls, table captions, and empty-state labels honor `BOARDREADY_LOCALE` or `LANG`. Use `BOARDREADY_LOCALE=tr` for Turkish report labels:
+
+```sh
+BOARDREADY_LOCALE=tr boardreadyops run .
+```
+
+Finding messages, rule IDs, and resource paths remain English and stable for cross-tool references.
+
 The report contains:
 
 - Summary counts by severity.
