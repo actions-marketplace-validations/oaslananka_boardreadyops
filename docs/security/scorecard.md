@@ -42,7 +42,7 @@ read classic branch protection rules in Scorecard.
 - `Packaging`: npm publication is triggered from clean `main` when a release tag and GitHub Release are published.
 - `Signed-Releases`: npm provenance and GitHub artifact attestations are handled by the release workflows.
 - `CII-Best-Practices`: external self-certification is not completed by the build agent. The badge can be added after the operator completes the questionnaire.
-- `Code-Review`: branch protection requires pull requests, but the repository uses bot-only review and zero required human approvals by policy.
+- `Code-Review`: the expected branch protection baseline requires pull requests, but the repository uses bot-only review and zero required human approvals by policy.
 - `Contributors`: the repository starts with a single maintainer.
 - `Maintained`: GitHub reports newly created repositories as young for the first 90 days.
 

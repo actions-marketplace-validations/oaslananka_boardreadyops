@@ -54,6 +54,7 @@ nav:
   - Support Matrix: support-matrix.md
   - Accessibility: accessibility.md
   - Testing: testing.md
+  - Governance: governance.md
   - Configuration: configuration.md
   - Cross-platform Paths: cross-platform.md
   - Multi-project Workspaces: multi-project.md
