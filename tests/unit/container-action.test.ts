@@ -59,6 +59,17 @@ describe("container action release surfaces", () => {
     expect(dockerfile).toContain('ENTRYPOINT ["boardreadyops"]');
   });
 
+  it("ships an explicit KiCad GPL notice in the container image and docs", async () => {
+    const [dockerfile, docs] = await Promise.all([
+      readFile("apps/container/Dockerfile", "utf8"),
+      readFile("docs/github-action.md", "utf8"),
+    ]);
+
+    expect(dockerfile).toContain("/usr/share/doc/boardreadyops/LICENSE-KICAD");
+    expect(dockerfile).toContain("/usr/share/common-licenses/GPL-3");
+    expect(docs).toContain("Container image redistributes KiCad under GPL terms.");
+  });
+
   it("keeps the container Node pin inside the package engine range", async () => {
     const [dockerfile, workflow, packageJson] = await Promise.all([
       readFile("apps/container/Dockerfile", "utf8"),

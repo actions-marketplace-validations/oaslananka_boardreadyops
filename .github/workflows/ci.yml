@@ -306,7 +306,7 @@ jobs:
       - run: corepack enable
       - run: corepack install
       - run: pnpm install --frozen-lockfile
-      - run: pnpm audit --audit-level moderate
+      - run: pnpm run security
 
   sbom:
     name: ci / sbom

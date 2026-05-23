@@ -45,6 +45,11 @@ direct container runs that can provide writable mounts for that user. The
 GitHub Docker action keeps the image default user so GitHub can mount and access
 `GITHUB_WORKSPACE`.
 
+Container image redistributes KiCad under GPL terms. The image preserves the
+GPL text at `/usr/share/doc/boardreadyops/LICENSE-KICAD` and the KiCad package
+notices under `/usr/share/doc/kicad/`; BoardReadyOps' Node code remains MIT
+licensed and invokes KiCad as a separate CLI process.
+
 Tagged container builds wait until the matching npm package version is visible,
 then publish `linux/amd64` and `linux/arm64` images to GHCR. Stable release
 tags update the matching major alias and `latest`; prerelease tags publish only

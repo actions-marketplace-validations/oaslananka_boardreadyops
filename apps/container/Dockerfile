@@ -41,6 +41,8 @@ RUN set -eux; \
     npm install --global "boardreadyops@${BOARDREADYOPS_VERSION}"; \
     boardreadyops --version; \
     kicad-cli version; \
+    mkdir -p /usr/share/doc/boardreadyops; \
+    cp /usr/share/common-licenses/GPL-3 /usr/share/doc/boardreadyops/LICENSE-KICAD; \
     useradd --create-home --shell /bin/bash --uid 10001 boardreadyops
 
 COPY action-entrypoint.sh /usr/local/bin/boardreadyops-action

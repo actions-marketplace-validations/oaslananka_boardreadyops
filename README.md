@@ -166,4 +166,6 @@ The repository intentionally versions `dist/action/index.cjs` and `dist/cli/inde
 
 ## License
 
-MIT.
+MIT. Third-party notices are generated in `NOTICE`. The full container image
+redistributes KiCad under GPL terms and preserves the KiCad license text inside
+the image.

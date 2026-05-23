@@ -26,6 +26,7 @@
     "docs",
     "README.md",
     "LICENSE",
+    "NOTICE",
     "SECURITY.md",
     "action.yml"
   ],
@@ -60,14 +61,17 @@
     "verify:clean-tree": "node scripts/verify-clean-tree.mjs",
     "verify:marketplace": "node scripts/check-marketplace-listing.mjs",
     "verify:structure": "node scripts/verify-structure.mjs",
+    "notice": "node scripts/build-notice.mjs",
+    "notice:check": "node scripts/build-notice.mjs --check",
+    "licenses:check": "node scripts/check-licenses.mjs",
     "gc": "node scripts/gc.mjs",
     "docs": "node scripts/compatibility.mjs render && node scripts/generate-rule-docs.mjs && node scripts/update-action-inputs-docs.mjs && node scripts/docs-build.mjs",
     "docs:a11y": "node scripts/check-docs-a11y.mjs",
     "docs:serve": "mkdocs serve",
     "knip": "knip",
     "sbom": "node scripts/generate-sbom.mjs",
-    "verify": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run compatibility:check && pnpm run build && pnpm run verify:dist && pnpm run verify:version && pnpm run verify:marketplace && pnpm run test:unit && pnpm run test:property && pnpm run test:snapshot && pnpm run test:action && pnpm run test:a11y && pnpm run coverage && pnpm run verify:structure && pnpm run gc && pnpm run docs && pnpm audit --audit-level moderate",
-    "security": "pnpm audit --audit-level moderate"
+    "verify": "pnpm run lint && pnpm run typecheck && pnpm run knip && pnpm run compatibility:check && pnpm run build && pnpm run verify:dist && pnpm run verify:version && pnpm run verify:marketplace && pnpm run test:unit && pnpm run test:property && pnpm run test:snapshot && pnpm run test:action && pnpm run test:a11y && pnpm run coverage && pnpm run verify:structure && pnpm run gc && pnpm run docs && pnpm run security",
+    "security": "pnpm audit --audit-level moderate && pnpm run licenses:check && pnpm run notice:check"
   },
   "lint-staged": {
     "{src,scripts,tests}/**/*.{ts,tsx,js,mjs,cjs}": [

@@ -96,5 +96,6 @@ nav:
           - "0003: Rule ID Namespace": architecture/adr/0003-rule-id-namespace.md
           - "0004: KiCad 10 Variants": architecture/adr/0004-kicad10-variant-support.md
           - "0005: KiCad IPC API": architecture/adr/0005-kicad-ipc-api.md
+          - "0006: License Compliance": architecture/adr/0006-license-compliance.md
   - Release:
       - Process: release/process.md
