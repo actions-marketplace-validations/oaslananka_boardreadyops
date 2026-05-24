@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { parseDelimited } from "../../src/bom/loader.js";
+import { loadBom, parseDelimited } from "../../src/bom/loader.js";
 import { normalizeBomRows } from "../../src/bom/normalizer.js";
 import { isRuleEnabled, loadConfig, ruleConfig, ruleSeverity, validateConfig } from "../../src/core/config.js";
 import type { RuleContext } from "../../src/core/context.js";
@@ -81,7 +81,11 @@ describe("support utilities", () => {
   it("parses quoted delimited files and pinmap formats", async () => {
     expect(parseDelimited('Reference,Value\n"R1,R2","10k"\n')[0]?.Reference).toBe("R1,R2");
     expect(parseDelimited('Reference,Value\n"R1","10""k"\n')[0]?.Value).toBe('10"k');
+    expect(parseDelimited("Reference,Value\nR1\n\n")[0]?.Value).toBe("");
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-pinmap-"));
+    const tsvBom = path.join(temp, "bom.tsv");
+    await fs.writeFile(tsvBom, "Reference\tMPN\tDNP\nR1\tABC-123\tno\n", "utf8");
+    expect((await loadBom(tsvBom))[0]).toMatchObject({ reference: "R1", mpn: "ABC-123", dnp: false });
     const jsonFile = path.join(temp, "pins.json");
     const csvFile = path.join(temp, "pins.csv");
     await fs.writeFile(

@@ -44,6 +44,7 @@ describe("configuration", () => {
           },
         ],
         baseline: { file: ".boardreadyops-baseline.json", mode: "new-only" },
+        fix: { allow: ["bom.missing-mpn", "release.version-format"] },
       }),
     ).toEqual([]);
     expect(validateConfig({ version: 1, gates: { release: { require: ["unknown"] } } })).not.toEqual([]);

@@ -1,6 +1,6 @@
 # CLI
 
-`boardreadyops run [path]` runs the full pipeline. `boardreadyops check [path]` is the concise preflight form for local and CI use. `boardreadyops check <rule-id> [path]` runs one rule. `boardreadyops explain <rule-id> [path]` prints rule-specific diagnostics when that rule exposes an explainer. `doctor`, `schema`, and `init` support setup and automation.
+`boardreadyops run [path]` runs the full pipeline. `boardreadyops check [path]` is the concise preflight form for local and CI use. `boardreadyops check <rule-id> [path]` runs one rule. `boardreadyops fix [path]` plans and applies safe automated fixes. `boardreadyops explain <rule-id> [path]` prints rule-specific diagnostics when that rule exposes an explainer. `doctor`, `schema`, and `init` support setup and automation.
 
 Use `--project <path>` with `run` or `check` to restrict a workspace scan to one project directory or `.kicad_pro` file. Use `--concurrency <count>` to cap concurrent project execution when a workspace contains multiple boards.
 
@@ -11,6 +11,23 @@ boardreadyops run . --concurrency 2
 ```
 
 Use `boardreadyops run --gate release` to select a configured gate from `boardreadyops.yml`. A selected gate enforces its configured threshold and named requirements for local release checks; GitHub Action runs auto-detect `pull_request`, `main`, or `release` when the Action `gate` input is empty.
+
+## Fix
+
+`boardreadyops fix [path]` prints a diff for safe automated changes before it writes anything. By default it refuses to apply changes in a dirty Git workspace; use `--allow-dirty` only when the local edits are intentional and already reviewed.
+
+```sh
+boardreadyops fix .
+boardreadyops fix . --dry-run
+boardreadyops fix . --rule bom.missing-mpn
+boardreadyops fix . --interactive
+boardreadyops fix . --commit
+boardreadyops fix . --drc-report build/kicad-drc.json --dry-run
+```
+
+Automated fixes cover inferable BOM MPN values, release changelog scaffolding, release revision normalization, missing PCB revision metadata, and missing fabrication notes. `bom.dnp-consistency` findings are surfaced but not applied automatically. KiCad DRC JSON diagnostics that include a suggested fix, or clearance wording that can be converted into a human review suggestion, are printed under `DRC suggested fixes` and do not mutate board files.
+
+Use `fix.allow` in `boardreadyops.yml` to restrict which safe fix categories may be applied. `--rule` narrows a single invocation further.
 
 ## Logging
 

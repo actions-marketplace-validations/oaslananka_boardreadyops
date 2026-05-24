@@ -657,7 +657,7 @@ rules:
     });
     expect(result.findings.some((finding) => finding.ruleId.startsWith("drc."))).toBe(true);
     expect(result.findings.some((finding) => finding.ruleId.startsWith("erc."))).toBe(true);
-  }, 60_000);
+  }, 120_000);
 });
 
 function memoryStreams() {

@@ -291734,6 +291734,20 @@ var config_schema_default = {
         }
       }
     },
+    fix: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        allow: {
+          type: "array",
+          items: {
+            type: "string",
+            minLength: 1
+          },
+          uniqueItems: true
+        }
+      }
+    },
     notifiers: {
       type: "object",
       additionalProperties: false,
@@ -292097,6 +292111,47 @@ function globLike(pattern, value) {
 // src/rules/bom/shared.ts
 var import_node_path6 = __toESM(require("node:path"), 1);
 
+// src/util/delimited.ts
+function parseDelimitedRows(text, delimiter2) {
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    const next = text[index + 1];
+    if (quoted) {
+      if (char === '"' && next === '"') {
+        cell += '"';
+        index += 1;
+      } else if (char === '"') {
+        quoted = false;
+      } else {
+        cell += char;
+      }
+      continue;
+    }
+    if (char === '"') {
+      quoted = true;
+    } else if (char === delimiter2) {
+      row.push(cell);
+      cell = "";
+    } else if (char === "\n") {
+      row.push(cell.replace(/\r$/, ""));
+      rows.push(row);
+      row = [];
+      cell = "";
+    } else {
+      cell += char;
+    }
+  }
+  if (cell.length > 0 || row.length > 0 || !text.endsWith("\n")) {
+    row.push(cell.replace(/\r$/, ""));
+    rows.push(row);
+  }
+  return rows;
+}
+
 // src/bom/normalizer.ts
 var aliases = {
   reference: ["reference", "refs", "ref", "designator", "references"],
@@ -292167,46 +292222,9 @@ async function loadBom(file2) {
   return normalizeBomRows(parseDelimited(text, delimiter2), file2);
 }
 function parseDelimited(text, delimiter2 = ",") {
-  const rows = parseRows(text, delimiter2);
+  const rows = parseDelimitedRows(text, delimiter2);
   const header = rows.shift()?.map((cell) => cell.trim()) ?? [];
   return rows.filter((row) => row.some((cell) => cell.trim() !== "")).map((row) => Object.fromEntries(header.map((key, index) => [key, row[index]?.trim() ?? ""])));
-}
-function parseRows(text, delimiter2) {
-  const rows = [];
-  let row = [];
-  let cell = "";
-  let quoted = false;
-  for (let index = 0; index < text.length; index += 1) {
-    const char = text[index];
-    const next = text[index + 1];
-    if (quoted) {
-      if (char === '"' && next === '"') {
-        cell += '"';
-        index += 1;
-      } else if (char === '"') {
-        quoted = false;
-      } else {
-        cell += char;
-      }
-      continue;
-    }
-    if (char === '"') {
-      quoted = true;
-    } else if (char === delimiter2) {
-      row.push(cell);
-      cell = "";
-    } else if (char === "\n") {
-      row.push(cell.replace(/\r$/, ""));
-      rows.push(row);
-      row = [];
-      cell = "";
-    } else {
-      cell += char;
-    }
-  }
-  row.push(cell.replace(/\r$/, ""));
-  rows.push(row);
-  return rows;
 }
 
 // src/kicad/parsers/project-files.ts

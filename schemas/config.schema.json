@@ -225,6 +225,20 @@
         }
       }
     },
+    "fix": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "allow": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
     "notifiers": {
       "type": "object",
       "additionalProperties": false,

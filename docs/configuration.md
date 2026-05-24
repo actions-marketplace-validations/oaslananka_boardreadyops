@@ -20,6 +20,8 @@ report:
   sarif: build/boardreadyops.sarif.json
   markdown: build/boardreadyops.report.md
   html: build/boardreadyops.report.html
+fix:
+  allow: [bom.missing-mpn, release.version-format, release.changelog-present, manufacturing.fab-notes]
 notifiers:
   slack:
     enabled: true
@@ -81,6 +83,23 @@ report:
 ```
 
 HTML reports are standalone files with embedded CSS and filtering JavaScript, so they can be shared without publishing additional assets.
+
+## Fixes
+
+Use the `fix` block to limit which safe automated fixes `boardreadyops fix` may apply. When the block is absent, the command allows the built-in safe categories. When `allow` is present, only listed rule IDs may be changed, and `--rule` can narrow that set for one invocation.
+
+```yaml
+version: 1
+fix:
+  allow:
+    - bom.missing-mpn
+    - release.changelog-present
+    - release.version-format
+    - release.revision-set
+    - manufacturing.fab-notes
+```
+
+`bom.dnp-consistency` is intentionally not an auto-applied fix because changing DNP state can affect assembly intent. The fix command reports those mismatches as skipped findings so they remain visible for review.
 
 ## Notifiers
 

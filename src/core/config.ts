@@ -44,6 +44,10 @@ export interface BaselineConfig {
   mode: "new-only" | "all";
 }
 
+interface FixConfig {
+  allow?: string[];
+}
+
 export interface GateConfig {
   "fail-on"?: FailOn;
   require?: string[];
@@ -86,6 +90,7 @@ export interface BoardReadyOpsConfig {
   gates?: Record<string, GateConfig>;
   suppressions?: SuppressionConfig[];
   baseline?: BaselineConfig;
+  fix?: FixConfig;
   notifiers?: NotifiersConfig;
   report?: {
     sarif?: string | false;

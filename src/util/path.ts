@@ -32,7 +32,7 @@ export async function displayPath(root: string, target: string): Promise<string>
   return `<outside-root>/${path.basename(absoluteTarget)}`;
 }
 
-async function resolveExistingPathAlias(target: string): Promise<string> {
+export async function resolveExistingPathAlias(target: string): Promise<string> {
   const missingSegments: string[] = [];
   let current = path.resolve(target);
   while (true) {

@@ -14,6 +14,7 @@ import {
 import { checkCommand } from "./commands/check.js";
 import { type DoctorCommandOptions, doctorCommand } from "./commands/doctor.js";
 import { explainCommand } from "./commands/explain.js";
+import { type FixCliOptions, fixCommand } from "./commands/fix.js";
 import { initCommand } from "./commands/init.js";
 import { addCommonOptions, type CommonCliOptions, runCommand } from "./commands/run.js";
 import { schemaCommand } from "./commands/schema.js";
@@ -47,6 +48,20 @@ export async function runCli(
       process.exitCode = await checkCommand(ruleOrPath, pathInput, options, streams);
     },
   );
+
+  program
+    .command("fix")
+    .argument("[path]", "directory to fix")
+    .option("--config <path>", "boardreadyops.yml location")
+    .option("--rule <id>", "restrict to rule", collectOption, [])
+    .option("--dry-run", "print planned diffs without writing files")
+    .option("--interactive", "prompt before applying planned diffs")
+    .option("--commit", "commit applied fixes with git")
+    .option("--allow-dirty", "allow fixes when the git workspace is dirty")
+    .option("--drc-report <path>", "KiCad DRC JSON report with suggested fixes")
+    .action(async (pathInput: string | undefined, options: FixCliOptions) => {
+      process.exitCode = await fixCommand(pathInput, options, streams);
+    });
 
   program
     .command("doctor")
@@ -118,8 +133,12 @@ function addBaselineOptions(command: Command): Command {
   return command.option("--config <path>", "boardreadyops.yml location");
 }
 
+function collectOption(value: string, previous: string[]): string[] {
+  return [...previous, value];
+}
+
 function rewriteDefaultCommand(argv: string[]): string[] {
-  const commands = new Set(["run", "check", "doctor", "explain", "schema", "init", "baseline", "help"]);
+  const commands = new Set(["run", "check", "fix", "doctor", "explain", "schema", "init", "baseline", "help"]);
   const first = argv[0];
   if (first === "--help" || first === "-h" || first === "--version" || first === "-V") {
     return argv;
