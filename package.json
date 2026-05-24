@@ -22,7 +22,9 @@
   },
   "files": [
     "dist",
+    "examples",
     "kicad-plugin",
+    "packages/plugin-sdk",
     "schemas",
     "docs",
     "README.md",

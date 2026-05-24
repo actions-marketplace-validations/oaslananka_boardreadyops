@@ -20,6 +20,7 @@ import { discoverProjects } from "./discovery.js";
 import { createFinding, type FailOn, type Finding, sortFindings, summarizeFindings } from "./findings.js";
 import { gateRequirementFindings, requiredGateRules, requiredManufacturingOutputs } from "./gates/requirements.js";
 import { createLogger, type Logger } from "./logger.js";
+import { loadPlugins } from "./plugin-loader.js";
 import type { RunResult } from "./result.js";
 import { listRules } from "./rule-registry.js";
 import { applySuppressions } from "./suppressions.js";
@@ -49,9 +50,13 @@ export async function runPipeline(
     path: root,
     project_count: projectsLengthHint(input),
   });
+  const pluginLoad = await loadPlugins(root, config);
+  const loadedWithPluginErrors = appendConfigErrors(loaded, pluginLoad.errors);
   const projects = await discoverConfiguredProjects(root, options);
   const findings: Finding[] = [];
-  findings.push(...configFindings(root, loaded, missingExplicitGate ? new Set([missingExplicitGate]) : undefined));
+  findings.push(
+    ...configFindings(root, loadedWithPluginErrors, missingExplicitGate ? new Set([missingExplicitGate]) : undefined),
+  );
   findings.push(...projectShapeFindings(projects));
   const activeRules = listRules().filter((rule) => {
     if (options.rules.length > 0 && !options.rules.includes(rule.meta.id)) {
@@ -235,6 +240,16 @@ function applyGateRequirements(config: BoardReadyOpsConfig, gate: GateConfig): B
   return {
     ...config,
     rules,
+  };
+}
+
+function appendConfigErrors(loaded: LoadedConfig, errors: string[]): LoadedConfig {
+  if (errors.length === 0) {
+    return loaded;
+  }
+  return {
+    ...loaded,
+    errors: [...loaded.errors, ...errors],
   };
 }
 

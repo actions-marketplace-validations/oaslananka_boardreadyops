@@ -82,6 +82,7 @@ nav:
       - KiCad Plugin: kicad-plugin.md
       - GitHub Code Scanning: integrations/github-code-scanning.md
       - KiCad IPC API: integrations/kicad-ipc.md
+      - Plugin SDK: plugin-sdk.md
       - BoardReadyOps MCP: integrations/boardreadyops-mcp.md
       - BoardReadyOps Studio: integrations/boardreadyops-studio.md
   - Development:

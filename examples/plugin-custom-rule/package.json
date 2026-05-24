@@ -1,0 +1,13 @@
+{
+  "name": "boardreadyops-plugin-custom-rule",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Example BoardReadyOps plugin that ships a custom rule.",
+  "dependencies": {
+    "@boardreadyops/plugin-sdk": "workspace:*"
+  },
+  "exports": {
+    ".": "./index.js"
+  }
+}

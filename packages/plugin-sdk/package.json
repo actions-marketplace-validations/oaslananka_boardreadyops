@@ -1,0 +1,24 @@
+{
+  "name": "@boardreadyops/plugin-sdk",
+  "version": "1.0.2",
+  "description": "Type helpers and definePlugin for BoardReadyOps plugins.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oaslananka/boardreadyops.git",
+    "directory": "packages/plugin-sdk"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    }
+  },
+  "files": [
+    "index.js",
+    "src",
+    "README.md"
+  ]
+}

@@ -84,6 +84,7 @@ export interface NotifiersConfig {
 export interface BoardReadyOpsConfig {
   version: 1;
   mode?: "warn" | "enforce";
+  plugins?: string[];
   projects?: ProjectConfig[];
   rules?: Record<string, RuleConfig | boolean>;
   "fail-on"?: FailOn;

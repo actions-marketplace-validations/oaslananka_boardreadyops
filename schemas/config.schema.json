@@ -12,6 +12,14 @@
     "mode": {
       "enum": ["warn", "enforce"]
     },
+    "plugins": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
     "projects": {
       "type": "array",
       "items": {

@@ -5,6 +5,9 @@ The primary configuration file is `boardreadyops.yml`. The loader also accepts `
 ```yaml
 version: 1
 mode: warn
+plugins:
+  - "@boardreadyops/plugin-example"
+  - "./local-rules/custom-fab-check.js"
 projects:
   - path: .
 rules:
@@ -46,6 +49,8 @@ projects:
 ```
 
 See [Multi-project Workspaces](multi-project.md) for filtering, concurrency, and report attribution examples.
+
+Use `plugins` to load third-party extensions by package name or local JavaScript path. BoardReadyOps also auto-discovers installed packages named `@boardreadyops/plugin-*` or `boardreadyops-plugin-*`, plus `./local-rules/*.js`. See [Plugin SDK](plugin-sdk.md) for the SDK contract, naming convention, and trust boundary.
 
 Use `gates` when event-specific enforcement needs stricter requirements than the repository default:
 

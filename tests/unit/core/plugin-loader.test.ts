@@ -1,0 +1,355 @@
+import fs from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
+import { pathToFileURL } from "node:url";
+import { beforeEach, describe, expect, it } from "vitest";
+import { validateConfig } from "../../../src/core/config.js";
+import { runPipeline } from "../../../src/core/pipeline.js";
+import {
+  clearPluginRegistrationsForTests,
+  discoverPluginSpecifiers,
+  loadPlugins,
+} from "../../../src/core/plugin-loader.js";
+import { clearRulesForTests } from "../../../src/core/rule-registry.js";
+import { registerBuiltInRules, resetBuiltInRuleRegistrationForTests } from "../../../src/rules/_index.js";
+
+const safeBasicFixture = path.resolve("tests/fixtures/projects/safe-basic");
+
+describe("plugin loader", () => {
+  beforeEach(() => {
+    clearRulesForTests();
+    resetBuiltInRuleRegistrationForTests();
+    clearPluginRegistrationsForTests();
+  });
+
+  it("accepts plugin entries in the BoardReadyOps config schema", () => {
+    expect(validateConfig({ version: 1, plugins: ["@boardreadyops/plugin-fab", "./local-rules/check.js"] })).toEqual(
+      [],
+    );
+    expect(validateConfig({ version: 1, plugins: [42] })).not.toEqual([]);
+  });
+
+  it("discovers configured, package, and local plugin specifiers deterministically", async () => {
+    const root = await makeProjectRoot();
+    await fs.mkdir(path.join(root, "node_modules", "@boardreadyops", "plugin-fab"), { recursive: true });
+    await fs.mkdir(path.join(root, "node_modules", "@boardreadyops", "plugin-zed"), { recursive: true });
+    await fs.mkdir(path.join(root, "node_modules", "@boardreadyops", "plugin-sdk"), { recursive: true });
+    await fs.mkdir(path.join(root, "node_modules", "boardreadyops-plugin-vendor"), { recursive: true });
+    await fs.mkdir(path.join(root, "node_modules", "boardreadyops-plugin-zed"), { recursive: true });
+    await fs.mkdir(path.join(root, "local-rules"), { recursive: true });
+    await fs.writeFile(path.join(root, "local-rules", "custom-fab-check.js"), "", "utf8");
+    await fs.writeFile(path.join(root, "local-rules", "zed-check.js"), "", "utf8");
+
+    await expect(discoverPluginSpecifiers(root, ["./explicit.js", "boardreadyops-plugin-vendor"])).resolves.toEqual([
+      "./explicit.js",
+      "boardreadyops-plugin-vendor",
+      "@boardreadyops/plugin-fab",
+      "@boardreadyops/plugin-zed",
+      "boardreadyops-plugin-zed",
+      "./local-rules/custom-fab-check.js",
+      "./local-rules/zed-check.js",
+    ]);
+  });
+
+  it("surfaces discovery directory errors that are not missing paths", async () => {
+    const root = await makeProjectRoot();
+    await fs.writeFile(path.join(root, "local-rules"), "not a directory\n", "utf8");
+
+    await expect(discoverPluginSpecifiers(root)).rejects.toMatchObject({
+      code: "ENOTDIR",
+    });
+  });
+
+  it("loads local plugins and registers their rules", async () => {
+    const root = await makeProjectRoot();
+    await fs.mkdir(path.join(root, "local-rules"), { recursive: true });
+    await writeRulePlugin(path.join(root, "local-rules", "custom-fab-check.js"), {
+      name: "custom-local",
+      ruleId: "plugin.local-hello",
+      message: "Local plugin rule ran.",
+    });
+
+    const result = await runPipeline({ path: root, failOn: "never", rules: ["plugin.local-hello"] });
+
+    expect(result.findings).toEqual([
+      expect.objectContaining({
+        ruleId: "plugin.local-hello",
+        severity: "info",
+        message: "Local plugin rule ran.",
+      }),
+    ]);
+  });
+
+  it("loads node_modules plugin packages by naming convention", async () => {
+    const root = await makeProjectRoot();
+    const packageRoot = path.join(root, "node_modules", "boardreadyops-plugin-vendor");
+    await fs.mkdir(packageRoot, { recursive: true });
+    await fs.writeFile(
+      path.join(packageRoot, "package.json"),
+      JSON.stringify({ name: "boardreadyops-plugin-vendor", version: "1.0.0", type: "module", main: "index.js" }),
+      "utf8",
+    );
+    await writeRulePlugin(path.join(packageRoot, "index.js"), {
+      name: "vendor-package",
+      ruleId: "plugin.vendor-hello",
+      message: "Vendor package plugin rule ran.",
+    });
+
+    const result = await runPipeline({ path: root, failOn: "never", rules: ["plugin.vendor-hello"] });
+
+    expect(result.findings).toEqual([
+      expect.objectContaining({
+        ruleId: "plugin.vendor-hello",
+        severity: "info",
+        message: "Vendor package plugin rule ran.",
+      }),
+    ]);
+  });
+
+  it("loads file URL plugins and treats repeat loads from the same specifier as idempotent", async () => {
+    const root = await makeProjectRoot();
+    const pluginFile = path.join(root, "file-url-plugin.js");
+    const specifier = pathToFileURL(pluginFile).href;
+    await writeRulePlugin(pluginFile, {
+      name: "file-url-plugin",
+      ruleId: "plugin.file-url",
+      message: "File URL plugin rule ran.",
+    });
+
+    await expect(loadPlugins(root, { plugins: [specifier] })).resolves.toMatchObject({
+      errors: [],
+      plugins: [
+        {
+          specifier,
+          ruleIds: ["plugin.file-url"],
+        },
+      ],
+    });
+    await expect(loadPlugins(root, { plugins: [specifier] })).resolves.toMatchObject({
+      errors: [],
+      plugins: [
+        {
+          specifier,
+          ruleIds: ["plugin.file-url"],
+        },
+      ],
+    });
+  });
+
+  it("reports invalid plugin shapes as configuration findings", async () => {
+    const root = await makeProjectRoot();
+    const pluginFile = path.join(root, "invalid-plugin.js");
+    await fs.writeFile(
+      pluginFile,
+      "export default { name: 'invalid-plugin', version: '1.0.0', rules: [{ meta: { id: 'plugin.invalid' }, run: 'no' }] };\n",
+      "utf8",
+    );
+    await fs.writeFile(
+      path.join(root, "boardreadyops.yml"),
+      `version: 1\nplugins:\n  - ${JSON.stringify(pluginFile)}\n`,
+      "utf8",
+    );
+
+    const result = await runPipeline({ path: root, failOn: "never", rules: ["plugin.invalid"] });
+
+    expect(result.findings).toEqual([
+      expect.objectContaining({
+        ruleId: "config.invalid",
+        severity: "high",
+        message: expect.stringContaining("Plugin"),
+      }),
+    ]);
+    expect(result.findings[0]?.message).toContain("is invalid");
+  });
+
+  it("reports plugin modules that cannot resolve or do not export objects", async () => {
+    const root = await makeProjectRoot();
+    const primitivePlugin = path.join(root, "primitive-plugin.js");
+    await fs.writeFile(primitivePlugin, "export default 'not a plugin';\n", "utf8");
+
+    const result = await loadPlugins(root, {
+      plugins: [primitivePlugin, "boardreadyops-plugin-missing"],
+    });
+
+    expect(result.plugins).toEqual([]);
+    expect(result.errors).toEqual([
+      expect.stringContaining(`Plugin "${primitivePlugin}" is invalid`),
+      expect.stringContaining('Plugin "boardreadyops-plugin-missing" could not be loaded'),
+    ]);
+  });
+
+  it("reports duplicate rule ids inside one plugin before registering it", async () => {
+    const root = await makeProjectRoot();
+    const duplicatePlugin = path.join(root, "duplicate-plugin.js");
+    await writeRulePlugin(duplicatePlugin, {
+      name: "duplicate-plugin",
+      ruleId: "plugin.duplicate",
+      message: "Duplicate plugin rule ran.",
+      duplicateRule: true,
+    });
+
+    const result = await loadPlugins(root, { plugins: [duplicatePlugin] });
+
+    expect(result.plugins).toEqual([]);
+    expect(result.errors).toEqual([
+      expect.stringContaining(`Plugin "${duplicatePlugin}" defines duplicate rule id "plugin.duplicate".`),
+    ]);
+  });
+
+  it("reports duplicate rule ids across different plugins", async () => {
+    const root = await makeProjectRoot();
+    const firstPlugin = path.join(root, "first-plugin.js");
+    const secondPlugin = path.join(root, "second-plugin.js");
+    await writeRulePlugin(firstPlugin, {
+      name: "first-plugin",
+      ruleId: "plugin.shared",
+      message: "First shared plugin rule ran.",
+    });
+    await writeRulePlugin(secondPlugin, {
+      name: "second-plugin",
+      ruleId: "plugin.shared",
+      message: "Second shared plugin rule ran.",
+    });
+
+    const result = await loadPlugins(root, { plugins: [firstPlugin, secondPlugin] });
+
+    expect(result.plugins).toEqual([
+      expect.objectContaining({
+        specifier: firstPlugin,
+        ruleIds: ["plugin.shared"],
+      }),
+    ]);
+    expect(result.errors).toEqual([
+      expect.stringContaining(`Plugin "${secondPlugin}" rule "plugin.shared" duplicates rule from "${firstPlugin}".`),
+    ]);
+  });
+
+  it("reports plugin rule ids that collide with built-in rules", async () => {
+    const root = await makeProjectRoot();
+    const pluginFile = path.join(root, "builtin-collision.js");
+    registerBuiltInRules();
+    await writeRulePlugin(pluginFile, {
+      name: "builtin-collision",
+      ruleId: "release.revision-set",
+      message: "Builtin collision rule ran.",
+    });
+
+    const result = await loadPlugins(root, { plugins: [pluginFile] });
+
+    expect(result.plugins).toEqual([]);
+    expect(result.errors).toEqual([
+      expect.stringContaining(
+        `Plugin "${pluginFile}" rule "release.revision-set" could not be registered: Duplicate rule id: release.revision-set`,
+      ),
+    ]);
+  });
+
+  it("loads named plugin exports and preserves plugin-provided fingerprints", async () => {
+    const root = await makeProjectRoot();
+    const pluginFile = path.join(root, "named-plugin.js");
+    const fingerprint = "b".repeat(64);
+    await fs.writeFile(
+      path.join(root, "boardreadyops.yml"),
+      `version: 1\nplugins:\n  - ${JSON.stringify(pluginFile)}\n`,
+      "utf8",
+    );
+    await writeRulePlugin(pluginFile, {
+      name: "named-plugin",
+      ruleId: "plugin.named",
+      message: "Named plugin rule ran.",
+      exportName: "plugin",
+      fingerprint,
+    });
+
+    const result = await runPipeline({ path: root, failOn: "never", rules: ["plugin.named"] });
+
+    expect(result.findings).toEqual([
+      expect.objectContaining({
+        ruleId: "plugin.named",
+        fingerprint,
+      }),
+    ]);
+  });
+
+  it("runs the shipped example plugin end-to-end through the SDK package", async () => {
+    const root = await makeProjectRoot();
+    const examplePlugin = path.resolve("examples/plugin-custom-rule/index.js");
+    await fs.writeFile(
+      path.join(root, "boardreadyops.yml"),
+      `version: 1\nplugins:\n  - ${JSON.stringify(examplePlugin)}\n`,
+      "utf8",
+    );
+
+    const result = await runPipeline({ path: root, failOn: "never", rules: ["plugin.hello-world"] });
+
+    expect(result.findings).toEqual([
+      expect.objectContaining({
+        ruleId: "plugin.hello-world",
+        severity: "info",
+        message: "Hello from a BoardReadyOps plugin.",
+      }),
+    ]);
+  });
+});
+
+async function makeProjectRoot(): Promise<string> {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-plugin-"));
+  await fs.cp(safeBasicFixture, root, { recursive: true });
+  return root;
+}
+
+async function writeRulePlugin(
+  file: string,
+  input: {
+    name: string;
+    ruleId: string;
+    message: string;
+    duplicateRule?: boolean;
+    exportName?: "default" | "plugin";
+    fingerprint?: string;
+  },
+): Promise<void> {
+  const exportPrefix = input.exportName === "plugin" ? "export const plugin =" : "export default";
+  const rules = [ruleSource(input), ...(input.duplicateRule ? [ruleSource(input)] : [])];
+  await fs.writeFile(
+    file,
+    `${exportPrefix} {
+  name: ${JSON.stringify(input.name)},
+  version: "1.0.0",
+  rules: [
+${rules.join(",\n")}
+  ]
+};
+`,
+    "utf8",
+  );
+}
+
+function ruleSource(input: { ruleId: string; message: string; fingerprint?: string }): string {
+  const fingerprint = input.fingerprint ? `,\n            fingerprint: ${JSON.stringify(input.fingerprint)}` : "";
+  return `    {
+      meta: {
+        id: ${JSON.stringify(input.ruleId)},
+        title: "Plugin hello",
+        description: "Exercises plugin loading.",
+        rationale: "Plugin rules should be registered by the loader.",
+        defaultSeverity: "info",
+        appliesTo: ["project"],
+        configKeys: [],
+        kicadVersions: ["9", "10", "future"],
+        tags: ["plugin"]
+      },
+      async run(context) {
+        return [
+          {
+            ruleId: ${JSON.stringify(input.ruleId)},
+            severity: "info",
+            message: ${JSON.stringify(input.message)},
+            project: context.projects[0]?.projectFile,
+            resource: { path: context.projects[0]?.projectFile ?? ".", kind: "project" },
+            confidence: "definite"${fingerprint}
+          }
+        ];
+      }
+    }`;
+}
