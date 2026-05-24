@@ -79,6 +79,7 @@ nav:
       - JUnit: reports/junit.md
       - Annotations: reports/annotations.md
   - Integrations:
+      - KiCad Plugin: kicad-plugin.md
       - GitHub Code Scanning: integrations/github-code-scanning.md
       - KiCad IPC API: integrations/kicad-ipc.md
       - BoardReadyOps MCP: integrations/boardreadyops-mcp.md

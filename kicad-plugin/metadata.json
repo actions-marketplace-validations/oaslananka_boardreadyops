@@ -1,0 +1,38 @@
+{
+  "$schema": "https://go.kicad.org/pcm/schemas/v2",
+  "name": "BoardReadyOps",
+  "description": "Run BoardReadyOps fabrication checks.",
+  "description_full": "BoardReadyOps runs the boardreadyops CLI for the active KiCad project from inside the PCB editor, parses JSON findings, and displays severity-grouped fabrication readiness guidance with fix steps and reference links.",
+  "identifier": "com.github.oaslananka.boardreadyops",
+  "type": "plugin",
+  "author": {
+    "name": "Osman Aslan",
+    "contact": {
+      "web": "https://github.com/oaslananka/boardreadyops"
+    }
+  },
+  "maintainer": {
+    "name": "Osman Aslan",
+    "contact": {
+      "web": "https://github.com/oaslananka/boardreadyops/issues"
+    }
+  },
+  "category": "fabrication",
+  "license": "MIT",
+  "resources": {
+    "homepage": "https://github.com/oaslananka/boardreadyops#readme",
+    "repository": "https://github.com/oaslananka/boardreadyops",
+    "documentation": "https://github.com/oaslananka/boardreadyops/blob/main/docs/kicad-plugin.md",
+    "bugtracker": "https://github.com/oaslananka/boardreadyops/issues"
+  },
+  "tags": ["fabrication", "drc", "erc", "bom", "ci"],
+  "versions": [
+    {
+      "version": "1.0.2",
+      "status": "development",
+      "runtime": "swig",
+      "kicad_version": "9.0",
+      "platforms": ["windows", "macos", "linux"]
+    }
+  ]
+}
