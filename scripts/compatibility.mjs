@@ -27,34 +27,51 @@ export function renderSupportMatrix(input) {
   ];
 
   for (const version of config.kicad.tested) {
-    lines.push(`| KiCad | ${version} | Supported | ${markdownCell(kicadNote(config, version))} |`);
+    const status = version === config.kicad.recommended ? "Recommended CI-tested line" : "Supported";
+    lines.push(`| KiCad | ${version} | ${status} | ${markdownCell(kicadNote(config, version))} |`);
   }
-  lines.push(
-    `| KiCad | ${config.kicad.recommended} | Recommended | ${markdownCell(
-      kicadNote(config, config.kicad.recommended),
-    )} |`,
-  );
 
   lines.push(
     "",
     "## Node.js",
     "",
-    `Minimum supported Node.js major: **${config.node.minimum}**.`,
+    `Minimum supported Node.js major: **${config.node.minimum}**. Recommended Node.js major: **${config.node.recommended}**.`,
     "",
-    "| Runtime | Version | Status | Tested latest |",
-    "| --- | --- | --- | --- |",
+    "| Runtime | Version | Status | Tested latest | Policy |",
+    "| --- | --- | --- | --- | --- |",
   );
 
   for (const version of config.node.supported) {
-    const status = version === config.node.minimum ? "Minimum supported runtime" : "Supported LTS runtime";
-    lines.push(`| Node.js | ${version} | ${status} | ${config.node.tested[version] ?? ""} |`);
+    const status = nodeSupportStatus(config, version);
+    lines.push(
+      `| Node.js | ${version} | ${status} | ${config.node.tested[version] ?? ""} | ${markdownCell(
+        config.node.policy[version] ?? "",
+      )} |`,
+    );
+  }
+
+  for (const version of config.node.current) {
+    lines.push(
+      `| Node.js | ${version} | Current, not supported |  | ${markdownCell(config.node.policy[version] ?? "")} |`,
+    );
   }
 
   lines.push(
     "",
+    "## CycloneDX HBOM",
+    "",
+    "| Contract | Version | Status | Validation |",
+    "| --- | --- | --- | --- |",
+    `| CycloneDX JSON | ${config.cyclonedx.specVersion} | Pinned HBOM contract | ${markdownCell(
+      config.cyclonedx.schemaUrl,
+    )} |`,
+    `| Repository HBOM schema | ${config.cyclonedx.hbomSchema} | CI validated | ${markdownCell(
+      config.cyclonedx.validation,
+    )} |`,
+    "",
     "## Drift Detection",
     "",
-    "The scheduled `compatibility-drift` workflow compares this matrix with the Node.js release index and KiCad GitLab tags. It opens a GitHub issue when a new supported runtime line needs review.",
+    "The scheduled `compatibility-drift` workflow compares this matrix with the Node.js release index, KiCad GitLab tags, and the pinned CycloneDX schema. It opens a GitHub issue when a documented runtime, hardware-toolchain line, or HBOM contract needs review.",
   );
 
   return `${lines.join("\n")}\n`;
@@ -65,16 +82,17 @@ export function findCompatibilityDrift(input, sources) {
   return {
     kicad: findKicadDrift(config, sources.kicadReleases ?? []),
     node: findNodeDrift(config, sources.nodeReleases ?? []),
+    cyclonedx: findCycloneDxDrift(config, sources.cycloneDxSchema),
   };
 }
 
 export function buildDriftReport(drift) {
-  const hasDrift = drift.kicad.length > 0 || drift.node.length > 0;
+  const hasDrift = drift.kicad.length > 0 || drift.node.length > 0 || drift.cyclonedx.length > 0;
   if (!hasDrift) {
     return [
       "# No Compatibility Drift Detected",
       "",
-      "`docs/compatibility.yaml` still matches the checked KiCad and Node.js release sources.",
+      "`docs/compatibility.yaml` still matches the checked KiCad, Node.js, and CycloneDX release sources.",
     ].join("\n");
   }
 
@@ -87,20 +105,25 @@ export function buildDriftReport(drift) {
   if (drift.kicad.length > 0) {
     lines.push("", "## KiCad", "");
     for (const entry of drift.kicad) {
-      lines.push(`- KiCad ${entry.series} is not listed as tested. Latest matching tag: ${entry.latest}.`);
+      lines.push(`- KiCad ${entry.series} is not listed as CI-tested. Latest matching tag: ${entry.latest}.`);
     }
   }
 
   if (drift.node.length > 0) {
     lines.push("", "## Node.js", "");
     for (const entry of drift.node) {
-      if (entry.reason === "unsupported-current") {
-        lines.push(`- Node.js ${entry.latest} is an even-numbered current line not listed as supported.`);
-      } else if (entry.reason === "untested-supported") {
-        lines.push(`- Node.js ${entry.major} is supported but has no tested latest version recorded.`);
+      lines.push(`- ${nodeDriftMessage(entry)}`);
+    }
+  }
+
+  if (drift.cyclonedx.length > 0) {
+    lines.push("", "## CycloneDX", "");
+    for (const entry of drift.cyclonedx) {
+      if (entry.reason === "schema-version-unreadable") {
+        lines.push(`- CycloneDX schema version could not be read from ${entry.schemaUrl}; expected ${entry.expected}.`);
       } else {
         lines.push(
-          `- Node.js ${entry.latest} is newer than recorded ${entry.tested} for supported major ${entry.major}.`,
+          `- CycloneDX schema reports ${entry.observed} but BoardReadyOps pins ${entry.expected} at ${entry.schemaUrl}.`,
         );
       }
     }
@@ -120,6 +143,11 @@ export async function fetchNodeReleases(fetchImpl = globalThis.fetch) {
 export async function fetchKicadReleaseTags(fetchImpl = globalThis.fetch) {
   const tags = await readJson(KICAD_TAGS_URL, fetchImpl);
   return tags.map((tag) => tag.name ?? tag.tag_name).filter(Boolean);
+}
+
+export async function fetchCycloneDxSchema(input, fetchImpl = globalThis.fetch) {
+  const url = typeof input === "string" ? input : normalizeCompatibilityConfig(input).cyclonedx.schemaUrl;
+  return readJson(url, fetchImpl);
 }
 
 export async function main(args = process.argv.slice(2), options = {}) {
@@ -157,14 +185,15 @@ async function driftCommand(root, args, fetchImpl = globalThis.fetch) {
   const markdownOutput = optionValue(args, "--markdown-output");
   const jsonOutput = optionValue(args, "--json-output");
   const githubOutput = optionValue(args, "--github-output");
-  const [config, kicadReleases, nodeReleases] = await Promise.all([
-    readFile(compatibilityPath, "utf8").then((content) => yaml.load(content)),
+  const config = yaml.load(await readFile(compatibilityPath, "utf8"));
+  const [kicadReleases, nodeReleases, cycloneDxSchema] = await Promise.all([
     fetchKicadReleaseTags(fetchImpl),
     fetchNodeReleases(fetchImpl),
+    fetchCycloneDxSchema(config, fetchImpl),
   ]);
-  const drift = findCompatibilityDrift(config, { kicadReleases, nodeReleases });
+  const drift = findCompatibilityDrift(config, { kicadReleases, nodeReleases, cycloneDxSchema });
   const report = buildDriftReport(drift);
-  const driftFound = drift.kicad.length > 0 || drift.node.length > 0;
+  const driftFound = drift.kicad.length > 0 || drift.node.length > 0 || drift.cyclonedx.length > 0;
 
   if (markdownOutput) {
     await writeFile(path.resolve(root, markdownOutput), `${report}\n`);
@@ -209,6 +238,7 @@ function findKicadDrift(config, releases) {
 function findNodeDrift(config, releases) {
   const minimum = Number(config.node.minimum);
   const supported = new Set(config.node.supported);
+  const documentedCurrent = new Set(config.node.current);
   const latestByMajor = new Map();
   for (const release of releases) {
     const version = stableReleaseName(releaseName(release));
@@ -217,15 +247,19 @@ function findNodeDrift(config, releases) {
     }
     const major = String(version.major);
     const current = latestByMajor.get(major);
-    if (!current || compareVersion(version, current) > 0) {
-      latestByMajor.set(major, version);
+    if (!current || compareVersion(version, current.version) > 0) {
+      latestByMajor.set(major, { version, lts: release.lts });
     }
   }
 
   const drift = [];
-  for (const [major, latest] of [...latestByMajor.entries()].sort(([left], [right]) => Number(left) - Number(right))) {
+  for (const [major, entry] of [...latestByMajor.entries()].sort(([left], [right]) => Number(left) - Number(right))) {
+    const latest = entry.version;
     if (!supported.has(major)) {
-      drift.push({ major, latest: latest.normalized, tested: null, reason: "unsupported-current" });
+      const reason = unsupportedNodeReason(documentedCurrent.has(major), entry.lts);
+      if (reason) {
+        drift.push({ major, latest: latest.normalized, tested: null, reason });
+      }
       continue;
     }
     const tested = config.node.tested[major];
@@ -243,10 +277,68 @@ function findNodeDrift(config, releases) {
   return drift;
 }
 
+function findCycloneDxDrift(config, schema) {
+  if (!schema) {
+    return [];
+  }
+  const observed = cycloneDxSchemaVersion(schema);
+  if (!observed) {
+    return [
+      {
+        expected: config.cyclonedx.specVersion,
+        observed: null,
+        schemaUrl: config.cyclonedx.schemaUrl,
+        reason: "schema-version-unreadable",
+      },
+    ];
+  }
+  if (observed !== config.cyclonedx.specVersion) {
+    return [
+      {
+        expected: config.cyclonedx.specVersion,
+        observed,
+        schemaUrl: config.cyclonedx.schemaUrl,
+        reason: "schema-version-mismatch",
+      },
+    ];
+  }
+  return [];
+}
+
+function unsupportedNodeReason(isDocumentedCurrent, lts) {
+  if (isDocumentedCurrent && lts === false) {
+    return undefined;
+  }
+  if (isDocumentedCurrent && lts) {
+    return "current-promoted-lts";
+  }
+  if (lts) {
+    return "unsupported-lts";
+  }
+  return "undocumented-current";
+}
+
+function nodeDriftMessage(entry) {
+  if (entry.reason === "undocumented-current") {
+    return `Node.js ${entry.latest} is an even-numbered current line not documented under node.current.`;
+  }
+  if (entry.reason === "unsupported-lts") {
+    return `Node.js ${entry.latest} is an LTS line not listed as supported.`;
+  }
+  if (entry.reason === "current-promoted-lts") {
+    return `Node.js ${entry.latest} moved to LTS but is still documented only under node.current.`;
+  }
+  if (entry.reason === "untested-supported") {
+    return `Node.js ${entry.major} is supported but has no tested latest version recorded.`;
+  }
+  return `Node.js ${entry.latest} is newer than recorded ${entry.tested} for supported major ${entry.major}.`;
+}
+
 function normalizeCompatibilityConfig(input) {
   const value = objectValue(input, "compatibility config");
   const kicad = objectValue(value.kicad, "kicad compatibility");
   const node = objectValue(value.node, "node compatibility");
+  const cyclonedx = objectValue(value.cyclonedx, "cyclonedx compatibility");
   return {
     kicad: {
       minimum: stringValue(kicad.minimum, "kicad.minimum"),
@@ -256,8 +348,17 @@ function normalizeCompatibilityConfig(input) {
     },
     node: {
       minimum: stringValue(node.minimum, "node.minimum"),
+      recommended: stringValue(node.recommended, "node.recommended"),
       supported: stringArray(node.supported, "node.supported"),
+      current: stringArray(node.current, "node.current"),
       tested: stringRecord(node.tested ?? {}, "node.tested"),
+      policy: stringRecord(node.policy ?? {}, "node.policy"),
+    },
+    cyclonedx: {
+      specVersion: stringValue(cyclonedx.specVersion, "cyclonedx.specVersion"),
+      schemaUrl: stringValue(cyclonedx.schemaUrl, "cyclonedx.schemaUrl"),
+      hbomSchema: stringValue(cyclonedx.hbomSchema, "cyclonedx.hbomSchema"),
+      validation: stringValue(cyclonedx.validation, "cyclonedx.validation"),
     },
   };
 }
@@ -265,6 +366,16 @@ function normalizeCompatibilityConfig(input) {
 function kicadNote(config, version) {
   const major = version.split(".")[0];
   return config.kicad.notes[version] ?? config.kicad.notes[`${major}.x`] ?? "";
+}
+
+function nodeSupportStatus(config, version) {
+  if (version === config.node.minimum) {
+    return "Minimum supported runtime";
+  }
+  if (version === config.node.recommended) {
+    return "Recommended Active LTS runtime";
+  }
+  return "Supported LTS runtime";
 }
 
 function markdownCell(value) {
@@ -293,6 +404,24 @@ function stableReleaseName(value) {
     patch: Number(patch),
     normalized: `${major}.${minor}.${patch}`,
   };
+}
+
+function cycloneDxSchemaVersion(schema) {
+  const value = objectValue(schema, "CycloneDX schema");
+  const id = typeof value.$id === "string" ? value.$id : typeof value.id === "string" ? value.id : "";
+  const idMatch = id.match(/bom-(\d+\.\d+)\.schema\.json/);
+  if (idMatch) {
+    return idMatch[1];
+  }
+  const properties = value.properties && typeof value.properties === "object" ? value.properties : {};
+  const specVersion =
+    properties.specVersion && typeof properties.specVersion === "object" ? properties.specVersion : {};
+  const candidates = [
+    specVersion.const,
+    ...(Array.isArray(specVersion.enum) ? specVersion.enum : []),
+    ...(Array.isArray(specVersion.examples) ? specVersion.examples : []),
+  ];
+  return candidates.find((candidate) => typeof candidate === "string" && /^\d+\.\d+$/.test(candidate));
 }
 
 function parseSeries(value) {

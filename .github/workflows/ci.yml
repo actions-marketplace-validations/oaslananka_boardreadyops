@@ -42,6 +42,7 @@ jobs:
       - run: corepack install
       - run: pnpm install --frozen-lockfile
       - run: pnpm run lint
+      - run: pnpm run compatibility:check
       - run: node scripts/check-action-pins.mjs
       - run: pnpm run verify:structure
       - run: pnpm run gc
