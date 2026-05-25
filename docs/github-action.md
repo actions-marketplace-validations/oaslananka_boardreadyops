@@ -6,6 +6,11 @@ Use the full container action when CI must run KiCad checks without a separate
 KiCad installation step. The container image includes KiCad CLI, Node.js, and
 the published BoardReadyOps package.
 
+The workflow block below is illustrative until BOARD-64 publishes an
+anonymous-pullable `ghcr.io/oaslananka/boardreadyops-full:v1` image and records
+the matching container action SHA. Do not use the placeholder SHA in a real
+workflow.
+
 ```yaml
 name: BoardReadyOps full
 
@@ -46,7 +51,9 @@ clean-consumer audit received `denied` from
 container publication follow-up in
 [BOARD-64](https://linear.app/oaslananka/issue/BOARD-64/completion-follow-up-make-ghcr-container-image-anonymously-pullable).
 Use the root Node action or install KiCad separately until that manifest check
-succeeds and a digest is recorded.
+succeeds and a digest is recorded. The direct `docker run` command is retained
+as the intended final command shape, not as a currently supported public
+consumer command.
 
 The image includes the unprivileged `boardreadyops` account at UID `10001` for
 direct container runs that can provide writable mounts for that user. The

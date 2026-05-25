@@ -17,8 +17,8 @@ const ACTION_EXAMPLE_STEPS = [
   },
   {
     action: "oaslananka/boardreadyops",
-    sha: "9210bcaea20bdc99f8cd26c6c4b62cbf4ad7983e",
-    version: "v1.0.2",
+    sha: "4efcd6d73e2e0de15a39c745b1a67e6c7a4f9ce0",
+    version: "current action contract",
   },
 ];
 const pinnedActionExample = ACTION_EXAMPLE_STEPS.map(
@@ -43,6 +43,11 @@ ${pinnedActionExample}
         with:
           config: boardreadyops.yml
 \`\`\`
+
+This example pins the current main Action commit because the input table below
+is generated from the repository's current \`action.yml\`. The public
+\`v1.0.2\` tag remains smoke-tested in the release channel matrix but does not
+include every current input.
 
 ## Inputs
 

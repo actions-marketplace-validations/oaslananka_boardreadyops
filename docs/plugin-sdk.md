@@ -2,10 +2,14 @@
 
 BoardReadyOps plugins let teams add rules, adapters, vendor profiles, report formats, and notifiers without forking the core repository. Plugins are normal Node.js packages or local JavaScript files that export a `BoardReadyOpsPlugin` object.
 
-Install the SDK in the plugin project:
+The SDK package exists in this repository under `packages/plugin-sdk`. It is
+used by the checked-in example through the pnpm workspace and is not published
+as a standalone npm package yet; `npm view @boardreadyops/plugin-sdk` currently
+returns 404. Use a local workspace or file dependency until a release publishes
+that package.
 
 ```sh
-pnpm add @boardreadyops/plugin-sdk
+corepack pnpm --filter boardreadyops-plugin-custom-rule install
 ```
 
 Define the plugin with `definePlugin`:
@@ -83,12 +87,17 @@ A minimal package should expose an ESM entrypoint:
     ".": "./index.js"
   },
   "dependencies": {
-    "@boardreadyops/plugin-sdk": "^1.0.2"
+    "@boardreadyops/plugin-sdk": "file:../boardreadyops/packages/plugin-sdk"
   }
 }
 ```
 
-Before publishing, run the plugin's own lint, typecheck, and tests. Consumers should pin plugin versions in their package manager lockfile so CI runs the same plugin code as local development.
+The dependency path is illustrative: replace it with the relative path from the
+plugin package to the BoardReadyOps checkout, or with the published SDK version
+after `@boardreadyops/plugin-sdk` exists on npm. Before publishing, run the
+plugin's own lint, typecheck, and tests. Consumers should pin plugin versions in
+their package manager lockfile so CI runs the same plugin code as local
+development.
 
 ## Trust Boundary
 

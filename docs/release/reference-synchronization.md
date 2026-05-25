@@ -11,14 +11,14 @@ BOARD-60 verifies that public references, generated documentation, release versi
 | Branch | `codex/BOARD-60-reference-synchronization-gate` |
 | Package version | `1.0.2` |
 | Public release reference | `v1.0.2` |
-| Public action reference | `oaslananka/boardreadyops@9210bcaea20bdc99f8cd26c6c4b62cbf4ad7983e # v1.0.2` |
+| Current action example reference | `oaslananka/boardreadyops@4efcd6d73e2e0de15a39c745b1a67e6c7a4f9ce0 # current action contract` |
 
 ## Surfaces Checked
 
 | Surface | Status | Evidence |
 | --- | --- | --- |
 | README quickstart and release notes | Synchronized with known channel state | README points npm users at `boardreadyops@1.0.2`, documents Node.js 22/24 support for the current repo, and links unsupported public release channels to the release channel verification page. |
-| GitHub Action examples | Synchronized with pinned references | README and generated `docs/action.md` use SHA-pinned `actions/checkout` and root BoardReadyOps action references. |
+| GitHub Action examples | Synchronized with pinned references | README and generated `docs/action.md` use SHA-pinned `actions/checkout` and a current main BoardReadyOps action reference that matches the documented inputs. |
 | Container action references | Synchronized as unavailable | README and `docs/github-action.md` keep the container path explicitly marked unavailable until GHCR anonymous pulls and digest evidence are fixed in BOARD-64. |
 | Installation references | Synchronized with public release limitations | `docs/install.md` records npm success for `boardreadyops@1.0.2` and keeps binary/Homebrew install paths blocked on BOARD-63. |
 | KiCad plugin reference | Synchronized with package parity limitation | `docs/kicad-plugin.md` records that `kicad-plugin/` is present on main but absent from the public `v1.0.2` npm tarball and tag archive; BOARD-65 owns publication parity. |
@@ -47,11 +47,11 @@ The repository and public release references intentionally remain split until fo
 | Reference | Current status | Owner |
 | --- | --- | --- |
 | npm CLI `boardreadyops@1.0.2` | Public package exists and clean-consumer CLI smoke passed. | None |
-| Root GitHub Action `v1.0.2` | Public tag action bundle was smoke-tested from the release commit. | None |
+| Root GitHub Action `v1.0.2` | Public tag action bundle was smoke-tested from the release commit, but current-contract examples use `4efcd6d73e2e0de15a39c745b1a67e6c7a4f9ce0` so inputs such as `gate`, `hbom`, and logging flags match the docs. | None |
 | Binary release assets and Homebrew checksums | Missing from public `v1.0.2`. | BOARD-63 |
 | GHCR full container image | Anonymous manifest request denied for `ghcr.io/oaslananka/boardreadyops-full:v1`. | BOARD-64 |
 | Public package parity with current docs, Node 22, HTML report, and KiCad plugin | Public package/tag archive lag current main. | BOARD-65 |
-| Full copy-paste documentation audit | Tracked separately because it includes external clean environment execution beyond generated-reference synchronization. | BOARD-57 |
+| Full copy-paste documentation audit | Recorded in [Copy-Paste Documentation Audit](copy-paste-audit.md). | BOARD-57 |
 
 ## Completion Rule
 

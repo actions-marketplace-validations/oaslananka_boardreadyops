@@ -11,7 +11,10 @@ boardreadyops doctor
 The current public npm package is `boardreadyops@1.0.2`. It installs and runs
 on Node.js 24. Current repository support for Node.js 22 is not present in that
 published package metadata yet; use the next release that includes the updated
-support matrix when Node.js 22 is required.
+support matrix when Node.js 22 is required. The documentation site tracks the
+current repository contract, so post-`v1.0.2` CLI additions such as JSON doctor
+output, HTML report configuration, HBOM Action inputs, and KiCad plugin package
+contents remain tracked in BOARD-65 until the next parity release.
 
 For one-off use from a clean consumer directory:
 
@@ -23,6 +26,10 @@ npx -y boardreadyops@1.0.2 --help
 
 The shell and PowerShell installers require a GitHub Release that contains the
 platform binary asset and `SHA256SUMS`.
+
+The following installer commands are the intended copy-paste form after
+BOARD-63 publishes those assets. They are intentionally not supported for the
+public `v1.0.2` release.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/oaslananka/boardreadyops/main/install.sh | sh

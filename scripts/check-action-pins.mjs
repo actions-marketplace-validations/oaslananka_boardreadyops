@@ -3,7 +3,7 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import glob from "fast-glob";
 
-const ACTION_USE_PATTERN = /^\s*(?:-\s*)?uses:\s+[^\s#]+@([^\s#]+)(?:\s*#\s*(v\S+))?\s*$/;
+const ACTION_USE_PATTERN = /^\s*(?:-\s*)?uses:\s+[^\s#]+@([^\s#]+)(?:\s*#\s*(\S.*))?\s*$/;
 const RELEASE_SHA_PATTERN = /^[a-f0-9]{40}$/i;
 
 export function findUnpinnedActionUses(file, markdown) {
@@ -25,7 +25,7 @@ export async function main(root = process.cwd()) {
     failures.push(...findUnpinnedActionUses(file, await readFile(path.join(root, file), "utf8")));
   }
   if (failures.length > 0) {
-    throw new Error(`Markdown GitHub Action examples must use SHA pins with tag comments:\n${failures.join("\n")}`);
+    throw new Error(`Markdown GitHub Action examples must use SHA pins with source comments:\n${failures.join("\n")}`);
   }
 }
 

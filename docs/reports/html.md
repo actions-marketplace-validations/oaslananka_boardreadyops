@@ -12,8 +12,18 @@ report:
 
 When the HTML report is written by the CLI, its headings, controls, table captions, and empty-state labels honor `BOARDREADY_LOCALE` or `LANG`. Use `BOARDREADY_LOCALE=tr` for Turkish report labels:
 
+Linux and macOS:
+
 ```sh
 BOARDREADY_LOCALE=tr boardreadyops run .
+```
+
+Windows 11 PowerShell:
+
+```powershell
+$env:BOARDREADY_LOCALE = "tr"
+boardreadyops run .
+Remove-Item Env:\BOARDREADY_LOCALE
 ```
 
 Finding messages, rule IDs, and resource paths remain English and stable for cross-tool references.

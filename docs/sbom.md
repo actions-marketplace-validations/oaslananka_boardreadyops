@@ -36,7 +36,7 @@ boardreadyops schema hbom
 Set the `hbom` input to write the hardware SBOM during an Action run. The empty default disables HBOM generation.
 
 ```yaml
-- uses: oaslananka/boardreadyops@9210bcaea20bdc99f8cd26c6c4b62cbf4ad7983e # v1.0.2
+- uses: oaslananka/boardreadyops@4efcd6d73e2e0de15a39c745b1a67e6c7a4f9ce0 # current action contract
   with:
     config: boardreadyops.yml
     hbom: build/hbom.json

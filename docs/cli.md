@@ -4,6 +4,10 @@
 
 Use `--project <path>` with `run` or `check` to restrict a workspace scan to one project directory or `.kicad_pro` file. Use `--concurrency <count>` to cap concurrent project execution when a workspace contains multiple boards.
 
+The paths in these examples are placeholders for a real KiCad project in the
+current workspace. The same command forms were smoke-tested with repository
+fixtures during the BOARD-57 copy-paste audit.
+
 ```bash
 boardreadyops run . --project hardware/mainboard
 boardreadyops check manufacturing.outputs-present . --project hardware/mainboard
@@ -65,9 +69,20 @@ boardreadyops check . \
 
 Human-facing CLI output uses English by default and can be switched to Turkish with `BOARDREADY_LOCALE=tr`. When `BOARDREADY_LOCALE` is unset, the CLI checks `LANG` and uses Turkish for values such as `tr_TR.UTF-8`; unsupported locale values fall back to English.
 
+Linux and macOS shells can set the locale for one command:
+
 ```sh
 BOARDREADY_LOCALE=tr boardreadyops doctor
 BOARDREADY_LOCALE=tr boardreadyops run . --markdown -
+```
+
+Windows 11 PowerShell uses `$env:` assignment:
+
+```powershell
+$env:BOARDREADY_LOCALE = "tr"
+boardreadyops doctor
+boardreadyops run . --markdown -
+Remove-Item Env:\BOARDREADY_LOCALE
 ```
 
 The locale setting affects status lines, configuration and environment error prefixes, doctor text output, and Markdown/HTML report labels produced by the CLI. JSON, SARIF, JUnit, rule IDs, and finding messages remain locale-independent for automation and stable references.
@@ -90,6 +105,10 @@ The JSON form returns structured check items with `pass`, `warn`, `fail`, or `in
 ## Baselines
 
 Baseline commands operate on the configured baseline file, or `.boardreadyops-baseline.json` when the config does not override it.
+
+The bracketed arguments below are syntax placeholders. Replace `[path]` and
+`[--config <path>]` with a repository path and config flag, or omit them to use
+the defaults.
 
 ```sh
 boardreadyops baseline capture [path] [--config <path>]

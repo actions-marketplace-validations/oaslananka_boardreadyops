@@ -40,7 +40,9 @@ equivalent packaged editor entry point.
 
 ## Command
 
-When invoked from KiCad, the plugin executes:
+When invoked from KiCad, the plugin executes the process shape below. The
+angle-bracket values are runtime paths supplied by KiCad and the plugin, not
+literal shell text.
 
 ```sh
 boardreadyops run <project-directory> --project <active.kicad_pro> --json <temporary-json-report> --sarif "" --markdown "" --fail-on never --no-annotations --log-level silent
@@ -51,8 +53,16 @@ parser isolated from any configured report formats that write to stdout.
 
 Set `BOARDREADYOPS_BIN` when the command is not already available on `PATH`:
 
+Linux and macOS:
+
 ```sh
 export BOARDREADYOPS_BIN="node /absolute/path/to/boardreadyops/dist/cli/index.cjs"
+```
+
+Windows 11 PowerShell:
+
+```powershell
+$env:BOARDREADYOPS_BIN = "node C:\tools\boardreadyops\dist\cli\index.cjs"
 ```
 
 On Windows, unquoted drive paths are preserved, so commands such as
@@ -74,6 +84,12 @@ the KiCad dialog.
    export BOARDREADYOPS_BIN="node $PWD/dist/cli/index.cjs"
    ```
 
+   On Windows 11 PowerShell, use:
+
+   ```powershell
+   $env:BOARDREADYOPS_BIN = "node $PWD\dist\cli\index.cjs"
+   ```
+
 3. Create a PCM archive from the package root:
 
    ```sh
@@ -89,7 +105,8 @@ the KiCad dialog.
 
 6. Run `BoardReadyOps` from the external plugins menu.
 
-7. Confirm the dialog lists the same findings as:
+7. Confirm the dialog lists the same findings as the equivalent CLI command.
+   Replace the angle-bracket values with the active project paths:
 
    ```sh
    boardreadyops run <project-directory> --project <active.kicad_pro> --json - --sarif "" --markdown "" --fail-on never --no-annotations --log-level silent

@@ -105,4 +105,5 @@ nav:
       - Process: release/process.md
       - Channel Verification: release/channel-verification.md
       - Reference Synchronization: release/reference-synchronization.md
+      - Copy-Paste Audit: release/copy-paste-audit.md
       - Self Validation: release/self-validation.md
