@@ -104,3 +104,4 @@ nav:
   - Release:
       - Process: release/process.md
       - Channel Verification: release/channel-verification.md
+      - Self Validation: release/self-validation.md

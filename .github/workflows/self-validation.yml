@@ -1,0 +1,98 @@
+name: self-validation
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "24"
+
+jobs:
+  self-validation:
+    name: self-validation / boardreadyops-on-boardreadyops
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          package-manager-cache: false
+      - run: corepack enable
+      - run: corepack install
+      - name: Install KiCad 10
+        run: |
+          set -euo pipefail
+          sudo add-apt-repository --yes ppa:kicad/kicad-10.0-releases
+          sudo apt-get update -qq
+          sudo apt-get install --yes kicad
+          version="$(kicad-cli version)"
+          echo "kicad-cli ${version}"
+          if [[ "${version}" != 10.0.* ]]; then
+            echo "::error::Expected KiCad 10.0.*, got ${version}"
+            exit 1
+          fi
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+      - name: Run BoardReadyOps against this repository
+        run: |
+          set -euo pipefail
+          mkdir -p reports/self-validation
+          node dist/cli/index.cjs check . \
+            --fail-on never \
+            --json reports/self-validation/findings.json \
+            --sarif reports/self-validation/findings.sarif.json \
+            --markdown reports/self-validation/report.md \
+            --no-annotations \
+            --log-level silent
+      - name: Summarize self-validation
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require("node:fs");
+          const report = JSON.parse(fs.readFileSync("reports/self-validation/findings.json", "utf8"));
+          const byRule = new Map();
+          for (const finding of report.findings) {
+            const entry = byRule.get(finding.ruleId) ?? {
+              ruleId: finding.ruleId,
+              severity: finding.severity,
+              count: 0,
+            };
+            entry.count += 1;
+            byRule.set(finding.ruleId, entry);
+          }
+          const lines = [
+            "# BoardReadyOps self-validation",
+            "",
+            `Total findings: ${report.summary.total}`,
+            `Critical: ${report.summary.critical}`,
+            `High: ${report.summary.high}`,
+            `Medium: ${report.summary.medium}`,
+            `Low: ${report.summary.low}`,
+            `Failed: ${report.summary.failed}`,
+            "",
+            "| Rule | Severity | Count |",
+            "| --- | --- | ---: |",
+            ...Array.from(byRule.values())
+              .sort((left, right) => left.ruleId.localeCompare(right.ruleId))
+              .map((entry) => `| ${entry.ruleId} | ${entry.severity} | ${entry.count} |`),
+            "",
+            "Artifacts are uploaded under the `boardreadyops-self-validation` workflow artifact.",
+            "",
+          ];
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join("\n"));
+          NODE
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: boardreadyops-self-validation
+          path: reports/self-validation/
+          if-no-files-found: error
+          retention-days: 30
