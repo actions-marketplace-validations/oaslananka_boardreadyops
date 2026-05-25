@@ -4,6 +4,7 @@ import * as core from "@actions/core";
 import { createLogger } from "../core/logger.js";
 import { runPipeline } from "../core/pipeline.js";
 import { emitAnnotations } from "../report/annotations.js";
+import { formatHbom } from "../report/hbom.js";
 import { formatJson } from "../report/json.js";
 import { formatMarkdown } from "../report/markdown.js";
 import { formatSarif } from "../report/sarif.js";
@@ -41,7 +42,7 @@ export async function runAction(): Promise<void> {
     },
     logger,
   );
-  const written: { sarif?: string; json?: string; markdown?: string } = {};
+  const written: { sarif?: string; json?: string; markdown?: string; hbom?: string } = {};
   if (inputs.outputs.json) {
     written.json = path.resolve(workspace, inputs.outputs.json);
     await writeTextFile(written.json, formatJson(result));
@@ -53,6 +54,10 @@ export async function runAction(): Promise<void> {
   if (inputs.outputs.markdown) {
     written.markdown = path.resolve(workspace, inputs.outputs.markdown);
     await writeTextFile(written.markdown, formatMarkdown(result));
+  }
+  if (inputs.outputs.hbom) {
+    written.hbom = path.resolve(workspace, inputs.outputs.hbom);
+    await writeTextFile(written.hbom, formatHbom(result));
   }
   if (inputs.annotations) {
     emitAnnotations(result.findings);

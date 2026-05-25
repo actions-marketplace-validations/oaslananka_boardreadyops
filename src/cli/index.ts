@@ -17,6 +17,7 @@ import { explainCommand } from "./commands/explain.js";
 import { type FixCliOptions, fixCommand } from "./commands/fix.js";
 import { initCommand } from "./commands/init.js";
 import { addCommonOptions, type CommonCliOptions, runCommand } from "./commands/run.js";
+import { type SbomCliOptions, sbomCommand } from "./commands/sbom.js";
 import { schemaCommand } from "./commands/schema.js";
 
 export async function runCli(
@@ -81,9 +82,22 @@ export async function runCli(
 
   program
     .command("schema")
-    .argument("[name]", "config, doctor, findings, or pinmap", "config")
+    .argument("[name]", "config, doctor, findings, hbom, or pinmap", "config")
     .action((name: string | undefined) => {
       process.exitCode = schemaCommand(name, streams);
+    });
+
+  program
+    .command("sbom")
+    .argument("[path]", "directory to scan")
+    .option("--config <path>", "boardreadyops.yml location")
+    .option("--project <path>", "specific .kicad_pro")
+    .option("--bom <path>", "BOM source path or auto")
+    .option("--variant <name>", "KiCad variant name")
+    .option("--output <path>", "CycloneDX HBOM output path, or - for stdout", "build/hbom.json")
+    .option("--format <format>", "SBOM format: cyclonedx. spdx is reserved for a future release.", "cyclonedx")
+    .action(async (pathInput: string | undefined, options: SbomCliOptions) => {
+      process.exitCode = await sbomCommand(pathInput, options, streams);
     });
 
   program.command("init").action(async () => {
@@ -138,7 +152,7 @@ function collectOption(value: string, previous: string[]): string[] {
 }
 
 function rewriteDefaultCommand(argv: string[]): string[] {
-  const commands = new Set(["run", "check", "fix", "doctor", "explain", "schema", "init", "baseline", "help"]);
+  const commands = new Set(["run", "check", "fix", "doctor", "explain", "schema", "sbom", "init", "baseline", "help"]);
   const first = argv[0];
   if (first === "--help" || first === "-h" || first === "--version" || first === "-V") {
     return argv;

@@ -10,6 +10,7 @@ export interface ActionInputs extends Partial<PipelineOptions> {
     sarif?: string | undefined;
     json?: string | undefined;
     markdown?: string | undefined;
+    hbom?: string | undefined;
   };
   uploadSarif: boolean;
   uploadArtifacts: boolean;
@@ -49,6 +50,7 @@ export function readActionInputs(workspace = process.env.GITHUB_WORKSPACE ?? pro
       sarif: empty(core.getInput("sarif")),
       json: empty(core.getInput("json")),
       markdown: empty(core.getInput("markdown")),
+      hbom: empty(core.getInput("hbom")),
     },
     uploadSarif: boolInput("upload-sarif", true),
     uploadArtifacts: boolInput("upload-artifacts", true),

@@ -58,6 +58,31 @@ describe("action bundle", () => {
     expect(await outputValue(path.join(workspace, "github-output.txt"), "findings")).toBe("1");
   });
 
+  it("writes HBOM output and reports the action output path", async () => {
+    const workspace = await workspaceFromFixture("safe-basic");
+    const result = runActionBundle(workspace, {
+      INPUT_PATH: ".",
+      INPUT_CONFIG: "boardreadyops.yml",
+      INPUT_HBOM: "boardreadyops.hbom.json",
+      "INPUT_UPLOAD-SARIF": "false",
+      "INPUT_UPLOAD-ARTIFACTS": "false",
+      "INPUT_COMMENT-PR": "false",
+      INPUT_ANNOTATIONS: "false",
+      "INPUT_FAIL-ON": "never",
+    });
+
+    expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
+    expect(await outputValue(path.join(workspace, "github-output.txt"), "hbom-path")).toBe(
+      path.join(workspace, "boardreadyops.hbom.json"),
+    );
+    const hbom = JSON.parse(await fs.readFile(path.join(workspace, "boardreadyops.hbom.json"), "utf8"));
+    expect(hbom).toMatchObject({
+      bomFormat: "CycloneDX",
+      specVersion: "1.7",
+      components: [{ name: "RC0603FR-0710KL" }],
+    });
+  });
+
   it("skips trusted-write operations for fork pull requests", async () => {
     const workspace = await workspaceFromFixture("safe-basic");
     const eventPath = path.join(workspace, "event.json");

@@ -86,6 +86,9 @@ function snapshotBomRow(root: string, row: BomRow): FabricationSnapshot["bom"][n
     manufacturer: row.manufacturer,
     mpn: row.mpn,
     suppliers: row.suppliers,
+    lifecycle: row.lifecycle,
+    dnp: row.dnp,
+    quantity: row.quantity,
   };
 }
 

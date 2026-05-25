@@ -59,6 +59,9 @@
               "footprint": { "type": "string" },
               "manufacturer": { "type": "string" },
               "mpn": { "type": "string" },
+              "lifecycle": { "type": "string" },
+              "dnp": { "type": "boolean" },
+              "quantity": { "type": "number" },
               "suppliers": {
                 "type": "array",
                 "items": { "type": "string" }

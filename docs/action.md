@@ -35,6 +35,7 @@ jobs:
 | `sarif` | `boardreadyops.sarif.json` | Output SARIF path. Empty disables. |
 | `json` | `boardreadyops.findings.json` | Output JSON findings path. Empty disables. |
 | `markdown` | `boardreadyops.report.md` | Output Markdown report path. Empty disables. |
+| `hbom` | `` | Output CycloneDX hardware SBOM path. Empty disables. |
 | `upload-sarif` | `true` | Upload SARIF to GitHub Code Scanning. |
 | `upload-artifacts` | `true` | Upload reports as workflow artifacts. |
 | `comment-pr` | `true` | Post a sticky Markdown comment on pull requests. |
@@ -59,6 +60,7 @@ jobs:
 | `sarif-path` | SARIF output path if produced. |
 | `json-path` | JSON output path if produced. |
 | `markdown-path` | Markdown output path if produced. |
+| `hbom-path` | CycloneDX hardware SBOM output path if produced. |
 
 ## Pull request comments
 

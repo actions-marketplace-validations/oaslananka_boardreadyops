@@ -40,10 +40,11 @@ describe("container action release surfaces", () => {
     expect(entrypoint).toContain(inputEnvAssignment("INPUT_PROJECT", 2));
     expect(entrypoint).toContain(inputEnvAssignment("INPUT_REQUIRE-KICAD", 5));
     expect(entrypoint).toContain(inputEnvAssignment("INPUT_GATE", 10));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_UPLOAD-SARIF", 14));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_FAIL-ON", 18));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_LOG-LEVEL", 20));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_LOG-FILE-RETENTION", 24));
+    expect(entrypoint).toContain(inputEnvAssignment("INPUT_HBOM", 14));
+    expect(entrypoint).toContain(inputEnvAssignment("INPUT_UPLOAD-SARIF", 15));
+    expect(entrypoint).toContain(inputEnvAssignment("INPUT_FAIL-ON", 19));
+    expect(entrypoint).toContain(inputEnvAssignment("INPUT_LOG-LEVEL", 21));
+    expect(entrypoint).toContain(inputEnvAssignment("INPUT_LOG-FILE-RETENTION", 25));
   });
 
   it("builds a GitHub-compatible Ubuntu image with an unprivileged account", async () => {

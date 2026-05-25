@@ -1,6 +1,6 @@
 # CLI
 
-`boardreadyops run [path]` runs the full pipeline. `boardreadyops check [path]` is the concise preflight form for local and CI use. `boardreadyops check <rule-id> [path]` runs one rule. `boardreadyops fix [path]` plans and applies safe automated fixes. `boardreadyops explain <rule-id> [path]` prints rule-specific diagnostics when that rule exposes an explainer. `doctor`, `schema`, and `init` support setup and automation.
+`boardreadyops run [path]` runs the full pipeline. `boardreadyops check [path]` is the concise preflight form for local and CI use. `boardreadyops check <rule-id> [path]` runs one rule. `boardreadyops fix [path]` plans and applies safe automated fixes. `boardreadyops sbom [path]` emits a CycloneDX hardware SBOM from the captured fabrication BOM. `boardreadyops explain <rule-id> [path]` prints rule-specific diagnostics when that rule exposes an explainer. `doctor`, `schema`, and `init` support setup and automation.
 
 Use `--project <path>` with `run` or `check` to restrict a workspace scan to one project directory or `.kicad_pro` file. Use `--concurrency <count>` to cap concurrent project execution when a workspace contains multiple boards.
 
@@ -11,6 +11,19 @@ boardreadyops run . --concurrency 2
 ```
 
 Use `boardreadyops run --gate release` to select a configured gate from `boardreadyops.yml`. A selected gate enforces its configured threshold and named requirements for local release checks; GitHub Action runs auto-detect `pull_request`, `main`, or `release` when the Action `gate` input is empty.
+
+## Hardware SBOM
+
+`boardreadyops sbom [path]` writes a CycloneDX 1.7 hardware SBOM to `build/hbom.json` by default. Use `--output -` when another process should read the JSON from stdout.
+
+```bash
+boardreadyops sbom .
+boardreadyops sbom . --output build/hbom.json
+boardreadyops sbom . --bom production-bom.csv --variant production
+boardreadyops sbom . --output -
+```
+
+The command accepts `--config`, `--project`, `--bom`, and `--variant` to match the same project and BOM selection used by `run`. `--format cyclonedx` is the implemented format. `--format spdx` is reserved for a future release and exits with code `2`.
 
 ## Fix
 

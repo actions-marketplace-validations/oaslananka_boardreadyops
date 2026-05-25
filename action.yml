@@ -62,6 +62,10 @@ inputs:
     description: Output Markdown report path. Empty disables.
     required: false
     default: boardreadyops.report.md
+  hbom:
+    description: Output CycloneDX hardware SBOM path. Empty disables.
+    required: false
+    default: ""
   upload-sarif:
     description: Upload SARIF to GitHub Code Scanning.
     required: false
@@ -123,3 +127,5 @@ outputs:
     description: JSON output path if produced.
   markdown-path:
     description: Markdown output path if produced.
+  hbom-path:
+    description: CycloneDX hardware SBOM output path if produced.

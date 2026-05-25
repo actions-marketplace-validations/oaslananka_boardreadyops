@@ -15928,9 +15928,9 @@ var require_cache = __commonJS({
       if (typeof key !== "object") {
         throw new TypeError(`expected key to be object, got ${typeof key}`);
       }
-      for (const property of ["origin", "method", "path"]) {
-        if (typeof key[property] !== "string") {
-          throw new TypeError(`expected key.${property} to be string, got ${typeof key[property]}`);
+      for (const property2 of ["origin", "method", "path"]) {
+        if (typeof key[property2] !== "string") {
+          throw new TypeError(`expected key.${property2} to be string, got ${typeof key[property2]}`);
         }
       }
       if (key.headers !== void 0 && typeof key.headers !== "object") {
@@ -15941,9 +15941,9 @@ var require_cache = __commonJS({
       if (typeof value !== "object") {
         throw new TypeError(`expected value to be object, got ${typeof value}`);
       }
-      for (const property of ["statusCode", "cachedAt", "staleAt", "deleteAt"]) {
-        if (typeof value[property] !== "number") {
-          throw new TypeError(`expected value.${property} to be number, got ${typeof value[property]}`);
+      for (const property2 of ["statusCode", "cachedAt", "staleAt", "deleteAt"]) {
+        if (typeof value[property2] !== "number") {
+          throw new TypeError(`expected value.${property2} to be number, got ${typeof value[property2]}`);
         }
       }
       if (typeof value.statusMessage !== "string") {
@@ -26028,9 +26028,9 @@ var require_scope = __commonJS({
         super(nameStr);
         this.prefix = prefix2;
       }
-      setValue(value, { property, itemIndex }) {
+      setValue(value, { property: property2, itemIndex }) {
         this.value = value;
-        this.scopePath = (0, code_1._)`.${new code_1.Name(property)}[${itemIndex}]`;
+        this.scopePath = (0, code_1._)`.${new code_1.Name(property2)}[${itemIndex}]`;
       }
     };
     exports2.ValueScopeName = ValueScopeName;
@@ -27529,18 +27529,18 @@ var require_code2 = __commonJS({
       });
     }
     exports2.hasPropFunc = hasPropFunc;
-    function isOwnProperty(gen, data, property) {
-      return (0, codegen_1._)`${hasPropFunc(gen)}.call(${data}, ${property})`;
+    function isOwnProperty(gen, data, property2) {
+      return (0, codegen_1._)`${hasPropFunc(gen)}.call(${data}, ${property2})`;
     }
     exports2.isOwnProperty = isOwnProperty;
-    function propertyInData(gen, data, property, ownProperties) {
-      const cond = (0, codegen_1._)`${data}${(0, codegen_1.getProperty)(property)} !== undefined`;
-      return ownProperties ? (0, codegen_1._)`${cond} && ${isOwnProperty(gen, data, property)}` : cond;
+    function propertyInData(gen, data, property2, ownProperties) {
+      const cond = (0, codegen_1._)`${data}${(0, codegen_1.getProperty)(property2)} !== undefined`;
+      return ownProperties ? (0, codegen_1._)`${cond} && ${isOwnProperty(gen, data, property2)}` : cond;
     }
     exports2.propertyInData = propertyInData;
-    function noPropertyInData(gen, data, property, ownProperties) {
-      const cond = (0, codegen_1._)`${data}${(0, codegen_1.getProperty)(property)} === undefined`;
-      return ownProperties ? (0, codegen_1.or)(cond, (0, codegen_1.not)(isOwnProperty(gen, data, property))) : cond;
+    function noPropertyInData(gen, data, property2, ownProperties) {
+      const cond = (0, codegen_1._)`${data}${(0, codegen_1.getProperty)(property2)} === undefined`;
+      return ownProperties ? (0, codegen_1.or)(cond, (0, codegen_1.not)(isOwnProperty(gen, data, property2))) : cond;
     }
     exports2.noPropertyInData = noPropertyInData;
     function allSchemaProperties(schemaMap) {
@@ -31235,11 +31235,11 @@ var require_dependencies = __commonJS({
     var util_1 = require_util7();
     var code_1 = require_code2();
     exports2.error = {
-      message: ({ params: { property, depsCount, deps } }) => {
+      message: ({ params: { property: property2, depsCount, deps } }) => {
         const property_ies = depsCount === 1 ? "property" : "properties";
-        return (0, codegen_1.str)`must have ${property_ies} ${deps} when property ${property} is present`;
+        return (0, codegen_1.str)`must have ${property_ies} ${deps} when property ${property2} is present`;
       },
-      params: ({ params: { property, depsCount, deps, missingProperty } }) => (0, codegen_1._)`{property: ${property},
+      params: ({ params: { property: property2, depsCount, deps, missingProperty } }) => (0, codegen_1._)`{property: ${property2},
     missingProperty: ${missingProperty},
     depsCount: ${depsCount},
     deps: ${deps}}`
@@ -55729,10 +55729,10 @@ ${lanes.join("\n")}
         return predicate && predicate.kind === 0;
       }
       function forEachPropertyAssignment(objectLiteral, key, callback, key2) {
-        return forEach(objectLiteral == null ? void 0 : objectLiteral.properties, (property) => {
-          if (!isPropertyAssignment(property)) return void 0;
-          const propName3 = tryGetTextOfPropertyName(property.name);
-          return key === propName3 || key2 && key2 === propName3 ? callback(property) : void 0;
+        return forEach(objectLiteral == null ? void 0 : objectLiteral.properties, (property2) => {
+          if (!isPropertyAssignment(property2)) return void 0;
+          const propName3 = tryGetTextOfPropertyName(property2.name);
+          return key === propName3 || key2 && key2 === propName3 ? callback(property2) : void 0;
         });
       }
       function getTsConfigObjectLiteralExpression(tsConfigSourceFile) {
@@ -55742,7 +55742,7 @@ ${lanes.join("\n")}
         }
       }
       function getTsConfigPropArrayElementValue(tsConfigSourceFile, propKey, elementValue) {
-        return forEachTsConfigPropArray(tsConfigSourceFile, propKey, (property) => isArrayLiteralExpression(property.initializer) ? find(property.initializer.elements, (element) => isStringLiteral(element) && element.text === elementValue) : void 0);
+        return forEachTsConfigPropArray(tsConfigSourceFile, propKey, (property2) => isArrayLiteralExpression(property2.initializer) ? find(property2.initializer.elements, (element) => isStringLiteral(element) && element.text === elementValue) : void 0);
       }
       function forEachTsConfigPropArray(tsConfigSourceFile, propKey, callback) {
         return forEachPropertyAssignment(getTsConfigObjectLiteralExpression(tsConfigSourceFile), propKey, callback);
@@ -62098,10 +62098,10 @@ ${lanes.join("\n")}
         return optionsObject && getPropertyArrayElementValue(optionsObject, name, value);
       }
       function getPropertyArrayElementValue(objectLiteral, propKey, elementValue) {
-        return forEachPropertyAssignment(objectLiteral, propKey, (property) => isArrayLiteralExpression(property.initializer) ? find(property.initializer.elements, (element) => isStringLiteral(element) && element.text === elementValue) : void 0);
+        return forEachPropertyAssignment(objectLiteral, propKey, (property2) => isArrayLiteralExpression(property2.initializer) ? find(property2.initializer.elements, (element) => isStringLiteral(element) && element.text === elementValue) : void 0);
       }
       function getOptionsSyntaxByValue(optionsObject, name, value) {
-        return forEachOptionsSyntaxByName(optionsObject, name, (property) => isStringLiteral(property.initializer) && property.initializer.text === value ? property.initializer : void 0);
+        return forEachOptionsSyntaxByName(optionsObject, name, (property2) => isStringLiteral(property2.initializer) && property2.initializer.text === value ? property2.initializer : void 0);
       }
       function forEachOptionsSyntaxByName(optionsObject, name, callback) {
         return forEachPropertyAssignment(optionsObject, name, callback);
@@ -70318,13 +70318,13 @@ ${lanes.join("\n")}
           return setParent(setTextRange(factory2.cloneNode(memberName), memberName), memberName.parent);
         }
       }
-      function createExpressionForAccessorDeclaration(factory2, properties, property, receiver, multiLine) {
-        const { firstAccessor, getAccessor, setAccessor } = getAllAccessorDeclarations(properties, property);
-        if (property === firstAccessor) {
+      function createExpressionForAccessorDeclaration(factory2, properties, property2, receiver, multiLine) {
+        const { firstAccessor, getAccessor, setAccessor } = getAllAccessorDeclarations(properties, property2);
+        if (property2 === firstAccessor) {
           return setTextRange(
             factory2.createObjectDefinePropertyCall(
               receiver,
-              createExpressionForPropertyName(factory2, property.name),
+              createExpressionForPropertyName(factory2, property2.name),
               factory2.createPropertyDescriptor({
                 enumerable: factory2.createFalse(),
                 configurable: true,
@@ -70375,42 +70375,42 @@ ${lanes.join("\n")}
         }
         return void 0;
       }
-      function createExpressionForPropertyAssignment(factory2, property, receiver) {
+      function createExpressionForPropertyAssignment(factory2, property2, receiver) {
         return setOriginalNode(
           setTextRange(
             factory2.createAssignment(
               createMemberAccessForPropertyName(
                 factory2,
                 receiver,
-                property.name,
+                property2.name,
                 /*location*/
-                property.name
+                property2.name
               ),
-              property.initializer
+              property2.initializer
             ),
-            property
+            property2
           ),
-          property
+          property2
         );
       }
-      function createExpressionForShorthandPropertyAssignment(factory2, property, receiver) {
+      function createExpressionForShorthandPropertyAssignment(factory2, property2, receiver) {
         return setOriginalNode(
           setTextRange(
             factory2.createAssignment(
               createMemberAccessForPropertyName(
                 factory2,
                 receiver,
-                property.name,
+                property2.name,
                 /*location*/
-                property.name
+                property2.name
               ),
-              factory2.cloneNode(property.name)
+              factory2.cloneNode(property2.name)
             ),
             /*location*/
-            property
+            property2
           ),
           /*original*/
-          property
+          property2
         );
       }
       function createExpressionForMethodDeclaration(factory2, method, receiver) {
@@ -70453,20 +70453,20 @@ ${lanes.join("\n")}
           method
         );
       }
-      function createExpressionForObjectLiteralElementLike(factory2, node, property, receiver) {
-        if (property.name && isPrivateIdentifier(property.name)) {
-          Debug.failBadSyntaxKind(property.name, "Private identifiers are not allowed in object literals.");
+      function createExpressionForObjectLiteralElementLike(factory2, node, property2, receiver) {
+        if (property2.name && isPrivateIdentifier(property2.name)) {
+          Debug.failBadSyntaxKind(property2.name, "Private identifiers are not allowed in object literals.");
         }
-        switch (property.kind) {
+        switch (property2.kind) {
           case 178:
           case 179:
-            return createExpressionForAccessorDeclaration(factory2, node.properties, property, receiver, !!node.multiLine);
+            return createExpressionForAccessorDeclaration(factory2, node.properties, property2, receiver, !!node.multiLine);
           case 304:
-            return createExpressionForPropertyAssignment(factory2, property, receiver);
+            return createExpressionForPropertyAssignment(factory2, property2, receiver);
           case 305:
-            return createExpressionForShorthandPropertyAssignment(factory2, property, receiver);
+            return createExpressionForShorthandPropertyAssignment(factory2, property2, receiver);
           case 175:
-            return createExpressionForMethodDeclaration(factory2, property, receiver);
+            return createExpressionForMethodDeclaration(factory2, property2, receiver);
         }
       }
       function expandPreOrPostfixIncrementOrDecrementExpression(factory2, node, expression, recordTempVariable, resultVariable) {
@@ -83643,7 +83643,7 @@ ${lanes.join("\n")}
               if (sourceFile) {
                 const fileName = configFileName || "tsconfig.json";
                 const diagnosticMessage = Diagnostics.The_files_list_in_config_file_0_is_empty;
-                const nodeValue = forEachTsConfigPropArray(sourceFile, "files", (property) => property.initializer);
+                const nodeValue = forEachTsConfigPropArray(sourceFile, "files", (property2) => property2.initializer);
                 const error210 = createDiagnosticForNodeInSourceFileOrCompilerDiagnostic(sourceFile, nodeValue, diagnosticMessage, fileName);
                 errors.push(error210);
               } else {
@@ -92242,9 +92242,9 @@ ${lanes.join("\n")}
             const node = getParseTreeNode(nodeIn, isPropertyAccessOrQualifiedNameOrImportTypeNode);
             return !!node && isValidPropertyAccess(node, escapeLeadingUnderscores(propertyName));
           },
-          isValidPropertyAccessForCompletions: (nodeIn, type2, property) => {
+          isValidPropertyAccessForCompletions: (nodeIn, type2, property2) => {
             const node = getParseTreeNode(nodeIn, isPropertyAccessExpression);
-            return !!node && isValidPropertyAccessForCompletions(node, type2, property);
+            return !!node && isValidPropertyAccessForCompletions(node, type2, property2);
           },
           getSignatureFromDeclaration: (declarationIn) => {
             const declaration = getParseTreeNode(declarationIn, isFunctionLike);
@@ -105176,11 +105176,11 @@ ${lanes.join("\n")}
         }
         function isTypeInvalidDueToUnionDiscriminant(contextualType, obj) {
           const list = obj.properties;
-          return list.some((property) => {
-            const nameType = property.name && (isJsxNamespacedName(property.name) ? getStringLiteralType(getTextOfJsxAttributeName(property.name)) : getLiteralTypeFromPropertyName(property.name));
+          return list.some((property2) => {
+            const nameType = property2.name && (isJsxNamespacedName(property2.name) ? getStringLiteralType(getTextOfJsxAttributeName(property2.name)) : getLiteralTypeFromPropertyName(property2.name));
             const name = nameType && isTypeUsableAsPropertyName(nameType) ? getPropertyNameFromType(nameType) : void 0;
             const expected = name === void 0 ? void 0 : getTypeOfPropertyOfType(contextualType, name);
-            return !!expected && isLiteralType(expected) && !isTypeAssignableTo(getTypeOfNode(property), expected);
+            return !!expected && isLiteralType(expected) && !isTypeAssignableTo(getTypeOfNode(property2), expected);
           });
         }
         function getAllPossiblePropertiesOfTypes(types2) {
@@ -105684,19 +105684,19 @@ ${lanes.join("\n")}
         }
         function getUnionOrIntersectionProperty(type2, name, skipObjectFunctionPropertyAugment) {
           var _a3, _b, _c;
-          let property = skipObjectFunctionPropertyAugment ? (_a3 = type2.propertyCacheWithoutObjectFunctionPropertyAugment) == null ? void 0 : _a3.get(name) : (_b = type2.propertyCache) == null ? void 0 : _b.get(name);
-          if (!property) {
-            property = createUnionOrIntersectionProperty(type2, name, skipObjectFunctionPropertyAugment);
-            if (property) {
+          let property2 = skipObjectFunctionPropertyAugment ? (_a3 = type2.propertyCacheWithoutObjectFunctionPropertyAugment) == null ? void 0 : _a3.get(name) : (_b = type2.propertyCache) == null ? void 0 : _b.get(name);
+          if (!property2) {
+            property2 = createUnionOrIntersectionProperty(type2, name, skipObjectFunctionPropertyAugment);
+            if (property2) {
               const properties = skipObjectFunctionPropertyAugment ? type2.propertyCacheWithoutObjectFunctionPropertyAugment || (type2.propertyCacheWithoutObjectFunctionPropertyAugment = createSymbolTable()) : type2.propertyCache || (type2.propertyCache = createSymbolTable());
-              properties.set(name, property);
-              if (skipObjectFunctionPropertyAugment && !(getCheckFlags(property) & 48) && !((_c = type2.propertyCache) == null ? void 0 : _c.get(name))) {
+              properties.set(name, property2);
+              if (skipObjectFunctionPropertyAugment && !(getCheckFlags(property2) & 48) && !((_c = type2.propertyCache) == null ? void 0 : _c.get(name))) {
                 const properties2 = type2.propertyCache || (type2.propertyCache = createSymbolTable());
-                properties2.set(name, property);
+                properties2.set(name, property2);
               }
             }
           }
-          return property;
+          return property2;
         }
         function getCommonDeclarationsOfSymbols(symbols) {
           let commonDeclarations;
@@ -105720,8 +105720,8 @@ ${lanes.join("\n")}
           return commonDeclarations;
         }
         function getPropertyOfUnionOrIntersectionType(type2, name, skipObjectFunctionPropertyAugment) {
-          const property = getUnionOrIntersectionProperty(type2, name, skipObjectFunctionPropertyAugment);
-          return property && !(getCheckFlags(property) & 16) ? property : void 0;
+          const property2 = getUnionOrIntersectionProperty(type2, name, skipObjectFunctionPropertyAugment);
+          return property2 && !(getCheckFlags(property2) & 16) ? property2 : void 0;
         }
         function getReducedType(type2) {
           if (type2.flags & 134217728 && type2.objectFlags & 16777216) {
@@ -107699,10 +107699,10 @@ ${lanes.join("\n")}
               const flags = elementFlags[i];
               combinedFlags |= flags;
               if (!(combinedFlags & 12)) {
-                const property = createSymbol(4 | (flags & 2 ? 16777216 : 0), "" + i, readonly2 ? 8 : 0);
-                property.links.tupleLabelDeclaration = namedMemberDeclarations == null ? void 0 : namedMemberDeclarations[i];
-                property.links.type = typeParameter;
-                properties.push(property);
+                const property2 = createSymbol(4 | (flags & 2 ? 16777216 : 0), "" + i, readonly2 ? 8 : 0);
+                property2.links.tupleLabelDeclaration = namedMemberDeclarations == null ? void 0 : namedMemberDeclarations[i];
+                property2.links.type = typeParameter;
+                properties.push(property2);
               }
             }
           }
@@ -108893,8 +108893,8 @@ ${lanes.join("\n")}
                   diagnostics.add(createDiagnosticForNode(accessExpression, Diagnostics.Property_0_does_not_exist_on_type_1, indexType.value, typeToString(objectType)));
                   return undefinedType;
                 } else if (indexType.flags & (64 | 32)) {
-                  const types2 = map3(objectType.properties, (property) => {
-                    return getTypeOfSymbol(property);
+                  const types2 = map3(objectType.properties, (property2) => {
+                    return getTypeOfSymbol(property2);
                   });
                   return getUnionType(append(types2, undefinedType));
                 }
@@ -114297,10 +114297,10 @@ ${lanes.join("\n")}
         function getDeclaringClass(prop) {
           return prop.parent && prop.parent.flags & 32 ? getDeclaredTypeOfSymbol(getParentOfSymbol(prop)) : void 0;
         }
-        function getTypeOfPropertyInBaseClass(property) {
-          const classType = getDeclaringClass(property);
+        function getTypeOfPropertyInBaseClass(property2) {
+          const classType = getDeclaringClass(property2);
           const baseClassType = classType && getBaseTypes(classType)[0];
-          return baseClassType && getTypeOfPropertyOfType(baseClassType, property.escapedName);
+          return baseClassType && getTypeOfPropertyOfType(baseClassType, property2.escapedName);
         }
         function isPropertyInClassDerivedFrom(prop, baseClass) {
           return forEachProperty2(prop, (sp) => {
@@ -114790,10 +114790,10 @@ ${lanes.join("\n")}
         }
         function transformTypeOfMembers(type2, f) {
           const members = createSymbolTable();
-          for (const property of getPropertiesOfObjectType(type2)) {
-            const original = getTypeOfSymbol(property);
+          for (const property2 of getPropertiesOfObjectType(type2)) {
+            const original = getTypeOfSymbol(property2);
             const updated = f(original);
-            members.set(property.escapedName, updated === original ? property : createSymbolWithType(property, updated));
+            members.set(property2.escapedName, updated === original ? property2 : createSymbolWithType(property2, updated));
           }
           return members;
         }
@@ -123085,14 +123085,14 @@ ${lanes.join("\n")}
               );
           }
         }
-        function isValidPropertyAccessForCompletions(node, type2, property) {
+        function isValidPropertyAccessForCompletions(node, type2, property2) {
           return isPropertyAccessible(
             node,
             node.kind === 212 && node.expression.kind === 108,
             /*isWrite*/
             false,
             type2,
-            property
+            property2
           );
         }
         function isValidPropertyAccessWithType(node, isSuper, propertyName, type2) {
@@ -123109,15 +123109,15 @@ ${lanes.join("\n")}
             prop
           );
         }
-        function isPropertyAccessible(node, isSuper, isWrite, containingType, property) {
+        function isPropertyAccessible(node, isSuper, isWrite, containingType, property2) {
           if (isTypeAny(containingType)) {
             return true;
           }
-          if (property.valueDeclaration && isPrivateIdentifierClassElementDeclaration(property.valueDeclaration)) {
-            const declClass = getContainingClass(property.valueDeclaration);
+          if (property2.valueDeclaration && isPrivateIdentifierClassElementDeclaration(property2.valueDeclaration)) {
+            const declClass = getContainingClass(property2.valueDeclaration);
             return !isOptionalChain(node) && !!findAncestor(node, (parent2) => parent2 === declClass);
           }
-          return checkPropertyAccessibilityAtLocation(node, isSuper, isWrite, containingType, property);
+          return checkPropertyAccessibilityAtLocation(node, isSuper, isWrite, containingType, property2);
         }
         function getForInVariableSymbol(node) {
           const initializer3 = node.initializer;
@@ -127407,17 +127407,17 @@ ${lanes.join("\n")}
         }
         function checkObjectLiteralDestructuringPropertyAssignment(node, objectLiteralType, propertyIndex, allProperties, rightIsThis = false) {
           const properties = node.properties;
-          const property = properties[propertyIndex];
-          if (property.kind === 304 || property.kind === 305) {
-            const name = property.name;
+          const property2 = properties[propertyIndex];
+          if (property2.kind === 304 || property2.kind === 305) {
+            const name = property2.name;
             const exprType = getLiteralTypeFromPropertyName(name);
             if (isTypeUsableAsPropertyName(exprType)) {
               const text = getPropertyNameFromType(exprType);
               const prop = getPropertyOfType(objectLiteralType, text);
               if (prop) {
-                markPropertyAsReferenced(prop, property, rightIsThis);
+                markPropertyAsReferenced(prop, property2, rightIsThis);
                 checkPropertyAccessibility(
-                  property,
+                  property2,
                   /*isSuper*/
                   false,
                   /*writing*/
@@ -127427,16 +127427,16 @@ ${lanes.join("\n")}
                 );
               }
             }
-            const elementType = getIndexedAccessType(objectLiteralType, exprType, 32 | (hasDefaultValue(property) ? 16 : 0), name);
-            const type2 = getFlowTypeOfDestructuring(property, elementType);
-            return checkDestructuringAssignment(property.kind === 305 ? property : property.initializer, type2);
-          } else if (property.kind === 306) {
+            const elementType = getIndexedAccessType(objectLiteralType, exprType, 32 | (hasDefaultValue(property2) ? 16 : 0), name);
+            const type2 = getFlowTypeOfDestructuring(property2, elementType);
+            return checkDestructuringAssignment(property2.kind === 305 ? property2 : property2.initializer, type2);
+          } else if (property2.kind === 306) {
             if (propertyIndex < properties.length - 1) {
-              error210(property, Diagnostics.A_rest_element_must_be_last_in_a_destructuring_pattern);
+              error210(property2, Diagnostics.A_rest_element_must_be_last_in_a_destructuring_pattern);
             } else {
               if (languageVersion < LanguageFeatureMinimumTarget.ObjectSpreadRest) {
                 checkExternalEmitHelpers(
-                  property,
+                  property2,
                   4
                   /* Rest */
                 );
@@ -127451,10 +127451,10 @@ ${lanes.join("\n")}
               }
               const type2 = getRestType(objectLiteralType, nonRestNames, objectLiteralType.symbol);
               checkGrammarForDisallowedTrailingComma(allProperties, Diagnostics.A_rest_parameter_or_binding_pattern_may_not_have_a_trailing_comma);
-              return checkDestructuringAssignment(property.expression, type2);
+              return checkDestructuringAssignment(property2.expression, type2);
             }
           } else {
-            error210(property, Diagnostics.Property_assignment_expected);
+            error210(property2, Diagnostics.Property_assignment_expected);
           }
         }
         function checkArrayLiteralAssignment(node, sourceType, checkMode) {
@@ -131624,10 +131624,10 @@ ${lanes.join("\n")}
               const exprType = getLiteralTypeFromPropertyName(name);
               if (isTypeUsableAsPropertyName(exprType)) {
                 const nameText = getPropertyNameFromType(exprType);
-                const property = getPropertyOfType(parentType, nameText);
-                if (property) {
+                const property2 = getPropertyOfType(parentType, nameText);
+                if (property2) {
                   markPropertyAsReferenced(
-                    property,
+                    property2,
                     /*nodeForCheckWriteOnly*/
                     void 0,
                     /*isSelfTypeAccess*/
@@ -131639,7 +131639,7 @@ ${lanes.join("\n")}
                     /*writing*/
                     false,
                     parentType,
-                    property
+                    property2
                   );
                 }
               }
@@ -142404,8 +142404,8 @@ ${lanes.join("\n")}
         }
         return { decorators, parameters };
       }
-      function getAllDecoratorsOfProperty(property) {
-        const decorators = getDecorators(property);
+      function getAllDecoratorsOfProperty(property2) {
+        const decorators = getDecorators(property2);
         if (!some(decorators)) {
           return void 0;
         }
@@ -146705,7 +146705,7 @@ ${lanes.join("\n")}
           );
           let properties = instanceProperties;
           if (!useDefineForClassFields) {
-            properties = filter(properties, (property) => !!property.initializer || isPrivateIdentifier(property.name) || hasAccessorModifier(property));
+            properties = filter(properties, (property2) => !!property2.initializer || isPrivateIdentifier(property2.name) || hasAccessorModifier(property2));
           }
           const privateMethodsAndAccessors = getPrivateInstanceMethodsAndAccessors(node);
           const needsConstructorBody = some(properties) || some(privateMethodsAndAccessors);
@@ -146798,36 +146798,36 @@ ${lanes.join("\n")}
           );
         }
         function addPropertyOrClassStaticBlockStatements(statements, properties, receiver) {
-          for (const property of properties) {
-            if (isStatic(property) && !shouldTransformPrivateElementsOrClassStaticBlocks) {
+          for (const property2 of properties) {
+            if (isStatic(property2) && !shouldTransformPrivateElementsOrClassStaticBlocks) {
               continue;
             }
-            const statement = transformPropertyOrClassStaticBlock(property, receiver);
+            const statement = transformPropertyOrClassStaticBlock(property2, receiver);
             if (!statement) {
               continue;
             }
             statements.push(statement);
           }
         }
-        function transformPropertyOrClassStaticBlock(property, receiver) {
-          const expression = isClassStaticBlockDeclaration(property) ? setCurrentClassElementAnd(property, transformClassStaticBlockDeclaration, property) : transformProperty(property, receiver);
+        function transformPropertyOrClassStaticBlock(property2, receiver) {
+          const expression = isClassStaticBlockDeclaration(property2) ? setCurrentClassElementAnd(property2, transformClassStaticBlockDeclaration, property2) : transformProperty(property2, receiver);
           if (!expression) {
             return void 0;
           }
           const statement = factory2.createExpressionStatement(expression);
-          setOriginalNode(statement, property);
+          setOriginalNode(statement, property2);
           addEmitFlags(
             statement,
-            getEmitFlags(property) & 3072
+            getEmitFlags(property2) & 3072
             /* NoComments */
           );
-          setCommentRange(statement, property);
-          const propertyOriginalNode = getOriginalNode(property);
+          setCommentRange(statement, property2);
+          const propertyOriginalNode = getOriginalNode(property2);
           if (isParameter(propertyOriginalNode)) {
             setSourceMapRange(statement, propertyOriginalNode);
             removeAllComments(statement);
           } else {
-            setSourceMapRange(statement, moveRangePastModifiers(property));
+            setSourceMapRange(statement, moveRangePastModifiers(property2));
           }
           setSyntheticLeadingComments(expression, void 0);
           setSyntheticTrailingComments(expression, void 0);
@@ -146842,10 +146842,10 @@ ${lanes.join("\n")}
         }
         function generateInitializedPropertyExpressionsOrClassStaticBlock(propertiesOrClassStaticBlocks, receiver) {
           const expressions = [];
-          for (const property of propertiesOrClassStaticBlocks) {
-            const expression = isClassStaticBlockDeclaration(property) ? setCurrentClassElementAnd(property, transformClassStaticBlockDeclaration, property) : setCurrentClassElementAnd(
-              property,
-              () => transformProperty(property, receiver),
+          for (const property2 of propertiesOrClassStaticBlocks) {
+            const expression = isClassStaticBlockDeclaration(property2) ? setCurrentClassElementAnd(property2, transformClassStaticBlockDeclaration, property2) : setCurrentClassElementAnd(
+              property2,
+              () => transformProperty(property2, receiver),
               /*arg*/
               void 0
             );
@@ -146853,45 +146853,45 @@ ${lanes.join("\n")}
               continue;
             }
             startOnNewLine(expression);
-            setOriginalNode(expression, property);
+            setOriginalNode(expression, property2);
             addEmitFlags(
               expression,
-              getEmitFlags(property) & 3072
+              getEmitFlags(property2) & 3072
               /* NoComments */
             );
-            setSourceMapRange(expression, moveRangePastModifiers(property));
-            setCommentRange(expression, property);
+            setSourceMapRange(expression, moveRangePastModifiers(property2));
+            setCommentRange(expression, property2);
             expressions.push(expression);
           }
           return expressions;
         }
-        function transformProperty(property, receiver) {
+        function transformProperty(property2, receiver) {
           var _a3;
           const savedCurrentClassElement = currentClassElement;
-          const transformed = transformPropertyWorker(property, receiver);
-          if (transformed && hasStaticModifier(property) && ((_a3 = lexicalEnvironment == null ? void 0 : lexicalEnvironment.data) == null ? void 0 : _a3.facts)) {
-            setOriginalNode(transformed, property);
+          const transformed = transformPropertyWorker(property2, receiver);
+          if (transformed && hasStaticModifier(property2) && ((_a3 = lexicalEnvironment == null ? void 0 : lexicalEnvironment.data) == null ? void 0 : _a3.facts)) {
+            setOriginalNode(transformed, property2);
             addEmitFlags(
               transformed,
               4
               /* AdviseOnEmitNode */
             );
-            setSourceMapRange(transformed, getSourceMapRange(property.name));
-            lexicalEnvironmentMap.set(getOriginalNode(property), lexicalEnvironment);
+            setSourceMapRange(transformed, getSourceMapRange(property2.name));
+            lexicalEnvironmentMap.set(getOriginalNode(property2), lexicalEnvironment);
           }
           currentClassElement = savedCurrentClassElement;
           return transformed;
         }
-        function transformPropertyWorker(property, receiver) {
+        function transformPropertyWorker(property2, receiver) {
           const emitAssignment = !useDefineForClassFields;
-          if (isNamedEvaluation(property, isAnonymousClassNeedingAssignedName)) {
-            property = transformNamedEvaluation(context5, property);
+          if (isNamedEvaluation(property2, isAnonymousClassNeedingAssignedName)) {
+            property2 = transformNamedEvaluation(context5, property2);
           }
-          const propertyName = hasAccessorModifier(property) ? factory2.getGeneratedPrivateNameForNode(property.name) : isComputedPropertyName(property.name) && !isSimpleInlineableExpression(property.name.expression) ? factory2.updateComputedPropertyName(property.name, factory2.getGeneratedNameForNode(property.name)) : property.name;
-          if (hasStaticModifier(property)) {
-            currentClassElement = property;
+          const propertyName = hasAccessorModifier(property2) ? factory2.getGeneratedPrivateNameForNode(property2.name) : isComputedPropertyName(property2.name) && !isSimpleInlineableExpression(property2.name.expression) ? factory2.updateComputedPropertyName(property2.name, factory2.getGeneratedNameForNode(property2.name)) : property2.name;
+          if (hasStaticModifier(property2)) {
+            currentClassElement = property2;
           }
-          if (isPrivateIdentifier(propertyName) && shouldTransformClassElementToWeakMap(property)) {
+          if (isPrivateIdentifier(propertyName) && shouldTransformClassElementToWeakMap(property2)) {
             const privateIdentifierInfo = accessPrivateIdentifier2(propertyName);
             if (privateIdentifierInfo) {
               if (privateIdentifierInfo.kind === "f") {
@@ -146899,14 +146899,14 @@ ${lanes.join("\n")}
                   return createPrivateInstanceFieldInitializer(
                     factory2,
                     receiver,
-                    visitNode(property.initializer, visitor, isExpression),
+                    visitNode(property2.initializer, visitor, isExpression),
                     privateIdentifierInfo.brandCheckIdentifier
                   );
                 } else {
                   return createPrivateStaticFieldInitializer(
                     factory2,
                     privateIdentifierInfo.variableName,
-                    visitNode(property.initializer, visitor, isExpression)
+                    visitNode(property2.initializer, visitor, isExpression)
                   );
                 }
               } else {
@@ -146916,10 +146916,10 @@ ${lanes.join("\n")}
               Debug.fail("Undeclared private name for property declaration.");
             }
           }
-          if ((isPrivateIdentifier(propertyName) || hasStaticModifier(property)) && !property.initializer) {
+          if ((isPrivateIdentifier(propertyName) || hasStaticModifier(property2)) && !property2.initializer) {
             return void 0;
           }
-          const propertyOriginalNode = getOriginalNode(property);
+          const propertyOriginalNode = getOriginalNode(property2);
           if (hasSyntacticModifier(
             propertyOriginalNode,
             64
@@ -146927,7 +146927,7 @@ ${lanes.join("\n")}
           )) {
             return void 0;
           }
-          let initializer3 = visitNode(property.initializer, visitor, isExpression);
+          let initializer3 = visitNode(property2.initializer, visitor, isExpression);
           if (isParameterPropertyDeclaration(propertyOriginalNode, propertyOriginalNode.parent) && isIdentifier(propertyName)) {
             const localName = factory2.cloneNode(propertyName);
             if (initializer3) {
@@ -157106,8 +157106,8 @@ ${lanes.join("\n")}
           const properties = node.properties;
           let numInitialProperties = -1, hasComputed = false;
           for (let i = 0; i < properties.length; i++) {
-            const property = properties[i];
-            if (property.transformFlags & 1048576 && hierarchyFacts & 4 || (hasComputed = Debug.checkDefined(property.name).kind === 168)) {
+            const property2 = properties[i];
+            if (property2.transformFlags & 1048576 && hierarchyFacts & 4 || (hasComputed = Debug.checkDefined(property2.name).kind === 168)) {
               numInitialProperties = i;
               break;
             }
@@ -157757,23 +157757,23 @@ ${lanes.join("\n")}
           const properties = node.properties;
           const numProperties = properties.length;
           for (let i = start; i < numProperties; i++) {
-            const property = properties[i];
-            switch (property.kind) {
+            const property2 = properties[i];
+            switch (property2.kind) {
               case 178:
               case 179:
-                const accessors = getAllAccessorDeclarations(node.properties, property);
-                if (property === accessors.firstAccessor) {
+                const accessors = getAllAccessorDeclarations(node.properties, property2);
+                if (property2 === accessors.firstAccessor) {
                   expressions.push(transformAccessorsToExpression(receiver, accessors, node, !!node.multiLine));
                 }
                 break;
               case 175:
-                expressions.push(transformObjectLiteralMethodDeclarationToExpression(property, receiver, node, node.multiLine));
+                expressions.push(transformObjectLiteralMethodDeclarationToExpression(property2, receiver, node, node.multiLine));
                 break;
               case 304:
-                expressions.push(transformPropertyAssignmentToExpression(property, receiver, node.multiLine));
+                expressions.push(transformPropertyAssignmentToExpression(property2, receiver, node.multiLine));
                 break;
               case 305:
-                expressions.push(transformShorthandPropertyAssignmentToExpression(property, receiver, node.multiLine));
+                expressions.push(transformShorthandPropertyAssignmentToExpression(property2, receiver, node.multiLine));
                 break;
               default:
                 Debug.failBadSyntaxKind(node);
@@ -157781,31 +157781,31 @@ ${lanes.join("\n")}
             }
           }
         }
-        function transformPropertyAssignmentToExpression(property, receiver, startsOnNewLine) {
+        function transformPropertyAssignmentToExpression(property2, receiver, startsOnNewLine) {
           const expression = factory2.createAssignment(
             createMemberAccessForPropertyName(
               factory2,
               receiver,
-              Debug.checkDefined(visitNode(property.name, visitor, isPropertyName))
+              Debug.checkDefined(visitNode(property2.name, visitor, isPropertyName))
             ),
-            Debug.checkDefined(visitNode(property.initializer, visitor, isExpression))
+            Debug.checkDefined(visitNode(property2.initializer, visitor, isExpression))
           );
-          setTextRange(expression, property);
+          setTextRange(expression, property2);
           if (startsOnNewLine) {
             startOnNewLine(expression);
           }
           return expression;
         }
-        function transformShorthandPropertyAssignmentToExpression(property, receiver, startsOnNewLine) {
+        function transformShorthandPropertyAssignmentToExpression(property2, receiver, startsOnNewLine) {
           const expression = factory2.createAssignment(
             createMemberAccessForPropertyName(
               factory2,
               receiver,
-              Debug.checkDefined(visitNode(property.name, visitor, isPropertyName))
+              Debug.checkDefined(visitNode(property2.name, visitor, isPropertyName))
             ),
-            factory2.cloneNode(property.name)
+            factory2.cloneNode(property2.name)
           );
-          setTextRange(expression, property);
+          setTextRange(expression, property2);
           if (startsOnNewLine) {
             startOnNewLine(expression);
           }
@@ -159003,12 +159003,12 @@ ${lanes.join("\n")}
           const expressions = reduceLeft(properties, reduceProperty, [], numInitialProperties);
           expressions.push(multiLine ? startOnNewLine(setParent(setTextRange(factory2.cloneNode(temp), temp), temp.parent)) : temp);
           return factory2.inlineExpressions(expressions);
-          function reduceProperty(expressions2, property) {
-            if (containsYield(property) && expressions2.length > 0) {
+          function reduceProperty(expressions2, property2) {
+            if (containsYield(property2) && expressions2.length > 0) {
               emitStatement(factory2.createExpressionStatement(factory2.inlineExpressions(expressions2)));
               expressions2 = [];
             }
-            const expression = createExpressionForObjectLiteralElementLike(factory2, node, property, temp);
+            const expression = createExpressionForObjectLiteralElementLike(factory2, node, property2, temp);
             const visited = visitNode(expression, visitor, isExpression);
             if (visited) {
               if (multiLine) {
@@ -176558,7 +176558,7 @@ ${lanes.join("\n")}
           );
         }
         function createDiagnosticForReference(sourceFile, index, message, ...args) {
-          const referencesSyntax = forEachTsConfigPropArray(sourceFile || options.configFile, "references", (property) => isArrayLiteralExpression(property.initializer) ? property.initializer : void 0);
+          const referencesSyntax = forEachTsConfigPropArray(sourceFile || options.configFile, "references", (property2) => isArrayLiteralExpression(property2.initializer) ? property2.initializer : void 0);
           if (referencesSyntax && referencesSyntax.elements.length > index) {
             programDiagnostics.addConfigDiagnostic(createDiagnosticForNodeInSourceFile(sourceFile || options.configFile, referencesSyntax.elements[index], message, ...args));
           } else {
@@ -177211,7 +177211,7 @@ ${lanes.join("\n")}
               );
               if (!referenceInfo) return void 0;
               const { sourceFile, index } = referenceInfo;
-              const referencesSyntax = forEachTsConfigPropArray(sourceFile, "references", (property) => isArrayLiteralExpression(property.initializer) ? property.initializer : void 0);
+              const referencesSyntax = forEachTsConfigPropArray(sourceFile, "references", (property2) => isArrayLiteralExpression(property2.initializer) ? property2.initializer : void 0);
               return referencesSyntax && referencesSyntax.elements.length > index ? createDiagnosticForNodeInSourceFile(
                 sourceFile,
                 referencesSyntax.elements[index],
@@ -191728,14 +191728,14 @@ ${lanes.join("\n")}
         const configDir = getDirectoryPath(configFile.fileName);
         const jsonObjectLiteral = getTsConfigObjectLiteralExpression(configFile);
         if (!jsonObjectLiteral) return;
-        forEachProperty(jsonObjectLiteral, (property, propertyName) => {
+        forEachProperty(jsonObjectLiteral, (property2, propertyName) => {
           switch (propertyName) {
             case "files":
             case "include":
             case "exclude": {
-              const foundExactMatch = updatePaths(property);
-              if (foundExactMatch || propertyName !== "include" || !isArrayLiteralExpression(property.initializer)) return;
-              const includes = mapDefined(property.initializer.elements, (e) => isStringLiteral(e) ? e.text : void 0);
+              const foundExactMatch = updatePaths(property2);
+              if (foundExactMatch || propertyName !== "include" || !isArrayLiteralExpression(property2.initializer)) return;
+              const includes = mapDefined(property2.initializer.elements, (e) => isStringLiteral(e) ? e.text : void 0);
               if (includes.length === 0) return;
               const matchers = getFileMatcherPatterns(
                 configDir,
@@ -191746,18 +191746,18 @@ ${lanes.join("\n")}
                 currentDirectory
               );
               if (getRegexFromPattern(Debug.checkDefined(matchers.includeFilePattern), useCaseSensitiveFileNames2).test(oldFileOrDirPath) && !getRegexFromPattern(Debug.checkDefined(matchers.includeFilePattern), useCaseSensitiveFileNames2).test(newFileOrDirPath)) {
-                changeTracker.insertNodeAfter(configFile, last(property.initializer.elements), factory.createStringLiteral(relativePath(newFileOrDirPath)));
+                changeTracker.insertNodeAfter(configFile, last(property2.initializer.elements), factory.createStringLiteral(relativePath(newFileOrDirPath)));
               }
               return;
             }
             case "compilerOptions":
-              forEachProperty(property.initializer, (property2, propertyName2) => {
+              forEachProperty(property2.initializer, (property22, propertyName2) => {
                 const option = getOptionFromName(propertyName2);
                 Debug.assert((option == null ? void 0 : option.type) !== "listOrElement");
                 if (option && (option.isFilePath || option.type === "list" && option.element.isFilePath)) {
-                  updatePaths(property2);
+                  updatePaths(property22);
                 } else if (propertyName2 === "paths") {
-                  forEachProperty(property2.initializer, (pathsProperty) => {
+                  forEachProperty(property22.initializer, (pathsProperty) => {
                     if (!isArrayLiteralExpression(pathsProperty.initializer)) return;
                     for (const e of pathsProperty.initializer.elements) {
                       tryUpdateString(e);
@@ -191768,8 +191768,8 @@ ${lanes.join("\n")}
               return;
           }
         });
-        function updatePaths(property) {
-          const elements = isArrayLiteralExpression(property.initializer) ? property.initializer.elements : [property.initializer];
+        function updatePaths(property2) {
+          const elements = isArrayLiteralExpression(property2.initializer) ? property2.initializer.elements : [property2.initializer];
           let foundExactMatch = false;
           for (const element of elements) {
             foundExactMatch = tryUpdateString(element) || foundExactMatch;
@@ -191871,9 +191871,9 @@ ${lanes.join("\n")}
       }
       function forEachProperty(objectLiteral, cb) {
         if (!isObjectLiteralExpression(objectLiteral)) return;
-        for (const property of objectLiteral.properties) {
-          if (isPropertyAssignment(property) && isStringLiteral(property.name)) {
-            cb(property, property.name.text);
+        for (const property2 of objectLiteral.properties) {
+          if (isPropertyAssignment(property2) && isStringLiteral(property2.name)) {
+            cb(property2, property2.name.text);
           }
         }
       }
@@ -196944,11 +196944,11 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         const nonRestArguments = hasRestParameter2 ? functionArguments.slice(0, parameters.length - 1) : functionArguments;
         const properties = map3(nonRestArguments, (arg, i) => {
           const parameterName = getParameterName(parameters[i]);
-          const property = createPropertyOrShorthandAssignment(parameterName, arg);
-          suppressLeadingAndTrailingTrivia(property.name);
-          if (isPropertyAssignment(property)) suppressLeadingAndTrailingTrivia(property.initializer);
-          copyComments(arg, property);
-          return property;
+          const property2 = createPropertyOrShorthandAssignment(parameterName, arg);
+          suppressLeadingAndTrailingTrivia(property2.name);
+          if (isPropertyAssignment(property2)) suppressLeadingAndTrailingTrivia(property2.initializer);
+          copyComments(arg, property2);
+          return property2;
         });
         if (hasRestParameter2 && functionArguments.length >= parameters.length) {
           const restArguments = functionArguments.slice(parameters.length - 1);
@@ -204205,10 +204205,10 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
               if (isPropertyAccessExpression(_target) && isConstructorAssignment(_target)) return true;
               return isFunctionLike(source);
             } else {
-              return every(_target.properties, (property) => {
-                if (isMethodDeclaration(property) || isGetOrSetAccessorDeclaration(property)) return true;
-                if (isPropertyAssignment(property) && isFunctionExpression(property.initializer) && !!property.name) return true;
-                if (isConstructorAssignment(property)) return true;
+              return every(_target.properties, (property2) => {
+                if (isMethodDeclaration(property2) || isGetOrSetAccessorDeclaration(property2)) return true;
+                if (isPropertyAssignment(property2) && isFunctionExpression(property2.initializer) && !!property2.name) return true;
+                if (isConstructorAssignment(property2)) return true;
                 return false;
               });
             }
@@ -204257,14 +204257,14 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
             } else if (isObjectLiteralExpression(assignmentExpr)) {
               forEach(
                 assignmentExpr.properties,
-                (property) => {
-                  if (isMethodDeclaration(property) || isGetOrSetAccessorDeclaration(property)) {
-                    members.push(property);
+                (property2) => {
+                  if (isMethodDeclaration(property2) || isGetOrSetAccessorDeclaration(property2)) {
+                    members.push(property2);
                   }
-                  if (isPropertyAssignment(property) && isFunctionExpression(property.initializer)) {
-                    createFunctionLikeExpressionMember(members, property.initializer, property.name);
+                  if (isPropertyAssignment(property2) && isFunctionExpression(property2.initializer)) {
+                    createFunctionLikeExpressionMember(members, property2.initializer, property2.name);
                   }
-                  if (isConstructorAssignment(property)) return;
+                  if (isConstructorAssignment(property2)) return;
                   return;
                 }
               );
@@ -208198,9 +208198,9 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         fixIds: [fixId19],
         getCodeActions(context5) {
           const { sourceFile, span, preferences } = context5;
-          const property = getPropertyAccessExpression(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange14(t2, context5.sourceFile, property, preferences));
-          return [createCodeFixAction(fixId19, changes, [Diagnostics.Use_element_access_for_0, property.name.text], fixId19, Diagnostics.Use_element_access_for_all_undeclared_properties)];
+          const property2 = getPropertyAccessExpression(sourceFile, span.start);
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange14(t2, context5.sourceFile, property2, preferences));
+          return [createCodeFixAction(fixId19, changes, [Diagnostics.Use_element_access_for_0, property2.name.text], fixId19, Diagnostics.Use_element_access_for_all_undeclared_properties)];
         },
         getAllCodeActions: (context5) => codeFixAll(context5, errorCodes22, (changes, diag2) => doChange14(changes, diag2.file, getPropertyAccessExpression(diag2.file, diag2.start), context5.preferences))
       });
@@ -209087,7 +209087,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const staticInitialization = initializePropertyToUndefined(factory.createIdentifier(className), tokenName);
           changeTracker.insertNodeAfter(sourceFile, classDeclaration, staticInitialization);
         } else if (isPrivateIdentifier(token)) {
-          const property = factory.createPropertyDeclaration(
+          const property2 = factory.createPropertyDeclaration(
             /*modifiers*/
             void 0,
             tokenName,
@@ -209100,9 +209100,9 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           );
           const lastProp = getNodeToInsertPropertyAfter(classDeclaration);
           if (lastProp) {
-            changeTracker.insertNodeAfter(sourceFile, lastProp, property);
+            changeTracker.insertNodeAfter(sourceFile, lastProp, property2);
           } else {
-            changeTracker.insertMemberAtStart(sourceFile, classDeclaration, property);
+            changeTracker.insertMemberAtStart(sourceFile, classDeclaration, property2);
           }
         } else {
           const classConstructor = getFirstConstructorWithBody(classDeclaration);
@@ -209168,7 +209168,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       }
       function addPropertyDeclaration(changeTracker, sourceFile, node, tokenName, typeNode, modifierFlags) {
         const modifiers = modifierFlags ? factory.createNodeArray(factory.createModifiersFromModifierFlags(modifierFlags)) : void 0;
-        const property = isClassLike(node) ? factory.createPropertyDeclaration(
+        const property2 = isClassLike(node) ? factory.createPropertyDeclaration(
           modifiers,
           tokenName,
           /*questionOrExclamationToken*/
@@ -209186,9 +209186,9 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         );
         const lastProp = getNodeToInsertPropertyAfter(node);
         if (lastProp) {
-          changeTracker.insertNodeAfter(sourceFile, lastProp, property);
+          changeTracker.insertNodeAfter(sourceFile, lastProp, property2);
         } else {
-          changeTracker.insertMemberAtStart(sourceFile, node, property);
+          changeTracker.insertMemberAtStart(sourceFile, node, property2);
         }
       }
       function getNodeToInsertPropertyAfter(node) {
@@ -210124,8 +210124,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         fixIds: [fixId30],
         getCodeActions(context5) {
           const { sourceFile, span } = context5;
-          const property = getProperty2(sourceFile, span.start);
-          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange24(t2, context5.sourceFile, property));
+          const property2 = getProperty2(sourceFile, span.start);
+          const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => doChange24(t2, context5.sourceFile, property2));
           return [createCodeFixAction(fixId30, changes, [Diagnostics.Change_0_to_1, "=", ":"], fixId30, [Diagnostics.Switch_each_misused_0_to_1, "=", ":"])];
         },
         getAllCodeActions: (context5) => codeFixAll(context5, errorCodes37, (changes, diag2) => doChange24(changes, diag2.file, getProperty2(diag2.file, diag2.start)))
@@ -214139,7 +214139,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
         );
       }
       function updatePropertyDeclaration(changeTracker, file2, declaration, type2, fieldName, modifiers) {
-        const property = factory.updatePropertyDeclaration(
+        const property2 = factory.updatePropertyDeclaration(
           declaration,
           modifiers,
           fieldName,
@@ -214147,7 +214147,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           type2,
           declaration.initializer
         );
-        changeTracker.replaceNode(file2, declaration, property);
+        changeTracker.replaceNode(file2, declaration, property2);
       }
       function updatePropertyAssignmentDeclaration(changeTracker, file2, declaration, fieldName) {
         let assignment = factory.updatePropertyAssignment(declaration, fieldName, declaration.initializer);
@@ -214350,7 +214350,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       }
       function addDefiniteAssignmentAssertion(changeTracker, propertyDeclarationSourceFile, propertyDeclaration) {
         suppressLeadingAndTrailingTrivia(propertyDeclaration);
-        const property = factory.updatePropertyDeclaration(
+        const property2 = factory.updatePropertyDeclaration(
           propertyDeclaration,
           propertyDeclaration.modifiers,
           propertyDeclaration.name,
@@ -214361,7 +214361,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           propertyDeclaration.type,
           propertyDeclaration.initializer
         );
-        changeTracker.replaceNode(propertyDeclarationSourceFile, propertyDeclaration, property);
+        changeTracker.replaceNode(propertyDeclarationSourceFile, propertyDeclaration, property2);
       }
       function getActionForAddMissingUndefinedType(context5, info2) {
         const changes = ts_textChanges_exports.ChangeTracker.with(context5, (t2) => addUndefinedType(t2, context5.sourceFile, info2));
@@ -214394,7 +214394,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
       }
       function addInitializer(changeTracker, propertyDeclarationSourceFile, propertyDeclaration, initializer3) {
         suppressLeadingAndTrailingTrivia(propertyDeclaration);
-        const property = factory.updatePropertyDeclaration(
+        const property2 = factory.updatePropertyDeclaration(
           propertyDeclaration,
           propertyDeclaration.modifiers,
           propertyDeclaration.name,
@@ -214402,7 +214402,7 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           propertyDeclaration.type,
           initializer3
         );
-        changeTracker.replaceNode(propertyDeclarationSourceFile, propertyDeclaration, property);
+        changeTracker.replaceNode(propertyDeclarationSourceFile, propertyDeclaration, property2);
       }
       function getInitializer(checker, propertyDeclaration) {
         return getDefaultValueFromType(checker, checker.getTypeFromTypeNode(propertyDeclaration.type));
@@ -218580,8 +218580,8 @@ ${newComment.split("\n").map((c) => ` * ${c}`).join("\n")}
           const type2 = symbol2 && typeChecker.getTypeOfSymbolAtLocation(symbol2, expression);
           const properties = type2 && type2.properties;
           if (properties) {
-            properties.forEach((property) => {
-              membersDeclaredBySpreadAssignment.add(property.name);
+            properties.forEach((property2) => {
+              membersDeclaredBySpreadAssignment.add(property2.name);
             });
           }
         }
@@ -292454,8 +292454,8 @@ async function parseSchematic(file2) {
     hopOverWireCrossings: [...text.matchAll(/\(hop_over\b/g)].length
   };
 }
-function propertyValue(block, property) {
-  const escaped = property.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function propertyValue(block, property2) {
+  const escaped = property2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const match = new RegExp(`\\(property\\s+"${escaped}"\\s+"((?:[^"\\\\]|\\\\.)*)"`).exec(block);
   return match?.[1]?.replace(/\\"/g, '"');
 }
@@ -292494,8 +292494,8 @@ async function parsePcb(file2) {
     designBlockInstances: extractBlocks(text, "design_block_instance").length
   };
 }
-function propertyValue2(block, property) {
-  const escaped = property.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function propertyValue2(block, property2) {
+  const escaped = property2.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   return new RegExp(`\\(property\\s+"${escaped}"\\s+"([^"]+)"`).exec(block)?.[1];
 }
 function firstQuoted(block) {
@@ -295369,9 +295369,9 @@ var $ZodCheckEndsWith = /* @__PURE__ */ $constructor("$ZodCheckEndsWith", (inst,
     });
   };
 });
-function handleCheckPropertyResult(result, payload, property) {
+function handleCheckPropertyResult(result, payload, property2) {
   if (result.issues.length) {
-    payload.issues.push(...prefixIssues(property, result.issues));
+    payload.issues.push(...prefixIssues(property2, result.issues));
   }
 }
 var $ZodCheckProperty = /* @__PURE__ */ $constructor("$ZodCheckProperty", (inst, def) => {
@@ -304198,10 +304198,10 @@ function _endsWith(suffix, params) {
   });
 }
 // @__NO_SIDE_EFFECTS__
-function _property(property, schema2, params) {
+function _property(property2, schema2, params) {
   return new $ZodCheckProperty({
     check: "property",
-    property,
+    property: property2,
     schema: schema2,
     ...normalizeParams(params)
   });
@@ -309047,7 +309047,10 @@ function snapshotBomRow(root, row) {
     footprint: row.footprint,
     manufacturer: row.manufacturer,
     mpn: row.mpn,
-    suppliers: row.suppliers
+    suppliers: row.suppliers,
+    lifecycle: row.lifecycle,
+    dnp: row.dnp,
+    quantity: row.quantity
   };
 }
 async function projectScopedFiles(root, projects, patterns) {
@@ -309931,6 +309934,117 @@ function escapeData2(value) {
 }
 function escapeProperty2(value) {
   return escapeData2(value).replace(/:/g, "%3A").replace(/,/g, "%2C");
+}
+
+// src/report/hbom.ts
+function formatHbom(result) {
+  return `${JSON.stringify(createHbom(result), null, 2)}
+`;
+}
+function createHbom(result) {
+  const rootRef = "boardreadyops:hardware";
+  const components = result.fabrication.bom.map((row) => componentFromBomRow(row));
+  return {
+    $schema: "https://cyclonedx.org/schema/bom-1.7.schema.json",
+    bomFormat: "CycloneDX",
+    specVersion: "1.7",
+    version: 1,
+    metadata: {
+      timestamp: result.generatedAt,
+      tools: {
+        components: [
+          {
+            type: "application",
+            name: result.tool.name,
+            version: result.tool.version
+          }
+        ]
+      },
+      component: {
+        type: "device",
+        name: hardwareName(result),
+        "bom-ref": rootRef
+      },
+      properties: [{ name: "boardreadyops:componentClass", value: "hardware" }]
+    },
+    components,
+    dependencies: [
+      {
+        ref: rootRef,
+        dependsOn: components.map((component) => component["bom-ref"])
+      }
+    ]
+  };
+}
+function componentFromBomRow(row) {
+  const component = {
+    type: "device",
+    name: row.mpn ?? row.value ?? row.reference,
+    "bom-ref": componentRef(row),
+    properties: componentProperties(row)
+  };
+  if (row.value) {
+    component.version = row.value;
+  }
+  if (row.manufacturer) {
+    component.manufacturer = { name: row.manufacturer };
+  }
+  if (row.suppliers?.[0]) {
+    component.supplier = { name: row.suppliers[0] };
+  }
+  const externalReferences = externalReferencesFromSuppliers(row.suppliers ?? []);
+  if (externalReferences.length > 0) {
+    component.externalReferences = externalReferences;
+  }
+  const purl = purlFromRow(row);
+  if (purl) {
+    component.purl = purl;
+  }
+  return component;
+}
+function componentProperties(row) {
+  return [
+    { name: "kicad:reference", value: row.reference },
+    property("kicad:footprint", row.footprint),
+    property("kicad:dnp", String(Boolean(row.dnp))),
+    property("boardreadyops:mpn", row.mpn),
+    property("boardreadyops:sourcePath", row.sourcePath),
+    property("boardreadyops:lifecycle", row.lifecycle),
+    property("boardreadyops:quantity", row.quantity === void 0 ? void 0 : String(row.quantity)),
+    ...(row.suppliers ?? []).map((supplier) => property("boardreadyops:supplier", supplier))
+  ].filter((entry) => Boolean(entry));
+}
+function property(name, value) {
+  return value ? { name, value } : void 0;
+}
+function hardwareName(result) {
+  if (result.projects.length === 1) {
+    return stripProjectExtension(result.projects[0]?.projectFile ?? "hardware");
+  }
+  return "boardreadyops-hardware-workspace";
+}
+function stripProjectExtension(projectFile) {
+  return projectFile.replace(/\.kicad_pro$/i, "");
+}
+function componentRef(row) {
+  return ["boardreadyops:component", sanitizeRef(row.sourcePath ?? "bom"), sanitizeRef(row.reference)].join(":");
+}
+function sanitizeRef(value) {
+  return value.trim().replace(/[^A-Za-z0-9._/-]+/g, "-").replaceAll("/", ".");
+}
+function externalReferencesFromSuppliers(suppliers) {
+  return suppliers.filter((supplier) => /^https?:\/\//i.test(supplier)).map((url3) => ({
+    type: "distribution",
+    url: url3
+  }));
+}
+function purlFromRow(row) {
+  if (!row.mpn || !row.manufacturer) {
+    return void 0;
+  }
+  const namespace = encodeURIComponent(row.manufacturer);
+  const name = encodeURIComponent(row.mpn);
+  return `pkg:generic/${namespace}/${name}`;
 }
 
 // src/report/json.ts
@@ -314726,7 +314840,16 @@ function bomRowKey(row) {
   return `${row.sourcePath ?? ""}\0${row.reference}`;
 }
 function bomFingerprint(row) {
-  return JSON.stringify([row.value, row.footprint, row.manufacturer, row.mpn, row.suppliers ?? []]);
+  return JSON.stringify([
+    row.value,
+    row.footprint,
+    row.manufacturer,
+    row.mpn,
+    row.suppliers ?? [],
+    row.lifecycle,
+    row.dnp,
+    row.quantity
+  ]);
 }
 function compareBomDiffRows(left, right) {
   const signalOrder = Number(left.status === "unchanged") - Number(right.status === "unchanged");
@@ -320327,8 +320450,8 @@ function deserializeCompositeType(serializer, mapper, responseBody, objectName, 
           instance[key] = serializer.deserialize(propertyMapper, elementList, propertyObjectName, options);
           handledPropertyNames.push(xmlName);
         } else {
-          const property = responseBody[propertyName];
-          instance[key] = serializer.deserialize(propertyMapper, property, propertyObjectName, options);
+          const property2 = responseBody[propertyName];
+          instance[key] = serializer.deserialize(propertyMapper, property2, propertyObjectName, options);
           handledPropertyNames.push(propertyName);
         }
       }
@@ -325499,21 +325622,21 @@ function compress(arr, options, matcher, readonlyMatcher) {
   const compressedObj = {};
   for (let i = 0; i < arr.length; i++) {
     const tagObj = arr[i];
-    const property = propName(tagObj);
-    if (property !== void 0 && property !== options.textNodeName) {
+    const property2 = propName(tagObj);
+    if (property2 !== void 0 && property2 !== options.textNodeName) {
       const rawAttrs = stripAttributePrefix(
         tagObj[":@"] || {},
         options.attributeNamePrefix
       );
-      matcher.push(property, rawAttrs);
+      matcher.push(property2, rawAttrs);
     }
-    if (property === options.textNodeName) {
-      if (text === void 0) text = tagObj[property];
-      else text += "" + tagObj[property];
-    } else if (property === void 0) {
+    if (property2 === options.textNodeName) {
+      if (text === void 0) text = tagObj[property2];
+      else text += "" + tagObj[property2];
+    } else if (property2 === void 0) {
       continue;
-    } else if (tagObj[property]) {
-      let val = compress(tagObj[property], options, matcher, readonlyMatcher);
+    } else if (tagObj[property2]) {
+      let val = compress(tagObj[property2], options, matcher, readonlyMatcher);
       const isLeaf = isLeafTag(val, options);
       if (Object.keys(val).length === 0 && options.alwaysCreateTextNode) {
         val[options.textNodeName] = "";
@@ -325529,20 +325652,20 @@ function compress(arr, options, matcher, readonlyMatcher) {
       if (tagObj[METADATA_SYMBOL2] !== void 0 && typeof val === "object" && val !== null) {
         val[METADATA_SYMBOL2] = tagObj[METADATA_SYMBOL2];
       }
-      if (compressedObj[property] !== void 0 && Object.prototype.hasOwnProperty.call(compressedObj, property)) {
-        if (!Array.isArray(compressedObj[property])) {
-          compressedObj[property] = [compressedObj[property]];
+      if (compressedObj[property2] !== void 0 && Object.prototype.hasOwnProperty.call(compressedObj, property2)) {
+        if (!Array.isArray(compressedObj[property2])) {
+          compressedObj[property2] = [compressedObj[property2]];
         }
-        compressedObj[property].push(val);
+        compressedObj[property2].push(val);
       } else {
         const jPathOrMatcher = options.jPath ? readonlyMatcher.toString() : readonlyMatcher;
-        if (options.isArray(property, jPathOrMatcher, isLeaf)) {
-          compressedObj[property] = [val];
+        if (options.isArray(property2, jPathOrMatcher, isLeaf)) {
+          compressedObj[property2] = [val];
         } else {
-          compressedObj[property] = val;
+          compressedObj[property2] = val;
         }
       }
-      if (property !== void 0 && property !== options.textNodeName) {
+      if (property2 !== void 0 && property2 !== options.textNodeName) {
         matcher.pop();
       }
     }
@@ -350035,7 +350158,8 @@ function readActionInputs(workspace = process.env.GITHUB_WORKSPACE ?? process.cw
     outputs: {
       sarif: empty(getInput("sarif")),
       json: empty(getInput("json")),
-      markdown: empty(getInput("markdown"))
+      markdown: empty(getInput("markdown")),
+      hbom: empty(getInput("hbom"))
     },
     uploadSarif: boolInput("upload-sarif", true),
     uploadArtifacts: boolInput("upload-artifacts", true),
@@ -350153,6 +350277,7 @@ function setActionOutputs(result, paths) {
   setOutput("sarif-path", paths.sarif ?? "");
   setOutput("json-path", paths.json ?? "");
   setOutput("markdown-path", paths.markdown ?? "");
+  setOutput("hbom-path", paths.hbom ?? "");
 }
 
 // src/action/upload.ts
@@ -350233,6 +350358,10 @@ async function runAction() {
   if (inputs.outputs.markdown) {
     written.markdown = import_node_path34.default.resolve(workspace, inputs.outputs.markdown);
     await writeTextFile(written.markdown, formatMarkdown(result));
+  }
+  if (inputs.outputs.hbom) {
+    written.hbom = import_node_path34.default.resolve(workspace, inputs.outputs.hbom);
+    await writeTextFile(written.hbom, formatHbom(result));
   }
   if (inputs.annotations) {
     emitAnnotations(result.findings);

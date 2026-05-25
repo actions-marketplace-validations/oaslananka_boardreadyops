@@ -8,6 +8,9 @@ interface FabricationBomEntry {
   manufacturer?: string | undefined;
   mpn?: string | undefined;
   suppliers?: string[] | undefined;
+  lifecycle?: string | undefined;
+  dnp?: boolean | undefined;
+  quantity?: number | undefined;
 }
 
 interface FabricationOutputFile {
@@ -138,7 +141,16 @@ function bomRowKey(row: FabricationBomEntry): string {
 }
 
 function bomFingerprint(row: FabricationBomEntry): string {
-  return JSON.stringify([row.value, row.footprint, row.manufacturer, row.mpn, row.suppliers ?? []]);
+  return JSON.stringify([
+    row.value,
+    row.footprint,
+    row.manufacturer,
+    row.mpn,
+    row.suppliers ?? [],
+    row.lifecycle,
+    row.dnp,
+    row.quantity,
+  ]);
 }
 
 function compareBomDiffRows(left: FabricationBomDiffRow, right: FabricationBomDiffRow): number {

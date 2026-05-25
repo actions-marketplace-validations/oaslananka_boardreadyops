@@ -42,6 +42,7 @@ describe("action gate detection", () => {
     vi.stubEnv("INPUT_SARIF", "reports/findings.sarif.json");
     vi.stubEnv("INPUT_JSON", "reports/findings.json");
     vi.stubEnv("INPUT_MARKDOWN", "reports/findings.md");
+    vi.stubEnv("INPUT_HBOM", "reports/hbom.json");
     vi.stubEnv("INPUT_UPLOAD-SARIF", "0");
     vi.stubEnv("INPUT_UPLOAD-ARTIFACTS", "1");
     vi.stubEnv("INPUT_COMMENT-PR", "false");
@@ -70,6 +71,7 @@ describe("action gate detection", () => {
         sarif: "reports/findings.sarif.json",
         json: "reports/findings.json",
         markdown: "reports/findings.md",
+        hbom: "reports/hbom.json",
       },
       uploadSarif: false,
       uploadArtifacts: true,

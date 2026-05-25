@@ -15,15 +15,16 @@ exec env \
   "INPUT_SARIF=${11-}" \
   "INPUT_JSON=${12-}" \
   "INPUT_MARKDOWN=${13-}" \
-  "INPUT_UPLOAD-SARIF=${14-}" \
-  "INPUT_UPLOAD-ARTIFACTS=${15-}" \
-  "INPUT_COMMENT-PR=${16-}" \
-  "INPUT_ARTIFACT-NAME=${17-}" \
-  "INPUT_FAIL-ON=${18-}" \
-  "INPUT_ANNOTATIONS=${19-}" \
-  "INPUT_LOG-LEVEL=${20-}" \
-  "INPUT_LOG-FORMAT=${21-}" \
-  "INPUT_LOG-FILE=${22-}" \
-  "INPUT_LOG-FILE-MAX-BYTES=${23-}" \
-  "INPUT_LOG-FILE-RETENTION=${24-}" \
+  "INPUT_HBOM=${14-}" \
+  "INPUT_UPLOAD-SARIF=${15-}" \
+  "INPUT_UPLOAD-ARTIFACTS=${16-}" \
+  "INPUT_COMMENT-PR=${17-}" \
+  "INPUT_ARTIFACT-NAME=${18-}" \
+  "INPUT_FAIL-ON=${19-}" \
+  "INPUT_ANNOTATIONS=${20-}" \
+  "INPUT_LOG-LEVEL=${21-}" \
+  "INPUT_LOG-FORMAT=${22-}" \
+  "INPUT_LOG-FILE=${23-}" \
+  "INPUT_LOG-FILE-MAX-BYTES=${24-}" \
+  "INPUT_LOG-FILE-RETENTION=${25-}" \
   node /usr/local/lib/node_modules/boardreadyops/dist/action/index.cjs

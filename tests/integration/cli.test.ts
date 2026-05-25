@@ -37,6 +37,51 @@ describe("CLI integration", () => {
     expect(await fs.stat(path.join(temp, "out.md"))).toBeTruthy();
   });
 
+  it("writes CycloneDX HBOM through the sbom command", async () => {
+    const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-hbom-"));
+    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, { recursive: true });
+    const streams = captureStreams();
+
+    const code = await runCli(["sbom", temp, "--output", "build/hbom.json"], streams);
+
+    expect(code).toBe(0);
+    expect(streams.stdoutText()).toBe("");
+    const hbom = JSON.parse(await fs.readFile(path.join(temp, "build/hbom.json"), "utf8"));
+    expect(hbom).toMatchObject({
+      bomFormat: "CycloneDX",
+      specVersion: "1.7",
+      metadata: { component: { type: "device", name: "safe-basic" } },
+      components: [
+        {
+          type: "device",
+          name: "RC0603FR-0710KL",
+          manufacturer: { name: "Yageo" },
+        },
+      ],
+    });
+  });
+
+  it("writes CycloneDX HBOM to stdout when sbom output is '-'", async () => {
+    const streams = captureStreams();
+
+    const code = await runCli(["sbom", path.join(fixtureRoot, "safe-basic"), "--output", "-"], streams);
+
+    expect(code).toBe(0);
+    expect(JSON.parse(streams.stdoutText())).toMatchObject({
+      bomFormat: "CycloneDX",
+      components: [{ name: "RC0603FR-0710KL" }],
+    });
+  });
+
+  it("rejects unsupported future SBOM formats", async () => {
+    const streams = captureStreams();
+
+    const code = await runCli(["sbom", path.join(fixtureRoot, "safe-basic"), "--format", "spdx"], streams);
+
+    expect(code).toBe(2);
+    expect(streams.stderrText()).toContain("SBOM format spdx is not supported yet.");
+  });
+
   it("writes configured JUnit reports", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-junit-"));
     await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, { recursive: true });
@@ -90,6 +135,9 @@ gates:
     const pinmap = captureStreams();
     expect(await runCli(["schema", "pinmap"], pinmap)).toBe(0);
     expect(pinmap.stdoutText()).toContain("BoardReadyOps pinmap");
+    const hbom = captureStreams();
+    expect(await runCli(["schema", "hbom"], hbom)).toBe(0);
+    expect(hbom.stdoutText()).toContain("BoardReadyOps CycloneDX hardware SBOM");
     const doctorSchema = captureStreams();
     expect(await runCli(["schema", "doctor"], doctorSchema)).toBe(0);
     expect(doctorSchema.stdoutText()).toContain("BoardReadyOps doctor report");

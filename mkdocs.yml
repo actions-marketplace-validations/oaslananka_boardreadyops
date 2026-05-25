@@ -59,6 +59,7 @@ nav:
   - Cross-platform Paths: cross-platform.md
   - Multi-project Workspaces: multi-project.md
   - CLI: cli.md
+  - Hardware SBOM: sbom.md
   - GitHub Action:
       - Node Action: action.md
       - Container Action: github-action.md
