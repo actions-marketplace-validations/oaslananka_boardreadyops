@@ -16,6 +16,14 @@ BoardReadyOps checks KiCad hardware repositories for production readiness before
 npm i -g boardreadyops
 ```
 
+The current public package is `boardreadyops@1.0.2` on npm. That release is
+verified for the npm CLI and root GitHub Action paths. Binary installers,
+Homebrew, and the full GHCR container are tracked separately because the public
+`v1.0.2` GitHub Release does not contain binary assets, `SHA256SUMS`, or an
+anonymous-pullable container image. See
+[release channel verification](docs/release/channel-verification.md) for the
+tested artifact list and failure matrix.
+
 ## Runtime Support
 
 BoardReadyOps supports Node.js 22 and 24. Node.js 24 is the recommended Active
@@ -29,25 +37,32 @@ table live in [docs/support-matrix.md](docs/support-matrix.md).
 
 ### Install Via Script
 
-Linux and macOS release binaries can be installed with the checksum-verifying shell installer:
+Linux and macOS release binaries are installed with the checksum-verifying shell
+installer when the selected GitHub Release includes the matching binary asset
+and `SHA256SUMS`:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/oaslananka/boardreadyops/main/install.sh | sh
 ```
 
-Windows x64 release binaries can be installed with PowerShell:
+Windows x64 release binaries use the same release asset and checksum flow:
 
 ```powershell
 irm https://raw.githubusercontent.com/oaslananka/boardreadyops/main/install.ps1 | iex
 ```
 
-The installers download the release asset plus `SHA256SUMS` before placing `boardreadyops` on the local command path. A Homebrew formula template for the same binary assets lives at `Formula/boardreadyops.rb`; update its release checksums from `SHA256SUMS` when publishing it through a tap.
+The installers download the release asset plus `SHA256SUMS` before placing
+`boardreadyops` on the local command path. The public `v1.0.2` release currently
+has no binary assets, so these installers return 404 for that tag. A Homebrew
+formula template for the same binary assets lives at `Formula/boardreadyops.rb`;
+it must be filled with release checksums from `SHA256SUMS` before publishing it
+through a tap.
 
 ## Quick Start
 
 ```bash
 boardreadyops --help
-boardreadyops check .
+boardreadyops check . --fail-on never
 ```
 
 `npx boardreadyops --help` also works when npm can resolve the package.
@@ -97,6 +112,10 @@ The same image can run as a CLI:
 ```bash
 docker run --rm ghcr.io/oaslananka/boardreadyops-full:v1 --help
 ```
+
+The public `ghcr.io/oaslananka/boardreadyops-full:v1` image must be considered
+unavailable until anonymous `docker manifest inspect` succeeds and the digest is
+recorded in the release verification matrix.
 
 ## CLI
 

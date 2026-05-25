@@ -103,3 +103,4 @@ nav:
           - "0006: License Compliance": architecture/adr/0006-license-compliance.md
   - Release:
       - Process: release/process.md
+      - Channel Verification: release/channel-verification.md

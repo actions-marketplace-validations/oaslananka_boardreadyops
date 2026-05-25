@@ -40,6 +40,14 @@ The default image entrypoint remains the CLI for direct use:
 docker run --rm ghcr.io/oaslananka/boardreadyops-full:v1 --help
 ```
 
+The public `v1` image is not yet verified for anonymous consumers. The 2026-05-25
+clean-consumer audit received `denied` from
+`docker manifest inspect ghcr.io/oaslananka/boardreadyops-full:v1`; track the
+container publication follow-up in
+[BOARD-64](https://linear.app/oaslananka/issue/BOARD-64/completion-follow-up-make-ghcr-container-image-anonymously-pullable).
+Use the root Node action or install KiCad separately until that manifest check
+succeeds and a digest is recorded.
+
 The image includes the unprivileged `boardreadyops` account at UID `10001` for
 direct container runs that can provide writable mounts for that user. The
 GitHub Docker action keeps the image default user so GitHub can mount and access
