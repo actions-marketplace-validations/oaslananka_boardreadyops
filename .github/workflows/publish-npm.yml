@@ -74,6 +74,7 @@ jobs:
       - name: Verify release commit
         env:
           RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.event.release.tag_name }}
+          REQUIRE_EXACT_MAIN: ${{ github.event_name == 'release' }}
         run: |
           set -euo pipefail
           git fetch --no-tags --depth=1 origin main "refs/tags/${RELEASE_TAG}:refs/tags/${RELEASE_TAG}"
@@ -84,8 +85,12 @@ jobs:
           fi
           release_commit="$(git rev-parse "${RELEASE_TAG}^{commit}")"
           main_commit="$(git rev-parse "origin/main^{commit}")"
-          if [ "${release_commit}" != "${main_commit}" ]; then
+          if [ "${REQUIRE_EXACT_MAIN}" = "true" ] && [ "${release_commit}" != "${main_commit}" ]; then
             echo "::error::Release tag ${RELEASE_TAG} must point at origin/main HEAD before publishing."
+            exit 1
+          fi
+          if [ "${REQUIRE_EXACT_MAIN}" != "true" ] && ! git merge-base --is-ancestor "${release_commit}" "${main_commit}"; then
+            echo "::error::Release tag ${RELEASE_TAG} must be an ancestor of origin/main before manual publishing."
             exit 1
           fi
       - name: Publish npm package
