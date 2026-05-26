@@ -188,13 +188,13 @@ describe("structured logger", () => {
   it("surfaces filesystem errors from the rotating log sink", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-log-error-"));
     const loop = path.join(temp, "loop.log");
-    await fs.symlink(loop, loop);
+    await fs.mkdir(loop);
     const logger = createLogger({
       level: "debug",
       format: "json",
       stream: memoryStream().stream,
       logFile: loop,
-      maxFileBytes: 1,
+      maxFileBytes: 0,
       retention: 1,
       now: () => new Date("2026-05-23T00:00:00.000Z"),
     });
