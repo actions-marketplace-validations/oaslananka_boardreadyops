@@ -4,12 +4,21 @@ import { promisify } from "node:util";
 const execFileAsync = promisify(execFile);
 
 export async function readPnpmLicenseReport(root, args) {
-  const { stdout } = await execFileAsync("pnpm", ["licenses", "list", ...args], {
+  const commandLine = pnpmLicenseCommandLine(args);
+  const { stdout } = await execFileAsync(commandLine.command, commandLine.args, {
     cwd: root,
     maxBuffer: 20 * 1024 * 1024,
     windowsHide: true,
   });
   return parsePnpmLicenseReport(stdout);
+}
+
+export function pnpmLicenseCommandLine(args, platform = process.platform) {
+  const pnpmArgs = ["licenses", "list", ...args];
+  if (platform === "win32") {
+    return { command: process.env.ComSpec ?? "cmd.exe", args: ["/d", "/s", "/c", "pnpm.cmd", ...pnpmArgs] };
+  }
+  return { command: "pnpm", args: pnpmArgs };
 }
 
 function parsePnpmLicenseReport(stdout) {

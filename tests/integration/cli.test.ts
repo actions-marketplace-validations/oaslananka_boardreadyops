@@ -2,12 +2,14 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { Ajv2020 } from "ajv/dist/2020.js";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import packageManifest from "../../package.json" with { type: "json" };
 import doctorSchema from "../../schemas/doctor.schema.json" with { type: "json" };
 import { supportsDoctorNodeVersion } from "../../src/cli/commands/doctor.js";
 import { runCli } from "../../src/cli/index.js";
 import { runPipeline } from "../../src/core/pipeline.js";
 import { detectKicadCli } from "../../src/kicad/cli.js";
+import * as kicadPaths from "../../src/kicad/paths.js";
 
 const fixtureRoot = path.resolve("tests/fixtures/projects");
 
@@ -20,7 +22,7 @@ describe("CLI integration", () => {
 
     const version = captureStreams();
     expect(await runCli(["--version"], version)).toBe(0);
-    expect(version.stdoutText().trim()).toBe("1.0.2");
+    expect(version.stdoutText().trim()).toBe(packageManifest.version);
   });
 
   it("runs the default command and writes reports", async () => {
@@ -216,6 +218,7 @@ gates:
     const previousPath = process.env.PATH;
     const previousNexarClientId = process.env.NEXAR_CLIENT_ID;
     const previousNexarClientSecret = process.env.NEXAR_CLIENT_SECRET;
+    const candidates = vi.spyOn(kicadPaths, "defaultKicadCliCandidates").mockReturnValue(["kicad-cli"]);
     process.chdir(temp);
     process.env.PATH = "";
     delete process.env.NEXAR_CLIENT_ID;
@@ -240,6 +243,7 @@ gates:
         severity: "warn",
       });
     } finally {
+      candidates.mockRestore();
       process.chdir(previousCwd);
       restoreEnv("PATH", previousPath);
       restoreEnv("NEXAR_CLIENT_ID", previousNexarClientId);

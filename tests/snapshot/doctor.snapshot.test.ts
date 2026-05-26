@@ -4,6 +4,10 @@ import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import { runCli } from "../../src/cli/index.js";
 
+vi.mock("../../src/kicad/paths.js", () => ({
+  defaultKicadCliCandidates: () => ["kicad-cli"],
+}));
+
 const doctorChecks = ["runtime", "kicad", "adapters", "repository", "suppressions", "action"] as const;
 const fixtureRoot = path.resolve("tests/fixtures/projects");
 

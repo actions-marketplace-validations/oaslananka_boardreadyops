@@ -49,7 +49,6 @@ cat >"${payload}" <<'JSON'
       "ci / coverage-gate",
       "ci / mutation",
       "ci / security",
-      "ci / sbom",
       "gitleaks",
       "zizmor",
       "security / dependency-review",

@@ -75,7 +75,6 @@ The expected required checks are:
 - `ci / coverage-gate`
 - `ci / mutation`
 - `ci / security`
-- `ci / sbom`
 - `CodeQL`
 - `gitleaks`
 - `zizmor`

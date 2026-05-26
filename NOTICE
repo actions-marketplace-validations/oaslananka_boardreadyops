@@ -548,9 +548,6 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@conventional-changelog/git-client@2.7.0`
   - Description: Simple git client for conventional changelog packages.
   - Homepage: https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/git-client#readme
-- `@esbuild/linux-x64@0.28.0`
-  - Description: The Linux 64-bit binary for esbuild, a JavaScript bundler.
-  - Homepage: https://github.com/evanw/esbuild#readme
 - `@html-validate/stylish@5.2.0`
   - Description: ESLint compatible stylish formatter
   - Homepage: https://gitlab.com/html-validate/stylish
@@ -664,18 +661,9 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@octokit/types@16.0.0`
   - Description: Shared TypeScript definitions for Octokit projects
   - Homepage: https://github.com/octokit/types.ts#readme
-- `@oxc-parser/binding-linux-x64-gnu@0.130.0`
-  - Description: Oxc Parser Node API
-  - Homepage: https://oxc.rs/docs/guide/usage/parser
 - `@oxc-project/types@0.130.0`
   - Description: Types for Oxc AST nodes
   - Homepage: https://oxc.rs
-- `@oxc-resolver/binding-linux-x64-gnu@11.19.1`
-  - Description: Oxc Resolver Node API
-  - Homepage: https://oxc.rs
-- `@rolldown/binding-linux-x64-gnu@1.0.1`
-  - Description: Fast JavaScript/TypeScript bundler in Rust with Rollup-compatible API.
-  - Homepage: https://rolldown.rs/
 - `@rolldown/pluginutils@1.0.1`
   - Description: Plugin utilities for Rolldown
   - Homepage: https://github.com/rolldown/plugins/tree/main/packages/pluginutils#readme
@@ -1510,8 +1498,6 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@biomejs/biome@2.4.15`
   - Description: Biome is a toolchain for the web: formatter, linter and more
   - Homepage: https://biomejs.dev
-- `@biomejs/cli-linux-x64@2.4.15`
-  - Homepage: https://biomejs.dev
 
 ## MIT/X11
 
@@ -1528,9 +1514,6 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
   - Description: Accessibility engine for automated Web UI testing
   - Homepage: https://www.deque.com/axe/
 - `lightningcss@1.32.0`
-  - Description: A CSS parser, transformer, and minifier written in Rust
-  - Homepage: https://github.com/parcel-bundler/lightningcss#readme
-- `lightningcss-linux-x64-gnu@1.32.0`
   - Description: A CSS parser, transformer, and minifier written in Rust
   - Homepage: https://github.com/parcel-bundler/lightningcss#readme
 

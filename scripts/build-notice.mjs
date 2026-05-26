@@ -4,6 +4,14 @@ import { pathToFileURL } from "node:url";
 import { readPnpmLicenseReport } from "./lib/pnpm-licenses.mjs";
 
 const OUTPUT_FILE = "NOTICE";
+const HOST_NATIVE_PACKAGE_PATTERNS = Object.freeze([
+  /^@biomejs\/cli-/,
+  /^@esbuild\//,
+  /^@oxc-parser\/binding-/,
+  /^@oxc-resolver\/binding-/,
+  /^@rolldown\/binding-/,
+  /^lightningcss-/,
+]);
 
 export async function main(root = process.cwd(), options = {}) {
   const report = await readPnpmLicenseReport(root, ["--json"]);
@@ -71,6 +79,7 @@ function licenseSections(report) {
     .map(([license, packages]) => ({
       license,
       packages: packages
+        .filter((item) => !isHostNativePackage(item.name))
         .map((item) => ({
           ...item,
           versions: [...(item.versions ?? [])].sort(compareText),
@@ -81,6 +90,10 @@ function licenseSections(report) {
         ),
     }))
     .sort((left, right) => compareText(left.license, right.license));
+}
+
+function isHostNativePackage(name) {
+  return HOST_NATIVE_PACKAGE_PATTERNS.some((pattern) => pattern.test(name));
 }
 
 function packageVersions(item) {
