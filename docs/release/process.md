@@ -45,6 +45,18 @@ workflow fix, manually run `binary-build` from `main` with the `release-tag`
 input set to that tag. The workflow checks out the tag before building, so the
 tag must contain the binary build scripts.
 
+If `binary-build` creates the GitHub Release with the workflow `GITHUB_TOKEN`,
+GitHub will not fire the `release: published` workflow event. Manually dispatch
+`publish-npm` from `main` with the `tag` input set to the published release tag:
+
+```bash
+gh workflow run publish-npm.yml -f tag=v1.0.0 -f prerelease=false
+```
+
+The workflow checks out the tag, verifies it points at `origin/main`, publishes
+the package with npm provenance, and then updates floating release tags for
+stable releases.
+
 ## Remote Verification
 
 After creating the GitHub Release:

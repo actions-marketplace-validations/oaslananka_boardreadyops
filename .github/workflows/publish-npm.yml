@@ -4,9 +4,20 @@ on:
   release:
     types:
       - published
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to publish, for example v1.1.0.
+        required: true
+        type: string
+      prerelease:
+        description: Publish to npm with the next dist-tag.
+        required: true
+        default: false
+        type: boolean
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -27,6 +38,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
           node-version: 24
@@ -60,19 +72,26 @@ jobs:
           name: sbom
           path: sbom.cyclonedx.json
       - name: Verify release commit
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.event.release.tag_name }}
         run: |
           set -euo pipefail
-          git fetch --no-tags --depth=1 origin main
-          release_commit="$(git rev-parse "${GITHUB_REF_NAME}^{commit}")"
+          git fetch --no-tags --depth=1 origin main "refs/tags/${RELEASE_TAG}:refs/tags/${RELEASE_TAG}"
+          package_version="$(jq -er '.version' package.json)"
+          if [ "v${package_version}" != "${RELEASE_TAG}" ]; then
+            echo "::error::Package version ${package_version} does not match ${RELEASE_TAG}."
+            exit 1
+          fi
+          release_commit="$(git rev-parse "${RELEASE_TAG}^{commit}")"
           main_commit="$(git rev-parse "origin/main^{commit}")"
           if [ "${release_commit}" != "${main_commit}" ]; then
-            echo "::error::Release tag ${GITHUB_REF_NAME} must point at origin/main HEAD before publishing."
+            echo "::error::Release tag ${RELEASE_TAG} must point at origin/main HEAD before publishing."
             exit 1
           fi
       - name: Publish npm package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          RELEASE_IS_PRERELEASE: ${{ github.event.release.prerelease }}
+          RELEASE_IS_PRERELEASE: ${{ github.event_name == 'workflow_dispatch' && inputs.prerelease || github.event.release.prerelease }}
         run: |
           set -euo pipefail
           if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
@@ -86,7 +105,7 @@ jobs:
           fi
 
   floating-release-tags:
-    if: github.event.release.prerelease == false
+    if: ${{ (github.event_name == 'release' && github.event.release.prerelease == false) || (github.event_name == 'workflow_dispatch' && inputs.prerelease == false) }}
     needs: publish-npm
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -97,12 +116,14 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
       - name: Update floating release tags
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.event.release.tag_name }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          bash scripts/update-floating-tags.sh "${GITHUB_REF_NAME}"
+          bash scripts/update-floating-tags.sh "${RELEASE_TAG}"
