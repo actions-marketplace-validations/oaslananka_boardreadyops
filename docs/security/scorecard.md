@@ -1,10 +1,11 @@
 # OpenSSF Scorecard
 
-BoardReadyOps runs an OpenSSF Scorecard baseline weekly. The baseline uses the
-Scorecard CLI check selection that is enforceable for stable releases and
-without human-review gating:
+BoardReadyOps runs an OpenSSF Scorecard baseline on every `main` push, weekly,
+and on manual dispatch. The baseline uses the pinned Scorecard CLI container
+`ghcr.io/ossf/scorecard:v5.5.0@sha256:3f24714e9366917adb7a05635382c97dfecb14b21eaef3dfa2ea48c8e23e0795`
+with the check selection that is enforceable for stable releases and without
+human-review gating:
 
-- `Binary-Artifacts`
 - `Dangerous-Workflow`
 - `Dependency-Update-Tool`
 - `Fuzzing`
@@ -15,7 +16,8 @@ without human-review gating:
 - `Token-Permissions`
 - `Vulnerabilities`
 
-The workflow fails when the baseline aggregate score is below `9.0`.
+The workflow fails when the baseline aggregate score or any enforced check score
+is below `9.0`.
 Branch protection is verified separately with `scripts/setup-branch-protection.sh`
 and the repository branch protection API because the default workflow token cannot
 read classic branch protection rules in Scorecard.
@@ -45,6 +47,23 @@ read classic branch protection rules in Scorecard.
 - `Code-Review`: the expected branch protection baseline requires pull requests, but the repository uses bot-only review and zero required human approvals by policy.
 - `Contributors`: the repository starts with a single maintainer.
 - `Maintained`: GitHub reports newly created repositories as young for the first 90 days.
+
+## Accepted Findings
+
+These findings are accepted outside the enforced Scorecard baseline. The owner
+is the BoardReadyOps maintainer.
+
+| Finding | Current decision | Revisit trigger |
+| --- | --- | --- |
+| `Branch-Protection` | Out of scope by maintainer decision for BOARD-56. The setup script remains the documented enforcement path. | Maintainer enables branch protection or changes the release gate policy. |
+| `Binary-Artifacts` | Accepted because `dist/` contains the committed GitHub Action and CLI bundles that are part of the public release surface and are checked by `corepack pnpm run verify:dist`. | The project stops committing action bundles or the release process moves to generated artifacts only. |
+| `Code-Review` | Accepted because the repository currently uses maintainer-operated bot PRs and zero required human approvals. | A second maintainer is added or required-review policy changes. |
+| `CI-Tests` | Accepted as time-bound while the repository history ages into the current CI policy; current PR and main workflows run the full local gate including unit, integration, action, build, docs, security, and mutation checks. | Scorecard still reports fewer than 30/30 merged PRs with CI after 30 new CI-gated merges from this policy. |
+| `CII-Best-Practices` | Accepted until the operator completes the external OpenSSF Best Practices questionnaire. | Stable release readiness review or maintainer completes the questionnaire. |
+| `Maintained` | Accepted as time-bound because GitHub reports repositories created within the first 90 days as young. | Repository age exceeds 90 days and Scorecard still reports the finding. |
+| `SAST` recent-commit coverage | Accepted as time-bound while the recent-commit window catches up to the current CodeQL and Scorecard workflows. | Scorecard still reports incomplete SAST coverage after 30 new commits with CodeQL checks. |
+| release workflow `contents: write` | Accepted where required to create release PRs, upload release assets, or update floating release tags. Publishing and tag-moving are isolated from npm provenance publishing where practical. | GitHub provides narrower release/tag permissions or the release process stops moving floating tags. |
+| self-smoke `security-events: write` | Accepted only for the SARIF upload smoke job. GitHub requires `security-events: write` to upload SARIF. | The SARIF upload path moves to a dedicated nightly/manual workflow or GitHub provides a narrower permission. |
 
 ## Required Follow-Up
 

@@ -5,6 +5,11 @@ description = "Bundled GitHub Actions artifact client contains Azure connection 
 paths = ["dist/(action|cli)/index.cjs"]
 regexes = ['''AccountKey=''']
 
+[[allowlists]]
+description = "Custom KiCad key rule documents the marker it detects."
+paths = ['''^\.gitleaks\.toml$''']
+regexes = ['''-----BEGIN KICAD PRIVATE KEY-----''']
+
 [[rules]]
 id = "kicad-private-key"
 description = "KiCad private key material must not be committed."

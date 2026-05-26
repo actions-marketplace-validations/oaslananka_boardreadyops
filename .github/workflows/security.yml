@@ -33,6 +33,9 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
   NODE_VERSION: '24'
   PNPM_VERSION: '11.1.3'
+  SCORECARD_CHECKS: Dangerous-Workflow,Dependency-Update-Tool,Fuzzing,License,Pinned-Dependencies,SAST,Security-Policy,Token-Permissions,Vulnerabilities
+  SCORECARD_IMAGE: ghcr.io/ossf/scorecard:v5.5.0@sha256:3f24714e9366917adb7a05635382c97dfecb14b21eaef3dfa2ea48c8e23e0795
+  SCORECARD_MIN_SCORE: "9.0"
 
 jobs:
   dependency-review:
@@ -147,22 +150,31 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-      security-events: write
-      id-token: write
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           persist-credentials: false
-      - name: Run scorecard advisory scan
-        uses: ossf/scorecard-action@4eaacf0543bb3f2c246792bd56e8cdeffafb205a
+      - name: Run enforced Scorecard baseline
         continue-on-error: true
+        env:
+          GITHUB_AUTH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            -e GITHUB_AUTH_TOKEN \
+            "${SCORECARD_IMAGE}" \
+            --repo="github.com/${GITHUB_REPOSITORY}" \
+            --checks="${SCORECARD_CHECKS}" \
+            --show-details \
+            --format=json > scorecard.json
+          node scripts/check-scorecard-baseline.mjs \
+            --report scorecard.json \
+            --minimum "${SCORECARD_MIN_SCORE}" \
+            --checks "${SCORECARD_CHECKS}" \
+            --summary
+      - name: Upload scorecard baseline
+        if: always() && hashFiles('scorecard.json') != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          results_format: sarif
-          results_file: scorecard.sarif
-          publish_results: true
-      - name: Upload scorecard SARIF
-        if: always() && hashFiles('scorecard.sarif') != ''
-        uses: github/codeql-action/upload-sarif@9e0d7b8d25671d64c341c19c0152d693099fb5ba
-        continue-on-error: true
-        with:
-          sarif_file: scorecard.sarif
+          name: scorecard-baseline
+          path: scorecard.json

@@ -54,6 +54,10 @@ nav:
   - Support Matrix: support-matrix.md
   - Accessibility: accessibility.md
   - Testing: testing.md
+  - Security:
+      - Policy: security/disclosure.md
+      - Threat Model: security/threat-model.md
+      - Scorecard: security/scorecard.md
   - Governance: governance.md
   - Configuration: configuration.md
   - Cross-platform Paths: cross-platform.md

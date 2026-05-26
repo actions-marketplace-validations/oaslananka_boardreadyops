@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     permissions:
-      contents: write
+      contents: read
       id-token: write
       attestations: write
     steps:
@@ -84,8 +84,20 @@ jobs:
           else
             npm publish --provenance --access public
           fi
+
+  floating-release-tags:
+    if: github.event.release.prerelease == false
+    needs: publish-npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
       - name: Update floating release tags
-        if: github.event.release.prerelease == false
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |

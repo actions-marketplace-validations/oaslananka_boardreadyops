@@ -52,11 +52,13 @@ describe("container action release surfaces", () => {
 
     expect(dockerfile).toContain("FROM ubuntu:24.04@sha256:");
     expect(dockerfile).toContain("ARG NODE_VERSION=22.");
-    expect(dockerfile).toContain("ARG NPM_VERSION=11.15.0");
+    expect(dockerfile).toContain("ARG PNPM_VERSION=11.1.3+sha512.");
     expect(dockerfile).toContain("ARG KICAD_PPA_SERIES=10.0");
     expect(dockerfile).toContain(`ppa:kicad/kicad-\${KICAD_PPA_SERIES}-releases`);
-    expect(dockerfile).toContain(`npm install --global "npm@\${NPM_VERSION}"`);
-    expect(dockerfile).toContain(`npm install --global "boardreadyops@\${BOARDREADYOPS_VERSION}"`);
+    expect(dockerfile).toContain(`corepack prepare "pnpm@\${PNPM_VERSION}" --activate`);
+    expect(dockerfile).toContain(`corepack pnpm add --global "boardreadyops@\${BOARDREADYOPS_VERSION}"`);
+    expect(dockerfile).toContain("/usr/local/lib/node_modules/npm");
+    expect(dockerfile).not.toContain("npm install --global");
     expect(dockerfile).toContain("useradd --create-home --shell /bin/bash --uid 10001 boardreadyops");
     expect(dockerfile).not.toContain("\nUSER ");
     expect(dockerfile).toContain('ENTRYPOINT ["boardreadyops"]');
