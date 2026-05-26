@@ -53,11 +53,11 @@ GitHub will not fire the `release: published` workflow event. Manually dispatch
 gh workflow run publish-npm.yml -f tag=v1.0.0 -f prerelease=false
 ```
 
-The workflow checks out the tag, verifies the tag version matches `package.json`
-and is reachable from `origin/main`, publishes the package with npm provenance,
-and then updates floating release tags for stable releases. The automatic
-`release: published` path remains stricter: the tag must point at the current
-`origin/main` HEAD.
+The workflow checks out the tag with full history, verifies the tag version
+matches `package.json` and is reachable from `origin/main`, publishes the
+package with npm provenance, and then updates floating release tags for stable
+releases. The automatic `release: published` path remains stricter: the tag
+must point at the current `origin/main` HEAD.
 
 ## Remote Verification
 
