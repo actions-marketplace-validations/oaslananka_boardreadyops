@@ -56,6 +56,7 @@
     "build": "node scripts/build.mjs",
     "build:binary": "node scripts/build-binary.mjs",
     "build:binary:verify": "node scripts/verify-binaries.mjs",
+    "build:binary:assets": "node scripts/prepare-binary-release-assets.mjs",
     "watch": "node scripts/watch.mjs",
     "compatibility:docs": "node scripts/compatibility.mjs render",
     "compatibility:check": "node scripts/compatibility.mjs render --check",

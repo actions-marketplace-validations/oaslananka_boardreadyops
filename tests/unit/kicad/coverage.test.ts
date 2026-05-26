@@ -14,6 +14,7 @@ import { activeVariantDnpRefs, parseVariants } from "../../../src/kicad/variants
 import { parseKicadMajor } from "../../../src/kicad/version.js";
 import { writeFixture } from "../rules/helpers.js";
 
+const SLOW_FIXTURE_TIMEOUT_MS = 15_000;
 const originalPlatform = process.platform;
 
 afterEach(() => {
@@ -35,21 +36,25 @@ describe("KiCad CLI adapters", () => {
     expect(await detectApiServerSupport(cli)).toEqual({ supported: true, version: "10.0.2" });
   });
 
-  it("falls back to --version and reports unsupported API server versions", async () => {
-    const root = await writeFixture({});
-    const cli = await writeExecutable(root, "dash-version-cli", [
-      `if (args[0] === "--version") {`,
-      `  process.stdout.write("9.99.0\\n");`,
-      `  process.exit(0);`,
-      `}`,
-      `process.exit(2);`,
-    ]);
+  it(
+    "falls back to --version and reports unsupported API server versions",
+    async () => {
+      const root = await writeFixture({});
+      const cli = await writeExecutable(root, "dash-version-cli", [
+        `if (args[0] === "--version") {`,
+        `  process.stdout.write("9.99.0\\n");`,
+        `  process.exit(0);`,
+        `}`,
+        `process.exit(2);`,
+      ]);
 
-    expect(await detectKicadCli(cli)).toMatchObject({ found: true, version: "9.99.0" });
-    expect(await detectApiServerSupport(cli)).toEqual({ supported: false, version: "9.99.0" });
-    expect(await detectKicadCli(path.join(root, "missing", "kicad-cli"))).toEqual({ found: false });
-    expect(await detectApiServerSupport(path.join(root, "missing", "kicad-cli"))).toEqual({ supported: false });
-  });
+      expect(await detectKicadCli(cli)).toMatchObject({ found: true, version: "9.99.0" });
+      expect(await detectApiServerSupport(cli)).toEqual({ supported: false, version: "9.99.0" });
+      expect(await detectKicadCli(path.join(root, "missing", "kicad-cli"))).toEqual({ found: false });
+      expect(await detectApiServerSupport(path.join(root, "missing", "kicad-cli"))).toEqual({ supported: false });
+    },
+    SLOW_FIXTURE_TIMEOUT_MS,
+  );
 
   it("runs DRC and ERC reports without passing unsupported variant flags", async () => {
     const root = await writeFixture({ "board.kicad_pcb": "(kicad_pcb)", "board.kicad_sch": "(kicad_sch)" });

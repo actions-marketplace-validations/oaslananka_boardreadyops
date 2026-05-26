@@ -11,7 +11,7 @@ export const BINARY_TARGETS = Object.freeze([
   binaryTarget("linux-arm64", "bun-linux-arm64", "boardreadyops-linux-arm64"),
   binaryTarget("macos-x64", "bun-darwin-x64-baseline", "boardreadyops-macos-x64"),
   binaryTarget("macos-arm64", "bun-darwin-arm64", "boardreadyops-macos-arm64"),
-  binaryTarget("windows-x64", "bun-windows-x64-baseline", "boardreadyops-win-x64.exe"),
+  binaryTarget("windows-x64", "bun-windows-x64", "boardreadyops-win-x64.exe"),
 ]);
 
 export async function main(argv = process.argv.slice(2), root = process.cwd()) {

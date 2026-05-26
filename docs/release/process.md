@@ -31,10 +31,19 @@ For a stable release:
 git status --short
 git tag -a v1.0.0 -m "v1.0.0"
 git push origin v1.0.0
-gh release create v1.0.0 --title "v1.0.0" --notes-file CHANGELOG.md --verify-tag
 ```
 
-Replace `v1.0.0` with the target semver tag. Do not retag a version that was already published. If a release workflow publishes a broken artifact, bump the next patch version and document the incident before re-releasing.
+Replace `v1.0.0` with the target semver tag. Do not retag a version that was
+already published. The `binary-build` workflow owns GitHub Release creation for
+tag pushes: it builds every supported binary, generates `SHA256SUMS`, uploads
+the SBOM, and verifies the release asset list before the release is considered
+complete. If the workflow publishes a broken artifact, bump the next patch
+version and document the incident before re-releasing.
+
+If a tag already exists but the release assets need to be attached after a
+workflow fix, manually run `binary-build` from `main` with the `release-tag`
+input set to that tag. The workflow checks out the tag before building, so the
+tag must contain the binary build scripts.
 
 ## Remote Verification
 
@@ -46,7 +55,10 @@ gh release view v1.0.0 --json tagName,isPrerelease,assets,url
 npm view boardreadyops version dist.integrity --json
 ```
 
-The release is complete only when all release workflows conclude successfully, expected artifacts are attached or uploaded, and the npm registry shows the published package version.
+The release is complete only when all release workflows conclude successfully,
+the GitHub Release contains all five binary assets plus `SHA256SUMS`, the
+checksums match those assets, and the npm registry shows the published package
+version.
 
 ## Failure Handling
 

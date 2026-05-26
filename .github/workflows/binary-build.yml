@@ -5,6 +5,11 @@ on:
     tags:
       - v*
   workflow_dispatch:
+    inputs:
+      release-tag:
+        description: "Existing release tag to attach assets to, for example v1.0.3"
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -39,6 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
+          ref: ${{ inputs['release-tag'] || github.ref }}
           persist-credentials: false
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
@@ -69,6 +75,7 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
+          ref: ${{ inputs['release-tag'] || github.ref }}
           persist-credentials: false
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
         with:
@@ -83,17 +90,10 @@ jobs:
       - run: corepack install
       - run: pnpm install --frozen-lockfile
       - run: pnpm run sbom
-      - name: Verify downloaded binary artifacts
-        run: |
-          test -f dist/binary/boardreadyops-linux-x64
-          test -f dist/binary/boardreadyops-linux-arm64
-          test -f dist/binary/boardreadyops-macos-x64
-          test -f dist/binary/boardreadyops-macos-arm64
-          test -f dist/binary/boardreadyops-win-x64.exe
-      - name: Generate binary checksums
-        run: |
-          cd dist/binary
-          sha256sum -- * > ../../SHA256SUMS
+      - name: Verify downloaded binary artifacts and generate checksums
+        run: pnpm run build:binary:assets
+      - name: Verify generated checksums are current
+        run: pnpm run build:binary:assets -- --check
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: boardreadyops-binaries
@@ -102,16 +102,34 @@ jobs:
             SHA256SUMS
             sbom.cyclonedx.json
       - name: Upload release assets
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v') || inputs['release-tag'] != ''
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs['release-tag'] || github.ref_name }}
         run: |
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" dist/binary/* SHA256SUMS sbom.cyclonedx.json
+          set -euo pipefail
+          if gh release view "${RELEASE_TAG}" >/dev/null 2>&1; then
+            gh release upload "${RELEASE_TAG}" dist/binary/* SHA256SUMS sbom.cyclonedx.json
           else
-            gh release create "$GITHUB_REF_NAME" \
+            gh release create "${RELEASE_TAG}" \
               dist/binary/* SHA256SUMS sbom.cyclonedx.json \
               --verify-tag \
               --generate-notes \
-              --title "$GITHUB_REF_NAME"
+              --title "${RELEASE_TAG}"
           fi
+      - name: Verify release asset publication
+        if: startsWith(github.ref, 'refs/tags/v') || inputs['release-tag'] != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs['release-tag'] || github.ref_name }}
+        run: |
+          set -euo pipefail
+          gh release view "${RELEASE_TAG}" --json assets --jq '
+            [.assets[].name] as $assets
+            | ["boardreadyops-linux-x64","boardreadyops-linux-arm64","boardreadyops-macos-x64","boardreadyops-macos-arm64","boardreadyops-win-x64.exe","SHA256SUMS","sbom.cyclonedx.json"] as $expected
+            | ($expected - ($expected - $assets)) as $present
+            | if ($present | length) == ($expected | length)
+              then $present
+              else error("missing release assets: " + (($expected - $assets) | join(", ")))
+              end
+          '
