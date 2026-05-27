@@ -5,10 +5,10 @@ BoardReadyOps ships a KiCad Plugin and Content Manager (PCM) package under
 editor, reads the JSON report, and shows a findings dialog with severity badges,
 board coordinates when findings include them, fix steps, and reference links.
 
-The PCM package exists in the repository on `main`. It is not present in the
-public `boardreadyops@1.0.2` npm tarball or the `v1.0.2` GitHub tag archive, and
-it has not been published through KiCad PCM. Track public package parity in
-[BOARD-65](https://linear.app/oaslananka/issue/BOARD-65/completion-follow-up-publish-package-parity-release-for-docs-node-22).
+The PCM package exists in the repository on `main` and is present in the public
+`boardreadyops@1.1.0` npm tarball and `v1.1.0` GitHub tag archive. It has not
+been published through KiCad PCM; use the manual archive flow below until a PCM
+repository submission is prepared.
 
 The package follows KiCad PCM schema v2:
 

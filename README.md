@@ -16,15 +16,13 @@ BoardReadyOps checks KiCad hardware repositories for production readiness before
 npm i -g boardreadyops
 ```
 
-The current public package is `boardreadyops@1.0.2` on npm. That release is
-verified for the npm CLI and public `v1.0.2` root GitHub Action smoke path.
-The workflow examples below pin a newer main commit because they document the
-current Action input contract from this repository. Binary installers, Homebrew,
-and the full GHCR container are tracked separately because the public `v1.0.2`
-GitHub Release does not contain binary assets, `SHA256SUMS`, or an
-anonymous-pullable container image. See
+The current public package is `boardreadyops@1.1.0` on npm. It is verified on
+Node.js 22 and 24, includes the current CLI bundle, schemas, docs, Action
+metadata, and `kicad-plugin/`, and matches the public `v1.1.0` tag archive.
+The `v1.1.0` GitHub Release also contains the binary asset matrix and
+`SHA256SUMS`; Homebrew checksum publication remains tracked in BOARD-63. See
 [release channel verification](docs/release/channel-verification.md) for the
-tested artifact list and failure matrix.
+tested artifact list and remaining channel follow-ups.
 
 ## Runtime Support
 
@@ -89,7 +87,7 @@ jobs:
       security-events: write
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: oaslananka/boardreadyops@4efcd6d73e2e0de15a39c745b1a67e6c7a4f9ce0 # current action contract
+      - uses: oaslananka/boardreadyops@41856e44bb2fc5def47a71072eccdad307301fc4 # v1.1.0
         with:
           config: boardreadyops.yml
           mode: enforce
@@ -101,13 +99,8 @@ SARIF upload requires `security-events: write`. Pull request comments require `p
 Use the full container action when a workflow should carry KiCad CLI inside the
 BoardReadyOps runtime instead of installing KiCad separately:
 
-The container workflow below is illustrative until BOARD-64 publishes an
-anonymous-pullable image and records the matching action SHA. Do not paste the
-placeholder SHA into production workflows.
-
 ```yaml
-      # Replace this placeholder with the release commit SHA that backs v1.
-      - uses: oaslananka/boardreadyops/apps/container@0123456789abcdef0123456789abcdef01234567 # v1
+      - uses: oaslananka/boardreadyops/apps/container@41856e44bb2fc5def47a71072eccdad307301fc4 # v1.1.0
         with:
           config: boardreadyops.yml
           require-kicad: "true"
@@ -120,11 +113,10 @@ The same image can run as a CLI:
 docker run --rm ghcr.io/oaslananka/boardreadyops-full:v1 --help
 ```
 
-The public `ghcr.io/oaslananka/boardreadyops-full:v1` image must be considered
-unavailable until anonymous `docker manifest inspect` succeeds and the digest is
-recorded in the release verification matrix. The direct `docker run` command is
-the intended final shape, but it is blocked for anonymous consumers while that
-manifest request returns `denied`.
+The `v1`, `v1.1.0`, and `latest` container tags currently resolve to OCI index
+digest `sha256:5258e7de0e25382894c70164e990820f78a7fdfce92453932e2f75d51728934b`
+with `linux/amd64` and `linux/arm64` manifests. Anonymous pull and a clean
+container Action sample workflow remain tracked in BOARD-64.
 
 ## CLI
 

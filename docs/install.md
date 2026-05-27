@@ -8,28 +8,22 @@ boardreadyops --help
 boardreadyops doctor
 ```
 
-The current public npm package is `boardreadyops@1.0.2`. It installs and runs
-on Node.js 24. Current repository support for Node.js 22 is not present in that
-published package metadata yet; use the next release that includes the updated
-support matrix when Node.js 22 is required. The documentation site tracks the
-current repository contract, so post-`v1.0.2` CLI additions such as JSON doctor
-output, HTML report configuration, HBOM Action inputs, and KiCad plugin package
-contents remain tracked in BOARD-65 until the next parity release.
+The current public npm package is `boardreadyops@1.1.0`. It declares Node.js 22
+and 24 support, provides `boardreadyops doctor --format json`, accepts HTML and
+JUnit report outputs in `boardreadyops.yml`, and ships the current docs,
+schemas, Action metadata, and `kicad-plugin/` package contents.
 
 For one-off use from a clean consumer directory:
 
 ```bash
-npx -y boardreadyops@1.0.2 --help
+npx -y boardreadyops@1.1.0 --help
 ```
 
 ## Binary Installers
 
 The shell and PowerShell installers require a GitHub Release that contains the
-platform binary asset and `SHA256SUMS`.
-
-The following installer commands are the intended copy-paste form after
-BOARD-63 publishes those assets. They are intentionally not supported for the
-public `v1.0.2` release.
+platform binary asset and `SHA256SUMS`. The `v1.1.0` release contains the Linux,
+macOS, and Windows binary matrix plus checksums.
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/oaslananka/boardreadyops/main/install.sh | sh
@@ -39,17 +33,17 @@ curl -fsSL https://raw.githubusercontent.com/oaslananka/boardreadyops/main/insta
 irm https://raw.githubusercontent.com/oaslananka/boardreadyops/main/install.ps1 | iex
 ```
 
-The public `v1.0.2` release has no binary assets, so these installer commands
-are not supported for that tag and currently return 404. Track the release asset
-follow-up in
+Pin a specific release during validation with `BOARDREADYOPS_VERSION`, for
+example `BOARDREADYOPS_VERSION=1.1.0`. Homebrew checksum publication and the
+remaining installer OS matrix evidence are tracked in
 [BOARD-63](https://linear.app/oaslananka/issue/BOARD-63/completion-follow-up-publish-binary-release-assets-and-homebrew).
 
 ## Homebrew
 
 `Formula/boardreadyops.rb` is a template for a tap formula. It contains
 fail-closed checksum placeholders until a release publishes binary assets and
-`SHA256SUMS`. Do not publish or use the formula for `v1.0.2`; track checksum
-publication in
+`SHA256SUMS` are wired into the formula. Do not publish or use the formula until
+real release checksums replace the placeholders; track checksum publication in
 [BOARD-63](https://linear.app/oaslananka/issue/BOARD-63/completion-follow-up-publish-binary-release-assets-and-homebrew).
 
 ## Verification Status
