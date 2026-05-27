@@ -15,6 +15,11 @@ on:
         description: Published boardreadyops npm version to install in the container.
         required: false
         type: string
+      publish:
+        description: Publish GHCR tags for the provided version from the selected workflow ref.
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -116,7 +121,7 @@ jobs:
 
   publish:
     name: container-build / publish
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.publish)
     needs: smoke
     runs-on: ubuntu-24.04
     timeout-minutes: 60
@@ -129,10 +134,21 @@ jobs:
         with:
           persist-credentials: false
       - id: package
-        name: Resolve tagged npm package version
+        name: Resolve npm package version
+        env:
+          MANUAL_VERSION: ${{ inputs.version }}
         run: |
           set -euo pipefail
-          echo "version=${GITHUB_REF_NAME#v}" >> "${GITHUB_OUTPUT}"
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            version="${GITHUB_REF_NAME#v}"
+          else
+            version="${MANUAL_VERSION#v}"
+          fi
+          if [ -z "${version}" ]; then
+            echo "::error::workflow_dispatch publish requires a version input"
+            exit 1
+          fi
+          echo "version=${version}" >> "${GITHUB_OUTPUT}"
       - name: Wait for npm package availability
         env:
           PACKAGE_VERSION: ${{ steps.package.outputs.version }}
@@ -151,8 +167,13 @@ jobs:
         name: Resolve image tags
         run: |
           set -euo pipefail
-          tag="${GITHUB_REF_NAME}"
-          version="${tag#v}"
+          version="${{ steps.package.outputs.version }}"
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            tag="${GITHUB_REF_NAME}"
+          else
+            tag="v${version}"
+          fi
+          echo "image-tag=${tag}" >> "${GITHUB_OUTPUT}"
           {
             echo "tags<<TAGS"
             echo "${IMAGE_NAME}:${tag}"
@@ -184,7 +205,7 @@ jobs:
           labels: |
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
             org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.version=${{ github.ref_name }}
+            org.opencontainers.image.version=${{ steps.image-tags.outputs.image-tag }}
           build-args: |
             BOARDREADYOPS_VERSION=${{ steps.package.outputs.version }}
             NODE_VERSION=${{ env.NODE_VERSION }}

@@ -68,6 +68,18 @@ retagging the released commit. Binary and container release workflows trigger
 only on full semver tags like `v1.1.0`; floating tags such as `v1` and `v1.1`
 must not create separate release artifacts.
 
+If the semver tag is already published but the container image needs to be
+repaired with the current container packaging from `main`, manually dispatch the
+container workflow with an explicit version and publish flag:
+
+```bash
+gh workflow run container-build.yml --ref main -f version=1.1.0 -f publish=true
+```
+
+This path builds the current container definition around the already-published
+npm package version, then publishes `ghcr.io/oaslananka/boardreadyops-full:vX.Y.Z`.
+For stable versions it also updates the `vX` and `latest` image aliases.
+
 ## Remote Verification
 
 After creating the GitHub Release:

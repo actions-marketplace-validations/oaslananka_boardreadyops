@@ -133,6 +133,19 @@ describe("container action release surfaces", () => {
     expect(workflow).toContain("aquasecurity/trivy-action@");
   });
 
+  it("allows explicit manual GHCR publish for an already-published package version", async () => {
+    const workflow = await readFile(".github/workflows/container-build.yml", "utf8");
+
+    expect(workflow).toContain("publish:");
+    expect(workflow).toContain("type: boolean");
+    expect(workflow).toContain(`github.event_name == 'workflow_dispatch' && inputs.publish`);
+    expect(workflow).toContain("workflow_dispatch publish requires a version input");
+    expect(workflow).toContain(`tag="v${shellVariable("version")}"`);
+    expect(workflow).toContain(
+      `org.opencontainers.image.version=${actionExpression("steps.image-tags.outputs.image-tag")}`,
+    );
+  });
+
   it("waits for npm package availability before publishing the container", async () => {
     const workflow = await readFile(".github/workflows/container-build.yml", "utf8");
 
