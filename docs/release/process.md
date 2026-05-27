@@ -59,6 +59,11 @@ package with npm provenance, and then updates floating release tags for stable
 releases. The automatic `release: published` path remains stricter: the tag
 must point at the current `origin/main` HEAD.
 
+If npm publishing succeeds but the floating release tag job fails, rerun the
+workflow after confirming the `vMAJOR` and `vMAJOR.MINOR` floating tags resolve
+to the release commit. The publish job is idempotent for already-published
+versions, and the tag update script skips no-op pushes.
+
 ## Remote Verification
 
 After creating the GitHub Release:

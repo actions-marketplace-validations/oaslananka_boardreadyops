@@ -100,6 +100,12 @@ jobs:
           RELEASE_IS_PRERELEASE: ${{ github.event_name == 'workflow_dispatch' && inputs.prerelease || github.event.release.prerelease }}
         run: |
           set -euo pipefail
+          package_version="$(jq -er '.version' package.json)"
+          published_version="$(npm view "boardreadyops@${package_version}" version --json 2>/dev/null | jq -r '. // empty' || true)"
+          if [ "${published_version}" = "${package_version}" ]; then
+            echo "boardreadyops@${package_version} is already published; skipping npm publish."
+            exit 0
+          fi
           if [ -z "${NODE_AUTH_TOKEN:-}" ]; then
             echo "::error::NPM_TOKEN secret must be configured before npm publishing."
             exit 1
