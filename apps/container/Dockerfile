@@ -1,12 +1,8 @@
 FROM ubuntu:24.04@sha256:c4a8d5503dfb2a3eb8ab5f807da5bc69a85730fb49b5cfca2330194ebcc41c7b
 
 ARG NODE_VERSION=22.22.3
-ARG PNPM_VERSION=11.1.3+sha512.c85357fe17ca12dd23dd7071822666dfd7e3cb76fe214e3370b5ea2fb34f2a231185509b63e717f3cd0acb38dd3f8d82bcd5e8172400ae678b70ea4fbed0896d
 ARG BOARDREADYOPS_VERSION=latest
 ARG KICAD_PPA_SERIES=10.0
-
-ENV PNPM_HOME=/usr/local/share/pnpm
-ENV PATH="${PNPM_HOME}/bin:${PNPM_HOME}:${PATH}"
 
 LABEL org.opencontainers.image.source="https://github.com/oaslananka/boardreadyops"
 LABEL org.opencontainers.image.description="BoardReadyOps with KiCad CLI preinstalled."
@@ -40,11 +36,8 @@ RUN set -eux; \
     npm --version
 
 RUN set -eux; \
-    mkdir -p "${PNPM_HOME}/bin"; \
-    corepack enable; \
-    corepack prepare "pnpm@${PNPM_VERSION}" --activate; \
-    PNPM_CONFIG_UPDATE_NOTIFIER=false corepack pnpm add --global "boardreadyops@${BOARDREADYOPS_VERSION}"; \
-    rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx; \
+    NPM_CONFIG_UPDATE_NOTIFIER=false npm install --global --no-audit --no-fund "boardreadyops@${BOARDREADYOPS_VERSION}"; \
+    rm -rf /root/.npm /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx; \
     boardreadyops --version; \
     kicad-cli version; \
     mkdir -p /usr/share/doc/boardreadyops; \

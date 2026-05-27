@@ -128,7 +128,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.ref }}
       - name: Update floating release tags
         env:
           GITHUB_TOKEN: ${{ github.token }}

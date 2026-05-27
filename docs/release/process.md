@@ -62,7 +62,11 @@ must point at the current `origin/main` HEAD.
 If npm publishing succeeds but the floating release tag job fails, rerun the
 workflow after confirming the `vMAJOR` and `vMAJOR.MINOR` floating tags resolve
 to the release commit. The publish job is idempotent for already-published
-versions, and the tag update script skips no-op pushes.
+versions. For manual dispatches, floating-tag repair uses the workflow and
+script from the selected `main` ref, so fixes to the retry path do not require
+retagging the released commit. Binary and container release workflows trigger
+only on full semver tags like `v1.1.0`; floating tags such as `v1` and `v1.1`
+must not create separate release artifacts.
 
 ## Remote Verification
 
