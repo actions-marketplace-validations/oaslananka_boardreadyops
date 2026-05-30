@@ -15,7 +15,7 @@ import { checkCommand } from "./commands/check.js";
 import { type DoctorCommandOptions, doctorCommand } from "./commands/doctor.js";
 import { explainCommand } from "./commands/explain.js";
 import { type FixCliOptions, fixCommand } from "./commands/fix.js";
-import { initCommand } from "./commands/init.js";
+import { type InitCommandOptions, initCommand } from "./commands/init.js";
 import { addCommonOptions, type CommonCliOptions, runCommand } from "./commands/run.js";
 import { type SbomCliOptions, sbomCommand } from "./commands/sbom.js";
 import { schemaCommand } from "./commands/schema.js";
@@ -100,9 +100,15 @@ export async function runCli(
       process.exitCode = await sbomCommand(pathInput, options, streams);
     });
 
-  program.command("init").action(async () => {
-    process.exitCode = await initCommand(process.cwd(), streams);
-  });
+  program
+    .command("init")
+    .option("--profile <profile>", "configuration profile: basic, ci, manufacturing, strict, kicad-plugin", "basic")
+    .option("--workflow <type>", "generate GitHub Actions workflow (github)")
+    .option("--output <path>", "output directory for generated files")
+    .option("--force", "overwrite existing files")
+    .action(async (options: InitCommandOptions) => {
+      process.exitCode = await initCommand(process.cwd(), options, streams);
+    });
 
   const baseline = program.command("baseline").description("capture and maintain finding baselines");
   addBaselineOptions(baseline.command("capture").argument("[path]", "directory to scan")).action(

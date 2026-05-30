@@ -11,11 +11,6 @@ site/
 /reports/
 sbom.cyclonedx.json
 SHA256SUMS
-.codex-checkpoints/
-PROMPT.md
-AUTONOMOUS_BUILD.md
-AGENT_ORDERS*.md
-NEXT.md
 *.log
 .env
 .env.*

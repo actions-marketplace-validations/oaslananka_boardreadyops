@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 env:
-  UV_VERSION: "0.9.14"
+  UV_VERSION: "0.11.16"
 
 jobs:
   zizmor:
@@ -32,4 +32,3 @@ jobs:
           enable-cache: false
       - name: Run zizmor advisory scan
         run: uvx --from zizmor==1.25.2 zizmor .github/workflows --min-severity medium
-        continue-on-error: true

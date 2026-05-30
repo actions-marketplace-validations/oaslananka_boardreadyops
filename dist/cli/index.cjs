@@ -17141,7 +17141,7 @@ var require_typescript = __commonJS({
         walkUpParenthesizedTypesAndGetParentAndChild: () => walkUpParenthesizedTypesAndGetParentAndChild,
         whitespaceOrMapCommentRegExp: () => whitespaceOrMapCommentRegExp,
         writeCommentRange: () => writeCommentRange,
-        writeFile: () => writeFile,
+        writeFile: () => writeFile2,
         writeFileEnsuringDirectories: () => writeFileEnsuringDirectories,
         zipWith: () => zipWith
       });
@@ -23481,7 +23481,7 @@ ${lanes.join("\n")}
               return process.stdout.isTTY;
             },
             readFile,
-            writeFile: writeFile2,
+            writeFile: writeFile22,
             watchFile: watchFile2,
             watchDirectory,
             preferNonRecursiveWatch: !fsSupportsRecursiveFsWatch,
@@ -23711,7 +23711,7 @@ ${lanes.join("\n")}
             }
             return buffer.toString("utf8");
           }
-          function writeFile2(fileName, data, writeByteOrderMark) {
+          function writeFile22(fileName, data, writeByteOrderMark) {
             if (writeByteOrderMark) {
               data = byteOrderMarkIndicator + data;
             }
@@ -35861,7 +35861,7 @@ ${lanes.join("\n")}
         sourceFilePath = isSourceFileInCommonSourceDirectory ? sourceFilePath.substring(commonSourceDirectory.length) : sourceFilePath;
         return combinePaths(newDirPath, sourceFilePath);
       }
-      function writeFile(host, diagnostics, fileName, text, writeByteOrderMark, sourceFiles, data) {
+      function writeFile2(host, diagnostics, fileName, text, writeByteOrderMark, sourceFiles, data) {
         host.writeFile(
           fileName,
           text,
@@ -35880,12 +35880,12 @@ ${lanes.join("\n")}
           createDirectory(directoryPath);
         }
       }
-      function writeFileEnsuringDirectories(path41, data, writeByteOrderMark, writeFile2, createDirectory, directoryExists) {
+      function writeFileEnsuringDirectories(path41, data, writeByteOrderMark, writeFile22, createDirectory, directoryExists) {
         try {
-          writeFile2(path41, data, writeByteOrderMark);
+          writeFile22(path41, data, writeByteOrderMark);
         } catch {
           ensureDirectoriesExist(getDirectoryPath(normalizePath3(path41)), createDirectory, directoryExists);
-          writeFile2(path41, data, writeByteOrderMark);
+          writeFile22(path41, data, writeByteOrderMark);
         }
       }
       function getLineOfLocalPosition(sourceFile, pos) {
@@ -145119,7 +145119,7 @@ ${lanes.join("\n")}
             return;
           }
           const buildInfo = host.getBuildInfo() || { version: version2 };
-          writeFile(
+          writeFile2(
             host,
             emitterDiagnostics,
             buildInfoPath,
@@ -145331,7 +145331,7 @@ ${lanes.join("\n")}
             }
             if (sourceMapFilePath) {
               const sourceMap = sourceMapGenerator.toString();
-              writeFile(
+              writeFile2(
                 host,
                 emitterDiagnostics,
                 sourceMapFilePath,
@@ -145346,7 +145346,7 @@ ${lanes.join("\n")}
           }
           const text = writer.getText();
           const data = { sourceMapUrlPos, diagnostics: transform22.diagnostics };
-          writeFile(host, emitterDiagnostics, jsFilePath, text, !!compilerOptions.emitBOM, sourceFiles, data);
+          writeFile2(host, emitterDiagnostics, jsFilePath, text, !!compilerOptions.emitBOM, sourceFiles, data);
           writer.clear();
           return !data.skippedDtsWrite;
         }
@@ -145531,7 +145531,7 @@ ${lanes.join("\n")}
           // internal API
           writeNode: writeNode2,
           writeList,
-          writeFile: writeFile2,
+          writeFile: writeFile22,
           writeBundle
         };
         function printNode(hint, node, sourceFile) {
@@ -145569,7 +145569,7 @@ ${lanes.join("\n")}
           return endPrint();
         }
         function printFile(sourceFile) {
-          writeFile2(
+          writeFile22(
             sourceFile,
             beginPrint(),
             /*sourceMapGenerator*/
@@ -145621,7 +145621,7 @@ ${lanes.join("\n")}
           reset2();
           writer = previousWriter;
         }
-        function writeFile2(sourceFile, output, sourceMapGenerator2) {
+        function writeFile22(sourceFile, output, sourceMapGenerator2) {
           isOwnFileEmit = true;
           const previousWriter = writer;
           setWriter(output, sourceMapGenerator2);
@@ -150186,7 +150186,7 @@ ${lanes.join("\n")}
           getDirectories,
           readDirectory: readDirectory2,
           createDirectory: host.createDirectory && createDirectory,
-          writeFile: host.writeFile && writeFile2,
+          writeFile: host.writeFile && writeFile22,
           addOrDeleteFileOrDirectory,
           addOrDeleteFile,
           clearCache: clearCache3,
@@ -150253,7 +150253,7 @@ ${lanes.join("\n")}
           const index = binarySearch(entries, name, identity, compareStringsCaseSensitive);
           return index >= 0;
         }
-        function writeFile2(fileName, data, writeByteOrderMark) {
+        function writeFile22(fileName, data, writeByteOrderMark) {
           const path41 = toPath3(fileName);
           const result = getCachedFileSystemEntriesForBaseDir(path41);
           if (result) {
@@ -151868,7 +151868,7 @@ ${lanes.join("\n")}
           getCanonicalFileName,
           getFileIncludeReasons: () => programDiagnostics.getFileReasons(),
           structureIsReused,
-          writeFile: writeFile2,
+          writeFile: writeFile22,
           getGlobalTypingsCacheLocation: maybeBind(host, host.getGlobalTypingsCacheLocation)
         };
         onProgramCreateComplete();
@@ -152364,7 +152364,7 @@ ${lanes.join("\n")}
             getRedirectFromSourceFile,
             isSourceOfProjectReferenceRedirect,
             getSymlinkCache,
-            writeFile: writeFileCallback || writeFile2,
+            writeFile: writeFileCallback || writeFile22,
             isEmitBlocked,
             shouldTransformImportCall,
             getEmitModuleFormatOfFile: getEmitModuleFormatOfFile2,
@@ -152392,7 +152392,7 @@ ${lanes.join("\n")}
             getGlobalTypingsCacheLocation: program2.getGlobalTypingsCacheLocation
           };
         }
-        function writeFile2(fileName, text, writeByteOrderMark, onError, sourceFiles, data) {
+        function writeFile22(fileName, text, writeByteOrderMark, onError, sourceFiles, data) {
           host.writeFile(fileName, text, writeByteOrderMark, onError, sourceFiles, data);
         }
         function emitBuildInfo(writeFileCallback) {
@@ -154559,10 +154559,10 @@ ${lanes.join("\n")}
         }
       }
       var emitSkippedWithNoDiagnostics = { diagnostics: emptyArray, sourceMaps: void 0, emittedFiles: void 0, emitSkipped: true };
-      function handleNoEmitOptions(program2, sourceFile, writeFile2, cancellationToken) {
+      function handleNoEmitOptions(program2, sourceFile, writeFile22, cancellationToken) {
         const options = program2.getCompilerOptions();
         if (options.noEmit) {
-          return sourceFile ? emitSkippedWithNoDiagnostics : program2.emitBuildInfo(writeFile2, cancellationToken);
+          return sourceFile ? emitSkippedWithNoDiagnostics : program2.emitBuildInfo(writeFile22, cancellationToken);
         }
         if (!options.noEmitOnError) return void 0;
         let diagnostics = [
@@ -154581,7 +154581,7 @@ ${lanes.join("\n")}
         if (!diagnostics.length) return void 0;
         let emittedFiles;
         if (!sourceFile) {
-          const emitResult = program2.emitBuildInfo(writeFile2, cancellationToken);
+          const emitResult = program2.emitBuildInfo(writeFile22, cancellationToken);
           if (emitResult.diagnostics) diagnostics = [...diagnostics, ...emitResult.diagnostics];
           emittedFiles = emitResult.emittedFiles;
         }
@@ -154951,9 +154951,9 @@ ${lanes.join("\n")}
       }
       function getFileEmitOutput(program2, sourceFile, emitOnlyDtsFiles, cancellationToken, customTransformers, forceDtsEmit) {
         const outputFiles = [];
-        const { emitSkipped, diagnostics } = program2.emit(sourceFile, writeFile2, cancellationToken, emitOnlyDtsFiles, customTransformers, forceDtsEmit);
+        const { emitSkipped, diagnostics } = program2.emit(sourceFile, writeFile22, cancellationToken, emitOnlyDtsFiles, customTransformers, forceDtsEmit);
         return { outputFiles, emitSkipped, diagnostics };
-        function writeFile2(fileName, text, writeByteOrderMark) {
+        function writeFile22(fileName, text, writeByteOrderMark) {
           outputFiles.push({ name: fileName, writeByteOrderMark, text });
         }
       }
@@ -156312,11 +156312,11 @@ ${lanes.join("\n")}
           notImplemented();
         }
         return builderProgram;
-        function emitBuildInfo(writeFile2, cancellationToken) {
+        function emitBuildInfo(writeFile22, cancellationToken) {
           Debug.assert(isBuilderProgramStateWithDefinedProgram(state));
           if (getBuildInfoEmitPending(state)) {
             const result = state.program.emitBuildInfo(
-              writeFile2 || maybeBind(host, host.writeFile),
+              writeFile22 || maybeBind(host, host.writeFile),
               cancellationToken
             );
             state.buildInfoEmitPending = false;
@@ -156324,7 +156324,7 @@ ${lanes.join("\n")}
           }
           return emitSkippedWithNoDiagnostics;
         }
-        function emitNextAffectedFileOrDtsErrors(writeFile2, cancellationToken, emitOnlyDtsFiles, customTransformers, isForDtsErrors) {
+        function emitNextAffectedFileOrDtsErrors(writeFile22, cancellationToken, emitOnlyDtsFiles, customTransformers, isForDtsErrors) {
           var _a3, _b, _c, _d;
           Debug.assert(isBuilderProgramStateWithDefinedProgram(state));
           let affected = getNextAffectedFile(state, cancellationToken, host);
@@ -156382,7 +156382,7 @@ ${lanes.join("\n")}
               if (isForDtsErrors || !getBuildInfoEmitPending(state)) return void 0;
               const affected2 = state.program;
               const result2 = affected2.emitBuildInfo(
-                writeFile2 || maybeBind(host, host.writeFile),
+                writeFile22 || maybeBind(host, host.writeFile),
                 cancellationToken
               );
               state.buildInfoEmitPending = false;
@@ -156394,7 +156394,7 @@ ${lanes.join("\n")}
           if (emitKind & 56) emitOnly = emitOnly === void 0 ? 1 : void 0;
           const result = !isForDtsErrors ? state.program.emit(
             affected === state.program ? void 0 : affected,
-            getWriteFileCallback(writeFile2, customTransformers),
+            getWriteFileCallback(writeFile22, customTransformers),
             cancellationToken,
             emitOnly,
             customTransformers,
@@ -156440,9 +156440,9 @@ ${lanes.join("\n")}
           });
           if (emitDiagnosticsPerFile) state.emitDiagnosticsPerFile = emitDiagnosticsPerFile;
         }
-        function emitNextAffectedFile(writeFile2, cancellationToken, emitOnlyDtsFiles, customTransformers) {
+        function emitNextAffectedFile(writeFile22, cancellationToken, emitOnlyDtsFiles, customTransformers) {
           return emitNextAffectedFileOrDtsErrors(
-            writeFile2,
+            writeFile22,
             cancellationToken,
             emitOnlyDtsFiles,
             customTransformers,
@@ -156450,9 +156450,9 @@ ${lanes.join("\n")}
             false
           );
         }
-        function getWriteFileCallback(writeFile2, customTransformers) {
+        function getWriteFileCallback(writeFile22, customTransformers) {
           Debug.assert(isBuilderProgramStateWithDefinedProgram(state));
-          if (!getEmitDeclarations(state.compilerOptions)) return writeFile2 || maybeBind(host, host.writeFile);
+          if (!getEmitDeclarations(state.compilerOptions)) return writeFile22 || maybeBind(host, host.writeFile);
           return (fileName, text, writeByteOrderMark, onError, sourceFiles, data) => {
             var _a3, _b, _c;
             if (isDeclarationFileName(fileName)) {
@@ -156503,7 +156503,7 @@ ${lanes.join("\n")}
                 state.outSignature = newSignature;
               }
             }
-            if (writeFile2) writeFile2(fileName, text, writeByteOrderMark, onError, sourceFiles, data);
+            if (writeFile22) writeFile22(fileName, text, writeByteOrderMark, onError, sourceFiles, data);
             else if (host.writeFile) host.writeFile(fileName, text, writeByteOrderMark, onError, sourceFiles, data);
             else state.program.writeFile(fileName, text, writeByteOrderMark, onError, sourceFiles, data);
             function handleNewSignature(oldSignatureFormat, newSignature) {
@@ -156521,12 +156521,12 @@ ${lanes.join("\n")}
             }
           };
         }
-        function emit(targetSourceFile, writeFile2, cancellationToken, emitOnlyDtsFiles, customTransformers) {
+        function emit(targetSourceFile, writeFile22, cancellationToken, emitOnlyDtsFiles, customTransformers) {
           Debug.assert(isBuilderProgramStateWithDefinedProgram(state));
           if (kind === 1) {
             assertSourceFileOkWithoutNextAffectedCall(state, targetSourceFile);
           }
-          const result = handleNoEmitOptions(builderProgram, targetSourceFile, writeFile2, cancellationToken);
+          const result = handleNoEmitOptions(builderProgram, targetSourceFile, writeFile22, cancellationToken);
           if (result) return result;
           if (!targetSourceFile) {
             if (kind === 1) {
@@ -156536,7 +156536,7 @@ ${lanes.join("\n")}
               let emittedFiles = [];
               let affectedEmitResult;
               while (affectedEmitResult = emitNextAffectedFile(
-                writeFile2,
+                writeFile22,
                 cancellationToken,
                 emitOnlyDtsFiles,
                 customTransformers
@@ -156563,7 +156563,7 @@ ${lanes.join("\n")}
           }
           const emitResult = state.program.emit(
             targetSourceFile,
-            getWriteFileCallback(writeFile2, customTransformers),
+            getWriteFileCallback(writeFile22, customTransformers),
             cancellationToken,
             emitOnlyDtsFiles,
             customTransformers
@@ -156878,8 +156878,8 @@ ${lanes.join("\n")}
           getSyntacticDiagnostics: (sourceFile, cancellationToken) => getProgram().getSyntacticDiagnostics(sourceFile, cancellationToken),
           getDeclarationDiagnostics: (sourceFile, cancellationToken) => getProgram().getDeclarationDiagnostics(sourceFile, cancellationToken),
           getSemanticDiagnostics: (sourceFile, cancellationToken) => getProgram().getSemanticDiagnostics(sourceFile, cancellationToken),
-          emit: (sourceFile, writeFile2, cancellationToken, emitOnlyDts, customTransformers) => getProgram().emit(sourceFile, writeFile2, cancellationToken, emitOnlyDts, customTransformers),
-          emitBuildInfo: (writeFile2, cancellationToken) => getProgram().emitBuildInfo(writeFile2, cancellationToken),
+          emit: (sourceFile, writeFile22, cancellationToken, emitOnlyDts, customTransformers) => getProgram().emit(sourceFile, writeFile22, cancellationToken, emitOnlyDts, customTransformers),
+          emitBuildInfo: (writeFile22, cancellationToken) => getProgram().emitBuildInfo(writeFile22, cancellationToken),
           getAllDependencies: notImplemented,
           getCurrentDirectory: () => getProgram().getCurrentDirectory(),
           close: noop
@@ -158438,7 +158438,7 @@ ${lanes.join("\n")}
         const fileName = isString(file2) ? file2 : file2.fileName;
         return fileNameConvertor ? fileNameConvertor(fileName) : fileName;
       }
-      function emitFilesAndReportErrors(program2, reportDiagnostic, write, reportSummary, writeFile2, cancellationToken, emitOnlyDtsFiles, customTransformers) {
+      function emitFilesAndReportErrors(program2, reportDiagnostic, write, reportSummary, writeFile22, cancellationToken, emitOnlyDtsFiles, customTransformers) {
         const options = program2.getCompilerOptions();
         const allDiagnostics = program2.getConfigFileParsingDiagnostics().slice();
         const configFileParsingDiagnosticsLength = allDiagnostics.length;
@@ -158470,7 +158470,7 @@ ${lanes.join("\n")}
         const emitResult = options.listFilesOnly ? { emitSkipped: true, diagnostics: emptyArray } : program2.emit(
           /*targetSourceFile*/
           void 0,
-          writeFile2,
+          writeFile22,
           cancellationToken,
           emitOnlyDtsFiles,
           customTransformers
@@ -158494,13 +158494,13 @@ ${lanes.join("\n")}
           diagnostics
         };
       }
-      function emitFilesAndReportErrorsAndGetExitStatus(program2, reportDiagnostic, write, reportSummary, writeFile2, cancellationToken, emitOnlyDtsFiles, customTransformers) {
+      function emitFilesAndReportErrorsAndGetExitStatus(program2, reportDiagnostic, write, reportSummary, writeFile22, cancellationToken, emitOnlyDtsFiles, customTransformers) {
         const { emitResult, diagnostics } = emitFilesAndReportErrors(
           program2,
           reportDiagnostic,
           write,
           reportSummary,
-          writeFile2,
+          writeFile22,
           cancellationToken,
           emitOnlyDtsFiles,
           customTransformers
@@ -160000,22 +160000,22 @@ ${lanes.join("\n")}
           getSemanticDiagnosticsOfNextAffectedFile: (cancellationToken, ignoreSourceFile) => withProgramOrUndefined(
             (program22) => program22.getSemanticDiagnosticsOfNextAffectedFile && program22.getSemanticDiagnosticsOfNextAffectedFile(cancellationToken, ignoreSourceFile)
           ),
-          emit: (targetSourceFile, writeFile2, cancellationToken, emitOnlyDtsFiles, customTransformers) => {
+          emit: (targetSourceFile, writeFile22, cancellationToken, emitOnlyDtsFiles, customTransformers) => {
             if (targetSourceFile || emitOnlyDtsFiles) {
               return withProgramOrUndefined(
                 (program22) => {
                   var _a3, _b;
-                  return program22.emit(targetSourceFile, writeFile2, cancellationToken, emitOnlyDtsFiles, customTransformers || ((_b = (_a3 = state.host).getCustomTransformers) == null ? void 0 : _b.call(_a3, project)));
+                  return program22.emit(targetSourceFile, writeFile22, cancellationToken, emitOnlyDtsFiles, customTransformers || ((_b = (_a3 = state.host).getCustomTransformers) == null ? void 0 : _b.call(_a3, project)));
                 }
               );
             }
             executeSteps(0, cancellationToken);
-            return emit(writeFile2, cancellationToken, customTransformers);
+            return emit(writeFile22, cancellationToken, customTransformers);
           },
           done
         };
-        function done(cancellationToken, writeFile2, customTransformers) {
-          executeSteps(3, cancellationToken, writeFile2, customTransformers);
+        function done(cancellationToken, writeFile22, customTransformers) {
+          executeSteps(3, cancellationToken, writeFile22, customTransformers);
           mark("SolutionBuilder::Projects built");
           return doneInvalidatedProject(state, projectPath);
         }
@@ -160149,7 +160149,7 @@ ${lanes.join("\n")}
           step = 2;
           return emitResult;
         }
-        function executeSteps(till, cancellationToken, writeFile2, customTransformers) {
+        function executeSteps(till, cancellationToken, writeFile22, customTransformers) {
           while (step <= till && step < 3) {
             const currentStep = step;
             switch (step) {
@@ -160157,7 +160157,7 @@ ${lanes.join("\n")}
                 createProgram2();
                 break;
               case 1:
-                emit(writeFile2, cancellationToken, customTransformers);
+                emit(writeFile22, cancellationToken, customTransformers);
                 break;
               case 2:
                 queueReferencingProjects(state, project, projectPath, projectIndex, config2, buildOrder, Debug.checkDefined(buildResult));
@@ -160744,14 +160744,14 @@ ${lanes.join("\n")}
           }
         }
       }
-      function build(state, project, cancellationToken, writeFile2, getCustomTransformers, onlyReferences) {
+      function build(state, project, cancellationToken, writeFile22, getCustomTransformers, onlyReferences) {
         mark("SolutionBuilder::beforeBuild");
-        const result = buildWorker(state, project, cancellationToken, writeFile2, getCustomTransformers, onlyReferences);
+        const result = buildWorker(state, project, cancellationToken, writeFile22, getCustomTransformers, onlyReferences);
         mark("SolutionBuilder::afterBuild");
         measure("SolutionBuilder::Build", "SolutionBuilder::beforeBuild", "SolutionBuilder::afterBuild");
         return result;
       }
-      function buildWorker(state, project, cancellationToken, writeFile2, getCustomTransformers, onlyReferences) {
+      function buildWorker(state, project, cancellationToken, writeFile22, getCustomTransformers, onlyReferences) {
         const buildOrder = getBuildOrderFor(state, project, onlyReferences);
         if (!buildOrder) return 3;
         setupInitialBuild(state, cancellationToken);
@@ -160761,7 +160761,7 @@ ${lanes.join("\n")}
           const invalidatedProject = getNextInvalidatedProject(state, buildOrder, reportQueue);
           if (!invalidatedProject) break;
           reportQueue = false;
-          invalidatedProject.done(cancellationToken, writeFile2, getCustomTransformers == null ? void 0 : getCustomTransformers(invalidatedProject.project));
+          invalidatedProject.done(cancellationToken, writeFile22, getCustomTransformers == null ? void 0 : getCustomTransformers(invalidatedProject.project));
           if (!state.diagnostics.has(invalidatedProject.projectPath)) successfulProjects++;
         }
         disableCache(state);
@@ -161057,13 +161057,13 @@ ${lanes.join("\n")}
       function createSolutionBuilderWorker(watch, hostOrHostWithWatch, rootNames, options, baseWatchOptions) {
         const state = createSolutionBuilderState(watch, hostOrHostWithWatch, rootNames, options, baseWatchOptions);
         return {
-          build: (project, cancellationToken, writeFile2, getCustomTransformers) => build(state, project, cancellationToken, writeFile2, getCustomTransformers),
+          build: (project, cancellationToken, writeFile22, getCustomTransformers) => build(state, project, cancellationToken, writeFile22, getCustomTransformers),
           clean: (project) => clean(state, project),
-          buildReferences: (project, cancellationToken, writeFile2, getCustomTransformers) => build(
+          buildReferences: (project, cancellationToken, writeFile22, getCustomTransformers) => build(
             state,
             project,
             cancellationToken,
-            writeFile2,
+            writeFile22,
             getCustomTransformers,
             /*onlyReferences*/
             true
@@ -213398,7 +213398,7 @@ ${options.prefix}` : "\n" : options.prefix
         walkUpParenthesizedTypesAndGetParentAndChild: () => walkUpParenthesizedTypesAndGetParentAndChild,
         whitespaceOrMapCommentRegExp: () => whitespaceOrMapCommentRegExp,
         writeCommentRange: () => writeCommentRange,
-        writeFile: () => writeFile,
+        writeFile: () => writeFile2,
         writeFileEnsuringDirectories: () => writeFileEnsuringDirectories,
         zipWith: () => zipWith
       });
@@ -215462,7 +215462,7 @@ ${options.prefix}` : "\n" : options.prefix
         /**
          * Returns true if emit was conducted
          */
-        emitFile(scriptInfo, writeFile2) {
+        emitFile(scriptInfo, writeFile22) {
           if (!this.languageServiceEnabled || !this.shouldEmitFile(scriptInfo)) {
             return { emitSkipped: true, diagnostics: emptyArray2 };
           }
@@ -215470,7 +215470,7 @@ ${options.prefix}` : "\n" : options.prefix
           if (!emitSkipped) {
             for (const outputFile of outputFiles) {
               const outputFileAbsoluteFileName = getNormalizedAbsolutePath(outputFile.name, this.currentDirectory);
-              writeFile2(outputFileAbsoluteFileName, outputFile.text, outputFile.writeByteOrderMark);
+              writeFile22(outputFileAbsoluteFileName, outputFile.text, outputFile.writeByteOrderMark);
             }
             if (this.builderState && getEmitDeclarations(this.compilerOptions)) {
               const dtsFiles = outputFiles.filter((f) => isDeclarationFileName(f.name));
@@ -233239,6 +233239,9 @@ var en = {
   "cli.explain.error.unsupportedRule": "Rule {ruleId} does not support explanation.",
   "cli.init.created": "created boardreadyops.yml",
   "cli.init.exists": "boardreadyops.yml already exists",
+  "cli.init.invalidProfile": "Unknown profile: {profile}. Available: basic, ci, manufacturing, strict, kicad-plugin",
+  "cli.init.workflowCreated": "created GitHub Actions workflow",
+  "cli.init.workflowExists": "GitHub Actions workflow already exists",
   "doctor.check.action": "Action / Workflow",
   "doctor.check.adapters": "Adapters",
   "doctor.check.kicad": "KiCad",
@@ -233376,6 +233379,9 @@ var tr = {
   "cli.explain.error.unsupportedRule": "{ruleId} kural\u0131 a\xE7\u0131klamay\u0131 desteklemiyor.",
   "cli.init.created": "boardreadyops.yml olu\u015Fturuldu",
   "cli.init.exists": "boardreadyops.yml zaten var",
+  "cli.init.invalidProfile": "Bilinmeyen profil: {profile}. Kullan\u0131labilir: basic, ci, manufacturing, strict, kicad-plugin",
+  "cli.init.workflowCreated": "GitHub Actions workflow dosyas\u0131 olu\u015Fturuldu",
+  "cli.init.workflowExists": "GitHub Actions workflow dosyas\u0131 zaten var",
   "doctor.check.action": "Action / Workflow",
   "doctor.check.adapters": "Ba\u011Fda\u015Ft\u0131r\u0131c\u0131lar",
   "doctor.check.kicad": "KiCad",
@@ -258414,13 +258420,26 @@ async function confirmApply(streams) {
 }
 
 // src/cli/commands/init.ts
+var import_promises12 = require("node:fs/promises");
 var import_node_path39 = __toESM(require("node:path"), 1);
-var starter = `version: 1
-mode: warn
+var yamlHeader = `version: 1
+mode: `;
+function yamlFooter(failOn, reports) {
+  return `fail-on: ${failOn}
+report:
+${reports}`;
+}
+function profileYaml(mode, rules, failOn, reports) {
+  return `${yamlHeader}${mode}
 projects:
   - path: .
 rules:
-  drc.kicad:
+${rules}${yamlFooter(failOn, reports)}`;
+}
+var profiles = {
+  basic: profileYaml(
+    "warn",
+    `  drc.kicad:
     enabled: true
   erc.kicad:
     enabled: true
@@ -258428,7 +258447,17 @@ rules:
     enabled: true
     severity: high
     ignore-refs: ["TP*", "FID*"]
-  pinmap.verify:
+`,
+    "never",
+    `  json: build/boardreadyops.findings.json
+  markdown: build/boardreadyops.report.md`
+  ),
+  ci: profileYaml(
+    "enforce",
+    `  drc.kicad:       { enabled: true }
+  erc.kicad:       { enabled: true }
+  pinmap.verify:   { enabled: true }
+  bom.missing-mpn:
     enabled: true
     severity: high
   manufacturing.outputs-present:
@@ -258436,24 +258465,167 @@ rules:
     required:
       - gerber
       - drill
-fail-on: high
-report:
-  sarif: build/boardreadyops.sarif.json
+`,
+    "high",
+    `  sarif: boardreadyops.sarif.json
+  json: boardreadyops.findings.json
+  markdown: boardreadyops.report.md
+  html: boardreadyops.report.html`
+  ),
+  manufacturing: profileYaml(
+    "enforce",
+    `  manufacturing.outputs-present:
+    enabled: true
+    required:
+      - gerber
+      - drill
+      - paste
+      - silkscreen
+      - soldermask
+      - assembly
+  manufacturing.jobset-outputs:
+    enabled: true
+  manufacturing.layer-stackup:
+    enabled: true
+  manufacturing.fab-notes:
+    enabled: true
+  manufacturing.drill-coverage:
+    enabled: true
+  manufacturing.panel-sanity:
+    enabled: true
+`,
+    "high",
+    `  json: build/boardreadyops.findings.json
+  markdown: build/boardreadyops.report.md`
+  ),
+  strict: profileYaml(
+    "enforce",
+    `  drc.kicad:
+    enabled: true
+  erc.kicad:
+    enabled: true
+  bom.missing-mpn:
+    enabled: true
+    severity: high
+  bom.footprint-mismatch:
+    enabled: true
+  bom.single-source:
+    enabled: true
+  bom.eol-detection:
+    enabled: true
+  bom.lifecycle:
+    enabled: true
+  pinmap.verify:
+    enabled: true
+  pinmap.collision:
+    enabled: true
+  pinmap.net-label:
+    enabled: true
+  manufacturing.outputs-present:
+    enabled: true
+    required:
+      - gerber
+      - drill
+  manufacturing.layer-stackup:
+    enabled: true
+  design.board-outline:
+    enabled: true
+  design.copper-balance:
+    enabled: true
+  release.changelog-present:
+    enabled: true
+  release.revision-set:
+    enabled: true
+  release.version-format:
+    enabled: true
+  release.tag-matches-revision:
+    enabled: true
+`,
+    "medium",
+    `  sarif: boardreadyops.sarif.json
   json: build/boardreadyops.findings.json
-  markdown: build/boardreadyops.report.md
+  markdown: boardreadyops.report.md
   html: build/boardreadyops.report.html
-  # junit: build/boardreadyops.junit.xml
+  junit: build/boardreadyops.junit.xml`
+  ),
+  "kicad-plugin": profileYaml(
+    "warn",
+    `  drc.kicad:       { enabled: true }
+  erc.kicad:       { enabled: true }
+  pinmap.verify:   { enabled: true }
+  bom.missing-mpn:
+    enabled: true
+    severity: high
+`,
+    "high",
+    `  json: build/boardreadyops.findings.json
+  markdown: build/boardreadyops.report.md
+  html: build/boardreadyops.report.html`
+  )
+};
+var githubWorkflowYml = `name: boardreadyops
+on:
+  pull_request:
+  push:
+    branches: [main]
+concurrency:
+  group: \${{ github.workflow }}-\${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+  pull-requests: write
+  security-events: write
+jobs:
+  boardreadyops:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+      - uses: oaslananka/boardreadyops@v1
+        with:
+          config: boardreadyops.yml
+          mode: enforce
+          fail-on: high
+          sarif: boardreadyops.sarif.json
+          json: boardreadyops.findings.json
+          markdown: boardreadyops.report.md
+          upload-sarif: "true"
+          upload-artifacts: "true"
+          comment-pr: "true"
 `;
-async function initCommand(cwd, streams) {
-  const file2 = import_node_path39.default.resolve(cwd, "boardreadyops.yml");
-  if (await pathExists(file2)) {
+async function initCommand(cwd, options, streams) {
+  const outputDir = options.output ? import_node_path39.default.resolve(cwd, options.output) : cwd;
+  const profile = options.profile ?? "basic";
+  const configContent = profiles[profile];
+  if (!configContent) {
+    streams.stdout.write(`${t("cli.init.invalidProfile", { profile })}
+`);
+    return 2;
+  }
+  const configFile = import_node_path39.default.resolve(outputDir, "boardreadyops.yml");
+  const configExists = await pathExists(configFile);
+  if (configExists && !options.force) {
     streams.stdout.write(`${t("cli.init.exists")}
 `);
     return 0;
   }
-  await writeTextFile(file2, starter);
-  streams.stdout.write(`${t("cli.init.created")}
+  if (!configExists) {
+    await writeTextFile(configFile, configContent);
+    streams.stdout.write(`${t("cli.init.created")}: ${configFile}
 `);
+  }
+  if (options.workflow === "github") {
+    const workflowDir = import_node_path39.default.resolve(outputDir, ".github/workflows");
+    await (0, import_promises12.mkdir)(workflowDir, { recursive: true });
+    const workflowFile = import_node_path39.default.resolve(workflowDir, "boardreadyops.yml");
+    if (!await pathExists(workflowFile) || options.force) {
+      await (0, import_promises12.writeFile)(workflowFile, githubWorkflowYml, "utf-8");
+      streams.stdout.write(`${t("cli.init.workflowCreated")}: ${workflowFile}
+`);
+    } else {
+      streams.stdout.write(`${t("cli.init.workflowExists")}: ${workflowFile}
+`);
+    }
+  }
   return 0;
 }
 
@@ -259452,8 +259624,8 @@ async function runCli(argv, streams = {
   program2.command("sbom").argument("[path]", "directory to scan").option("--config <path>", "boardreadyops.yml location").option("--project <path>", "specific .kicad_pro").option("--bom <path>", "BOM source path or auto").option("--variant <name>", "KiCad variant name").option("--output <path>", "CycloneDX HBOM output path, or - for stdout", "build/hbom.json").option("--format <format>", "SBOM format: cyclonedx. spdx is reserved for a future release.", "cyclonedx").action(async (pathInput, options) => {
     process.exitCode = await sbomCommand(pathInput, options, streams);
   });
-  program2.command("init").action(async () => {
-    process.exitCode = await initCommand(process.cwd(), streams);
+  program2.command("init").option("--profile <profile>", "configuration profile: basic, ci, manufacturing, strict, kicad-plugin", "basic").option("--workflow <type>", "generate GitHub Actions workflow (github)").option("--output <path>", "output directory for generated files").option("--force", "overwrite existing files").action(async (options) => {
+    process.exitCode = await initCommand(process.cwd(), options, streams);
   });
   const baseline = program2.command("baseline").description("capture and maintain finding baselines");
   addBaselineOptions(baseline.command("capture").argument("[path]", "directory to scan")).action(

@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+
+### CI
+
+* **ci:** update UV_VERSION 0.9.14 → 0.11.16 ([#58](https://github.com/oaslananka/boardreadyops/issues/58))
+* **ci:** upgrade pnpm 11.1.3 → 11.3.0 ([#60](https://github.com/oaslananka/boardreadyops/issues/60))
+* **ci:** remove KiCad 9.x from integration and container matrices ([#59](https://github.com/oaslananka/boardreadyops/issues/59))
+* **ci:** enforce zizmor advisory scan — remove continue-on-error ([#61](https://github.com/oaslananka/boardreadyops/issues/61))
+* **ci:** extract docs Python deps to requirements.txt ([#62](https://github.com/oaslananka/boardreadyops/issues/62))
+
 ## [1.1.0](https://github.com/oaslananka/boardreadyops/compare/boardreadyopsv1.0.2...boardreadyopsv1.1.0) (2026-05-26)
 
 

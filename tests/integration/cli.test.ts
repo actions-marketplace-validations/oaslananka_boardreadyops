@@ -27,7 +27,9 @@ describe("CLI integration", () => {
 
   it("runs the default command and writes reports", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-cli-"));
-    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, { recursive: true });
+    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, {
+      recursive: true,
+    });
     const streams = memoryStreams();
     const code = await runCli(
       ["run", temp, "--json", "out.json", "--sarif", "out.sarif.json", "--markdown", "out.md", "--no-annotations"],
@@ -41,7 +43,9 @@ describe("CLI integration", () => {
 
   it("writes CycloneDX HBOM through the sbom command", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-hbom-"));
-    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, { recursive: true });
+    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, {
+      recursive: true,
+    });
     const streams = captureStreams();
 
     const code = await runCli(["sbom", temp, "--output", "build/hbom.json"], streams);
@@ -86,7 +90,9 @@ describe("CLI integration", () => {
 
   it("writes configured JUnit reports", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-junit-"));
-    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, { recursive: true });
+    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, {
+      recursive: true,
+    });
     await fs.writeFile(
       path.join(temp, "boardreadyops.yml"),
       "version: 1\nreport:\n  junit: build/boardreadyops.junit.xml\n",
@@ -113,7 +119,9 @@ describe("CLI integration", () => {
 
   it("uses a selected gate fail-on threshold from config", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-cli-gate-"));
-    await fs.cp(path.join(fixtureRoot, "bom-missing-mpn"), temp, { recursive: true });
+    await fs.cp(path.join(fixtureRoot, "bom-missing-mpn"), temp, {
+      recursive: true,
+    });
     await fs.appendFile(
       path.join(temp, "boardreadyops.yml"),
       `
@@ -213,7 +221,9 @@ gates:
 
   it("diagnoses repository, adapter, KiCad, and workflow gaps", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-doctor-"));
-    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, { recursive: true });
+    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, {
+      recursive: true,
+    });
     const previousCwd = process.cwd();
     const previousPath = process.env.PATH;
     const previousNexarClientId = process.env.NEXAR_CLIENT_ID;
@@ -254,7 +264,9 @@ gates:
   it("reads YAML workflow structure for action diagnostics", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-doctor-action-"));
     const sha = "d".repeat(40);
-    await fs.mkdir(path.join(temp, ".github", "workflows"), { recursive: true });
+    await fs.mkdir(path.join(temp, ".github", "workflows"), {
+      recursive: true,
+    });
     await fs.writeFile(
       path.join(temp, ".github", "workflows", "boardreadyops.yaml"),
       `name: boardreadyops
@@ -293,7 +305,9 @@ jobs:
 
   it("does not trust workflow comments and keeps unreadable workflow paths diagnostic", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-doctor-action-"));
-    await fs.mkdir(path.join(temp, ".github", "workflows"), { recursive: true });
+    await fs.mkdir(path.join(temp, ".github", "workflows"), {
+      recursive: true,
+    });
     await fs.writeFile(
       path.join(temp, ".github", "workflows", "boardreadyops.yml"),
       `# permissions: pull-requests: write
@@ -391,7 +405,9 @@ jobs:
 
   it("supports check, init, and stdout report targets", async () => {
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-cli-more-"));
-    await fs.cp(path.join(fixtureRoot, "pinmap-mismatch"), temp, { recursive: true });
+    await fs.cp(path.join(fixtureRoot, "pinmap-mismatch"), temp, {
+      recursive: true,
+    });
     const check = captureStreams();
     expect(
       await runCli(["check", "pinmap.verify", temp, "--json", "-", "--no-annotations", "--fail-on", "never"], check),
@@ -410,8 +426,8 @@ jobs:
       expect(await runCli(["init"], init)).toBe(0);
       const config = await fs.readFile(path.join(initDir, "boardreadyops.yml"), "utf8");
       expect(config).toContain("version: 1");
-      expect(config).toContain("html: build/boardreadyops.report.html");
-      expect(config).toContain("# junit: build/boardreadyops.junit.xml");
+      expect(config).toContain("json: build/boardreadyops.findings.json");
+      expect(config).toContain("markdown: build/boardreadyops.report.md");
     } finally {
       process.chdir(previous);
     }
@@ -699,7 +715,9 @@ rules:
     expect(kicad.version).toMatch(supportedKicad);
     const temp = await fs.mkdtemp(path.join(os.tmpdir(), "boardreadyops-real-kicad-"));
     await fs.rm(temp, { recursive: true, force: true });
-    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, { recursive: true });
+    await fs.cp(path.join(fixtureRoot, "safe-basic"), temp, {
+      recursive: true,
+    });
     await fs.rm(path.join(temp, "boardreadyops.yml"), { force: true });
     const result = await runPipeline({
       path: temp,
@@ -724,7 +742,10 @@ function memoryStreams() {
         return true;
       },
     },
-  } as unknown as { stdout: NodeJS.WritableStream; stderr: NodeJS.WritableStream };
+  } as unknown as {
+    stdout: NodeJS.WritableStream;
+    stderr: NodeJS.WritableStream;
+  };
 }
 
 function captureStreams() {
@@ -766,7 +787,9 @@ async function writeProject(root: string, directory: string, name: string): Prom
 }
 
 function doctorItem(
-  report: { checks: Array<{ name: string; items: Array<{ message: string }> }> },
+  report: {
+    checks: Array<{ name: string; items: Array<{ message: string }> }>;
+  },
   checkName: string,
   message: string,
 ) {

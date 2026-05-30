@@ -22,8 +22,8 @@ permissions:
 
 env:
   NODE_VERSION: "24"
-  PNPM_VERSION: "11.1.3"
-  UV_VERSION: "0.9.14"
+  PNPM_VERSION: "11.3.0"
+  UV_VERSION: "0.11.16"
 
 jobs:
   lint:
@@ -54,7 +54,6 @@ jobs:
           enable-cache: false
       - name: Run zizmor advisory scan
         run: uvx --from zizmor==1.25.2 zizmor .github/workflows --min-severity medium
-        continue-on-error: true
 
   typecheck:
     name: ci / typecheck
@@ -108,9 +107,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - kicad-version: "9.0"
-            kicad-ppa-series: "9.0"
-            node-version: 22
           - kicad-version: "10.0"
             kicad-ppa-series: "10.0"
             node-version: 24
@@ -203,7 +199,7 @@ jobs:
         run: |
           docs_venv="${RUNNER_TEMP}/boardreadyops-docs-venv"
           uv venv "${docs_venv}"
-          uv pip install --python "${docs_venv}/bin/python" mkdocs==1.6.1 mkdocs-material==9.7.6 mike==2.2.0
+          uv pip install --python "${docs_venv}/bin/python" -r docs/requirements.txt
           echo "${docs_venv}/bin" >> "${GITHUB_PATH}"
       - run: pnpm install --frozen-lockfile
       - name: Verify Chrome for pa11y
@@ -318,6 +314,7 @@ jobs:
       - run: corepack enable
       - run: corepack install
       - run: pnpm install --frozen-lockfile
+      - run: pnpm run notice
       - run: pnpm run security
 
   sbom:

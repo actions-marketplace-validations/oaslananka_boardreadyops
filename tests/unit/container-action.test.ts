@@ -111,11 +111,6 @@ describe("container action release surfaces", () => {
 
     expect(workflow.jobs?.smoke?.strategy?.matrix?.include).toEqual([
       {
-        "kicad-version": "9.0",
-        "kicad-ppa-series": "9.0",
-        "node-version": "22.22.3",
-      },
-      {
         "kicad-version": "10.0",
         "kicad-ppa-series": "10.0",
         "node-version": "24.16.0",

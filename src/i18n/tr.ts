@@ -16,6 +16,10 @@ export const tr = {
   "cli.explain.error.unsupportedRule": "{ruleId} kuralı açıklamayı desteklemiyor.",
   "cli.init.created": "boardreadyops.yml oluşturuldu",
   "cli.init.exists": "boardreadyops.yml zaten var",
+  "cli.init.invalidProfile":
+    "Bilinmeyen profil: {profile}. Kullanılabilir: basic, ci, manufacturing, strict, kicad-plugin",
+  "cli.init.workflowCreated": "GitHub Actions workflow dosyası oluşturuldu",
+  "cli.init.workflowExists": "GitHub Actions workflow dosyası zaten var",
   "doctor.check.action": "Action / Workflow",
   "doctor.check.adapters": "Bağdaştırıcılar",
   "doctor.check.kicad": "KiCad",

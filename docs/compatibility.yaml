@@ -15,10 +15,9 @@ kicad:
   minimum: "9.0"
   recommended: "10.0"
   tested:
-    - "9.0"
     - "10.0"
   notes:
-    "9.0": "Variants are partially supported."
+    "9.0": "Upstream EOL since April 2026. Removed from CI in May 2026 — may still work but is untested."
     "10.0": "Current recommended stable line. CI installs ppa:kicad/kicad-10.0-releases and asserts kicad-cli 10.0.x."
 node:
   minimum: "22"
@@ -29,7 +28,7 @@ node:
     "22": "22.22.3"
     "24": "24.16.0"
   policy:
-    "22": "Maintenance LTS. Supported until upstream EOL for existing users and tested in unit and KiCad 9.0 integration jobs."
+    "22": "Maintenance LTS. Supported until upstream EOL for existing users and tested in unit integration jobs."
     "24": "Active LTS and recommended runtime. Used by default CI jobs, binary builds, GitHub Action runtime, and KiCad 10.0 integration jobs."
     "26": "Current release line. Tracked by drift guard but not in package engines or CI until it reaches LTS and dependency/tooling validation is added."
 cyclonedx:

@@ -25,7 +25,7 @@ permissions:
   contents: read
 
 env:
-  UV_VERSION: "0.9.14"
+  UV_VERSION: "0.11.16"
 
 jobs:
   build:
@@ -70,7 +70,7 @@ jobs:
         run: |
           docs_venv="${RUNNER_TEMP}/boardreadyops-docs-venv"
           uv venv "${docs_venv}"
-          uv pip install --python "${docs_venv}/bin/python" mkdocs==1.6.1 mkdocs-material==9.7.6 mike==2.2.0
+          uv pip install --python "${docs_venv}/bin/python" -r docs/requirements.txt
           echo "${docs_venv}/bin" >> "${GITHUB_PATH}"
 
       - name: Install Node dependencies

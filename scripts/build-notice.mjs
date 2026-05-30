@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -12,6 +13,50 @@ const HOST_NATIVE_PACKAGE_PATTERNS = Object.freeze([
   /^@rolldown\/binding-/,
   /^lightningcss-/,
 ]);
+
+/** Read pnpm-lock.yaml to find packages with platform constraints (os:/cpu:). */
+function readLockfilePlatformPackages(root) {
+  const lockfilePath = path.join(root, "pnpm-lock.yaml");
+  const content = readFileSync(lockfilePath, "utf8");
+  const lines = content.split("\n");
+
+  const platformPackages = new Set();
+  let currentName = null;
+  let hasOsOrCpu = false;
+
+  for (const line of lines) {
+    // Package entry: two spaces, single-quoted name@version':
+    const pkgMatch = line.match(/^ {2}'(.+)@(.+)':\s*$/);
+    if (pkgMatch) {
+      if (currentName !== null && hasOsOrCpu) {
+        platformPackages.add(currentName);
+      }
+      currentName = pkgMatch[1];
+      hasOsOrCpu = false;
+      continue;
+    }
+
+    if (currentName !== null) {
+      if (/^\s{4}os:/.test(line) || /^\s{4}cpu:/.test(line)) {
+        hasOsOrCpu = true;
+      }
+      if (line.trim() === "") {
+        if (hasOsOrCpu) platformPackages.add(currentName);
+        currentName = null;
+        hasOsOrCpu = false;
+      }
+    }
+  }
+
+  // Handle last entry
+  if (currentName !== null && hasOsOrCpu) {
+    platformPackages.add(currentName);
+  }
+
+  return platformPackages;
+}
+
+const platformPackages = readLockfilePlatformPackages(process.cwd());
 
 export async function main(root = process.cwd(), options = {}) {
   const report = await readPnpmLicenseReport(root, ["--json"]);
@@ -93,7 +138,7 @@ function licenseSections(report) {
 }
 
 function isHostNativePackage(name) {
-  return HOST_NATIVE_PACKAGE_PATTERNS.some((pattern) => pattern.test(name));
+  return HOST_NATIVE_PACKAGE_PATTERNS.some((pattern) => pattern.test(name)) || platformPackages.has(name);
 }
 
 function packageVersions(item) {

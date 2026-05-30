@@ -55,7 +55,6 @@ describe("compatibility matrix", () => {
     const supportMatrix = await readFile("docs/support-matrix.md", "utf8");
 
     expect(supportMatrix).toBe(renderSupportMatrix(config));
-    expect(supportMatrix).toContain("| KiCad | 9.0 | Supported | Variants are partially supported. |");
     expect(supportMatrix).toContain("| KiCad | 10.0 | Recommended CI-tested line |");
     expect(supportMatrix).not.toContain("| KiCad | 9.1 | Supported |");
     expect(supportMatrix).not.toContain("| KiCad | 10.1 | Supported |");
@@ -305,17 +304,12 @@ describe("compatibility matrix", () => {
     expect(integration?.name).toBe(`ci / test-int (KiCad ${kicadExpression}, Node ${nodeExpression})`);
     expect(integration?.strategy?.matrix?.include).toEqual([
       {
-        "kicad-version": "9.0",
-        "kicad-ppa-series": "9.0",
-        "node-version": 22,
-      },
-      {
         "kicad-version": "10.0",
         "kicad-ppa-series": "10.0",
         "node-version": 24,
       },
     ]);
-    expect(config.kicad.tested).toEqual(["9.0", "10.0"]);
+    expect(config.kicad.tested).toEqual(["10.0"]);
     expect(config.node.supported).toEqual(["22", "24"]);
     expect(config.node.current).toEqual(["26"]);
     expect(lintRuns).toContain("pnpm run compatibility:check");
