@@ -21,22 +21,22 @@ importers:
   .:
     devDependencies:
       '@actions/artifact':
-        specifier: ^6.2.1
+        specifier: 6.2.1
         version: 6.2.1
       '@actions/core':
-        specifier: ^3.0.1
+        specifier: 3.0.1
         version: 3.0.1
       '@actions/github':
-        specifier: ^9.1.1
+        specifier: 9.1.1
         version: 9.1.1
       '@biomejs/biome':
-        specifier: ^2.0.0
+        specifier: 2.4.15
         version: 2.4.15
       '@commitlint/cli':
-        specifier: ^21.0.1
+        specifier: 21.0.1
         version: 21.0.1(@types/node@24.12.4)(conventional-commits-parser@6.4.0)(typescript@6.0.3)
       '@commitlint/config-conventional':
-        specifier: ^21.0.1
+        specifier: 21.0.1
         version: 21.0.1
       '@stryker-mutator/core':
         specifier: 9.6.1
@@ -45,31 +45,31 @@ importers:
         specifier: 9.6.1
         version: 9.6.1(@stryker-mutator/core@9.6.1(@types/node@24.12.4))(vitest@4.1.6)
       '@types/js-yaml':
-        specifier: ^4.0.9
+        specifier: 4.0.9
         version: 4.0.9
       '@types/mustache':
-        specifier: ^4.2.6
+        specifier: 4.2.6
         version: 4.2.6
       '@types/node':
-        specifier: ^24.0.0
+        specifier: 24.12.4
         version: 24.12.4
       '@vitest/coverage-v8':
-        specifier: ^4.1.6
+        specifier: 4.1.6
         version: 4.1.6(vitest@4.1.6)
       ajv:
-        specifier: ^8.17.1
+        specifier: 8.20.0
         version: 8.20.0
       ajv-formats:
-        specifier: ^3.0.1
+        specifier: 3.0.1
         version: 3.0.1(ajv@8.20.0)
       axe-core:
         specifier: 4.11.4
         version: 4.11.4
       commander:
-        specifier: ^14.0.3
+        specifier: 14.0.3
         version: 14.0.3
       cosmiconfig:
-        specifier: ^9.0.0
+        specifier: 9.0.1
         version: 9.0.1(typescript@6.0.3)
       esbuild:
         specifier: 0.28.0
@@ -78,7 +78,7 @@ importers:
         specifier: 4.8.0
         version: 4.8.0
       fast-glob:
-        specifier: ^3.3.3
+        specifier: 3.3.3
         version: 3.3.3
       happy-dom:
         specifier: 20.9.0
@@ -87,25 +87,25 @@ importers:
         specifier: 10.17.0
         version: 10.17.0(vitest@4.1.6)
       husky:
-        specifier: ^9.1.7
+        specifier: 9.1.7
         version: 9.1.7
       js-yaml:
-        specifier: ^4.1.0
+        specifier: 4.1.1
         version: 4.1.1
       knip:
         specifier: 6.14.2
         version: 6.14.2(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
       lint-staged:
-        specifier: ^17.0.5
+        specifier: 17.0.5
         version: 17.0.5
       mustache:
-        specifier: ^4.2.0
+        specifier: 4.2.0
         version: 4.2.0
       pa11y:
         specifier: 9.1.1
         version: 9.1.1(typescript@6.0.3)
       picocolors:
-        specifier: ^1.1.1
+        specifier: 1.1.1
         version: 1.1.1
       puppeteer:
         specifier: 24.43.1
@@ -114,10 +114,10 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
       vitest:
-        specifier: ^4.1.6
+        specifier: 4.1.6
         version: 4.1.6(@types/node@24.12.4)(@vitest/coverage-v8@4.1.6)(happy-dom@20.9.0)(vite@8.0.13(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(yaml@2.9.0))
       zod:
-        specifier: ^4.4.3
+        specifier: 4.4.3
         version: 4.4.3
 
   examples/plugin-custom-rule:
