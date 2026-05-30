@@ -272,7 +272,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `isexe@2.0.0`
   - Description: Minimal module to check if a file is executable.
   - Homepage: https://github.com/isaacs/isexe#readme
-- `knip@6.14.1`
+- `knip@6.14.2`
   - Description: Find and fix unused dependencies, exports and files in your TypeScript and JavaScript projects
   - Homepage: https://knip.dev
 - `lru-cache@5.1.1`, `lru-cache@7.18.3`
