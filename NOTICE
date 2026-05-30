@@ -716,28 +716,28 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@typespec/ts-http-runtime@0.3.5`
   - Description: Isomorphic client library for making HTTP requests in node.js and browser.
   - Homepage: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/core/ts-http-runtime/
-- `@vitest/coverage-v8@4.1.6`
+- `@vitest/coverage-v8@4.1.7`
   - Description: V8 coverage provider for Vitest
   - Homepage: https://vitest.dev/guide/coverage
-- `@vitest/expect@4.1.6`
+- `@vitest/expect@4.1.7`
   - Description: Jest's expect matchers as a Chai plugin
   - Homepage: https://vitest.dev/api/expect
-- `@vitest/mocker@4.1.6`
+- `@vitest/mocker@4.1.7`
   - Description: Vitest module mocker implementation
   - Homepage: https://github.com/vitest-dev/vitest/tree/main/packages/mocker
-- `@vitest/pretty-format@4.1.6`
+- `@vitest/pretty-format@4.1.7`
   - Description: Fork of pretty-format with support for ESM
   - Homepage: https://github.com/vitest-dev/vitest/tree/main/packages/pretty-format
-- `@vitest/runner@4.1.6`
+- `@vitest/runner@4.1.7`
   - Description: Vitest test runner
   - Homepage: https://vitest.dev/api/advanced/runner
-- `@vitest/snapshot@4.1.6`
+- `@vitest/snapshot@4.1.7`
   - Description: Vitest snapshot manager
   - Homepage: https://vitest.dev/guide/snapshot
-- `@vitest/spy@4.1.6`
+- `@vitest/spy@4.1.7`
   - Description: Lightweight Jest compatible spy implementation
   - Homepage: https://vitest.dev/api/mock
-- `@vitest/utils@4.1.6`
+- `@vitest/utils@4.1.7`
   - Description: Shared Vitest utility functions
   - Homepage: https://github.com/vitest-dev/vitest/tree/main/packages/utils
 - `abort-controller@3.0.0`
@@ -1462,7 +1462,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `vite@8.0.13`
   - Description: Native-ESM powered web dev build tool
   - Homepage: https://vite.dev
-- `vitest@4.1.6`
+- `vitest@4.1.7`
   - Description: Next generation testing framework powered by Vite
   - Homepage: https://vitest.dev
 - `whatwg-mimetype@3.0.0`
