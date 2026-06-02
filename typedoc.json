@@ -1,0 +1,21 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["packages/plugin-sdk/src/index.ts"],
+  "tsconfig": "tsconfig.json",
+  "out": "docs/reference/plugin-sdk",
+  "plugin": ["typedoc-plugin-markdown"],
+  "name": "@boardreadyops/plugin-sdk API",
+  "readme": "none",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "disableSources": true,
+  "treatWarningsAsErrors": true,
+  "treatValidationWarningsAsErrors": true,
+  "validation": {
+    "invalidLink": true,
+    "notDocumented": true,
+    "notExported": true
+  },
+  "requiredToBeDocumented": ["Function", "Interface", "TypeAlias"]
+}

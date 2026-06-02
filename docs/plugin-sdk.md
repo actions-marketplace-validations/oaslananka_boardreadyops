@@ -52,6 +52,12 @@ export default definePlugin({
 
 The same example is available in `examples/plugin-custom-rule/`.
 
+The generated API reference for exported SDK types and extension points is
+available in [Plugin SDK API](reference/plugin-sdk/README.md). Regenerate it
+with `corepack pnpm run api:docs` after changing
+`packages/plugin-sdk/src/index.ts`; `corepack pnpm run gc` fails when the
+checked-in API reference is stale.
+
 ## Loading Plugins
 
 Declare explicit plugins in `boardreadyops.yml`:

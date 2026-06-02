@@ -1,156 +1,87 @@
 # Changelog
 
-## [1.2.0](https://github.com/oaslananka/boardreadyops/compare/boardreadyopsv1.1.0...boardreadyopsv1.2.0) (2026-05-30)
-
-
-### Features
-
-* **action:** diff fabrication changes in PR comments ([0d9dc32](https://github.com/oaslananka/boardreadyops/commit/0d9dc3281abe0139e2ab3113dbc6a83fe7fae817))
-* **action:** validate marketplace listing ([85a4dc7](https://github.com/oaslananka/boardreadyops/commit/85a4dc7476f904c197853143597b4297dfdc2244))
-* **ci:** enforce compatibility matrix ([#18](https://github.com/oaslananka/boardreadyops/issues/18)) ([be4135e](https://github.com/oaslananka/boardreadyops/commit/be4135ecc1234448a965fb63aaac10642e3dbb2c))
-* **cli:** add automated fix command ([dad705b](https://github.com/oaslananka/boardreadyops/commit/dad705b24b260ec15feb4da8d25ad36e1e529f81))
-* **cli:** add i18n infrastructure ([#21](https://github.com/oaslananka/boardreadyops/issues/21)) ([c254552](https://github.com/oaslananka/boardreadyops/commit/c254552cb07b6e7830f098159324a759b510ff1f))
-* **cli:** expand doctor diagnostics ([514d606](https://github.com/oaslananka/boardreadyops/commit/514d606f7010539f3981bcb8f00de32ce447b015))
-* **core:** add finding remediation metadata ([1bca167](https://github.com/oaslananka/boardreadyops/commit/1bca1679ad5b66f61e9d093975996b36b7bc6bb9))
-* **core:** add gate semantics ([8c8a9bf](https://github.com/oaslananka/boardreadyops/commit/8c8a9bf38d1ce531bb05cb3b21924e640803e65e))
-* **core:** add notifier framework ([c535bed](https://github.com/oaslananka/boardreadyops/commit/c535bed352458b819141aafe89fc9d0e11374630))
-* **core:** add plugin SDK and loader ([0589294](https://github.com/oaslananka/boardreadyops/commit/0589294b424709bfa97c14da049c7b5fd1e563c3))
-* **core:** add structured logging ([6b10f13](https://github.com/oaslananka/boardreadyops/commit/6b10f13d9d1145220742752871ff1ad62304630e))
-* **core:** add suppressions and baselines ([846357f](https://github.com/oaslananka/boardreadyops/commit/846357f58bd59ea6b36b887d7366f42abdbbbd1f))
-* **core:** support multi-project workspaces ([8c27166](https://github.com/oaslananka/boardreadyops/commit/8c271668e5da3e6b268dbfd9c8c0c66171342463))
-* **kicad:** add PCM editor plugin ([96eb42a](https://github.com/oaslananka/boardreadyops/commit/96eb42a0f90aabb610f4b08914ec9629ec9206d0))
-* **release:** add binary distribution pipeline ([485c25c](https://github.com/oaslananka/boardreadyops/commit/485c25c0157f568a227b348910d485f4926f79ed))
-* **release:** add full container action ([71f83b0](https://github.com/oaslananka/boardreadyops/commit/71f83b0fe8ffa0e3fd1dad1c4c2842915d2654c8))
-* **report:** add accessible HTML report emitter ([#20](https://github.com/oaslananka/boardreadyops/issues/20)) ([6f895fa](https://github.com/oaslananka/boardreadyops/commit/6f895fac1350bc693c9e81e17cf876b1ef7176f7))
-* **report:** add CycloneDX hardware SBOM ([#31](https://github.com/oaslananka/boardreadyops/issues/31)) ([56ab82d](https://github.com/oaslananka/boardreadyops/commit/56ab82dde38efe807ac442b0b41ed5a5845b9fc7))
-* **report:** enrich SARIF context ([#17](https://github.com/oaslananka/boardreadyops/issues/17)) ([3fa99fa](https://github.com/oaslananka/boardreadyops/commit/3fa99fa5d23e96e40877b884d715d536c113ebff))
-* **rules:** enrich rule metadata ([0773732](https://github.com/oaslananka/boardreadyops/commit/0773732d1755deac2eff5513830604fd2ee9badd))
-* **rules:** explain manufacturing outputs ([533938c](https://github.com/oaslananka/boardreadyops/commit/533938ce475225a92b2ca61fda0c7caea00ab652))
-
-
-### Bug Fixes
-
-* emit configured junit reports ([ee4846f](https://github.com/oaslananka/boardreadyops/commit/ee4846f133eda36f69eb3e45ba67feb41d2d6875))
-
-
-### Documentation
-
-* **docs:** add license compliance notices ([6087066](https://github.com/oaslananka/boardreadyops/commit/6087066b0f53a87639ca2a75dff4c55c6fd1b464))
-* **docs:** document structure verifier ([cf14cf7](https://github.com/oaslananka/boardreadyops/commit/cf14cf7d690997c259ae500c920f35ee284fc7d3))
-* expand contributing governance docs ([95852af](https://github.com/oaslananka/boardreadyops/commit/95852af2dcd6dd55f24ce826fa461028a3cb74d8))
-* **release:** record clean consumer channel verification ([5667f1b](https://github.com/oaslananka/boardreadyops/commit/5667f1b5ce14dbd8888fd3e919109abc76655f51))
-* **release:** record copy-paste audit gate ([d3e74b0](https://github.com/oaslananka/boardreadyops/commit/d3e74b08607767743bde22f90efb1e0a1a5fa58b))
-* **release:** record reference synchronization gate ([4efcd6d](https://github.com/oaslananka/boardreadyops/commit/4efcd6d73e2e0de15a39c745b1a67e6c7a4f9ce0))
-* **release:** record v1.1.0 package parity ([#69](https://github.com/oaslananka/boardreadyops/issues/69)) ([255eb6d](https://github.com/oaslananka/boardreadyops/commit/255eb6d31692d7c06737ed99ba7a56f6e18a3018))
-
-
-### Tests
-
-* align CLI version expectation ([90478fc](https://github.com/oaslananka/boardreadyops/commit/90478fc27f9617f1ee3821002416cfe382c30c1c))
-* **core:** add fixture regression corpus ([e692578](https://github.com/oaslananka/boardreadyops/commit/e6925782e7a28fd18fae48e64d6d88338351328e))
-* **core:** cover cross-platform path handling ([#19](https://github.com/oaslananka/boardreadyops/issues/19)) ([5e1df7a](https://github.com/oaslananka/boardreadyops/commit/5e1df7ae1839108cabe29c225ac7052235a2fd6b))
-* **docs:** enforce accessibility checks ([da3a370](https://github.com/oaslananka/boardreadyops/commit/da3a370ff78498bce4b198084551ea2d16ee5504))
-* enforce coverage and mutation gates ([9446b77](https://github.com/oaslananka/boardreadyops/commit/9446b7763277dfb666429ac0dca0138c1c9d1994))
-
-
-### CI
-
-* **ci:** repair trivy action pin ([a049987](https://github.com/oaslananka/boardreadyops/commit/a04998799b5fbf3cbdc42ced1204ed6422a1818d))
-* **docs:** enforce compatibility matrix drift guard ([#33](https://github.com/oaslananka/boardreadyops/issues/33)) ([37cf202](https://github.com/oaslananka/boardreadyops/commit/37cf2024d772ace790047b648cbb5dfe33e1a29f))
-* enforce action example pinning ([02b55c5](https://github.com/oaslananka/boardreadyops/commit/02b55c590b214c2d70692834b7d46ed3d6fbbbba))
-* fix Scorecard SARIF upload action pin ([84d77e2](https://github.com/oaslananka/boardreadyops/commit/84d77e288cf43fa1c5ea680d0d3241b38afb1110))
-* publish OpenSSF Scorecard results ([800feb1](https://github.com/oaslananka/boardreadyops/commit/800feb195a1850f6a49942036513e2ae85b818d3))
-* publish OpenSSF Scorecard results ([d8e7ac4](https://github.com/oaslananka/boardreadyops/commit/d8e7ac4b082054d8f2e2ef02a67eecb5d1e16626))
-* **release:** add manual container publish ([704b2ec](https://github.com/oaslananka/boardreadyops/commit/704b2ec82794f69f69e485f9929d56e718cd3f79))
-* **release:** add manual npm publish dispatch ([11113be](https://github.com/oaslananka/boardreadyops/commit/11113be50f0d9b257321e3c54e2dff888858572b))
-* **release:** add self-validation gate ([42a4a5d](https://github.com/oaslananka/boardreadyops/commit/42a4a5d396914278c1e0f9e2c3bf47cd257a7052))
-* **release:** allow dispatch publish from release tag ([2132170](https://github.com/oaslananka/boardreadyops/commit/21321705df4f15c029af833b098775127a87dab6))
-* **release:** fetch full history for manual npm publish ([6b9b9e0](https://github.com/oaslananka/boardreadyops/commit/6b9b9e0d439de3c5bc657f0649bdd6698cdf2578))
-* **release:** harden binary release assets ([8e5bdbd](https://github.com/oaslananka/boardreadyops/commit/8e5bdbd3d128c5a84caf04475392773e403a1469)), closes [#41](https://github.com/oaslananka/boardreadyops/issues/41)
-* **release:** harden manual tag retry workflow ([a791ffe](https://github.com/oaslananka/boardreadyops/commit/a791ffed7ce6dbba694c088185985dd230d2429a))
-* **release:** make npm publish retry idempotent ([7aacbed](https://github.com/oaslananka/boardreadyops/commit/7aacbed67550e5da29d130082ec1e56194a2f205))
-* **security:** harden scorecard gate ([4c7f545](https://github.com/oaslananka/boardreadyops/commit/4c7f54562fc141ffcfaad9985c8e43b40c5a56a4))
-* test supported Node versions ([aa52ed6](https://github.com/oaslananka/boardreadyops/commit/aa52ed6c007f96fcade6914f0467b195c4cb143e))
+All notable changes to BoardReadyOps are recorded here.
 
 ## [Unreleased]
 
+### Documentation
+
+* Normalize release history, generated plugin SDK API docs, and stale-doc verification ([#50](https://github.com/oaslananka/boardreadyops/issues/50)).
+
 ### CI
 
-* **ci:** update UV_VERSION 0.9.14 → 0.11.16 ([#58](https://github.com/oaslananka/boardreadyops/issues/58))
-* **ci:** upgrade pnpm 11.1.3 → 11.3.0 ([#60](https://github.com/oaslananka/boardreadyops/issues/60))
-* **ci:** remove KiCad 9.x from integration and container matrices ([#59](https://github.com/oaslananka/boardreadyops/issues/59))
-* **ci:** enforce zizmor advisory scan — remove continue-on-error ([#61](https://github.com/oaslananka/boardreadyops/issues/61))
-* **ci:** extract docs Python deps to requirements.txt ([#62](https://github.com/oaslananka/boardreadyops/issues/62))
+* Update UV_VERSION 0.9.14 to 0.11.16 ([#58](https://github.com/oaslananka/boardreadyops/issues/58)).
+* Upgrade pnpm 11.1.3 to 11.3.0 ([#60](https://github.com/oaslananka/boardreadyops/issues/60)).
+* Remove KiCad 9.x from integration and container matrices ([#59](https://github.com/oaslananka/boardreadyops/issues/59)).
+* Enforce zizmor advisory scan by removing `continue-on-error` ([#61](https://github.com/oaslananka/boardreadyops/issues/61)).
+* Extract docs Python dependencies to `docs/requirements.txt` ([#62](https://github.com/oaslananka/boardreadyops/issues/62)).
 
-## [1.1.0](https://github.com/oaslananka/boardreadyops/compare/boardreadyopsv1.0.2...boardreadyopsv1.1.0) (2026-05-26)
+## [1.2.0](https://github.com/oaslananka/boardreadyops/compare/v1.1.0...boardreadyopsv1.2.0) (2026-05-30)
 
+### CI
 
-### Features
-
-* **action:** diff fabrication changes in PR comments ([0d9dc32](https://github.com/oaslananka/boardreadyops/commit/0d9dc3281abe0139e2ab3113dbc6a83fe7fae817))
-* **action:** validate marketplace listing ([85a4dc7](https://github.com/oaslananka/boardreadyops/commit/85a4dc7476f904c197853143597b4297dfdc2244))
-* **ci:** enforce compatibility matrix ([#18](https://github.com/oaslananka/boardreadyops/issues/18)) ([be4135e](https://github.com/oaslananka/boardreadyops/commit/be4135ecc1234448a965fb63aaac10642e3dbb2c))
-* **cli:** add automated fix command ([dad705b](https://github.com/oaslananka/boardreadyops/commit/dad705b24b260ec15feb4da8d25ad36e1e529f81))
-* **cli:** add i18n infrastructure ([#21](https://github.com/oaslananka/boardreadyops/issues/21)) ([c254552](https://github.com/oaslananka/boardreadyops/commit/c254552cb07b6e7830f098159324a759b510ff1f))
-* **cli:** expand doctor diagnostics ([514d606](https://github.com/oaslananka/boardreadyops/commit/514d606f7010539f3981bcb8f00de32ce447b015))
-* **core:** add finding remediation metadata ([1bca167](https://github.com/oaslananka/boardreadyops/commit/1bca1679ad5b66f61e9d093975996b36b7bc6bb9))
-* **core:** add gate semantics ([8c8a9bf](https://github.com/oaslananka/boardreadyops/commit/8c8a9bf38d1ce531bb05cb3b21924e640803e65e))
-* **core:** add notifier framework ([c535bed](https://github.com/oaslananka/boardreadyops/commit/c535bed352458b819141aafe89fc9d0e11374630))
-* **core:** add plugin SDK and loader ([0589294](https://github.com/oaslananka/boardreadyops/commit/0589294b424709bfa97c14da049c7b5fd1e563c3))
-* **core:** add structured logging ([6b10f13](https://github.com/oaslananka/boardreadyops/commit/6b10f13d9d1145220742752871ff1ad62304630e))
-* **core:** add suppressions and baselines ([846357f](https://github.com/oaslananka/boardreadyops/commit/846357f58bd59ea6b36b887d7366f42abdbbbd1f))
-* **core:** support multi-project workspaces ([8c27166](https://github.com/oaslananka/boardreadyops/commit/8c271668e5da3e6b268dbfd9c8c0c66171342463))
-* **kicad:** add PCM editor plugin ([96eb42a](https://github.com/oaslananka/boardreadyops/commit/96eb42a0f90aabb610f4b08914ec9629ec9206d0))
-* **release:** add binary distribution pipeline ([485c25c](https://github.com/oaslananka/boardreadyops/commit/485c25c0157f568a227b348910d485f4926f79ed))
-* **release:** add full container action ([71f83b0](https://github.com/oaslananka/boardreadyops/commit/71f83b0fe8ffa0e3fd1dad1c4c2842915d2654c8))
-* **report:** add accessible HTML report emitter ([#20](https://github.com/oaslananka/boardreadyops/issues/20)) ([6f895fa](https://github.com/oaslananka/boardreadyops/commit/6f895fac1350bc693c9e81e17cf876b1ef7176f7))
-* **report:** add CycloneDX hardware SBOM ([#31](https://github.com/oaslananka/boardreadyops/issues/31)) ([56ab82d](https://github.com/oaslananka/boardreadyops/commit/56ab82dde38efe807ac442b0b41ed5a5845b9fc7))
-* **report:** enrich SARIF context ([#17](https://github.com/oaslananka/boardreadyops/issues/17)) ([3fa99fa](https://github.com/oaslananka/boardreadyops/commit/3fa99fa5d23e96e40877b884d715d536c113ebff))
-* **rules:** enrich rule metadata ([0773732](https://github.com/oaslananka/boardreadyops/commit/0773732d1755deac2eff5513830604fd2ee9badd))
-* **rules:** explain manufacturing outputs ([533938c](https://github.com/oaslananka/boardreadyops/commit/533938ce475225a92b2ca61fda0c7caea00ab652))
-
-
-### Bug Fixes
-
-* emit configured junit reports ([ee4846f](https://github.com/oaslananka/boardreadyops/commit/ee4846f133eda36f69eb3e45ba67feb41d2d6875))
-
+* Add manual npm publish dispatch and release-tag retry paths ([11113be](https://github.com/oaslananka/boardreadyops/commit/11113be50f0d9b257321e3c54e2dff888858572b), [2132170](https://github.com/oaslananka/boardreadyops/commit/21321705df4f15c029af833b098775127a87dab6), [6b9b9e0](https://github.com/oaslananka/boardreadyops/commit/6b9b9e0d439de3c5bc657f0649bdd6698cdf2578)).
+* Make npm publish retry idempotent and harden manual tag repair ([7aacbed](https://github.com/oaslananka/boardreadyops/commit/7aacbed67550e5da29d130082ec1e56194a2f205), [a791ffe](https://github.com/oaslananka/boardreadyops/commit/a791ffed7ce6dbba694c088185985dd230d2429a)).
+* Add manual container publish dispatch for already-published versions ([704b2ec](https://github.com/oaslananka/boardreadyops/commit/704b2ec82794f69f69e485f9929d56e718cd3f79)).
 
 ### Documentation
 
-* **docs:** add license compliance notices ([6087066](https://github.com/oaslananka/boardreadyops/commit/6087066b0f53a87639ca2a75dff4c55c6fd1b464))
-* **docs:** document structure verifier ([cf14cf7](https://github.com/oaslananka/boardreadyops/commit/cf14cf7d690997c259ae500c920f35ee284fc7d3))
-* expand contributing governance docs ([95852af](https://github.com/oaslananka/boardreadyops/commit/95852af2dcd6dd55f24ce826fa461028a3cb74d8))
-* **release:** record clean consumer channel verification ([5667f1b](https://github.com/oaslananka/boardreadyops/commit/5667f1b5ce14dbd8888fd3e919109abc76655f51))
-* **release:** record copy-paste audit gate ([d3e74b0](https://github.com/oaslananka/boardreadyops/commit/d3e74b08607767743bde22f90efb1e0a1a5fa58b))
-* **release:** record reference synchronization gate ([4efcd6d](https://github.com/oaslananka/boardreadyops/commit/4efcd6d73e2e0de15a39c745b1a67e6c7a4f9ce0))
+* Record v1.1.0 package parity verification ([#69](https://github.com/oaslananka/boardreadyops/issues/69)).
 
+### Dependencies
+
+* Update knip to v6.14.2 and pin dependency versions ([#71](https://github.com/oaslananka/boardreadyops/issues/71), [3724c78](https://github.com/oaslananka/boardreadyops/commit/3724c787a953ad8653f6b37a4c87f6141bd9b366)).
+* Update non-major Vitest and coverage packages to v4.1.7 ([#76](https://github.com/oaslananka/boardreadyops/issues/76)).
+
+### Maintenance
+
+* Refresh generated NOTICE artifacts after dependency updates ([f56bfac](https://github.com/oaslananka/boardreadyops/commit/f56bfac33ad3a633ed062c955ab526775769cfa8), [7e4cbba](https://github.com/oaslananka/boardreadyops/commit/7e4cbba3eead4c1078b2a3d16866abb85087c7aa)).
+
+## [1.1.0](https://github.com/oaslananka/boardreadyops/compare/v1.0.2...v1.1.0) (2026-05-26)
+
+### Features
+
+* Add fabrication diffs in PR comments and validate the GitHub Action marketplace listing ([0d9dc32](https://github.com/oaslananka/boardreadyops/commit/0d9dc3281abe0139e2ab3113dbc6a83fe7fae817), [85a4dc7](https://github.com/oaslananka/boardreadyops/commit/85a4dc7476f904c197853143597b4297dfdc2244)).
+* Add CLI fix automation, doctor diagnostics, and i18n infrastructure ([dad705b](https://github.com/oaslananka/boardreadyops/commit/dad705b24b260ec15feb4da8d25ad36e1e529f81), [514d606](https://github.com/oaslananka/boardreadyops/commit/514d606f7010539f3981bcb8f00de32ce447b015), [#21](https://github.com/oaslananka/boardreadyops/issues/21)).
+* Add finding remediation metadata, gate semantics, suppressions, baselines, structured logging, notifier hooks, and multi-project workspace support ([1bca167](https://github.com/oaslananka/boardreadyops/commit/1bca1679ad5b66f61e9d093975996b36b7bc6bb9), [8c8a9bf](https://github.com/oaslananka/boardreadyops/commit/8c8a9bf38d1ce531bb05cb3b21924e640803e65e), [846357f](https://github.com/oaslananka/boardreadyops/commit/846357f58bd59ea6b36b887d7366f42abdbbbd1f), [6b10f13](https://github.com/oaslananka/boardreadyops/commit/6b10f13d9d1145220742752871ff1ad62304630e), [c535bed](https://github.com/oaslananka/boardreadyops/commit/c535bed352458b819141aafe89fc9d0e11374630), [8c27166](https://github.com/oaslananka/boardreadyops/commit/8c271668e5da3e6b268dbfd9c8c0c66171342463)).
+* Add plugin SDK and loader plus the KiCad PCM editor plugin ([0589294](https://github.com/oaslananka/boardreadyops/commit/0589294b424709bfa97c14da049c7b5fd1e563c3), [96eb42a](https://github.com/oaslananka/boardreadyops/commit/96eb42a0f90aabb610f4b08914ec9629ec9206d0)).
+* Add binary distribution and full container Action release pipelines ([485c25c](https://github.com/oaslananka/boardreadyops/commit/485c25c0157f568a227b348910d485f4926f79ed), [71f83b0](https://github.com/oaslananka/boardreadyops/commit/71f83b0fe8ffa0e3fd1dad1c4c2842915d2654c8)).
+* Add accessible HTML reports, CycloneDX hardware SBOM output, enriched SARIF context, richer rule metadata, and manufacturing output explanations ([#20](https://github.com/oaslananka/boardreadyops/issues/20), [#31](https://github.com/oaslananka/boardreadyops/issues/31), [#17](https://github.com/oaslananka/boardreadyops/issues/17), [0773732](https://github.com/oaslananka/boardreadyops/commit/0773732d1755deac2eff5513830604fd2ee9badd), [533938c](https://github.com/oaslananka/boardreadyops/commit/533938ce475225a92b2ca61fda0c7caea00ab652)).
+
+### Bug Fixes
+
+* Emit configured JUnit reports ([ee4846f](https://github.com/oaslananka/boardreadyops/commit/ee4846f133eda36f69eb3e45ba67feb41d2d6875)).
+
+### Documentation
+
+* Add license compliance notices, structure verifier documentation, and contributing governance docs ([6087066](https://github.com/oaslananka/boardreadyops/commit/6087066b0f53a87639ca2a75dff4c55c6fd1b464), [cf14cf7](https://github.com/oaslananka/boardreadyops/commit/cf14cf7d690997c259ae500c920f35ee284fc7d3), [95852af](https://github.com/oaslananka/boardreadyops/commit/95852af2dcd6dd55f24ce826fa461028a3cb74d8)).
+* Record clean consumer channel verification, reference synchronization, and copy-paste audit gates ([5667f1b](https://github.com/oaslananka/boardreadyops/commit/5667f1b5ce14dbd8888fd3e919109abc76655f51), [4efcd6d](https://github.com/oaslananka/boardreadyops/commit/4efcd6d73e2e0de15a39c745b1a67e6c7a4f9ce0), [d3e74b0](https://github.com/oaslananka/boardreadyops/commit/d3e74b08607767743bde22f90efb1e0a1a5fa58b)).
 
 ### Tests
 
-* align CLI version expectation ([90478fc](https://github.com/oaslananka/boardreadyops/commit/90478fc27f9617f1ee3821002416cfe382c30c1c))
-* **core:** add fixture regression corpus ([e692578](https://github.com/oaslananka/boardreadyops/commit/e6925782e7a28fd18fae48e64d6d88338351328e))
-* **core:** cover cross-platform path handling ([#19](https://github.com/oaslananka/boardreadyops/issues/19)) ([5e1df7a](https://github.com/oaslananka/boardreadyops/commit/5e1df7ae1839108cabe29c225ac7052235a2fd6b))
-* **docs:** enforce accessibility checks ([da3a370](https://github.com/oaslananka/boardreadyops/commit/da3a370ff78498bce4b198084551ea2d16ee5504))
-* enforce coverage and mutation gates ([9446b77](https://github.com/oaslananka/boardreadyops/commit/9446b7763277dfb666429ac0dca0138c1c9d1994))
-
+* Align CLI version expectations, add fixture regression coverage, cover cross-platform paths, enforce docs accessibility, and add coverage and mutation gates ([90478fc](https://github.com/oaslananka/boardreadyops/commit/90478fc27f9617f1ee3821002416cfe382c30c1c), [e692578](https://github.com/oaslananka/boardreadyops/commit/e6925782e7a28fd18fae48e64d6d88338351328e), [#19](https://github.com/oaslananka/boardreadyops/issues/19), [da3a370](https://github.com/oaslananka/boardreadyops/commit/da3a370ff78498bce4b198084551ea2d16ee5504), [9446b77](https://github.com/oaslananka/boardreadyops/commit/9446b7763277dfb666429ac0dca0138c1c9d1994)).
 
 ### CI
 
-* **ci:** repair trivy action pin ([a049987](https://github.com/oaslananka/boardreadyops/commit/a04998799b5fbf3cbdc42ced1204ed6422a1818d))
-* **docs:** enforce compatibility matrix drift guard ([#33](https://github.com/oaslananka/boardreadyops/issues/33)) ([37cf202](https://github.com/oaslananka/boardreadyops/commit/37cf2024d772ace790047b648cbb5dfe33e1a29f))
-* enforce action example pinning ([02b55c5](https://github.com/oaslananka/boardreadyops/commit/02b55c590b214c2d70692834b7d46ed3d6fbbbba))
-* fix Scorecard SARIF upload action pin ([84d77e2](https://github.com/oaslananka/boardreadyops/commit/84d77e288cf43fa1c5ea680d0d3241b38afb1110))
-* publish OpenSSF Scorecard results ([800feb1](https://github.com/oaslananka/boardreadyops/commit/800feb195a1850f6a49942036513e2ae85b818d3))
-* publish OpenSSF Scorecard results ([d8e7ac4](https://github.com/oaslananka/boardreadyops/commit/d8e7ac4b082054d8f2e2ef02a67eecb5d1e16626))
-* **release:** add self-validation gate ([42a4a5d](https://github.com/oaslananka/boardreadyops/commit/42a4a5d396914278c1e0f9e2c3bf47cd257a7052))
-* **release:** harden binary release assets ([8e5bdbd](https://github.com/oaslananka/boardreadyops/commit/8e5bdbd3d128c5a84caf04475392773e403a1469)), closes [#41](https://github.com/oaslananka/boardreadyops/issues/41)
-* **security:** harden scorecard gate ([4c7f545](https://github.com/oaslananka/boardreadyops/commit/4c7f54562fc141ffcfaad9985c8e43b40c5a56a4))
-* test supported Node versions ([aa52ed6](https://github.com/oaslananka/boardreadyops/commit/aa52ed6c007f96fcade6914f0467b195c4cb143e))
+* Enforce compatibility matrix drift, action example pinning, Node version coverage, Scorecard publishing, Trivy pin repair, binary release asset hardening, and release self-validation ([#33](https://github.com/oaslananka/boardreadyops/issues/33), [02b55c5](https://github.com/oaslananka/boardreadyops/commit/02b55c590b214c2d70692834b7d46ed3d6fbbbba), [aa52ed6](https://github.com/oaslananka/boardreadyops/commit/aa52ed6c007f96fcade6914f0467b195c4cb143e), [800feb1](https://github.com/oaslananka/boardreadyops/commit/800feb195a1850f6a49942036513e2ae85b818d3), [d8e7ac4](https://github.com/oaslananka/boardreadyops/commit/d8e7ac4b082054d8f2e2ef02a67eecb5d1e16626), [a049987](https://github.com/oaslananka/boardreadyops/commit/a04998799b5fbf3cbdc42ced1204ed6422a1818d), [8e5bdbd](https://github.com/oaslananka/boardreadyops/commit/8e5bdbd3d128c5a84caf04475392773e403a1469), [42a4a5d](https://github.com/oaslananka/boardreadyops/commit/42a4a5d396914278c1e0f9e2c3bf47cd257a7052)).
 
-## 1.0.0 - 2026-05-20
+## [1.0.2](https://github.com/oaslananka/boardreadyops/compare/v1.0.1...v1.0.2) (2026-05-21)
+
+### Maintenance
+
+* Refresh generated artifacts and mark the CLI bundle executable ([1cdcdcf](https://github.com/oaslananka/boardreadyops/commit/1cdcdcf), [c77df5c](https://github.com/oaslananka/boardreadyops/commit/c77df5c)).
+* Align release metadata for v1.0.2 ([15e7890](https://github.com/oaslananka/boardreadyops/commit/15e7890), [9210bca](https://github.com/oaslananka/boardreadyops/commit/9210bca)).
+
+## [1.0.1](https://github.com/oaslananka/boardreadyops/compare/v1.0.0...v1.0.1) (2026-05-21)
+
+### Maintenance
+
+* Normalize npm package metadata and publish the v1.0.1 package correction ([2cd39e6](https://github.com/oaslananka/boardreadyops/commit/2cd39e6), [02ff84a](https://github.com/oaslananka/boardreadyops/commit/02ff84a)).
+
+## [1.0.0](https://github.com/oaslananka/boardreadyops/releases/tag/v1.0.0) (2026-05-21)
 
 ### Added
 
-- Initial BoardReadyOps CLI and GitHub Action release for KiCad hardware production-readiness checks.
-- KiCad DRC/ERC normalization, BOM checks, pinmap validation, manufacturing checks, design sanity checks, release preflight rules, and JSON/SARIF/Markdown/JUnit report outputs.
-- Node 24 GitHub Action runtime, committed CLI/action bundles, coverage gates, mutation testing, property tests, SBOM generation, Gitleaks, OSV, CodeQL, Scorecard, Trivy, and npm provenance release workflows.
+* Initial BoardReadyOps CLI and GitHub Action release for KiCad hardware production-readiness checks.
+* KiCad DRC/ERC normalization, BOM checks, pinmap validation, manufacturing checks, design sanity checks, release preflight rules, and JSON/SARIF/Markdown/JUnit report outputs.
+* Node 24 GitHub Action runtime, committed CLI/action bundles, coverage gates, mutation testing, property tests, SBOM generation, Gitleaks, OSV, CodeQL, Scorecard, Trivy, and npm provenance release workflows.

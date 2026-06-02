@@ -145,6 +145,9 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `typed-inject@5.0.0`
   - Description: Type safe dependency injection framework for TypeScript
   - Homepage: https://github.com/nicojs/typed-inject/#readme
+- `typedoc@0.28.19`
+  - Description: Create api documentation for TypeScript projects.
+  - Homepage: https://typedoc.org
 - `typescript@3.9.10`, `typescript@5.4.5`, `typescript@6.0.3`
   - Description: TypeScript is a language for application scale JavaScript development
   - Homepage: https://www.typescriptlang.org/
@@ -174,7 +177,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 
 ## BSD-2-Clause
 
-- `entities@7.0.1`
+- `entities@4.5.0`, `entities@7.0.1`
   - Description: Encode & decode XML and HTML entities with ease & speed
   - Homepage: https://github.com/fb55/entities#readme
 - `escodegen@2.1.0`
@@ -494,10 +497,10 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@bcoe/v8-coverage@1.0.2`
   - Description: Helper functions for V8 coverage files.
   - Homepage: https://github.com/bcoe/v8-coverage#readme
-- `@commitlint/cli@21.0.1`
+- `@commitlint/cli@21.0.2`
   - Description: Lint your commit messages
   - Homepage: https://commitlint.js.org/
-- `@commitlint/config-conventional@21.0.1`
+- `@commitlint/config-conventional@21.0.2`
   - Description: Shareable commitlint config enforcing conventional commits
   - Homepage: https://commitlint.js.org/
 - `@commitlint/config-validator@21.0.1`
@@ -512,34 +515,34 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@commitlint/format@21.0.1`
   - Description: Format commitlint reports
   - Homepage: https://commitlint.js.org/
-- `@commitlint/is-ignored@21.0.1`
+- `@commitlint/is-ignored@21.0.2`
   - Description: Lint your commit messages
   - Homepage: https://commitlint.js.org/
-- `@commitlint/lint@21.0.1`
+- `@commitlint/lint@21.0.2`
   - Description: Lint a string against commitlint rules
   - Homepage: https://commitlint.js.org/
-- `@commitlint/load@21.0.1`
+- `@commitlint/load@21.0.2`
   - Description: Load shared commitlint configuration
   - Homepage: https://commitlint.js.org/
-- `@commitlint/message@21.0.1`
+- `@commitlint/message@21.0.2`
   - Description: Lint your commit messages
   - Homepage: https://commitlint.js.org/
-- `@commitlint/parse@21.0.1`
+- `@commitlint/parse@21.0.2`
   - Description: Lint your commit messages
   - Homepage: https://commitlint.js.org/
-- `@commitlint/read@21.0.1`
+- `@commitlint/read@21.0.2`
   - Description: Read commit messages from a specified range or last edit
   - Homepage: https://commitlint.js.org/
 - `@commitlint/resolve-extends@21.0.1`
   - Description: Lint your commit messages
   - Homepage: https://commitlint.js.org/
-- `@commitlint/rules@21.0.1`
+- `@commitlint/rules@21.0.2`
   - Description: Lint your commit messages
   - Homepage: https://commitlint.js.org/
 - `@commitlint/to-lines@21.0.1`
   - Description: Lint your commit messages
   - Homepage: https://commitlint.js.org/
-- `@commitlint/top-level@21.0.1`
+- `@commitlint/top-level@21.0.2`
   - Description: Lint your commit messages
   - Homepage: https://commitlint.js.org/
 - `@commitlint/types@21.0.1`
@@ -548,6 +551,8 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@conventional-changelog/git-client@2.7.0`
   - Description: Simple git client for conventional changelog packages.
   - Homepage: https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/git-client#readme
+- `@gerrit0/mini-shiki@3.23.0`
+  - Homepage: https://github.com/Gerrit0/mini-shiki#readme
 - `@html-validate/stylish@5.2.0`
   - Description: ESLint compatible stylish formatter
   - Homepage: https://gitlab.com/html-validate/stylish
@@ -670,6 +675,21 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@sec-ant/readable-stream@0.4.1`
   - Description: A tiny, zero-dependency yet spec-compliant asynchronous iterator polyfill/ponyfill for ReadableStreams.
   - Homepage: https://github.com/Sec-ant/readable-stream
+- `@shikijs/engine-oniguruma@3.23.0`
+  - Description: Engine for Shiki using Oniguruma RegExp engine in WebAssembly
+  - Homepage: https://github.com/shikijs/shiki#readme
+- `@shikijs/langs@3.23.0`
+  - Description: TextMate grammars for Shiki in ESM
+  - Homepage: https://github.com/shikijs/shiki#readme
+- `@shikijs/themes@3.23.0`
+  - Description: TextMate themes for Shiki in ESM
+  - Homepage: https://github.com/shikijs/shiki#readme
+- `@shikijs/types@3.23.0`
+  - Description: Type definitions for Shiki
+  - Homepage: https://github.com/shikijs/shiki#readme
+- `@shikijs/vscode-textmate@10.0.2`
+  - Description: Shiki's fork of `vscode-textmate`
+  - Homepage: https://github.com/shikijs/vscode-textmate#readme
 - `@simple-libs/child-process-utils@1.0.2`
   - Description: A small set of utilities for child process.
   - Homepage: https://github.com/TrigenSoftware/simple-libs/tree/main/packages/child-process-utils#readme
@@ -693,6 +713,9 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@types/estree@1.0.9`
   - Description: TypeScript definitions for estree
   - Homepage: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/estree
+- `@types/hast@3.0.4`
+  - Description: TypeScript definitions for hast
+  - Homepage: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/hast
 - `@types/js-yaml@4.0.9`
   - Description: TypeScript definitions for js-yaml
   - Homepage: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/js-yaml
@@ -702,6 +725,9 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@types/node@24.12.4`
   - Description: TypeScript definitions for node
   - Homepage: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/node
+- `@types/unist@3.0.3`
+  - Description: TypeScript definitions for unist
+  - Homepage: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/unist
 - `@types/whatwg-mimetype@3.0.2`
   - Description: TypeScript definitions for whatwg-mimetype
   - Homepage: https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/whatwg-mimetype
@@ -1151,6 +1177,9 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `lines-and-columns@1.2.4`
   - Description: Maps lines and columns to character offsets and back.
   - Homepage: https://github.com/eventualbuddha/lines-and-columns#readme
+- `linkify-it@5.0.1`
+  - Description: Links recognition library with FULL unicode support
+  - Homepage: https://github.com/markdown-it/linkify-it#readme
 - `lint-staged@17.0.5`
   - Description: Lint files staged by git
   - Homepage: https://github.com/lint-staged/lint-staged#readme
@@ -1166,6 +1195,9 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `log-update@6.1.0`
   - Description: Log by overwriting the previous output in the terminal. Useful for rendering progress bars, animations, etc.
   - Homepage: https://github.com/sindresorhus/log-update#readme
+- `lunr@2.3.9`
+  - Description: Simple full-text search in your browser.
+  - Homepage: https://lunrjs.com
 - `magic-string@0.30.21`
   - Description: Modify strings, generate sourcemaps
   - Homepage: https://github.com/Rich-Harris/magic-string#readme
@@ -1175,9 +1207,15 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `make-dir@4.0.0`
   - Description: Make a directory and its parents if needed - Think `mkdir -p`
   - Homepage: https://github.com/sindresorhus/make-dir#readme
+- `markdown-it@14.2.0`
+  - Description: Markdown-it - modern pluggable markdown parser.
+  - Homepage: https://github.com/markdown-it/markdown-it#readme
 - `math-intrinsics@1.1.0`
   - Description: ES Math-related intrinsics and helpers, robustly cached.
   - Homepage: https://github.com/es-shims/math-intrinsics#readme
+- `mdurl@2.0.0`
+  - Description: URL utilities for markdown-it
+  - Homepage: https://github.com/markdown-it/mdurl#readme
 - `meow@13.2.0`
   - Description: CLI app helper
   - Homepage: https://github.com/sindresorhus/meow#readme
@@ -1292,6 +1330,9 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `pump@3.0.4`
   - Description: pipe streams together and close all of them if one of them closes
   - Homepage: https://github.com/mafintosh/pump#readme
+- `punycode.js@2.3.1`
+  - Description: A robust Punycode converter that fully complies to RFC 3492 and RFC 5891, and works on nearly all JavaScript platforms.
+  - Homepage: https://mths.be/punycode
 - `pure-rand@8.4.0`
   - Description:  Pure random number generator written in TypeScript
   - Homepage: https://github.com/dubzzz/pure-rand#readme
@@ -1438,6 +1479,12 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `typed-rest-client@2.3.1`
   - Description: Node Rest and Http Clients for use with TypeScript
   - Homepage: https://github.com/Microsoft/typed-rest-client#readme
+- `typedoc-plugin-markdown@4.11.0`
+  - Description: A plugin for TypeDoc that enables TypeScript API documentation to be generated in Markdown.
+  - Homepage: https://typedoc-plugin-markdown.org
+- `uc.micro@2.1.0`
+  - Description: Micro subset of unicode data files for markdown-it projects.
+  - Homepage: https://github.com/markdown-it/uc.micro#readme
 - `underscore@1.13.8`
   - Description: JavaScript's functional programming helper library.
   - Homepage: https://underscorejs.org
@@ -1495,7 +1542,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 
 ## MIT OR Apache-2.0
 
-- `@biomejs/biome@2.4.15`
+- `@biomejs/biome@2.4.16`
   - Description: Biome is a toolchain for the web: formatter, linter and more
   - Homepage: https://biomejs.dev
 

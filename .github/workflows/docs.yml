@@ -9,13 +9,18 @@ on:
       - docs/compatibility.yaml
       - docs/support-matrix.md
       - docs/**
+      - CHANGELOG.md
       - mkdocs.yml
       - package.json
+      - packages/plugin-sdk/**
       - pnpm-lock.yaml
       - scripts/compatibility.mjs
+      - scripts/generate-api-docs.mjs
+      - scripts/generate-release-history.mjs
       - scripts/generate-rule-docs.mjs
       - scripts/update-action-inputs-docs.mjs
       - scripts/docs-build.mjs
+      - typedoc.json
 
 concurrency:
   group: pages

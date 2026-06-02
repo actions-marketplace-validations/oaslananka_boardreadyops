@@ -88,6 +88,7 @@ nav:
       - GitHub Code Scanning: integrations/github-code-scanning.md
       - KiCad IPC API: integrations/kicad-ipc.md
       - Plugin SDK: plugin-sdk.md
+      - Plugin SDK API: reference/plugin-sdk/README.md
       - BoardReadyOps MCP: integrations/boardreadyops-mcp.md
       - BoardReadyOps Studio: integrations/boardreadyops-studio.md
   - Development:
@@ -106,6 +107,7 @@ nav:
           - "0005: KiCad IPC API": architecture/adr/0005-kicad-ipc-api.md
           - "0006: License Compliance": architecture/adr/0006-license-compliance.md
   - Release:
+      - History: release/history.md
       - Process: release/process.md
       - Channel Verification: release/channel-verification.md
       - Reference Synchronization: release/reference-synchronization.md

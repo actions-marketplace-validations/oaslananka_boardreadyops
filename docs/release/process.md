@@ -2,6 +2,19 @@
 
 Release Please manages routine version bumps and release PRs. Manual stable releases are allowed only from a clean, verified `main` branch. Publishing uses npm provenance and GitHub OIDC.
 
+Release Please reads `release-please-config.json` and
+`.release-please-manifest.json`. The manifest package uses standard semver tags
+such as `v1.2.0`; component-prefixed tags are disabled so GitHub Release notes,
+floating tags, binary assets, and npm publishing all point at the same release
+identity. Release notes must come from real changelog changes, not placeholder
+sentences.
+
+`corepack pnpm run docs` regenerates compatibility docs, rule docs, Action
+input docs, plugin SDK API docs, and the release history page before building
+MkDocs. `corepack pnpm run gc` reruns the same generated-doc steps and fails if
+`docs/reference/plugin-sdk/`, `docs/release/history.md`, or other generated docs
+are stale.
+
 ## Local Pre-Release Gate
 
 Run these commands on the exact commit that will be tagged:

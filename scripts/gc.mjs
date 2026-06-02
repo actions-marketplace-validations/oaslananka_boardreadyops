@@ -9,6 +9,8 @@ const generatedBefore = await generatedContents();
 
 run("node", ["scripts/generate-rule-docs.mjs"]);
 run("node", ["scripts/update-action-inputs-docs.mjs"]);
+run("node", ["scripts/generate-api-docs.mjs"]);
+run("node", ["scripts/generate-release-history.mjs"]);
 run("node", ["scripts/check-marketplace-listing.mjs"]);
 run("node", ["scripts/verify-structure.mjs"]);
 await checkGeneratedDrift(generatedBefore);

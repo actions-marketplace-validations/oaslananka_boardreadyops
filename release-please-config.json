@@ -6,6 +6,7 @@
   "prerelease": true,
   "prerelease-type": "rc",
   "include-v-in-tag": true,
+  "include-component-in-tag": false,
   "tag-separator": "",
   "packages": {
     ".": {
