@@ -22,7 +22,7 @@ permissions:
 
 env:
   NODE_VERSION: "24"
-  PNPM_VERSION: "11.3.0"
+
   UV_VERSION: "0.11.16"
 
 jobs:

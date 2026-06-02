@@ -28,7 +28,7 @@
   "tags": ["fabrication", "drc", "erc", "bom", "ci"],
   "versions": [
     {
-      "version": "1.2.0",
+      "version": "1.2.1",
       "status": "development",
       "runtime": "swig",
       "kicad_version": "9.0",

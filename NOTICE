@@ -1180,7 +1180,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `linkify-it@5.0.1`
   - Description: Links recognition library with FULL unicode support
   - Homepage: https://github.com/markdown-it/linkify-it#readme
-- `lint-staged@17.0.5`
+- `lint-staged@17.0.6`
   - Description: Lint files staged by git
   - Homepage: https://github.com/lint-staged/lint-staged#readme
 - `listr2@10.2.1`
@@ -1452,7 +1452,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
   - Homepage: https://github.com/mafintosh/teex
 - `tinybench@2.9.0`
   - Homepage: https://github.com/tinylibs/tinybench#readme
-- `tinyexec@1.1.2`
+- `tinyexec@1.1.2`, `tinyexec@1.2.2`
   - Description: A minimal library for executing processes in Node
   - Homepage: https://github.com/tinylibs/tinyexec#readme
 - `tinyglobby@0.2.16`
