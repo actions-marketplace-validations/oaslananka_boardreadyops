@@ -233222,7 +233222,7 @@ var {
 } = import_index.default;
 
 // src/generated/version.ts
-var boardReadyVersion = "1.2.1";
+var boardReadyVersion = "1.2.2";
 
 // src/i18n/en.ts
 var en = {

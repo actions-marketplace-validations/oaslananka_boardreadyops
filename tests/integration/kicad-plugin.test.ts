@@ -73,7 +73,7 @@ describe("KiCad PCM plugin", () => {
       version: manifest.version,
       status: "development",
       runtime: "swig",
-      kicad_version: "9.0",
+      kicad_version: "10.0",
     });
     expect(manifest.files).toContain("kicad-plugin");
   });
@@ -172,7 +172,10 @@ async function readJson<T>(filePath: string): Promise<T> {
 
 async function findPython(): Promise<string | undefined> {
   for (const command of ["python3", "python"]) {
-    const result = await runProcess(command, ["--version"], { cwd: repoRoot, timeoutMs: 5_000 });
+    const result = await runProcess(command, ["--version"], {
+      cwd: repoRoot,
+      timeoutMs: 5_000,
+    });
     if (result.code === 0) {
       return command;
     }

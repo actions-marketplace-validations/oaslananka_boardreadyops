@@ -2,14 +2,13 @@
 
 All notable changes to BoardReadyOps are recorded here.
 
-## [1.2.2](https://github.com/oaslananka/boardreadyops/compare/v1.2.1...v1.2.2) (2026-06-02)
+## [Unreleased]
 
+## [1.2.2](https://github.com/oaslananka/boardreadyops/compare/v1.2.1...v1.2.2) (2026-06-02)
 
 ### Bug Fixes
 
-* stabilize v1.2.1 release automation ([#95](https://github.com/oaslananka/boardreadyops/issues/95)) ([3b493dd](https://github.com/oaslananka/boardreadyops/commit/3b493ddca01e7b01964697db66896ee7169eba13)), closes [#89](https://github.com/oaslananka/boardreadyops/issues/89)
-
-## [Unreleased]
+- stabilize v1.2.1 release automation ([#95](https://github.com/oaslananka/boardreadyops/issues/95)) ([3b493dd](https://github.com/oaslananka/boardreadyops/commit/3b493ddca01e7b01964697db66896ee7169eba13)), closes [#89](https://github.com/oaslananka/boardreadyops/issues/89)
 
 ### Documentation
 
