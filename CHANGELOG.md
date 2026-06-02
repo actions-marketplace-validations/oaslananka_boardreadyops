@@ -2,6 +2,24 @@
 
 All notable changes to BoardReadyOps are recorded here.
 
+## [1.2.1](https://github.com/oaslananka/boardreadyops/compare/v1.2.0...v1.2.1) (2026-06-02)
+
+
+### Bug Fixes
+
+* **ci:** normalize compatibility matrix drift ([#82](https://github.com/oaslananka/boardreadyops/issues/82)) ([793e8ce](https://github.com/oaslananka/boardreadyops/commit/793e8cee6ac54ea438ef3f6544b5a21b01f261f7))
+
+
+### Documentation
+
+* plan docs toolchain lifecycle ([#86](https://github.com/oaslananka/boardreadyops/issues/86)) ([fe20a0e](https://github.com/oaslananka/boardreadyops/commit/fe20a0e75017df427008450893ee0f069025ea95))
+* **release:** normalize release history and sdk api ([#87](https://github.com/oaslananka/boardreadyops/issues/87)) ([d5e0bad](https://github.com/oaslananka/boardreadyops/commit/d5e0badc822f899935e757bb58bdcb015ddd1744))
+
+
+### Tests
+
+* **ci:** stabilize Vitest timeout on Windows ([#81](https://github.com/oaslananka/boardreadyops/issues/81)) ([d38c8b1](https://github.com/oaslananka/boardreadyops/commit/d38c8b15aa70a50dc0b2cf55722e7e2070afec79))
+
 ## [Unreleased]
 
 ### Documentation
