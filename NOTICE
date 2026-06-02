@@ -275,7 +275,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `isexe@2.0.0`
   - Description: Minimal module to check if a file is executable.
   - Homepage: https://github.com/isaacs/isexe#readme
-- `knip@6.14.2`
+- `knip@6.15.0`
   - Description: Find and fix unused dependencies, exports and files in your TypeScript and JavaScript projects
   - Homepage: https://knip.dev
 - `lru-cache@5.1.1`, `lru-cache@7.18.3`
@@ -666,7 +666,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@octokit/types@16.0.0`
   - Description: Shared TypeScript definitions for Octokit projects
   - Homepage: https://github.com/octokit/types.ts#readme
-- `@oxc-project/types@0.130.0`
+- `@oxc-project/types@0.130.0`, `@oxc-project/types@0.133.0`
   - Description: Types for Oxc AST nodes
   - Homepage: https://oxc.rs
 - `@rolldown/pluginutils@1.0.1`
@@ -1144,7 +1144,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `js-tokens@4.0.0`, `js-tokens@10.0.0`
   - Description: Tiny JavaScript tokenizer.
   - Homepage: https://github.com/lydell/js-tokens#readme
-- `js-yaml@4.1.1`
+- `js-yaml@4.1.1`, `js-yaml@4.2.0`
   - Description: YAML 1.2 parser and serializer
   - Homepage: https://github.com/nodeca/js-yaml#readme
 - `jsesc@3.1.0`
@@ -1267,10 +1267,10 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `onetime@7.0.0`
   - Description: Ensure a function is only called once
   - Homepage: https://github.com/sindresorhus/onetime#readme
-- `oxc-parser@0.130.0`
+- `oxc-parser@0.133.0`
   - Description: Oxc Parser Node API
   - Homepage: https://oxc.rs/docs/guide/usage/parser
-- `oxc-resolver@11.19.1`
+- `oxc-resolver@11.20.0`
   - Description: Oxc Resolver Node API
   - Homepage: https://oxc.rs
 - `pac-proxy-agent@7.2.0`
@@ -1557,7 +1557,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 
 ## MPL-2.0
 
-- `axe-core@4.11.4`
+- `axe-core@4.11.4`, `axe-core@4.12.0`
   - Description: Accessibility engine for automated Web UI testing
   - Homepage: https://www.deque.com/axe/
 - `lightningcss@1.32.0`
