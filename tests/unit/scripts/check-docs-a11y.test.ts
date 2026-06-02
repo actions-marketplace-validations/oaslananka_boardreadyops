@@ -2,7 +2,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { collectHtmlFiles, formatPa11yFailures, pa11yOptions } from "../../../scripts/check-docs-a11y.mjs";
+import {
+  candidateChromeExecutables,
+  collectHtmlFiles,
+  formatPa11yFailures,
+  pa11yOptions,
+} from "../../../scripts/check-docs-a11y.mjs";
 
 describe("check-docs-a11y", () => {
   it("collects generated HTML pages in stable order", async () => {
@@ -51,5 +56,20 @@ describe("check-docs-a11y", () => {
       runners: ["axe", "htmlcs"],
       standard: "WCAG2AA",
     });
+  });
+
+  it("detects standard Windows browser install paths", () => {
+    const candidates = candidateChromeExecutables({
+      "ProgramFiles(x86)": "C:\\Program Files (x86)",
+      CHROME_PATH: "D:\\Portable\\chrome.exe",
+      LOCALAPPDATA: "C:\\Users\\Admin\\AppData\\Local",
+      ProgramFiles: "C:\\Program Files",
+    });
+
+    expect(candidates).toContain("D:\\Portable\\chrome.exe");
+    expect(candidates).toContain(path.join("C:\\Program Files", "Google", "Chrome", "Application", "chrome.exe"));
+    expect(candidates).toContain(
+      path.join("C:\\Program Files (x86)", "Microsoft", "Edge", "Application", "msedge.exe"),
+    );
   });
 });

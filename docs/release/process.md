@@ -34,6 +34,12 @@ gitleaks detect --source . --redact --verbose
 
 `corepack pnpm outdated --json` is informational manual review output, not a hard release gate. pnpm exits non-zero when any package is outdated; review expected differences manually. Do not run this line under `set -e` or fail CI solely on its exit code.
 
+Docs Python dependencies are pinned in `docs/requirements.txt`. CI, docs,
+accessibility, and release workflows must install from that file instead of
+repeating inline `mkdocs`, `mkdocs-material`, or `mike` versions. Changes to
+the docs toolchain lifecycle are governed by
+[ADR-0007](../architecture/adr/0007-docs-toolchain-lifecycle.md).
+
 Before tagging, inspect each external workflow action metadata and confirm no JavaScript action runs on `node12`, `node16`, or `node20`. Prefer Node24 actions, composite actions, Docker actions, or directly installed official CLIs.
 
 ## Tag And GitHub Release

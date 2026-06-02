@@ -1,5 +1,7 @@
 import { defineConfig } from "vitest/config";
 
+const PIPELINE_TEST_TIMEOUT_MS = 15_000;
+
 export default defineConfig({
   plugins: [
     {
@@ -19,6 +21,7 @@ export default defineConfig({
     environment: "node",
     include: ["tests/**/*.test.ts"],
     setupFiles: ["tests/setup-env.ts"],
+    testTimeout: PIPELINE_TEST_TIMEOUT_MS,
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],

@@ -97,15 +97,29 @@ export async function createChromeLaunchConfig() {
   };
 }
 
-async function detectChromeExecutable() {
+export function candidateChromeExecutables(env = process.env) {
+  const localAppData = env.LOCALAPPDATA ?? env.LocalAppData;
+  const programFiles = env.ProgramFiles;
+  const programFilesX86 = env["ProgramFiles(x86)"];
   const candidates = [
-    process.env.CHROME_PATH,
+    env.CHROME_PATH,
+    localAppData && path.join(localAppData, "Google", "Chrome", "Application", "chrome.exe"),
+    programFiles && path.join(programFiles, "Google", "Chrome", "Application", "chrome.exe"),
+    programFilesX86 && path.join(programFilesX86, "Google", "Chrome", "Application", "chrome.exe"),
+    localAppData && path.join(localAppData, "Microsoft", "Edge", "Application", "msedge.exe"),
+    programFiles && path.join(programFiles, "Microsoft", "Edge", "Application", "msedge.exe"),
+    programFilesX86 && path.join(programFilesX86, "Microsoft", "Edge", "Application", "msedge.exe"),
     "/usr/bin/google-chrome",
     "/usr/bin/google-chrome-stable",
     "/usr/bin/chromium",
     "/usr/bin/chromium-browser",
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-  ].filter(Boolean);
+  ];
+  return candidates.filter(Boolean);
+}
+
+async function detectChromeExecutable() {
+  const candidates = candidateChromeExecutables();
   for (const candidate of candidates) {
     try {
       await access(candidate);

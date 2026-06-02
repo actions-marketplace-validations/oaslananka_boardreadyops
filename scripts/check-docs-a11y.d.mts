@@ -23,6 +23,8 @@ export const pa11yOptions: {
 
 export function createChromeLaunchConfig(): Promise<{ executablePath?: string; args: string[] }>;
 
+export function candidateChromeExecutables(env?: NodeJS.ProcessEnv): string[];
+
 export function collectHtmlFiles(siteDir: string): Promise<string[]>;
 
 export function formatPa11yFailures(siteDir: string, results: Pa11yPageResult[]): string;
