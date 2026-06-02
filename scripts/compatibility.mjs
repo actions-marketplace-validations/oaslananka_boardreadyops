@@ -20,15 +20,19 @@ export function renderSupportMatrix(input) {
     "",
     "## KiCad",
     "",
-    `Minimum supported KiCad: **${config.kicad.minimum}**. Recommended KiCad line: **${config.kicad.recommended}**.`,
+    `Minimum supported KiCad: **${config.kicad.minimum}**. Recommended KiCad line: **${config.kicad.recommended}**. Latest verified patch: **${config.kicad.latestVerified}**.`,
     "",
-    "| Runtime | Version | Status | Notes |",
-    "| --- | --- | --- | --- |",
+    "| Runtime | Version | Status | Latest verified | Notes |",
+    "| --- | --- | --- | --- | --- |",
   ];
 
-  for (const version of config.kicad.tested) {
-    const status = version === config.kicad.recommended ? "Recommended CI-tested line" : "Supported";
-    lines.push(`| KiCad | ${version} | ${status} | ${markdownCell(kicadNote(config, version))} |`);
+  for (const version of kicadMatrixVersions(config)) {
+    const status = kicadSupportStatus(config, version);
+    lines.push(
+      `| KiCad | ${version} | ${status} | ${kicadLatestVerifiedCell(config, version)} | ${markdownCell(
+        kicadNote(config, version),
+      )} |`,
+    );
   }
 
   lines.push(
@@ -105,7 +109,7 @@ export function buildDriftReport(drift) {
   if (drift.kicad.length > 0) {
     lines.push("", "## KiCad", "");
     for (const entry of drift.kicad) {
-      lines.push(`- KiCad ${entry.series} is not listed as CI-tested. Latest matching tag: ${entry.latest}.`);
+      lines.push(`- ${kicadDriftMessage(entry)}`);
     }
   }
 
@@ -213,8 +217,15 @@ async function driftCommand(root, args, fetchImpl = globalThis.fetch) {
 }
 
 function findKicadDrift(config, releases) {
+  const latestBySeries = latestKicadReleasesBySeries(config, releases);
+  return [
+    ...untestedKicadSeriesDrift(config, latestBySeries),
+    ...latestVerifiedKicadPatchDrift(config, latestBySeries),
+  ];
+}
+
+function latestKicadReleasesBySeries(config, releases) {
   const minimum = parseSeries(config.kicad.minimum);
-  const tested = new Set(config.kicad.tested);
   const latestBySeries = new Map();
   for (const release of releases) {
     const version = stableReleaseName(releaseName(release));
@@ -222,7 +233,7 @@ function findKicadDrift(config, releases) {
       continue;
     }
     const series = `${version.major}.${version.minor}`;
-    if (version.minor >= 90 || compareSeries(version, minimum) < 0 || tested.has(series)) {
+    if (version.minor >= 90 || compareSeries(version, minimum) < 0) {
       continue;
     }
     const current = latestBySeries.get(series);
@@ -230,9 +241,44 @@ function findKicadDrift(config, releases) {
       latestBySeries.set(series, version);
     }
   }
+  return latestBySeries;
+}
+
+function untestedKicadSeriesDrift(config, latestBySeries) {
+  const tested = new Set(config.kicad.tested);
+  const eol = new Set(config.kicad.eol);
   return [...latestBySeries.entries()]
     .sort(([left], [right]) => compareSeries(parseSeries(left), parseSeries(right)))
-    .map(([series, latest]) => ({ series, latest: latest.normalized }));
+    .flatMap(([series, latest]) =>
+      tested.has(series) || eol.has(series) ? [] : [{ series, latest: latest.normalized }],
+    );
+}
+
+function latestVerifiedKicadPatchDrift(config, latestBySeries) {
+  const latestVerified = stableReleaseName(config.kicad.latestVerified);
+  if (!latestVerified) {
+    return [
+      {
+        series: config.kicad.recommended,
+        latest: config.kicad.latestVerified,
+        tested: null,
+        reason: "latest-verified-invalid",
+      },
+    ];
+  }
+
+  const latestRecommended = latestBySeries.get(config.kicad.recommended);
+  if (!latestRecommended || compareVersion(latestRecommended, latestVerified) <= 0) {
+    return [];
+  }
+  return [
+    {
+      series: config.kicad.recommended,
+      latest: latestRecommended.normalized,
+      tested: latestVerified.normalized,
+      reason: "new-verified-patch",
+    },
+  ];
 }
 
 function findNodeDrift(config, releases) {
@@ -334,6 +380,16 @@ function nodeDriftMessage(entry) {
   return `Node.js ${entry.latest} is newer than recorded ${entry.tested} for supported major ${entry.major}.`;
 }
 
+function kicadDriftMessage(entry) {
+  if (entry.reason === "new-verified-patch") {
+    return `KiCad ${entry.latest} is newer than latest verified ${entry.tested} for recommended series ${entry.series}.`;
+  }
+  if (entry.reason === "latest-verified-invalid") {
+    return `KiCad latest verified patch ${entry.latest} is not a stable major.minor.patch version.`;
+  }
+  return `KiCad ${entry.series} is not listed as CI-tested. Latest matching tag: ${entry.latest}.`;
+}
+
 function normalizeCompatibilityConfig(input) {
   const value = objectValue(input, "compatibility config");
   const kicad = objectValue(value.kicad, "kicad compatibility");
@@ -343,6 +399,8 @@ function normalizeCompatibilityConfig(input) {
     kicad: {
       minimum: stringValue(kicad.minimum, "kicad.minimum"),
       recommended: stringValue(kicad.recommended, "kicad.recommended"),
+      latestVerified: stringValue(kicad.latestVerified, "kicad.latestVerified"),
+      eol: stringArray(kicad.eol ?? [], "kicad.eol"),
       tested: stringArray(kicad.tested, "kicad.tested"),
       notes: stringRecord(kicad.notes ?? {}, "kicad.notes"),
     },
@@ -366,6 +424,32 @@ function normalizeCompatibilityConfig(input) {
 function kicadNote(config, version) {
   const major = version.split(".")[0];
   return config.kicad.notes[version] ?? config.kicad.notes[`${major}.x`] ?? "";
+}
+
+function kicadLatestVerifiedCell(config, version) {
+  return config.kicad.latestVerified.startsWith(`${version}.`) ? config.kicad.latestVerified : "";
+}
+
+function kicadMatrixVersions(config) {
+  return [...new Set([...config.kicad.eol, ...config.kicad.tested])].sort((left, right) =>
+    compareSeries(parseSeries(left), parseSeries(right)),
+  );
+}
+
+function kicadSupportStatus(config, version) {
+  if (version === config.kicad.recommended) {
+    return "Recommended CI-tested line";
+  }
+  if (config.kicad.tested.includes(version)) {
+    return "CI-tested line";
+  }
+  if (config.kicad.eol.includes(version) && version === config.kicad.minimum) {
+    return "Minimum supported, upstream EOL, not CI-tested";
+  }
+  if (config.kicad.eol.includes(version)) {
+    return "Upstream EOL, not CI-tested";
+  }
+  return "Supported";
 }
 
 function nodeSupportStatus(config, version) {

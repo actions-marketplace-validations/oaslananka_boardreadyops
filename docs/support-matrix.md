@@ -6,11 +6,12 @@ BoardReadyOps compatibility is defined in `docs/compatibility.yaml` and rendered
 
 ## KiCad
 
-Minimum supported KiCad: **9.0**. Recommended KiCad line: **10.0**.
+Minimum supported KiCad: **9.0**. Recommended KiCad line: **10.0**. Latest verified patch: **10.0.3**.
 
-| Runtime | Version | Status | Notes |
-| --- | --- | --- | --- |
-| KiCad | 10.0 | Recommended CI-tested line | Current recommended stable line. CI installs ppa:kicad/kicad-10.0-releases and asserts kicad-cli 10.0.x. |
+| Runtime | Version | Status | Latest verified | Notes |
+| --- | --- | --- | --- | --- |
+| KiCad | 9.0 | Minimum supported, upstream EOL, not CI-tested |  | Upstream EOL since April 2026. Removed from CI in May 2026 — may still work but is untested. |
+| KiCad | 10.0 | Recommended CI-tested line | 10.0.3 | Current recommended stable line. CI installs ppa:kicad/kicad-10.0-releases and asserts kicad-cli 10.0.x. |
 
 ## Node.js
 

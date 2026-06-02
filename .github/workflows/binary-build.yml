@@ -40,7 +40,7 @@ jobs:
           - target: macos-arm64
             runner: macos-15
           - target: windows-x64
-            runner: windows-2025
+            runner: windows-2025-vs2026
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
@@ -124,12 +124,12 @@ jobs:
           RELEASE_TAG: ${{ inputs['release-tag'] || github.ref_name }}
         run: |
           set -euo pipefail
-          gh release view "${RELEASE_TAG}" --json assets --jq '
-            [.assets[].name] as $assets
-            | ["boardreadyops-linux-x64","boardreadyops-linux-arm64","boardreadyops-macos-x64","boardreadyops-macos-arm64","boardreadyops-win-x64.exe","SHA256SUMS","sbom.cyclonedx.json"] as $expected
-            | ($expected - ($expected - $assets)) as $present
-            | if ($present | length) == ($expected | length)
-              then $present
-              else error("missing release assets: " + (($expected - $assets) | join(", ")))
+          gh release view "${RELEASE_TAG}" --json assets --jq "
+            [.assets[].name] as \$assets
+            | [\"boardreadyops-linux-x64\",\"boardreadyops-linux-arm64\",\"boardreadyops-macos-x64\",\"boardreadyops-macos-arm64\",\"boardreadyops-win-x64.exe\",\"SHA256SUMS\",\"sbom.cyclonedx.json\"] as \$expected
+            | (\$expected - (\$expected - \$assets)) as \$present
+            | if (\$present | length) == (\$expected | length)
+              then \$present
+              else error(\"missing release assets: \" + ((\$expected - \$assets) | join(\", \")))
               end
-          '
+          "

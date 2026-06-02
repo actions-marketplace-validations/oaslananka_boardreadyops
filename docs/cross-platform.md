@@ -51,7 +51,7 @@ The `ci / cross-platform-paths` job runs
 
 - `ubuntu-latest`;
 - `macos-latest`;
-- `windows-latest`.
+- `windows-2025-vs2026`.
 
 The broader unit and integration suites still run independently. The focused
 path suite exists so regressions in filesystem normalization, project discovery,

@@ -31,9 +31,10 @@ LTS runtime; Node.js 22 remains supported for Maintenance LTS users. Node.js 26
 Current is tracked but not supported in `engines.node` or CI until it reaches
 LTS and dependency validation is added.
 
-KiCad CLI compatibility is CI-tested on KiCad 9.0 and 10.0, with 10.0 as the
-recommended stable line. The machine-readable policy and generated support
-table live in [docs/support-matrix.md](docs/support-matrix.md).
+KiCad CLI compatibility is CI-tested on KiCad 10.0, with 10.0.3 as the latest
+verified patch. KiCad 9.0 remains the minimum supported line but is upstream EOL
+and no longer CI-tested. The machine-readable policy and generated support table
+live in [docs/support-matrix.md](docs/support-matrix.md).
 
 ### Install Via Script
 

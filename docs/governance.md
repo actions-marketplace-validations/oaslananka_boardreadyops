@@ -63,11 +63,10 @@ The expected required checks are:
 - `ci / test-unit (windows-2025-vs2026, Node 24)`
 - `ci / test-unit (macos-latest, Node 22)`
 - `ci / test-unit (macos-latest, Node 24)`
-- `ci / test-int (KiCad 9.0, Node 22)`
 - `ci / test-int (KiCad 10.0, Node 24)`
 - `ci / cross-platform-paths (ubuntu-latest)`
 - `ci / cross-platform-paths (macos-latest)`
-- `ci / cross-platform-paths (windows-latest)`
+- `ci / cross-platform-paths (windows-2025-vs2026)`
 - `ci / test-action`
 - `ci / accessibility`
 - `ci / build`

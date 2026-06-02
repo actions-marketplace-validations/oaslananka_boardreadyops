@@ -1,5 +1,5 @@
 source_checked:
-  date: "2026-05-25"
+  date: "2026-06-02"
   node:
     releases: "https://nodejs.org/en/about/previous-releases"
     schedule: "https://github.com/nodejs/Release#release-schedule"
@@ -11,9 +11,15 @@ source_checked:
   cyclonedx:
     specification: "https://cyclonedx.org/specification/overview/"
     schema: "https://cyclonedx.org/schema/bom-1.7.schema.json"
+  github_actions:
+    hosted_runners: "https://docs.github.com/en/actions/reference/runners/github-hosted-runners"
+    image_migration: "https://github.blog/changelog/2026-05-14-github-actions-upcoming-image-migrations/"
 kicad:
   minimum: "9.0"
   recommended: "10.0"
+  latestVerified: "10.0.3"
+  eol:
+    - "9.0"
   tested:
     - "10.0"
   notes:

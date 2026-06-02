@@ -8,6 +8,8 @@ type CompatibilityConfig = {
   kicad: {
     minimum: string;
     recommended: string;
+    latestVerified: string;
+    eol?: string[];
     tested: string[];
     notes?: Record<string, string>;
   };
@@ -44,6 +46,7 @@ type WorkflowJob = {
   strategy?: {
     matrix?: {
       include?: Array<Record<string, string | number>>;
+      os?: string[];
     };
   };
   steps?: Array<{ uses?: string; run?: string; env?: Record<string, string> }>;
@@ -55,7 +58,10 @@ describe("compatibility matrix", () => {
     const supportMatrix = await readFile("docs/support-matrix.md", "utf8");
 
     expect(supportMatrix).toBe(renderSupportMatrix(config));
+    expect(supportMatrix).toContain("| KiCad | 9.0 | Minimum supported, upstream EOL, not CI-tested |");
     expect(supportMatrix).toContain("| KiCad | 10.0 | Recommended CI-tested line |");
+    expect(supportMatrix).toContain("Latest verified patch: **10.0.3**");
+    expect(supportMatrix).toContain("| KiCad | 10.0 | Recommended CI-tested line | 10.0.3 |");
     expect(supportMatrix).not.toContain("| KiCad | 9.1 | Supported |");
     expect(supportMatrix).not.toContain("| KiCad | 10.1 | Supported |");
     expect(supportMatrix).toContain("| Node.js | 22 | Minimum supported runtime |");
@@ -71,6 +77,7 @@ describe("compatibility matrix", () => {
       kicad: {
         minimum: "9.0",
         recommended: "10.0",
+        latestVerified: "10.0.3",
         tested: ["9.0"],
         notes: {
           "9.0": String.raw`Backslash \ and pipe | are literal.`,
@@ -98,7 +105,7 @@ describe("compatibility matrix", () => {
       },
     });
 
-    expect(markdown).toContain(String.raw`| KiCad | 9.0 | Supported | Backslash \\ and pipe \| are literal. |`);
+    expect(markdown).toContain(String.raw`| KiCad | 9.0 | CI-tested line |  | Backslash \\ and pipe \| are literal. |`);
   });
 
   it("detects untested KiCad release series and Node minor drift", () => {
@@ -107,6 +114,7 @@ describe("compatibility matrix", () => {
         kicad: {
           minimum: "9.0",
           recommended: "10.0",
+          latestVerified: "10.0.3",
           tested: ["9.0", "10.0"],
           notes: {
             "9.0": "Variants are partially supported.",
@@ -167,6 +175,7 @@ describe("compatibility matrix", () => {
         kicad: {
           minimum: "9.0",
           recommended: "10.0",
+          latestVerified: "10.0.3",
           tested: ["9.0", "10.0"],
         },
         node: {
@@ -208,6 +217,7 @@ describe("compatibility matrix", () => {
         kicad: {
           minimum: "9.0",
           recommended: "10.0",
+          latestVerified: "10.0.3",
           tested: ["9.0", "10.0"],
         },
         node: {
@@ -252,6 +262,7 @@ describe("compatibility matrix", () => {
         kicad: {
           minimum: "9.0",
           recommended: "10.0",
+          latestVerified: "10.0.3",
           tested: ["9.0", "10.0"],
         },
         node: {
@@ -293,10 +304,50 @@ describe("compatibility matrix", () => {
     ]);
   });
 
+  it("flags KiCad patch drift for the latest verified recommended line", () => {
+    const drift = findCompatibilityDrift(
+      {
+        kicad: {
+          minimum: "9.0",
+          recommended: "10.0",
+          latestVerified: "10.0.2",
+          tested: ["10.0"],
+        },
+        node: {
+          minimum: "22",
+          recommended: "24",
+          supported: ["22", "24"],
+          current: ["26"],
+          tested: {
+            "22": "22.22.3",
+            "24": "24.16.0",
+          },
+        },
+        cyclonedx: {
+          specVersion: "1.7",
+          schemaUrl: "https://cyclonedx.org/schema/bom-1.7.schema.json",
+          hbomSchema: "schemas/hbom.schema.json",
+          validation: "AJV validation in unit tests.",
+        },
+      },
+      {
+        kicadReleases: ["10.0.3", "10.0.2"],
+        cycloneDxSchema: {
+          $id: "http://cyclonedx.org/schema/bom-1.7.schema.json",
+          properties: { specVersion: { examples: ["1.7"] } },
+        },
+      },
+    );
+
+    expect(drift.kicad).toEqual([{ series: "10.0", latest: "10.0.3", tested: "10.0.2", reason: "new-verified-patch" }]);
+    expect(buildDriftReport(drift)).toContain("KiCad 10.0.3 is newer than latest verified 10.0.2");
+  });
+
   it("keeps CI integration tests explicit per KiCad and Node pair", async () => {
     const config = yaml.load(await readFile("docs/compatibility.yaml", "utf8")) as CompatibilityConfig;
     const workflow = yaml.load(await readFile(".github/workflows/ci.yml", "utf8")) as Workflow;
     const integration = workflow.jobs?.["test-int"];
+    const crossPlatform = workflow.jobs?.["cross-platform-paths"];
     const lintRuns = (workflow.jobs?.lint?.steps ?? []).map((step) => step.run ?? "").join("\n");
 
     const kicadExpression = "${" + "{ matrix.kicad-version }}";
@@ -310,8 +361,11 @@ describe("compatibility matrix", () => {
       },
     ]);
     expect(config.kicad.tested).toEqual(["10.0"]);
+    expect(config.kicad.eol).toEqual(["9.0"]);
+    expect(config.kicad.latestVerified).toBe("10.0.3");
     expect(config.node.supported).toEqual(["22", "24"]);
     expect(config.node.current).toEqual(["26"]);
+    expect(crossPlatform?.strategy?.matrix?.os).toEqual(["ubuntu-latest", "macos-latest", "windows-2025-vs2026"]);
     expect(lintRuns).toContain("pnpm run compatibility:check");
   });
 
@@ -334,6 +388,9 @@ describe("compatibility matrix", () => {
     expect(dockerfile).toContain(`ARG KICAD_PPA_SERIES=${config.kicad.recommended}`);
     expect(readme).toContain("Node.js 22 and 24");
     expect(readme).toMatch(/Node\.js 26\s+Current is tracked but not supported/);
+    expect(readme).toContain("CI-tested on KiCad 10.0");
+    expect(readme).toMatch(/10\.0\.3 as the latest\s+verified patch/);
+    expect(readme).not.toContain("KiCad 9.0 and 10.0");
     expect(readme).toContain("docs/support-matrix.md");
   });
 
