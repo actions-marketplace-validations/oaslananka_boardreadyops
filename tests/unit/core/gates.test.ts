@@ -252,6 +252,7 @@ rules:
     const result = await runPipeline({
       path: root,
       gate: "main",
+      kicadCli: "__test_unavailable__",
       rules: ["manufacturing.outputs-present"],
     });
 
