@@ -288359,7 +288359,7 @@ var import_promises9 = __toESM(require("node:fs/promises"), 1);
 var import_node_path31 = __toESM(require("node:path"), 1);
 
 // src/generated/version.ts
-var boardReadyVersion = "1.3.0";
+var boardReadyVersion = "1.4.0";
 
 // src/core/findings.ts
 var import_node_crypto2 = __toESM(require("node:crypto"), 1);
