@@ -1,0 +1,14 @@
+# Each owner line applies the pattern to all subsequent lines
+# until the next pattern line. Order matters: last match wins.
+#
+# Default owner for everything
+* @oaslananka
+
+# GitHub workflows and rulesets
+.github/ @oaslananka
+
+# Docs
+docs/ @oaslananka
+
+# All changes receive automated review through CodeRabbit and CI.
+# No human reviewer is required by repository policy; Mergify merges eligible PRs.

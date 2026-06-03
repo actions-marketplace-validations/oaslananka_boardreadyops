@@ -26,6 +26,14 @@ kicad-cli version
 The repository supports KiCad 9.x and 10.x, with 10.x recommended for variant
 and IPC API work. Use `docs/support-matrix.md` for the current tested versions.
 
+### KiCad PCM Plugin Integration Tests
+
+The `kicad-plugin` integration test (`tests/integration/kicad-plugin.test.ts`) tests
+the KiCad PCM plugin metadata. It is automatically skipped when the `kicad-plugin/`
+directory is absent (the plugin source was committed separately in commit `96eb42a`
+and later removed in `68e21df`). To run these tests locally, restore the
+`kicad-plugin/` directory from the repository history.
+
 ## Development Loop
 
 Run the narrowest useful command while editing, then run the required validation
@@ -65,16 +73,16 @@ corepack pnpm run verify:dist
 
 Run extra checks when the touched surface needs them:
 
-| Change surface | Additional validation |
-| --- | --- |
-| Rules, core pipeline, findings, reports | `corepack pnpm run coverage` |
-| Mutation-sensitive core behavior | `corepack pnpm run mutation` and `corepack pnpm run mutation:check` |
-| Docs navigation or generated docs | `corepack pnpm run docs` |
-| MkDocs or HTML report accessibility | `corepack pnpm run test:a11y` |
-| Public docs, generated files, repo hygiene | `corepack pnpm run gc` and `corepack pnpm run knip` |
-| Architecture imports or layer boundaries | `corepack pnpm run verify:structure` |
-| Security policy, licenses, dependencies | `corepack pnpm run security` |
-| GitHub workflows | `actionlint`, `yamllint`, and `zizmor` against the changed workflow files |
+| Change surface                             | Additional validation                                                     |
+| ------------------------------------------ | ------------------------------------------------------------------------- |
+| Rules, core pipeline, findings, reports    | `corepack pnpm run coverage`                                              |
+| Mutation-sensitive core behavior           | `corepack pnpm run mutation` and `corepack pnpm run mutation:check`       |
+| Docs navigation or generated docs          | `corepack pnpm run docs`                                                  |
+| MkDocs or HTML report accessibility        | `corepack pnpm run test:a11y`                                             |
+| Public docs, generated files, repo hygiene | `corepack pnpm run gc` and `corepack pnpm run knip`                       |
+| Architecture imports or layer boundaries   | `corepack pnpm run verify:structure`                                      |
+| Security policy, licenses, dependencies    | `corepack pnpm run security`                                              |
+| GitHub workflows                           | `actionlint`, `yamllint`, and `zizmor` against the changed workflow files |
 
 `task verify` remains the full local gate used by maintainers. It requires the
 same package manager and may run more than the minimum PR chain.
@@ -83,18 +91,18 @@ same package manager and may run more than the minimum PR chain.
 
 Use these focused commands before the full required chain:
 
-| Category | Command | Use for |
-| --- | --- | --- |
-| Unit | `corepack pnpm run test:unit` | Deterministic module, rule, report, CLI helper, and script behavior. |
-| Integration | `corepack pnpm run test:int` | CLI, fixture, filesystem, KiCad, multi-project, and cross-surface behavior. |
-| Property | `corepack pnpm run test:property` | Invariants such as sorting, fingerprints, and parse/format round trips. |
-| Snapshot | `corepack pnpm run test:snapshot` | Stable report contracts and expected formatted output. |
-| Action | `corepack pnpm run test:action` | GitHub Action input parsing, outputs, artifact behavior, and edge integration. |
-| Coverage | `corepack pnpm run coverage` | Coverage thresholds configured in `vitest.config.ts`. |
-| Mutation | `corepack pnpm run mutation` | Mutation score thresholds configured in `stryker.config.mjs` and checked by `scripts/check-mutation-thresholds.mjs`. |
-| Performance | `corepack pnpm run benchmark` | Throughput changes in parsing, traversal, pipeline, and report formatting. |
-| Accessibility | `corepack pnpm run test:a11y` | MkDocs and HTML report accessibility coverage. |
-| Generated docs | `corepack pnpm run docs` | Rule docs, compatibility docs, action docs, and MkDocs build. |
+| Category       | Command                           | Use for                                                                                                              |
+| -------------- | --------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| Unit           | `corepack pnpm run test:unit`     | Deterministic module, rule, report, CLI helper, and script behavior.                                                 |
+| Integration    | `corepack pnpm run test:int`      | CLI, fixture, filesystem, KiCad, multi-project, and cross-surface behavior.                                          |
+| Property       | `corepack pnpm run test:property` | Invariants such as sorting, fingerprints, and parse/format round trips.                                              |
+| Snapshot       | `corepack pnpm run test:snapshot` | Stable report contracts and expected formatted output.                                                               |
+| Action         | `corepack pnpm run test:action`   | GitHub Action input parsing, outputs, artifact behavior, and edge integration.                                       |
+| Coverage       | `corepack pnpm run coverage`      | Coverage thresholds configured in `vitest.config.ts`.                                                                |
+| Mutation       | `corepack pnpm run mutation`      | Mutation score thresholds configured in `stryker.config.mjs` and checked by `scripts/check-mutation-thresholds.mjs`. |
+| Performance    | `corepack pnpm run benchmark`     | Throughput changes in parsing, traversal, pipeline, and report formatting.                                           |
+| Accessibility  | `corepack pnpm run test:a11y`     | MkDocs and HTML report accessibility coverage.                                                                       |
+| Generated docs | `corepack pnpm run docs`          | Rule docs, compatibility docs, action docs, and MkDocs build.                                                        |
 
 Fixture expectations live under `tests/fixtures/projects/**/expected-findings.json`.
 When adding or changing a fixture, include the rule coverage reason, expected

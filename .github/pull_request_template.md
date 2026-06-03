@@ -24,6 +24,15 @@ Additional validation:
 - [ ] Schemas and snapshots updated, if report contracts changed.
 - [ ] Security/license checks run, if dependencies, workflows, or release logic changed.
 
+## Self-Review
+
+- [ ] I read my own diff before opening the PR.
+- [ ] No `TODO`, `FIXME`, `console.log`, `debugger`, or commented-out code.
+- [ ] Errors are handled (not silently swallowed).
+- [ ] All new public functions, types, and exports have doc comments.
+- [ ] No `any` types without a one-line justification.
+- [ ] Lines ≤ 40 logical lines, cyclomatic complexity ≤ 10.
+
 ## Checklist
 
 - [ ] The PR is scoped to one Linear issue.

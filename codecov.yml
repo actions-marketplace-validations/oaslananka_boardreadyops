@@ -1,2 +1,39 @@
+comment:
+  behavior: default
+  layout: header, reach, diff, flags, components, footer
+  require_changes: false
+  show_carryforward_flags: true
+  require_base: false
+
+coverage:
+  precision: 2
+  round: down
+  range: 70..100
+
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 2%
+        flags:
+          - unit
+    patch:
+      default:
+        target: 80%
+        flags:
+          - unit
+    changes: false
+
+flags:
+  unit:
+    paths:
+      - src/
+    carryforward: true
+  integration:
+    paths:
+      - src/
+      - tests/
+    carryforward: true
+
 ignore:
   - "dist/**/*"
