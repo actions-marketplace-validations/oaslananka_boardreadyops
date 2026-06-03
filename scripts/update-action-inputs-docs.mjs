@@ -46,8 +46,8 @@ ${pinnedActionExample}
 
 This example pins the current main Action commit because the input table below
 is generated from the repository's current \`action.yml\`. The public
-\`v1.0.2\` tag remains smoke-tested in the release channel matrix but does not
-include every current input.
+\`v1.3.0\` tag remains smoke-tested in the release channel matrix and includes
+all current inputs.
 
 ## Inputs
 
