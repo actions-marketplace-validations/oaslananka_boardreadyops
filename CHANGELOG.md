@@ -2,6 +2,13 @@
 
 All notable changes to BoardReadyOps are recorded here.
 
+## [1.3.0](https://github.com/oaslananka/boardreadyops/compare/v1.2.3...v1.3.0) (2026-06-03)
+
+
+### Features
+
+* **cli:** define stable JSON diagnostics contract with status and exitCode ([#103](https://github.com/oaslananka/boardreadyops/issues/103)) ([8147a1d](https://github.com/oaslananka/boardreadyops/commit/8147a1dddd7bb8f4684e3b95a72e8dda05448cc2))
+
 ## [Unreleased]
 
 ## [1.2.3](https://github.com/oaslananka/boardreadyops/compare/v1.2.2...v1.2.3) (2026-06-03)
