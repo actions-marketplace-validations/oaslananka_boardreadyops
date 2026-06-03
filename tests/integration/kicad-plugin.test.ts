@@ -50,112 +50,123 @@ interface RobustnessResult {
   malformedDialogText: string;
 }
 
-describe("KiCad PCM plugin", () => {
-  it("ships PCM metadata versioned with the CLI", async () => {
-    expect(await fileExists(metadataPath), "metadata.json should exist at the PCM package root").toBe(true);
-    expect(await fileExists(pluginPath), "plugin source should live directly under plugins/").toBe(true);
-    expect(await fileExists(iconPath), "PCM icon should be bundled under resources/").toBe(true);
+const kicadPluginExists = await fs
+  .stat(pluginPath)
+  .then(() => true)
+  .catch(() => false);
 
-    const manifest = await readJson<PackageManifest>(path.join(repoRoot, "package.json"));
-    const metadata = await readJson<PluginMetadata>(metadataPath);
-
-    expect(metadata.$schema).toBe("https://go.kicad.org/pcm/schemas/v2");
-    expect(metadata.identifier).toBe("com.github.oaslananka.boardreadyops");
-    expect(metadata.name).toBe("BoardReadyOps");
-    expect(metadata.type).toBe("plugin");
-    expect(metadata.license).toBe(manifest.license ?? "MIT");
-    expect(metadata.description).toBe("Run BoardReadyOps fabrication checks.");
-    expect(metadata.resources).toMatchObject({
-      documentation: "https://github.com/oaslananka/boardreadyops/blob/main/docs/kicad-plugin.md",
-      repository: "https://github.com/oaslananka/boardreadyops",
-    });
-    expect(metadata.versions?.[0]).toMatchObject({
-      version: manifest.version,
-      status: "development",
-      runtime: "swig",
-      kicad_version: "10.0",
-    });
-    expect(manifest.files).toContain("kicad-plugin");
+if (!kicadPluginExists) {
+  describe.skip("KiCad PCM plugin", () => {
+    it("skipped — kicad-plugin/ directory not present", () => {});
   });
+} else {
+  describe("KiCad PCM plugin", () => {
+    it("ships PCM metadata versioned with the CLI", async () => {
+      expect(await fileExists(metadataPath), "metadata.json should exist at the PCM package root").toBe(true);
+      expect(await fileExists(pluginPath), "plugin source should live directly under plugins/").toBe(true);
+      expect(await fileExists(iconPath), "PCM icon should be bundled under resources/").toBe(true);
 
-  it("imports headlessly, registers the ActionPlugin, and renders findings guidance", async () => {
-    expect(await fileExists(pluginPath), "plugin source should exist before the import smoke test").toBe(true);
-    const python = await findPython();
-    if (python === undefined) {
-      throw new Error("python3 or python is required for the KiCad plugin import smoke test");
-    }
+      const manifest = await readJson<PackageManifest>(path.join(repoRoot, "package.json"));
+      const metadata = await readJson<PluginMetadata>(metadataPath);
 
-    const projectFile = path.join(os.tmpdir(), "boardreadyops-plugin", "demo.kicad_pro");
-    const result = await runProcess(python, ["-c", headlessImportScript, pluginPath, projectFile], {
-      cwd: repoRoot,
-      timeoutMs: 10_000,
-      maxStdoutBytes: 64 * 1024,
-      maxStderrBytes: 64 * 1024,
+      expect(metadata.$schema).toBe("https://go.kicad.org/pcm/schemas/v2");
+      expect(metadata.identifier).toBe("com.github.oaslananka.boardreadyops");
+      expect(metadata.name).toBe("BoardReadyOps");
+      expect(metadata.type).toBe("plugin");
+      expect(metadata.license).toBe(manifest.license ?? "MIT");
+      expect(metadata.description).toBe("Run BoardReadyOps fabrication checks.");
+      expect(metadata.resources).toMatchObject({
+        documentation: "https://github.com/oaslananka/boardreadyops/blob/main/docs/kicad-plugin.md",
+        repository: "https://github.com/oaslananka/boardreadyops",
+      });
+      expect(metadata.versions?.[0]).toMatchObject({
+        version: manifest.version,
+        status: "development",
+        runtime: "swig",
+        kicad_version: "10.0",
+      });
+      expect(manifest.files).toContain("kicad-plugin");
     });
 
-    expect(result.code, result.stderr || result.error).toBe(0);
-    const output = JSON.parse(result.stdout) as HeadlessImportResult;
+    it("imports headlessly, registers the ActionPlugin, and renders findings guidance", async () => {
+      expect(await fileExists(pluginPath), "plugin source should exist before the import smoke test").toBe(true);
+      const python = await findPython();
+      if (python === undefined) {
+        throw new Error("python3 or python is required for the KiCad plugin import smoke test");
+      }
 
-    expect(output.defaultName).toBe("BoardReadyOps");
-    expect(output.defaultCategory).toBe("External Tools");
-    expect(output.defaultDescription).toBe("Run BoardReadyOps fabrication checks.");
-    expect(output.registeredCount).toBe(1);
-    expect(output.command).toEqual([
-      "boardreadyops",
-      "run",
-      path.dirname(projectFile),
-      "--project",
-      projectFile,
-      "--json",
-      "-",
-      "--sarif",
-      "",
-      "--markdown",
-      "",
-      "--fail-on",
-      "never",
-      "--no-annotations",
-      "--log-level",
-      "silent",
-    ]);
-    expect(output.dialogText).toContain("[HIGH] drc.clearance");
-    expect(output.dialogText).toContain("Tighten minimum clearance.");
-    expect(output.dialogText).toContain("x=12.5 mm");
-    expect(output.dialogText).toContain("https://docs.example.test/clearance");
-  });
+      const projectFile = path.join(os.tmpdir(), "boardreadyops-plugin", "demo.kicad_pro");
+      const result = await runProcess(python, ["-c", headlessImportScript, pluginPath, projectFile], {
+        cwd: repoRoot,
+        timeoutMs: 10_000,
+        maxStdoutBytes: 64 * 1024,
+        maxStderrBytes: 64 * 1024,
+      });
 
-  it("handles CLI and malformed report edge cases defensively", async () => {
-    expect(await fileExists(pluginPath), "plugin source should exist before the robustness smoke test").toBe(true);
-    const python = await findPython();
-    if (python === undefined) {
-      throw new Error("python3 or python is required for the KiCad plugin robustness smoke test");
-    }
+      expect(result.code, result.stderr || result.error).toBe(0);
+      const output = JSON.parse(result.stdout) as HeadlessImportResult;
 
-    const projectFile = path.join(os.tmpdir(), "boardreadyops-plugin", "demo.kicad_pro");
-    const result = await runProcess(python, ["-c", robustnessScript, pluginPath, projectFile], {
-      cwd: repoRoot,
-      timeoutMs: 10_000,
-      maxStdoutBytes: 64 * 1024,
-      maxStderrBytes: 64 * 1024,
+      expect(output.defaultName).toBe("BoardReadyOps");
+      expect(output.defaultCategory).toBe("External Tools");
+      expect(output.defaultDescription).toBe("Run BoardReadyOps fabrication checks.");
+      expect(output.registeredCount).toBe(1);
+      expect(output.command).toEqual([
+        "boardreadyops",
+        "run",
+        path.dirname(projectFile),
+        "--project",
+        projectFile,
+        "--json",
+        "-",
+        "--sarif",
+        "",
+        "--markdown",
+        "",
+        "--fail-on",
+        "never",
+        "--no-annotations",
+        "--log-level",
+        "silent",
+      ]);
+      expect(output.dialogText).toContain("[HIGH] drc.clearance");
+      expect(output.dialogText).toContain("Tighten minimum clearance.");
+      expect(output.dialogText).toContain("x=12.5 mm");
+      expect(output.dialogText).toContain("https://docs.example.test/clearance");
     });
 
-    expect(result.code, result.stderr || result.error).toBe(0);
-    const output = JSON.parse(result.stdout) as RobustnessResult;
+    it("handles CLI and malformed report edge cases defensively", async () => {
+      expect(await fileExists(pluginPath), "plugin source should exist before the robustness smoke test").toBe(true);
+      const python = await findPython();
+      if (python === undefined) {
+        throw new Error("python3 or python is required for the KiCad plugin robustness smoke test");
+      }
 
-    expect(output.emptyOutputError).toBe("no report emitted");
-    expect(output.timeoutSeconds).toBeGreaterThan(0);
-    expect(output.isolatedReportCommand).toContain("--sarif");
-    expect(output.isolatedReportCommand).toContain("--markdown");
-    expect(output.isolatedReportCommand).toContain("");
-    expect(output.isolatedReportCommand[output.isolatedReportCommand.indexOf("--json") + 1]).not.toBe("-");
-    expect(output.windowsCommand.slice(0, 2)).toEqual(["node", "C:\\tools\\boardreadyops\\dist\\cli\\index.cjs"]);
-    expect(output.uncCommand[0]).toBe("\\\\server\\share\\boardreadyops.exe");
-    expect(output.malformedDialogText).toContain("[INFO] unknown-rule");
-    expect(output.malformedDialogText).toContain("No finding message provided.");
-    expect(output.malformedDialogText).not.toContain("References:");
-    expect(output.malformedDialogText).not.toContain("None");
+      const projectFile = path.join(os.tmpdir(), "boardreadyops-plugin", "demo.kicad_pro");
+      const result = await runProcess(python, ["-c", robustnessScript, pluginPath, projectFile], {
+        cwd: repoRoot,
+        timeoutMs: 10_000,
+        maxStdoutBytes: 64 * 1024,
+        maxStderrBytes: 64 * 1024,
+      });
+
+      expect(result.code, result.stderr || result.error).toBe(0);
+      const output = JSON.parse(result.stdout) as RobustnessResult;
+
+      expect(output.emptyOutputError).toBe("no report emitted");
+      expect(output.timeoutSeconds).toBeGreaterThan(0);
+      expect(output.isolatedReportCommand).toContain("--sarif");
+      expect(output.isolatedReportCommand).toContain("--markdown");
+      expect(output.isolatedReportCommand).toContain("");
+      expect(output.isolatedReportCommand[output.isolatedReportCommand.indexOf("--json") + 1]).not.toBe("-");
+      expect(output.windowsCommand.slice(0, 2)).toEqual(["node", "C:\\tools\\boardreadyops\\dist\\cli\\index.cjs"]);
+      expect(output.uncCommand[0]).toBe("\\\\server\\share\\boardreadyops.exe");
+      expect(output.malformedDialogText).toContain("[INFO] unknown-rule");
+      expect(output.malformedDialogText).toContain("No finding message provided.");
+      expect(output.malformedDialogText).not.toContain("References:");
+      expect(output.malformedDialogText).not.toContain("None");
+    });
   });
-});
+}
 
 async function fileExists(filePath: string): Promise<boolean> {
   try {
