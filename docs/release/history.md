@@ -8,17 +8,21 @@ All notable changes to BoardReadyOps are recorded here.
 
 ## [Unreleased]
 
-## [1.2.3](https://github.com/oaslananka/boardreadyops/compare/v1.2.2...v1.2.3) (2026-06-03)
+## [1.3.0](https://github.com/oaslananka/boardreadyops/compare/v1.2.3...v1.3.0) (2026-06-03)
 
+### Features
+
+- **cli:** define stable JSON diagnostics contract with status and exitCode ([#103](https://github.com/oaslananka/boardreadyops/issues/103)) ([8147a1d](https://github.com/oaslananka/boardreadyops/commit/8147a1dddd7bb8f4684e3b95a72e8dda05448cc2))
+
+## [1.2.3](https://github.com/oaslananka/boardreadyops/compare/v1.2.2...v1.2.3) (2026-06-03)
 
 ### Bug Fixes
 
-* stabilize v1.2.2 release CI (dist, KiCad metadata, CHANGELOG) ([adb7bb1](https://github.com/oaslananka/boardreadyops/commit/adb7bb190ea1981a48d6ce968999355e0bb526f2))
-
+- stabilize v1.2.2 release CI (dist, KiCad metadata, CHANGELOG) ([adb7bb1](https://github.com/oaslananka/boardreadyops/commit/adb7bb190ea1981a48d6ce968999355e0bb526f2))
 
 ### CI
 
-* **ci:** add governance workflow concurrency ([b1a735e](https://github.com/oaslananka/boardreadyops/commit/b1a735ed27e81aa9f34e96ea1ccc0f0a9ed03f51)), closes [#100](https://github.com/oaslananka/boardreadyops/issues/100)
+- **ci:** add governance workflow concurrency ([b1a735e](https://github.com/oaslananka/boardreadyops/commit/b1a735ed27e81aa9f34e96ea1ccc0f0a9ed03f51)), closes [#100](https://github.com/oaslananka/boardreadyops/issues/100)
 
 ## [1.2.2](https://github.com/oaslananka/boardreadyops/compare/v1.2.1...v1.2.2) (2026-06-02)
 

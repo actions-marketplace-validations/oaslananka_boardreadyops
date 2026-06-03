@@ -18,7 +18,7 @@ npm i -g boardreadyops
 
 The current public package is `boardreadyops@1.1.0` on npm. It is verified on
 Node.js 22 and 24, includes the current CLI bundle, schemas, docs, Action
-metadata, and `kicad-plugin/`, and matches the public `v1.1.0` tag archive.
+metadata, and matches the public `v1.1.0` tag archive.
 The `v1.1.0` GitHub Release also contains the binary asset matrix and
 `SHA256SUMS`; Homebrew checksum publication remains tracked in BOARD-63. See
 [release channel verification](docs/release/channel-verification.md) for the
