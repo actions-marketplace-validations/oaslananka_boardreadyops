@@ -5,6 +5,7 @@ import { Ajv2020 } from "ajv/dist/2020.js";
 import { describe, expect, it, vi } from "vitest";
 import packageManifest from "../../package.json" with { type: "json" };
 import doctorSchema from "../../schemas/doctor.schema.json" with { type: "json" };
+import findingsSchema from "../../schemas/findings.schema.json" with { type: "json" };
 import { supportsDoctorNodeVersion } from "../../src/cli/commands/doctor.js";
 import { runCli } from "../../src/cli/index.js";
 import { runPipeline } from "../../src/core/pipeline.js";
@@ -115,6 +116,82 @@ describe("CLI integration", () => {
   it("returns exit code 1 at the fail-on threshold", async () => {
     const code = await runCli(["run", path.join(fixtureRoot, "bom-missing-mpn"), "--no-annotations"], memoryStreams());
     expect(code).toBe(1);
+  });
+
+  it("emits stable JSON diagnostics for check --format json", async () => {
+    const streams = captureStreams();
+    const code = await runCli(
+      [
+        "check",
+        "pinmap.verify",
+        path.join(fixtureRoot, "pinmap-mismatch"),
+        "--format",
+        "json",
+        "--no-annotations",
+        "--fail-on",
+        "never",
+      ],
+      streams,
+    );
+
+    expect(code, streams.stderrText()).toBe(0);
+    const report = JSON.parse(streams.stdoutText());
+    expect(report).toMatchObject({ schemaVersion: 1, status: "passed", exitCode: 0 });
+    expect(report.findings).toHaveLength(1);
+    validateFindingsReport(report);
+  });
+
+  it("keeps --format json parseable for nonzero diagnostics and preflight errors", async () => {
+    const failed = captureStreams();
+    expect(
+      await runCli(
+        ["check", path.join(fixtureRoot, "bom-missing-mpn"), "--format", "json", "--no-annotations"],
+        failed,
+      ),
+    ).toBe(1);
+    const failedReport = JSON.parse(failed.stdoutText());
+    expect(failedReport).toMatchObject({ status: "failed", exitCode: 1, summary: { failed: true } });
+    validateFindingsReport(failedReport);
+
+    const badConfig = captureStreams();
+    expect(
+      await runCli(
+        ["check", path.join(fixtureRoot, "malformed-config"), "--format", "json", "--no-annotations"],
+        badConfig,
+      ),
+    ).toBe(2);
+    const badConfigReport = JSON.parse(badConfig.stdoutText());
+    expect(badConfigReport).toMatchObject({ status: "failed", exitCode: 2 });
+    expect(badConfigReport.findings[0]).toMatchObject({ ruleId: "config.invalid", severity: "high" });
+    validateFindingsReport(badConfigReport);
+
+    const missingKicad = captureStreams();
+    expect(
+      await runCli(
+        [
+          "check",
+          path.join(fixtureRoot, "safe-basic"),
+          "--format",
+          "json",
+          "--require-kicad",
+          "--kicad-cli",
+          path.join(os.tmpdir(), "missing-kicad-cli"),
+          "--no-annotations",
+        ],
+        missingKicad,
+      ),
+    ).toBe(3);
+    const missingKicadReport = JSON.parse(missingKicad.stdoutText());
+    expect(missingKicadReport.findings[0]).toMatchObject({
+      ruleId: "environment.kicad-missing",
+      severity: "high",
+    });
+    validateFindingsReport(missingKicadReport);
+
+    const invalidFormat = captureStreams();
+    expect(await runCli(["check", path.join(fixtureRoot, "safe-basic"), "--format", "yaml"], invalidFormat)).toBe(2);
+    expect(invalidFormat.stdoutText()).toBe("");
+    expect(invalidFormat.stderrText()).toContain("Output format must be text or json.");
   });
 
   it("uses a selected gate fail-on threshold from config", async () => {
@@ -431,6 +508,13 @@ jobs:
     } finally {
       process.chdir(previous);
     }
+  });
+
+  it("keeps the committed findings-v1 contract fixture schema-valid", async () => {
+    const fixture = JSON.parse(
+      await fs.readFile(path.join("tests", "fixtures", "contract", "findings-v1.json"), "utf8"),
+    );
+    validateFindingsReport(fixture);
   });
 
   it("filters run and check to one project with explicit concurrency", async () => {
@@ -794,6 +878,11 @@ function doctorItem(
   message: string,
 ) {
   return report.checks.find((check) => check.name === checkName)?.items.find((item) => item.message === message);
+}
+
+function validateFindingsReport(report: unknown): void {
+  const validate = new Ajv2020({ allErrors: true }).compile(findingsSchema);
+  expect(validate(report), JSON.stringify(validate.errors)).toBe(true);
 }
 
 function restoreEnv(name: string, value: string | undefined): void {

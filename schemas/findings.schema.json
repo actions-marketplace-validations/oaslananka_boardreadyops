@@ -24,6 +24,13 @@
     "summary": {
       "type": "object"
     },
+    "status": {
+      "enum": ["passed", "failed"]
+    },
+    "exitCode": {
+      "type": "integer",
+      "minimum": 0
+    },
     "projects": {
       "type": "array"
     },
@@ -337,6 +344,7 @@
         {
           "enum": [
             "config.invalid",
+            "environment.kicad-missing",
             "manifest.project-discovery",
             "gate.requirement",
             "bom.missing-mpn",

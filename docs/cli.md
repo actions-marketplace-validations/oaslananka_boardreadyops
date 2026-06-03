@@ -16,6 +16,8 @@ boardreadyops run . --concurrency 2
 
 Use `boardreadyops run --gate release` to select a configured gate from `boardreadyops.yml`. A selected gate enforces its configured threshold and named requirements for local release checks; GitHub Action runs auto-detect `pull_request`, `main`, or `release` when the Action `gate` input is empty.
 
+Use `--format json` with `run` or `check` when another tool should consume diagnostics from stdout. The JSON contract is described in [reports/json.md](reports/json.md) and validated by `schemas/findings.schema.json`. Human logs and annotations are written to stderr, so stdout remains parseable JSON even when the command exits nonzero for findings, configuration, or required-environment failures.
+
 ## Hardware SBOM
 
 `boardreadyops sbom [path]` writes a CycloneDX 1.7 hardware SBOM to `build/hbom.json` by default. Use `--output -` when another process should read the JSON from stdout.

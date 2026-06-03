@@ -63421,9 +63421,9 @@ ${lanes.join("\n")}
               features: state.features & ~8,
               reportDiagnostic: noop
             };
-            const diagnosticResult = tryResolve(extensions & (1 | 4), diagnosticState);
-            if ((_b = diagnosticResult == null ? void 0 : diagnosticResult.value) == null ? void 0 : _b.isExternalLibraryImport) {
-              alternateResult = diagnosticResult.value.resolved.path;
+            const diagnosticResult2 = tryResolve(extensions & (1 | 4), diagnosticState);
+            if ((_b = diagnosticResult2 == null ? void 0 : diagnosticResult2.value) == null ? void 0 : _b.isExternalLibraryImport) {
+              alternateResult = diagnosticResult2.value.resolved.path;
             }
           } else if ((!(result == null ? void 0 : result.value) || wantedTypesButGotJs) && moduleResolution === 2) {
             traceIfEnabled(state, Diagnostics.Resolution_of_non_relative_name_failed_trying_with_moduleResolution_bundler_to_see_if_project_may_need_configuration_update);
@@ -63439,9 +63439,9 @@ ${lanes.join("\n")}
               conditions: getConditions(diagnosticsCompilerOptions),
               reportDiagnostic: noop
             };
-            const diagnosticResult = tryResolve(extensions & (1 | 4), diagnosticState);
-            if ((_c = diagnosticResult == null ? void 0 : diagnosticResult.value) == null ? void 0 : _c.isExternalLibraryImport) {
-              alternateResult = diagnosticResult.value.resolved.path;
+            const diagnosticResult2 = tryResolve(extensions & (1 | 4), diagnosticState);
+            if ((_c = diagnosticResult2 == null ? void 0 : diagnosticResult2.value) == null ? void 0 : _c.isExternalLibraryImport) {
+              alternateResult = diagnosticResult2.value.resolved.path;
             }
           }
         }
@@ -256612,17 +256612,25 @@ async function runCommand(pathInput, options, streams, commandName = "run") {
   try {
     const loaded = await loadConfig(root, options.config);
     if (loaded.errors.length > 0) {
-      for (const error51 of loaded.errors) {
-        streams.stderr.write(`${t("cli.error.configuration", { error: error51 }, locale)}
+      if (writesJsonToStdout(options)) {
+        await writeDiagnosticReport(root, loaded, configErrorFindings(root, loaded), 2, streams, locale);
+      } else {
+        for (const error51 of loaded.errors) {
+          streams.stderr.write(`${t("cli.error.configuration", { error: error51 }, locale)}
 `);
+        }
       }
       return finish(2);
     }
     if (options.requireKicad) {
       const kicad = await detectKicadCli(options.kicadCli);
       if (!kicad.found) {
-        streams.stderr.write(`${t("cli.error.environment.kicadMissing", {}, locale)}
+        if (writesJsonToStdout(options)) {
+          await writeDiagnosticReport(root, loaded, [kicadMissingFinding()], 3, streams, locale);
+        } else {
+          streams.stderr.write(`${t("cli.error.environment.kicadMissing", {}, locale)}
 `);
+        }
         return finish(3);
       }
     }
@@ -256650,14 +256658,16 @@ async function runCommand(pathInput, options, streams, commandName = "run") {
       },
       logger
     );
-    await writeReports(result, root, outputOptions(options), loaded, streams.stdout, locale);
+    const resultExitCode = result.summary.failed ? 1 : 0;
+    const cliResult = withCliStatus(result, resultExitCode);
+    await writeReports(cliResult, root, outputOptions(options), loaded, streams.stdout, locale);
     if (!hasExplicitReportOutput(options)) {
-      streams.stdout.write(formatMarkdown(result, [], void 0, locale));
+      streams.stdout.write(formatMarkdown(cliResult, [], void 0, locale));
     }
     if (options.annotations !== false) {
-      emitAnnotations(result.findings, streams.stderr);
+      emitAnnotations(cliResult.findings, streams.stderr);
     }
-    return finish(result.summary.failed ? 1 : 0);
+    return finish(resultExitCode);
   } catch (error51) {
     logger.error("cli.command.error", {
       command: commandName,
@@ -256676,7 +256686,7 @@ async function runCommand(pathInput, options, streams, commandName = "run") {
   }
 }
 function addCommonOptions(command) {
-  return command.option("--config <path>", "boardreadyops.yml location").option("--project <path>", "specific .kicad_pro").option("--mode <mode>", "warn or enforce", "warn").option("--require-kicad", "exit non-zero if kicad-cli missing").option("--kicad-cli <path>", "explicit kicad-cli path").option("--bom <path>", "BOM source path or auto").option("--pinmap <path>", "pinmap file path").option("--variant <name>", "KiCad variant name").option("--concurrency <count>", "max projects to check in parallel", positiveInteger).option("--gate <name>", "gate from boardreadyops.yml").option("--sarif [path]", "write SARIF report").option("--json [path]", "write JSON report").option("--markdown [path]", "write Markdown report").option("--fail-on <level>", "critical|high|medium|low|never", "high").option("--rule <id>", "restrict to rule", collect2, []).option("--skip <id>", "skip rule", collect2, []).option("--no-annotations", "disable GitHub annotations").option("--quiet", "suppress informational output").option("--verbose", "verbose output").option("--color <mode>", "auto|always|never", "auto").option("--log-format <format>", "text or json", logFormatInput).option("--log-level <level>", "debug|info|warn|error|critical|silent", logLevelInput).option("--log-file <path>", "write structured logs to a file").option("--log-file-max-bytes <bytes>", "rotate log file after this many bytes", positiveInteger).option("--log-file-retention <count>", "number of rotated log files to keep", nonNegativeInteger);
+  return command.option("--config <path>", "boardreadyops.yml location").option("--project <path>", "specific .kicad_pro").option("--mode <mode>", "warn or enforce", "warn").option("--require-kicad", "exit non-zero if kicad-cli missing").option("--kicad-cli <path>", "explicit kicad-cli path").option("--bom <path>", "BOM source path or auto").option("--pinmap <path>", "pinmap file path").option("--variant <name>", "KiCad variant name").option("--concurrency <count>", "max projects to check in parallel", positiveInteger).option("--gate <name>", "gate from boardreadyops.yml").option("--sarif [path]", "write SARIF report").option("--json [path]", "write JSON report").option("--markdown [path]", "write Markdown report").option("--fail-on <level>", "critical|high|medium|low|never", "high").option("--rule <id>", "restrict to rule", collect2, []).option("--skip <id>", "skip rule", collect2, []).option("--no-annotations", "disable GitHub annotations").option("--quiet", "suppress informational output").option("--verbose", "verbose output").option("--color <mode>", "auto|always|never", "auto").option("--format <format>", "output format: text or json", outputFormatInput).option("--log-format <format>", "text or json", logFormatInput).option("--log-level <level>", "debug|info|warn|error|critical|silent", logLevelInput).option("--log-file <path>", "write structured logs to a file").option("--log-file-max-bytes <bytes>", "rotate log file after this many bytes", positiveInteger).option("--log-file-retention <count>", "number of rotated log files to keep", nonNegativeInteger);
 }
 function collect2(value, previous) {
   return [...previous, value];
@@ -256699,6 +256709,12 @@ function logFormatInput(value) {
   } catch (error51) {
     throw new InvalidArgumentError(error51 instanceof Error ? error51.message : "Invalid log-format.");
   }
+}
+function outputFormatInput(value) {
+  if (value === "text" || value === "json") {
+    return value;
+  }
+  throw new InvalidArgumentError("Output format must be text or json.");
 }
 function logLevelInput(value) {
   try {
@@ -256764,7 +256780,7 @@ function resolveOptionalPath(root, value) {
 }
 function outputOptions(options) {
   return {
-    json: optionPath(options.json, "boardreadyops.findings.json"),
+    json: writesJsonToStdout(options) ? "-" : optionPath(options.json, "boardreadyops.findings.json"),
     sarif: optionPath(options.sarif, "boardreadyops.sarif.json"),
     markdown: optionPath(options.markdown, "boardreadyops.report.md")
   };
@@ -256776,7 +256792,59 @@ function optionPath(value, fallback) {
   return typeof value === "string" ? value : void 0;
 }
 function hasExplicitReportOutput(options) {
-  return Boolean(options.json || options.sarif || options.markdown);
+  return Boolean(writesJsonToStdout(options) || options.json || options.sarif || options.markdown);
+}
+function writesJsonToStdout(options) {
+  return options.format === "json";
+}
+async function writeDiagnosticReport(root, loaded, findings, exitCode, streams, locale) {
+  await writeReports(diagnosticResult(findings, exitCode), root, { json: "-" }, loaded, streams.stdout, locale);
+}
+function diagnosticResult(findings, exitCode) {
+  return withCliStatus(
+    {
+      schemaVersion: 1,
+      tool: { name: "boardreadyops", version: boardReadyVersion },
+      summary: summarizeFindings(findings, "low"),
+      projects: [],
+      findings,
+      fabrication: { bom: [], outputs: [] },
+      generatedAt: (/* @__PURE__ */ new Date()).toISOString()
+    },
+    exitCode
+  );
+}
+function withCliStatus(result, exitCode) {
+  return {
+    ...result,
+    status: exitCode === 0 ? "passed" : "failed",
+    exitCode
+  };
+}
+function configErrorFindings(root, loaded) {
+  return loaded.errors.map(
+    (error51) => createFinding({
+      ruleId: "config.invalid",
+      severity: "high",
+      message: `Configuration is invalid: ${error51}`,
+      resource: { path: loaded.path ? normalizeRelative(root, loaded.path) : "boardreadyops.yml", kind: "manifest" },
+      location: { line: 1, column: 1 },
+      confidence: "definite"
+    })
+  );
+}
+function kicadMissingFinding() {
+  return createFinding({
+    ruleId: "environment.kicad-missing",
+    severity: "high",
+    message: "KiCad CLI is required but was not found.",
+    resource: { path: ".", kind: "manifest" },
+    confidence: "definite",
+    fix: {
+      description: "Install KiCad CLI or pass --kicad-cli with a supported executable path.",
+      steps: ["Install KiCad.", "Confirm kicad-cli is on PATH.", "Run BoardReadyOps again."]
+    }
+  });
 }
 
 // src/cli/commands/check.ts
@@ -258623,6 +258691,13 @@ var findings_schema_default = {
     summary: {
       type: "object"
     },
+    status: {
+      enum: ["passed", "failed"]
+    },
+    exitCode: {
+      type: "integer",
+      minimum: 0
+    },
     projects: {
       type: "array"
     },
@@ -258936,6 +259011,7 @@ var findings_schema_default = {
         {
           enum: [
             "config.invalid",
+            "environment.kicad-missing",
             "manifest.project-discovery",
             "gate.requirement",
             "bom.missing-mpn",
