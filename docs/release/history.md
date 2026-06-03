@@ -6,6 +6,32 @@ This page is generated from the repository changelog so release documentation st
 
 All notable changes to BoardReadyOps are recorded here.
 
+## Unreleased
+
+## [1.4.0](https://github.com/oaslananka/boardreadyops/compare/v1.3.0...v1.4.0) (2026-06-03)
+
+### Features
+
+- **cli:** define stable JSON diagnostics contract with status and exitCode ([b90be1a](https://github.com/oaslananka/boardreadyops/commit/b90be1af705127f3e7841a948b8d466891358292))
+
+### Bug Fixes
+
+- align UV_VERSION in publish-npm.yml and disable prerelease in release-please-config ([c64f1e3](https://github.com/oaslananka/boardreadyops/commit/c64f1e33683ef717bf7cbac27beec6c50b4ec743))
+- repair CHANGELOG Unreleased positioning and regenerate dist/docs ([b90be1a](https://github.com/oaslananka/boardreadyops/commit/b90be1af705127f3e7841a948b8d466891358292))
+- repair CHANGELOG Unreleased positioning and regenerate dist/docs after release-please merge ([d83cfb4](https://github.com/oaslananka/boardreadyops/commit/d83cfb4c483c13e4db874cbd8c146d6bb15af552))
+- skip kicad-plugin integration tests when plugin dir not present ([327deca](https://github.com/oaslananka/boardreadyops/commit/327decafca9614b1728a6c0ba93447fb2591784c))
+- update action-inputs-docs generator source to v1.3.0 so gc passes ([aa49679](https://github.com/oaslananka/boardreadyops/commit/aa49679442cea76b993c2ca2e95d6ad6b104b30a))
+
+### Code Refactoring
+
+- split more-coverage.test.ts into domain-specific coverage files ([b86b10b](https://github.com/oaslananka/boardreadyops/commit/b86b10bc58afdb74cd5d36a4604b52bba23e7fec))
+
+### CI
+
+- **docs:** replace manual Pages deploy with actions/deploy-pages@v5.0.0 ([161e58c](https://github.com/oaslananka/boardreadyops/commit/161e58c53bde149b73da73d5ac2e065f3ab57ab9))
+- pin all workflow runners from ubuntu-latest to ubuntu-24.04 ([f60294f](https://github.com/oaslananka/boardreadyops/commit/f60294f078a775a6c2c2b31d6751c339c3210895))
+- remove 4 redundant workflow files consolidated into security.yml and ci.yml ([79706e5](https://github.com/oaslananka/boardreadyops/commit/79706e59a955a1d4db33670e55cf54b4b89344dd))
+
 ## [Unreleased]
 
 ## [1.3.0](https://github.com/oaslananka/boardreadyops/compare/v1.2.3...v1.3.0) (2026-06-03)
