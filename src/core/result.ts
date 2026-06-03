@@ -8,6 +8,8 @@ export interface RunResult {
     name: "boardreadyops";
     version: string;
   };
+  status?: "passed" | "failed" | undefined;
+  exitCode?: number | undefined;
   summary: FindingSummary;
   projects: ProjectContext[];
   findings: Finding[];

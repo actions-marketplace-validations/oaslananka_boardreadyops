@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "tool": {
+    "name": "boardreadyops",
+    "version": "1.2.3"
+  },
+  "status": "failed",
+  "exitCode": 1,
+  "summary": {
+    "total": 1,
+    "critical": 0,
+    "high": 1,
+    "medium": 0,
+    "low": 0,
+    "info": 0,
+    "maxSeverity": "high",
+    "failed": true
+  },
+  "projects": [],
+  "findings": [
+    {
+      "ruleId": "bom.missing-mpn",
+      "severity": "high",
+      "message": "R1 is missing an MPN.",
+      "resource": {
+        "path": "bom.csv",
+        "kind": "bom"
+      },
+      "location": {
+        "line": 2,
+        "column": 1
+      },
+      "details": {
+        "reference": "R1"
+      },
+      "fingerprint": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "fabrication": {
+    "bom": [],
+    "outputs": []
+  },
+  "generatedAt": "2026-06-03T00:00:00.000Z"
+}

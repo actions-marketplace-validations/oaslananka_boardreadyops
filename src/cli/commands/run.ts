@@ -1,15 +1,19 @@
 import path from "node:path";
 import { type Command, InvalidArgumentError } from "commander";
-import { loadConfig } from "../../core/config.js";
-import type { FailOn } from "../../core/findings.js";
+import { type LoadedConfig, loadConfig } from "../../core/config.js";
+import { createFinding, type FailOn, type Finding, summarizeFindings } from "../../core/findings.js";
 import { createLogger, type LogFormat, type LogLevel, parseLogFormat, parseLogLevel } from "../../core/logger.js";
 import { canonicalRoot, runPipeline } from "../../core/pipeline.js";
+import type { RunResult } from "../../core/result.js";
+import { boardReadyVersion } from "../../generated/version.js";
 import { resolveLocale, t } from "../../i18n/t.js";
 import { detectKicadCli } from "../../kicad/cli.js";
 import { emitAnnotations } from "../../report/annotations.js";
 import { formatMarkdown } from "../../report/markdown.js";
-import { normalizePathInput } from "../../util/path.js";
+import { normalizePathInput, normalizeRelative } from "../../util/path.js";
 import { type OutputOptions, writeReports } from "../output.js";
+
+type CliOutputFormat = "text" | "json";
 
 export interface CommonCliOptions {
   config?: string;
@@ -37,6 +41,7 @@ export interface CommonCliOptions {
   logFile?: string;
   logFileMaxBytes?: number;
   logFileRetention?: number;
+  format?: CliOutputFormat;
 }
 
 export async function runCommand(
@@ -61,15 +66,23 @@ export async function runCommand(
   try {
     const loaded = await loadConfig(root, options.config);
     if (loaded.errors.length > 0) {
-      for (const error of loaded.errors) {
-        streams.stderr.write(`${t("cli.error.configuration", { error }, locale)}\n`);
+      if (writesJsonToStdout(options)) {
+        await writeDiagnosticReport(root, loaded, configErrorFindings(root, loaded), 2, streams, locale);
+      } else {
+        for (const error of loaded.errors) {
+          streams.stderr.write(`${t("cli.error.configuration", { error }, locale)}\n`);
+        }
       }
       return finish(2);
     }
     if (options.requireKicad) {
       const kicad = await detectKicadCli(options.kicadCli);
       if (!kicad.found) {
-        streams.stderr.write(`${t("cli.error.environment.kicadMissing", {}, locale)}\n`);
+        if (writesJsonToStdout(options)) {
+          await writeDiagnosticReport(root, loaded, [kicadMissingFinding()], 3, streams, locale);
+        } else {
+          streams.stderr.write(`${t("cli.error.environment.kicadMissing", {}, locale)}\n`);
+        }
         return finish(3);
       }
     }
@@ -97,14 +110,16 @@ export async function runCommand(
       },
       logger,
     );
-    await writeReports(result, root, outputOptions(options), loaded, streams.stdout, locale);
+    const resultExitCode = result.summary.failed ? 1 : 0;
+    const cliResult = withCliStatus(result, resultExitCode);
+    await writeReports(cliResult, root, outputOptions(options), loaded, streams.stdout, locale);
     if (!hasExplicitReportOutput(options)) {
-      streams.stdout.write(formatMarkdown(result, [], undefined, locale));
+      streams.stdout.write(formatMarkdown(cliResult, [], undefined, locale));
     }
     if (options.annotations !== false) {
-      emitAnnotations(result.findings, streams.stderr);
+      emitAnnotations(cliResult.findings, streams.stderr);
     }
-    return finish(result.summary.failed ? 1 : 0);
+    return finish(resultExitCode);
   } catch (error) {
     logger.error("cli.command.error", {
       command: commandName,
@@ -145,6 +160,7 @@ export function addCommonOptions(command: Command): Command {
     .option("--quiet", "suppress informational output")
     .option("--verbose", "verbose output")
     .option("--color <mode>", "auto|always|never", "auto")
+    .option("--format <format>", "output format: text or json", outputFormatInput)
     .option("--log-format <format>", "text or json", logFormatInput)
     .option("--log-level <level>", "debug|info|warn|error|critical|silent", logLevelInput)
     .option("--log-file <path>", "write structured logs to a file")
@@ -176,6 +192,13 @@ function logFormatInput(value: string): LogFormat {
   } catch (error) {
     throw new InvalidArgumentError(error instanceof Error ? error.message : "Invalid log-format.");
   }
+}
+
+function outputFormatInput(value: string): CliOutputFormat {
+  if (value === "text" || value === "json") {
+    return value;
+  }
+  throw new InvalidArgumentError("Output format must be text or json.");
 }
 
 function logLevelInput(value: string): LogLevel {
@@ -249,7 +272,7 @@ function resolveOptionalPath(root: string, value: string | undefined): string | 
 
 function outputOptions(options: CommonCliOptions): OutputOptions {
   return {
-    json: optionPath(options.json, "boardreadyops.findings.json"),
+    json: writesJsonToStdout(options) ? "-" : optionPath(options.json, "boardreadyops.findings.json"),
     sarif: optionPath(options.sarif, "boardreadyops.sarif.json"),
     markdown: optionPath(options.markdown, "boardreadyops.report.md"),
   };
@@ -263,5 +286,70 @@ function optionPath(value: string | boolean | undefined, fallback: string): stri
 }
 
 function hasExplicitReportOutput(options: CommonCliOptions): boolean {
-  return Boolean(options.json || options.sarif || options.markdown);
+  return Boolean(writesJsonToStdout(options) || options.json || options.sarif || options.markdown);
+}
+
+function writesJsonToStdout(options: CommonCliOptions): boolean {
+  return options.format === "json";
+}
+
+async function writeDiagnosticReport(
+  root: string,
+  loaded: LoadedConfig,
+  findings: Finding[],
+  exitCode: number,
+  streams: { stdout: NodeJS.WritableStream },
+  locale: ReturnType<typeof resolveLocale>,
+): Promise<void> {
+  await writeReports(diagnosticResult(findings, exitCode), root, { json: "-" }, loaded, streams.stdout, locale);
+}
+
+function diagnosticResult(findings: Finding[], exitCode: number): RunResult {
+  return withCliStatus(
+    {
+      schemaVersion: 1,
+      tool: { name: "boardreadyops", version: boardReadyVersion },
+      summary: summarizeFindings(findings, "low"),
+      projects: [],
+      findings,
+      fabrication: { bom: [], outputs: [] },
+      generatedAt: new Date().toISOString(),
+    },
+    exitCode,
+  );
+}
+
+function withCliStatus(result: RunResult, exitCode: number): RunResult {
+  return {
+    ...result,
+    status: exitCode === 0 ? "passed" : "failed",
+    exitCode,
+  };
+}
+
+function configErrorFindings(root: string, loaded: LoadedConfig): Finding[] {
+  return loaded.errors.map((error) =>
+    createFinding({
+      ruleId: "config.invalid",
+      severity: "high",
+      message: `Configuration is invalid: ${error}`,
+      resource: { path: loaded.path ? normalizeRelative(root, loaded.path) : "boardreadyops.yml", kind: "manifest" },
+      location: { line: 1, column: 1 },
+      confidence: "definite",
+    }),
+  );
+}
+
+function kicadMissingFinding(): Finding {
+  return createFinding({
+    ruleId: "environment.kicad-missing",
+    severity: "high",
+    message: "KiCad CLI is required but was not found.",
+    resource: { path: ".", kind: "manifest" },
+    confidence: "definite",
+    fix: {
+      description: "Install KiCad CLI or pass --kicad-cli with a supported executable path.",
+      steps: ["Install KiCad.", "Confirm kicad-cli is on PATH.", "Run BoardReadyOps again."],
+    },
+  });
 }
