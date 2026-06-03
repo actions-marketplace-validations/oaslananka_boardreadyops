@@ -6,6 +6,7 @@
       "**",
       "!dist",
       "!coverage",
+      "!coverage-report",
       "!node_modules",
       "!pnpm-lock.yaml",
       "!reports",
@@ -26,7 +27,7 @@
       "recommended": true,
       "suspicious": {
         "noConsole": "error",
-        "noExplicitAny": "warn"
+        "noExplicitAny": "error"
       }
     }
   },

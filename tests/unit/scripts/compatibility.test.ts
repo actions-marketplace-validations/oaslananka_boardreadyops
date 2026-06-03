@@ -162,7 +162,14 @@ describe("compatibility matrix", () => {
       { series: "10.1", latest: "10.1.2" },
       { series: "11.0", latest: "11.0.0" },
     ]);
-    expect(drift.node).toEqual([{ major: "24", latest: "24.17.0", tested: "24.16.0", reason: "new-minor" }]);
+    expect(drift.node).toEqual([
+      {
+        major: "24",
+        latest: "24.17.0",
+        tested: "24.16.0",
+        reason: "new-minor",
+      },
+    ]);
     expect(drift.cyclonedx).toEqual([]);
     expect(buildDriftReport(drift)).toContain("KiCad 11.0");
     expect(buildDriftReport(drift)).toContain("Node.js 24.17.0");
@@ -207,7 +214,14 @@ describe("compatibility matrix", () => {
       },
     );
 
-    expect(drift.node).toEqual([{ major: "26", latest: "26.8.0", tested: null, reason: "current-promoted-lts" }]);
+    expect(drift.node).toEqual([
+      {
+        major: "26",
+        latest: "26.8.0",
+        tested: null,
+        reason: "current-promoted-lts",
+      },
+    ]);
     expect(buildDriftReport(drift)).toContain("Node.js 26.8.0 moved to LTS");
   });
 
@@ -339,7 +353,14 @@ describe("compatibility matrix", () => {
       },
     );
 
-    expect(drift.kicad).toEqual([{ series: "10.0", latest: "10.0.3", tested: "10.0.2", reason: "new-verified-patch" }]);
+    expect(drift.kicad).toEqual([
+      {
+        series: "10.0",
+        latest: "10.0.3",
+        tested: "10.0.2",
+        reason: "new-verified-patch",
+      },
+    ]);
     expect(buildDriftReport(drift)).toContain("KiCad 10.0.3 is newer than latest verified 10.0.2");
   });
 
@@ -365,7 +386,7 @@ describe("compatibility matrix", () => {
     expect(config.kicad.latestVerified).toBe("10.0.3");
     expect(config.node.supported).toEqual(["22", "24"]);
     expect(config.node.current).toEqual(["26"]);
-    expect(crossPlatform?.strategy?.matrix?.os).toEqual(["ubuntu-latest", "macos-latest", "windows-2025-vs2026"]);
+    expect(crossPlatform?.strategy?.matrix?.os).toEqual(["ubuntu-24.04", "macos-latest", "windows-2025-vs2026"]);
     expect(lintRuns).toContain("pnpm run compatibility:check");
   });
 
@@ -400,7 +421,10 @@ describe("compatibility matrix", () => {
     const runCommands = (job?.steps ?? []).map((step) => step.run ?? "").join("\n");
 
     expect(workflow.on?.schedule).toEqual([{ cron: "23 5 * * 1" }]);
-    expect(workflow.permissions).toMatchObject({ contents: "read", issues: "write" });
+    expect(workflow.permissions).toMatchObject({
+      contents: "read",
+      issues: "write",
+    });
     expect(job?.steps?.some((step) => step.uses?.startsWith("actions/checkout@"))).toBe(true);
     expect(job?.steps?.some((step) => step.uses?.startsWith("actions/setup-node@"))).toBe(true);
     expect(runCommands).toContain("pnpm run compatibility:drift");

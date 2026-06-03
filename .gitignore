@@ -4,6 +4,7 @@ __pycache__/
 *.py[cod]
 dist/binary/
 coverage/
+!tests/unit/coverage/
 .tsbuild/
 .turbo/
 .cache/
