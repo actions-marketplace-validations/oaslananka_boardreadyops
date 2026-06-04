@@ -8,6 +8,13 @@ All notable changes to BoardReadyOps are recorded here.
 
 ## Unreleased
 
+## [1.4.2](https://github.com/oaslananka/boardreadyops/compare/v1.4.1...v1.4.2) (2026-06-04)
+
+
+### Bug Fixes
+
+* regenerate dist bundles and release history for v1.4.1 ([2734365](https://github.com/oaslananka/boardreadyops/commit/2734365f459a7efdc0c5082bfd31de392f46270a))
+
 ## [1.4.1](https://github.com/oaslananka/boardreadyops/compare/v1.4.0...v1.4.1) (2026-06-03)
 
 
