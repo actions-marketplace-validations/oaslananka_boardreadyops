@@ -8,6 +8,23 @@ All notable changes to BoardReadyOps are recorded here.
 
 ## Unreleased
 
+## [1.4.1](https://github.com/oaslananka/boardreadyops/compare/v1.4.0...v1.4.1) (2026-06-03)
+
+
+### Bug Fixes
+
+* restore Unreleased section in CHANGELOG.md ([1c0da85](https://github.com/oaslananka/boardreadyops/commit/1c0da8525e5de5d3dc6cd75523f82e9dc93d8f61))
+* restore Unreleased section in CHANGELOG.md ([05fbc8d](https://github.com/oaslananka/boardreadyops/commit/05fbc8d347d070b4afb6a43469839679d45d98ea))
+* simulate unavailable kicad-cli in gate requirement test ([c19c0fc](https://github.com/oaslananka/boardreadyops/commit/c19c0fca85b1feb0e25fc863dfe1e9e29e78ee18))
+* simulate unavailable kicad-cli in gate requirement test ([69d26b5](https://github.com/oaslananka/boardreadyops/commit/69d26b5d5e5547dd9acae2b6d110521df8d521b4))
+
+
+### CI
+
+* add branch protection ruleset for main ([a21a4ef](https://github.com/oaslananka/boardreadyops/commit/a21a4efc43b4418bdb55ac7551aec511a0691d67))
+* add branch protection ruleset for main ([9f0367c](https://github.com/oaslananka/boardreadyops/commit/9f0367c2cc3f8ea94e7f2bae3eb7cfe2a90a842f))
+* add branch protection ruleset for main ([#107](https://github.com/oaslananka/boardreadyops/issues/107)) ([a21a4ef](https://github.com/oaslananka/boardreadyops/commit/a21a4efc43b4418bdb55ac7551aec511a0691d67))
+
 ## [1.4.0](https://github.com/oaslananka/boardreadyops/compare/v1.3.0...v1.4.0) (2026-06-03)
 
 ### Features
