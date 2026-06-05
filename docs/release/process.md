@@ -73,9 +73,10 @@ tag must contain the binary build scripts.
 GitHub does not create most follow-on workflow runs from events caused by a
 workflow's repository `GITHUB_TOKEN`; only `workflow_dispatch` and
 `repository_dispatch` are exceptions. After `release-please` creates a release,
-the release workflow explicitly starts `publish-npm` with `workflow_dispatch`
-and passes the new release tag. This keeps npm publishing deterministic without
-using `workflow_run` for privileged release work.
+the release workflow explicitly starts `publish-npm` with `workflow_dispatch`,
+passes the new release tag, and enables floating release tag updates. This keeps
+npm publishing deterministic without using `workflow_run` for privileged release
+work.
 
 If the automatic path did not run or a previous workflow fix needs to publish an
 already-created release tag, manually dispatch `publish-npm` from `main` with
@@ -86,24 +87,26 @@ gh workflow run publish-npm.yml -f tag=v1.0.0 -f prerelease=false
 ```
 
 The workflow checks out the release tag with full history, verifies the tag
-version matches `package.json`, publishes the package with npm provenance, and
-then updates floating release tags for stable releases. The automatic
-`release: published` path remains stricter: the tag must point at the current
-`origin/main` HEAD and pass the full local verification chain. Manual and
-release-please dispatches allow the tag to be an ancestor of `origin/main` so
-already-created releases can be backfilled after workflow-only fixes. Those
-historical backfills validate the immutable package snapshot without rebuilding
-committed `dist/` bundles, because the selected release tag may predate the
-current reproducible-build workflow fixes.
+version matches `package.json`, and publishes the package with npm provenance.
+The automatic `release: published` path remains stricter: the tag must point at
+the current `origin/main` HEAD, pass the full local verification chain, and then
+update floating release tags for stable releases. Manual and release-please
+dispatches allow the tag to be an ancestor of `origin/main` so already-created
+releases can be backfilled after workflow-only fixes. Those historical backfills
+validate the immutable package snapshot without rebuilding committed `dist/`
+bundles, because the selected release tag may predate the current
+reproducible-build workflow fixes.
 
-If npm publishing succeeds but the floating release tag job fails, rerun the
-workflow after confirming the `vMAJOR` and `vMAJOR.MINOR` floating tags resolve
-to the release commit. The publish job is idempotent for already-published
-versions. For manual dispatches, floating-tag repair uses the workflow and
-script from the selected `main` ref, so fixes to the retry path do not require
-retagging the released commit. Binary and container release workflows trigger
-only on full semver tags like `v1.1.0`; floating tags such as `v1` and `v1.1`
-must not create separate release artifacts.
+Manual historical backfills do not move `vMAJOR` or `vMAJOR.MINOR` floating
+release tags unless `update_floating_tags=true` is passed explicitly. GitHub
+rejects default `GITHUB_TOKEN` ref updates when the target commit contains
+workflow-file changes and the token lacks workflow-file write permission. If a
+historical release also needs floating Action tags repaired, run
+`scripts/update-floating-tags.sh <tag>` with maintainer credentials that can
+update workflow-containing refs. The publish job is idempotent for
+already-published versions. Binary and container release workflows trigger only
+on full semver tags like `v1.1.0`; floating tags such as `v1` and `v1.1` must not
+create separate release artifacts.
 
 If the semver tag is already published but the container image needs to be
 repaired with the current container packaging from `main`, manually dispatch the

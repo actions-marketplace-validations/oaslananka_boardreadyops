@@ -32,7 +32,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ steps.release.outputs.tag_name }}
-        run: gh workflow run publish-npm.yml -f tag="${RELEASE_TAG}" -f prerelease=false
+        run: gh workflow run publish-npm.yml -f tag="${RELEASE_TAG}" -f prerelease=false -f update_floating_tags=true
       - name: Explain non-blocking release automation
         run: |
           cat <<'EOF'
