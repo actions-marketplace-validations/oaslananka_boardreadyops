@@ -1,4 +1,4 @@
-name: BoardReadyOps - Hardware Fabrication Gate
+name: BoardReadyOps
 description: >-
   Fabrication readiness checks for KiCad PCB projects. Identify and fix issues
   before you order boards.
