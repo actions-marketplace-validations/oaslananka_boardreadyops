@@ -742,28 +742,28 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `@typespec/ts-http-runtime@0.3.5`
   - Description: Isomorphic client library for making HTTP requests in node.js and browser.
   - Homepage: https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/core/ts-http-runtime/
-- `@vitest/coverage-v8@4.1.7`
+- `@vitest/coverage-v8@4.1.8`
   - Description: V8 coverage provider for Vitest
   - Homepage: https://vitest.dev/guide/coverage
-- `@vitest/expect@4.1.7`
+- `@vitest/expect@4.1.8`
   - Description: Jest's expect matchers as a Chai plugin
   - Homepage: https://vitest.dev/api/expect
-- `@vitest/mocker@4.1.7`
+- `@vitest/mocker@4.1.8`
   - Description: Vitest module mocker implementation
   - Homepage: https://github.com/vitest-dev/vitest/tree/main/packages/mocker
-- `@vitest/pretty-format@4.1.7`
+- `@vitest/pretty-format@4.1.8`
   - Description: Fork of pretty-format with support for ESM
   - Homepage: https://github.com/vitest-dev/vitest/tree/main/packages/pretty-format
-- `@vitest/runner@4.1.7`
+- `@vitest/runner@4.1.8`
   - Description: Vitest test runner
   - Homepage: https://vitest.dev/api/advanced/runner
-- `@vitest/snapshot@4.1.7`
+- `@vitest/snapshot@4.1.8`
   - Description: Vitest snapshot manager
   - Homepage: https://vitest.dev/guide/snapshot
-- `@vitest/spy@4.1.7`
+- `@vitest/spy@4.1.8`
   - Description: Lightweight Jest compatible spy implementation
   - Homepage: https://vitest.dev/api/mock
-- `@vitest/utils@4.1.7`
+- `@vitest/utils@4.1.8`
   - Description: Shared Vitest utility functions
   - Homepage: https://github.com/vitest-dev/vitest/tree/main/packages/utils
 - `abort-controller@3.0.0`
@@ -1180,7 +1180,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `linkify-it@5.0.1`
   - Description: Links recognition library with FULL unicode support
   - Homepage: https://github.com/markdown-it/linkify-it#readme
-- `lint-staged@17.0.6`
+- `lint-staged@17.0.7`
   - Description: Lint files staged by git
   - Homepage: https://github.com/lint-staged/lint-staged#readme
 - `listr2@10.2.1`
@@ -1452,7 +1452,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
   - Homepage: https://github.com/mafintosh/teex
 - `tinybench@2.9.0`
   - Homepage: https://github.com/tinylibs/tinybench#readme
-- `tinyexec@1.1.2`, `tinyexec@1.2.2`
+- `tinyexec@1.1.2`, `tinyexec@1.2.4`
   - Description: A minimal library for executing processes in Node
   - Homepage: https://github.com/tinylibs/tinyexec#readme
 - `tinyglobby@0.2.16`
@@ -1509,7 +1509,7 @@ The image preserves the KiCad package license text at `/usr/share/doc/boardready
 - `vite@8.0.13`
   - Description: Native-ESM powered web dev build tool
   - Homepage: https://vite.dev
-- `vitest@4.1.7`
+- `vitest@4.1.8`
   - Description: Next generation testing framework powered by Vite
   - Homepage: https://vitest.dev
 - `whatwg-mimetype@3.0.0`

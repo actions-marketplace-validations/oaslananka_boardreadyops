@@ -64,19 +64,34 @@ workflow fix, manually run `binary-build` from `main` with the `release-tag`
 input set to that tag. The workflow checks out the tag before building, so the
 tag must contain the binary build scripts.
 
-If `binary-build` creates the GitHub Release with the workflow `GITHUB_TOKEN`,
-GitHub will not fire the `release: published` workflow event. Manually dispatch
-`publish-npm` from `main` with the `tag` input set to the published release tag:
+`publish-npm` has two entry points:
+
+- `release: published` for releases created outside the repository's
+  `GITHUB_TOKEN` automation path.
+- `workflow_dispatch` for backfills and recovery.
+
+GitHub does not create most follow-on workflow runs from events caused by a
+workflow's repository `GITHUB_TOKEN`; only `workflow_dispatch` and
+`repository_dispatch` are exceptions. After `release-please` creates a release,
+the release workflow explicitly starts `publish-npm` with `workflow_dispatch`
+and passes the new release tag. This keeps npm publishing deterministic without
+using `workflow_run` for privileged release work.
+
+If the automatic path did not run or a previous workflow fix needs to publish an
+already-created release tag, manually dispatch `publish-npm` from `main` with
+the `tag` input set to the published release tag:
 
 ```bash
 gh workflow run publish-npm.yml -f tag=v1.0.0 -f prerelease=false
 ```
 
-The workflow checks out the tag with full history, verifies the tag version
-matches `package.json` and is reachable from `origin/main`, publishes the
-package with npm provenance, and then updates floating release tags for stable
-releases. The automatic `release: published` path remains stricter: the tag
-must point at the current `origin/main` HEAD.
+The workflow checks out the release tag with full history, verifies the tag
+version matches `package.json`, publishes the package with npm provenance, and
+then updates floating release tags for stable releases. The automatic
+`release: published` path remains stricter: the tag must point at the current
+`origin/main` HEAD. Manual and release-please dispatches allow the tag to be an
+ancestor of `origin/main` so already-created releases can be backfilled after
+workflow-only fixes.
 
 If npm publishing succeeds but the floating release tag job fails, rerun the
 workflow after confirming the `vMAJOR` and `vMAJOR.MINOR` floating tags resolve

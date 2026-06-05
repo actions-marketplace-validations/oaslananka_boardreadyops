@@ -34,47 +34,64 @@ jobs:
       contents: read
       id-token: write
       attestations: write
+    outputs:
+      release_is_prerelease: ${{ steps.release.outputs.release_is_prerelease }}
+      release_tag: ${{ steps.release.outputs.release_tag }}
+      should_publish: ${{ steps.release.outputs.should_publish }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
           persist-credentials: false
           ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref }}
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
-        with:
-          node-version: 24
-          package-manager-cache: false
-          registry-url: https://registry.npmjs.org
-      - run: corepack enable
-      - run: corepack install
-      - name: Setup uv
-        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
-        with:
-          version: ${{ env.UV_VERSION }}
-          enable-cache: false
-      - name: Install Python docs dependencies
+      - name: Resolve release metadata
+        id: release
+        env:
+          DISPATCH_PRERELEASE: ${{ inputs.prerelease }}
+          DISPATCH_TAG: ${{ inputs.tag }}
+          EVENT_NAME: ${{ github.event_name }}
+          EVENT_RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
+          EVENT_RELEASE_TAG: ${{ github.event.release.tag_name }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          docs_venv="${RUNNER_TEMP}/boardreadyops-docs-venv"
-          uv venv "${docs_venv}"
-          uv pip install --python "${docs_venv}/bin/python" -r docs/requirements.txt
-          echo "${docs_venv}/bin" >> "${GITHUB_PATH}"
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm run verify
-        env:
-          ALLOW_MAJOR_RELEASE: "true"
-          NO_MKDOCS_2_WARNING: "1"
-      - run: pnpm run sbom
-      - name: Attest provenance
-        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32
-        with:
-          subject-path: dist/**
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: sbom
-          path: sbom.cyclonedx.json
+          set -euo pipefail
+          release_tag=""
+          release_is_prerelease="false"
+          should_publish="true"
+
+          case "${EVENT_NAME}" in
+            workflow_dispatch)
+              release_tag="${DISPATCH_TAG}"
+              release_is_prerelease="${DISPATCH_PRERELEASE}"
+              ;;
+            release)
+              release_tag="${EVENT_RELEASE_TAG}"
+              release_is_prerelease="${EVENT_RELEASE_PRERELEASE}"
+              ;;
+            *)
+              echo "::error::Unsupported event: ${EVENT_NAME}"
+              exit 1
+              ;;
+          esac
+
+          if [ "${should_publish}" = "true" ] && [ -z "${release_tag}" ]; then
+            echo "::error::Could not resolve a release tag for ${EVENT_NAME}."
+            exit 1
+          fi
+
+          {
+            echo "RELEASE_IS_PRERELEASE=${release_is_prerelease}"
+            echo "RELEASE_TAG=${release_tag}"
+            echo "SHOULD_PUBLISH=${should_publish}"
+          } >> "${GITHUB_ENV}"
+          {
+            echo "release_is_prerelease=${release_is_prerelease}"
+            echo "release_tag=${release_tag}"
+            echo "should_publish=${should_publish}"
+          } >> "${GITHUB_OUTPUT}"
       - name: Verify release commit
+        if: env.SHOULD_PUBLISH == 'true'
         env:
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.event.release.tag_name }}
           REQUIRE_EXACT_MAIN: ${{ github.event_name == 'release' }}
         run: |
           set -euo pipefail
@@ -94,10 +111,52 @@ jobs:
             echo "::error::Release tag ${RELEASE_TAG} must be an ancestor of origin/main before manual publishing."
             exit 1
           fi
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+        if: env.SHOULD_PUBLISH == 'true'
+        with:
+          node-version: 24
+          package-manager-cache: false
+          registry-url: https://registry.npmjs.org
+      - if: env.SHOULD_PUBLISH == 'true'
+        run: corepack enable
+      - if: env.SHOULD_PUBLISH == 'true'
+        run: corepack install
+      - name: Setup uv
+        if: env.SHOULD_PUBLISH == 'true'
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b
+        with:
+          version: ${{ env.UV_VERSION }}
+          enable-cache: false
+      - name: Install Python docs dependencies
+        if: env.SHOULD_PUBLISH == 'true'
+        run: |
+          docs_venv="${RUNNER_TEMP}/boardreadyops-docs-venv"
+          uv venv "${docs_venv}"
+          uv pip install --python "${docs_venv}/bin/python" -r docs/requirements.txt
+          echo "${docs_venv}/bin" >> "${GITHUB_PATH}"
+      - if: env.SHOULD_PUBLISH == 'true'
+        run: pnpm install --frozen-lockfile
+      - if: env.SHOULD_PUBLISH == 'true'
+        run: pnpm run verify
+        env:
+          ALLOW_MAJOR_RELEASE: "true"
+          NO_MKDOCS_2_WARNING: "1"
+      - if: env.SHOULD_PUBLISH == 'true'
+        run: pnpm run sbom
+      - name: Attest provenance
+        if: env.SHOULD_PUBLISH == 'true'
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32
+        with:
+          subject-path: dist/**
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: env.SHOULD_PUBLISH == 'true'
+        with:
+          name: sbom
+          path: sbom.cyclonedx.json
       - name: Publish npm package
+        if: env.SHOULD_PUBLISH == 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-          RELEASE_IS_PRERELEASE: ${{ github.event_name == 'workflow_dispatch' && inputs.prerelease || github.event.release.prerelease }}
         run: |
           set -euo pipefail
           package_version="$(jq -er '.version' package.json)"
@@ -117,7 +176,7 @@ jobs:
           fi
 
   floating-release-tags:
-    if: ${{ (github.event_name == 'release' && github.event.release.prerelease == false) || (github.event_name == 'workflow_dispatch' && inputs.prerelease == false) }}
+    if: ${{ needs.publish-npm.outputs.should_publish == 'true' && needs.publish-npm.outputs.release_is_prerelease == 'false' }}
     needs: publish-npm
     runs-on: ubuntu-24.04
     timeout-minutes: 10
@@ -128,11 +187,11 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.sha || github.ref }}
+          ref: ${{ needs.publish-npm.outputs.release_tag }}
       - name: Update floating release tags
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.event.release.tag_name }}
+          RELEASE_TAG: ${{ needs.publish-npm.outputs.release_tag }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"

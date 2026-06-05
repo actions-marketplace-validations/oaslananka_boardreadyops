@@ -16,15 +16,23 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
+      actions: write
       contents: write
       pull-requests: write
     steps:
       - name: Run release-please
+        id: release
         uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
         continue-on-error: true
+      - name: Dispatch npm publish
+        if: steps.release.outputs.release_created == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag_name }}
+        run: gh workflow run publish-npm.yml -f tag="${RELEASE_TAG}" -f prerelease=false
       - name: Explain non-blocking release automation
         run: |
           cat <<'EOF'
