@@ -89,9 +89,12 @@ The workflow checks out the release tag with full history, verifies the tag
 version matches `package.json`, publishes the package with npm provenance, and
 then updates floating release tags for stable releases. The automatic
 `release: published` path remains stricter: the tag must point at the current
-`origin/main` HEAD. Manual and release-please dispatches allow the tag to be an
-ancestor of `origin/main` so already-created releases can be backfilled after
-workflow-only fixes.
+`origin/main` HEAD and pass the full local verification chain. Manual and
+release-please dispatches allow the tag to be an ancestor of `origin/main` so
+already-created releases can be backfilled after workflow-only fixes. Those
+historical backfills validate the immutable package snapshot without rebuilding
+committed `dist/` bundles, because the selected release tag may predate the
+current reproducible-build workflow fixes.
 
 If npm publishing succeeds but the floating release tag job fails, rerun the
 workflow after confirming the `vMAJOR` and `vMAJOR.MINOR` floating tags resolve

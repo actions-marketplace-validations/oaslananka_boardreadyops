@@ -136,11 +136,29 @@ jobs:
           echo "${docs_venv}/bin" >> "${GITHUB_PATH}"
       - if: env.SHOULD_PUBLISH == 'true'
         run: pnpm install --frozen-lockfile
-      - if: env.SHOULD_PUBLISH == 'true'
-        run: pnpm run verify
+      - name: Verify release package
+        if: env.SHOULD_PUBLISH == 'true'
         env:
+          EVENT_NAME: ${{ github.event_name }}
           ALLOW_MAJOR_RELEASE: "true"
           NO_MKDOCS_2_WARNING: "1"
+        run: |
+          set -euo pipefail
+          if [ "${EVENT_NAME}" = "release" ]; then
+            pnpm run verify
+            exit 0
+          fi
+
+          pnpm run lint
+          pnpm run typecheck
+          pnpm run verify:version
+          pnpm run verify:marketplace
+          test -s dist/cli/index.cjs
+          test -s dist/action/index.cjs
+          pnpm run check:size
+          npm pack --dry-run --json > "${RUNNER_TEMP}/npm-pack.json"
+          jq -e '.[0].files | map(.path) | index("dist/cli/index.cjs") and index("dist/action/index.cjs") and index("package.json")' \
+            "${RUNNER_TEMP}/npm-pack.json" > /dev/null
       - if: env.SHOULD_PUBLISH == 'true'
         run: pnpm run sbom
       - name: Attest provenance
