@@ -16,10 +16,10 @@ BoardReadyOps checks KiCad hardware repositories for production readiness before
 npm i -g boardreadyops
 ```
 
-The current public package is `boardreadyops@1.1.0` on npm. It is verified on
+The current public package is `boardreadyops@1.4.3` on npm. It is verified on
 Node.js 22 and 24, includes the current CLI bundle, schemas, docs, Action
-metadata, and matches the public `v1.1.0` tag archive.
-The `v1.1.0` GitHub Release also contains the binary asset matrix and
+metadata, and matches the public `v1.4.3` tag archive.
+The `v1.4.3` GitHub Release also contains the binary asset matrix and
 `SHA256SUMS`; Homebrew checksum publication remains tracked in BOARD-63. See
 [release channel verification](docs/release/channel-verification.md) for the
 tested artifact list and remaining channel follow-ups.
@@ -53,8 +53,9 @@ irm https://raw.githubusercontent.com/oaslananka/boardreadyops/main/install.ps1 
 ```
 
 The installers download the release asset plus `SHA256SUMS` before placing
-`boardreadyops` on the local command path. The public `v1.0.2` release currently
-has no binary assets, so these installers return 404 for that tag. A Homebrew
+`boardreadyops` on the local command path. Binary asset availability depends on
+the release; check the [latest release](https://github.com/oaslananka/boardreadyops/releases/latest)
+for the current asset matrix. A Homebrew
 formula template for the same binary assets lives at `Formula/boardreadyops.rb`;
 it must be filled with release checksums from `SHA256SUMS` before publishing it
 through a tap. Treat the installer blocks above as post-BOARD-63 examples until
@@ -88,7 +89,7 @@ jobs:
       security-events: write
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - uses: oaslananka/boardreadyops@41856e44bb2fc5def47a71072eccdad307301fc4 # v1.1.0
+      - uses: oaslananka/boardreadyops@fe889db0d437b6e0fd632f504b7c43ea2c6ba9c3 # v1.4.3
         with:
           config: boardreadyops.yml
           mode: enforce
@@ -101,7 +102,7 @@ Use the full container action when a workflow should carry KiCad CLI inside the
 BoardReadyOps runtime instead of installing KiCad separately:
 
 ```yaml
-      - uses: oaslananka/boardreadyops/apps/container@41856e44bb2fc5def47a71072eccdad307301fc4 # v1.1.0
+      - uses: oaslananka/boardreadyops/apps/container@fe889db0d437b6e0fd632f504b7c43ea2c6ba9c3 # v1.4.3
         with:
           config: boardreadyops.yml
           require-kicad: "true"
@@ -114,10 +115,9 @@ The same image can run as a CLI:
 docker run --rm ghcr.io/oaslananka/boardreadyops-full:v1 --help
 ```
 
-The `v1`, `v1.1.0`, and `latest` container tags currently resolve to OCI index
-digest `sha256:5258e7de0e25382894c70164e990820f78a7fdfce92453932e2f75d51728934b`
-with `linux/amd64` and `linux/arm64` manifests. Anonymous pull and a clean
-container Action sample workflow remain tracked in BOARD-64.
+The `v1` and `latest` container tags resolve to the most recent release
+image. Check the [release channel verification](docs/release/channel-verification.md)
+for the current digest and manifest list.
 
 ## CLI
 
