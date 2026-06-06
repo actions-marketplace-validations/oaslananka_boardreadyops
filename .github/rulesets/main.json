@@ -19,7 +19,7 @@
         "require_code_owner_review": false,
         "require_last_push_approval": false,
         "required_approving_review_count": 0,
-        "required_review_thread_resolution": false
+        "required_review_thread_resolution": true
       }
     },
     {
@@ -28,10 +28,15 @@
         "required_status_checks": [
           { "context": "ci / lint" },
           { "context": "ci / typecheck" },
-          { "context": "ci / test-unit (ubuntu-24.04, Node 22)" },
-          { "context": "ci / test-unit (ubuntu-24.04, Node 24)" }
+          { "context": "ci / build" },
+          { "context": "ci / verify-dist" },
+          { "context": "ci / security" },
+          { "context": "ci / test-action" },
+          { "context": "ci / coverage-gate" },
+          { "context": "lint-fast / lint-fast" },
+          { "context": "self-smoke / self-smoke" }
         ],
-        "strict_required_status_checks_policy": false
+        "strict_required_status_checks_policy": true
       }
     }
   ],
