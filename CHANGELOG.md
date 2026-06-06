@@ -4,6 +4,16 @@ All notable changes to BoardReadyOps are recorded here.
 
 ## Unreleased
 
+## [1.4.3](https://github.com/oaslananka/boardreadyops/compare/v1.4.2...v1.4.3) (2026-06-05)
+
+
+### Bug Fixes
+
+* **ci:** restore npm publish release handoff ([#120](https://github.com/oaslananka/boardreadyops/issues/120)) ([45c41a0](https://github.com/oaslananka/boardreadyops/commit/45c41a05180148a09e1a5343d5d0ebb84778aada))
+* **ci:** skip floating tags for manual npm backfills ([6fcb644](https://github.com/oaslananka/boardreadyops/commit/6fcb644301c7f53b6efffc3df0a585fe2ffefd2a))
+* **ci:** support historical npm backfills ([#121](https://github.com/oaslananka/boardreadyops/issues/121)) ([0975629](https://github.com/oaslananka/boardreadyops/commit/0975629a260d90e245411b24e011cf220739bb94))
+* regenerate dist bundles and release history for v1.4.2 ([#112](https://github.com/oaslananka/boardreadyops/issues/112)) ([4dd98c5](https://github.com/oaslananka/boardreadyops/commit/4dd98c5c8889815378e4d85a37fded76c0965479))
+
 ## [1.4.2](https://github.com/oaslananka/boardreadyops/compare/v1.4.1...v1.4.2) (2026-06-04)
 
 
