@@ -25,33 +25,28 @@ describe("container action release surfaces", () => {
     expect(containerAction.outputs).toEqual(nodeAction.outputs);
     expect(containerAction.runs).toMatchObject({
       using: "docker",
-      image: "docker://ghcr.io/oaslananka/boardreadyops-full:v1",
+      image: `docker://ghcr.io/\${{ github.repository_owner }}/boardreadyops-full:v1`,
       entrypoint: "/usr/local/bin/boardreadyops-action",
     });
-    expect(containerAction.runs?.args).toEqual(
-      Object.keys(nodeAction.inputs ?? {}).map((input) => inputExpression(input)),
-    );
+    // Container action no longer uses positional args - GitHub Actions sets INPUT_* env vars automatically
+    expect(containerAction.runs?.args).toBeUndefined();
   });
 
-  it("maps Docker action args to the Node action input environment", async () => {
+  it("uses GitHub Actions INPUT_* env vars directly (no positional arg mapping)", async () => {
     const entrypoint = await readFile("apps/container/action-entrypoint.sh", "utf8");
 
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_PATH", 1));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_PROJECT", 2));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_REQUIRE-KICAD", 5));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_GATE", 10));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_HBOM", 14));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_UPLOAD-SARIF", 15));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_FAIL-ON", 19));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_LOG-LEVEL", 21));
-    expect(entrypoint).toContain(inputEnvAssignment("INPUT_LOG-FILE-RETENTION", 25));
+    // Should directly execute the action without mapping positional args to env vars
+    expect(entrypoint).toContain("exec node /usr/local/lib/node_modules/boardreadyops/dist/action/index.cjs");
+    // Should NOT contain the old positional arg mapping
+    expect(entrypoint).not.toContain(`INPUT_PATH=\${1-}`);
+    expect(entrypoint).not.toContain(`INPUT_PROJECT=\${2-}`);
   });
 
   it("builds a GitHub-compatible Ubuntu image with an unprivileged account", async () => {
     const dockerfile = await readFile("apps/container/Dockerfile", "utf8");
 
     expect(dockerfile).toContain("FROM ubuntu:24.04@sha256:");
-    expect(dockerfile).toContain("ARG NODE_VERSION=22.");
+    expect(dockerfile).toContain("ARG NODE_VERSION=24.16.0");
     expect(dockerfile).not.toContain("ARG PNPM_VERSION");
     expect(dockerfile).toContain("ARG KICAD_PPA_SERIES=10.0");
     expect(dockerfile).toContain(`ppa:kicad/kicad-\${KICAD_PPA_SERIES}-releases`);
@@ -121,7 +116,7 @@ describe("container action release surfaces", () => {
   it("publishes signed multi-arch GHCR images with scan and SBOM coverage", async () => {
     const workflow = await readFile(".github/workflows/container-build.yml", "utf8");
 
-    expect(workflow).toContain("ghcr.io/oaslananka/boardreadyops-full");
+    expect(workflow).toContain(`ghcr.io/\${{ github.repository_owner }}/boardreadyops-full`);
     expect(workflow).toContain("linux/amd64,linux/arm64");
     expect(workflow).toContain("sbom: true");
     expect(workflow).toContain("cosign sign");
@@ -148,14 +143,16 @@ describe("container action release surfaces", () => {
     expect(workflow).toContain(`npm view "boardreadyops@${shellVariable("PACKAGE_VERSION")}" version`);
   });
 
-  it("falls back to a published package version for pull request smoke builds", async () => {
+  it("builds local npm tarball for pull request smoke builds", async () => {
     const workflow = await readFile(".github/workflows/container-build.yml", "utf8");
 
     expect(workflow).toContain(`elif [ "${shellVariable("GITHUB_EVENT_NAME")}" = "pull_request" ]; then`);
-    expect(workflow).toContain(`candidate="$(jq -er '.version' package.json)"`);
-    expect(workflow).toContain(`npm view "boardreadyops@${shellVariable("candidate")}" version`);
-    expect(workflow).toContain(`version="$(npm view boardreadyops version)"`);
-    expect(workflow).toContain("using latest published");
+    expect(workflow).toContain("Building local boardreadyops package for PR smoke test");
+    expect(workflow).toContain("npm pack --pack-destination apps/container");
+    expect(workflow).toContain(`tarball_arg="file:boardreadyops-${shellVariable("version")}.tgz"`);
+    expect(workflow).toContain(
+      `BOARDREADYOPS_VERSION=\${{ steps.package.outputs.tarball || steps.package.outputs.version }}`,
+    );
   });
 
   it("waits for npm package availability before release smoke builds", async () => {
@@ -195,14 +192,6 @@ function requireMatch(value: string, pattern: RegExp): string {
 
 function engineAllowsMajor(range: string, major: number): boolean {
   return new RegExp(`\\^${major}\\.0\\.0(?:\\s|$)`).test(range);
-}
-
-function inputExpression(input: string): string {
-  return `\${{ inputs['${input}'] }}`;
-}
-
-function inputEnvAssignment(name: string, position: number): string {
-  return `"${name}=\${${position}-}"`;
 }
 
 function shellVariable(name: string): string {

@@ -1,30 +1,6 @@
 #!/usr/bin/env sh
 set -eu
 
-exec env \
-  "INPUT_PATH=${1-}" \
-  "INPUT_PROJECT=${2-}" \
-  "INPUT_CONFIG=${3-}" \
-  "INPUT_MODE=${4-}" \
-  "INPUT_REQUIRE-KICAD=${5-}" \
-  "INPUT_KICAD-CLI=${6-}" \
-  "INPUT_BOM=${7-}" \
-  "INPUT_PINMAP=${8-}" \
-  "INPUT_VARIANT=${9-}" \
-  "INPUT_GATE=${10-}" \
-  "INPUT_SARIF=${11-}" \
-  "INPUT_JSON=${12-}" \
-  "INPUT_MARKDOWN=${13-}" \
-  "INPUT_HBOM=${14-}" \
-  "INPUT_UPLOAD-SARIF=${15-}" \
-  "INPUT_UPLOAD-ARTIFACTS=${16-}" \
-  "INPUT_COMMENT-PR=${17-}" \
-  "INPUT_ARTIFACT-NAME=${18-}" \
-  "INPUT_FAIL-ON=${19-}" \
-  "INPUT_ANNOTATIONS=${20-}" \
-  "INPUT_LOG-LEVEL=${21-}" \
-  "INPUT_LOG-FORMAT=${22-}" \
-  "INPUT_LOG-FILE=${23-}" \
-  "INPUT_LOG-FILE-MAX-BYTES=${24-}" \
-  "INPUT_LOG-FILE-RETENTION=${25-}" \
-  node /usr/local/lib/node_modules/boardreadyops/dist/action/index.cjs
+# GitHub Actions automatically sets INPUT_<NAME> environment variables for Docker actions.
+# No need to map positional arguments - just execute the action directly.
+exec node /usr/local/lib/node_modules/boardreadyops/dist/action/index.cjs

@@ -403,9 +403,9 @@ describe("compatibility matrix", () => {
     expect(packageJson.engines?.node).toBe("^22.0.0 || ^24.0.0");
     expect(packageJson.engines?.node).not.toContain("26");
     expect(binaryWorkflow.env?.NODE_VERSION).toBe(config.node.recommended);
-    expect(containerWorkflow.env?.NODE_VERSION).toBe(config.node.tested?.[config.node.minimum]);
+    expect(containerWorkflow.env?.NODE_VERSION).toBe(config.node.tested?.[config.node.recommended]);
     expect(containerWorkflow.env?.KICAD_PPA_SERIES).toBe(config.kicad.recommended);
-    expect(dockerfile).toContain(`ARG NODE_VERSION=${config.node.tested?.[config.node.minimum]}`);
+    expect(dockerfile).toContain(`ARG NODE_VERSION=${config.node.tested?.[config.node.recommended]}`);
     expect(dockerfile).toContain(`ARG KICAD_PPA_SERIES=${config.kicad.recommended}`);
     expect(readme).toContain("Node.js 22 and 24");
     expect(readme).toMatch(/Node\.js 26\s+Current is tracked but not supported/);

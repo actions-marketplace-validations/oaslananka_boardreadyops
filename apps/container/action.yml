@@ -6,34 +6,8 @@ branding:
   color: blue
 runs:
   using: docker
-  image: docker://ghcr.io/oaslananka/boardreadyops-full:v1
+  image: docker://ghcr.io/${{ github.repository_owner }}/boardreadyops-full:v1
   entrypoint: /usr/local/bin/boardreadyops-action
-  args:
-    - ${{ inputs['path'] }}
-    - ${{ inputs['project'] }}
-    - ${{ inputs['config'] }}
-    - ${{ inputs['mode'] }}
-    - ${{ inputs['require-kicad'] }}
-    - ${{ inputs['kicad-cli'] }}
-    - ${{ inputs['bom'] }}
-    - ${{ inputs['pinmap'] }}
-    - ${{ inputs['variant'] }}
-    - ${{ inputs['gate'] }}
-    - ${{ inputs['sarif'] }}
-    - ${{ inputs['json'] }}
-    - ${{ inputs['markdown'] }}
-    - ${{ inputs['hbom'] }}
-    - ${{ inputs['upload-sarif'] }}
-    - ${{ inputs['upload-artifacts'] }}
-    - ${{ inputs['comment-pr'] }}
-    - ${{ inputs['artifact-name'] }}
-    - ${{ inputs['fail-on'] }}
-    - ${{ inputs['annotations'] }}
-    - ${{ inputs['log-level'] }}
-    - ${{ inputs['log-format'] }}
-    - ${{ inputs['log-file'] }}
-    - ${{ inputs['log-file-max-bytes'] }}
-    - ${{ inputs['log-file-retention'] }}
 inputs:
   path:
     description: Directory to scan.

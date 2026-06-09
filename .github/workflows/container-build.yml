@@ -29,8 +29,8 @@ permissions:
   contents: read
 
 env:
-  IMAGE_NAME: ghcr.io/oaslananka/boardreadyops-full
-  NODE_VERSION: "22.22.3"
+  IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/boardreadyops-full
+  NODE_VERSION: "24.16.0"
   KICAD_PPA_SERIES: "10.0"
 
 jobs:
@@ -50,25 +50,28 @@ jobs:
         with:
           persist-credentials: false
       - id: package
-        name: Resolve npm package version
+        name: Resolve package version and build local tarball for PRs
         env:
           MANUAL_VERSION: ${{ inputs.version }}
         run: |
           set -euo pipefail
           if [ -n "${MANUAL_VERSION}" ]; then
             version="${MANUAL_VERSION#v}"
+            tarball_arg=""
           elif [ "${GITHUB_REF_TYPE}" = "tag" ]; then
             version="${GITHUB_REF_NAME#v}"
+            tarball_arg=""
           elif [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
-            candidate="$(jq -er '.version' package.json)"
-            if npm view "boardreadyops@${candidate}" version >/dev/null 2>&1; then
-              version="${candidate}"
-            else
-              version="$(npm view boardreadyops version)"
-              echo "boardreadyops@${candidate} is not available on npm; using latest published ${version} for PR smoke"
-            fi
+            version="$(jq -er '.version' package.json)"
+            # Build local npm tarball for PR testing
+            echo "Building local boardreadyops package for PR smoke test..."
+            npm pack --pack-destination apps/container
+            tarball_path="$(ls apps/container/boardreadyops-${version}.tgz)"
+            tarball_arg="file:boardreadyops-${version}.tgz"
+            echo "tarball=${tarball_arg}" >> "${GITHUB_OUTPUT}"
           else
             version="$(jq -er '.version' package.json)"
+            tarball_arg=""
           fi
           echo "version=${version}" >> "${GITHUB_OUTPUT}"
       - name: Wait for npm package availability
@@ -96,7 +99,7 @@ jobs:
           push: false
           tags: boardreadyops-full:smoke-kicad-${{ matrix.kicad-version }}-node-${{ matrix.node-version }}
           build-args: |
-            BOARDREADYOPS_VERSION=${{ steps.package.outputs.version }}
+            BOARDREADYOPS_VERSION=${{ steps.package.outputs.tarball || steps.package.outputs.version }}
             NODE_VERSION=${{ matrix.node-version }}
             KICAD_PPA_SERIES=${{ matrix.kicad-ppa-series }}
       - name: Smoke container CLI
