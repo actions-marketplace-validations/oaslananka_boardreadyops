@@ -13,6 +13,9 @@ tasks:
   fmt:
     cmds:
       - corepack pnpm run fmt
+  format:
+    cmds:
+      - corepack pnpm run format
   test:
     cmds:
       - corepack pnpm run coverage
