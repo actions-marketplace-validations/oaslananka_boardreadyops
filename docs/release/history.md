@@ -8,6 +8,24 @@ All notable changes to BoardReadyOps are recorded here.
 
 ## Unreleased
 
+## [1.4.4](https://github.com/oaslananka/boardreadyops/compare/v1.4.3...v1.4.4) (2026-06-09)
+
+
+### Bug Fixes
+
+* add --repo flag to gh workflow run in release-please to avoid dispatch failure ([3190ec0](https://github.com/oaslananka/boardreadyops/commit/3190ec0973e37c21bf4ec0ac2e19823b57b70bed))
+* **ci:** use INPUT_* env vars, align Node 24, build local tarball for PRs ([b5d85ba](https://github.com/oaslananka/boardreadyops/commit/b5d85ba4c9abecfd8a81871cca71ab63f25f7103))
+
+
+### Documentation
+
+* update stale version references to v1.4.3 ([6f66c4b](https://github.com/oaslananka/boardreadyops/commit/6f66c4b0f62af264cd594f3965906c51cedf6616))
+
+
+### CI
+
+* align branch protection ruleset with live GitHub configuration ([c1eb9e3](https://github.com/oaslananka/boardreadyops/commit/c1eb9e3053a11f3e157dd10f4a32150bd51fdd75))
+
 ## [1.4.3](https://github.com/oaslananka/boardreadyops/compare/v1.4.2...v1.4.3) (2026-06-05)
 
 

@@ -27,6 +27,7 @@ env:
 
 jobs:
   lint:
+    if: github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops'
     name: ci / lint
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -56,6 +57,7 @@ jobs:
         run: uvx --from zizmor==1.25.2 zizmor .github/workflows --min-severity medium
 
   typecheck:
+    if: github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops'
     name: ci / typecheck
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -73,6 +75,7 @@ jobs:
       - run: pnpm run typecheck
 
   test-unit:
+    if: github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops'
     name: ci / test-unit (${{ matrix.os }}, Node ${{ matrix.node-version }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
@@ -100,6 +103,7 @@ jobs:
       - run: pnpm run test:unit
 
   test-int:
+    if: github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops'
     name: ci / test-int (KiCad ${{ matrix.kicad-version }}, Node ${{ matrix.node-version }})
     runs-on: ubuntu-24.04
     timeout-minutes: 25
@@ -136,6 +140,7 @@ jobs:
       - run: pnpm run test:int
 
   cross-platform-paths:
+    if: github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops'
     name: ci / cross-platform-paths (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
@@ -160,6 +165,7 @@ jobs:
       - run: pnpm exec vitest run tests/integration/cross-platform-paths.test.ts
 
   test-action:
+    if: github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops'
     name: ci / test-action
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -177,6 +183,7 @@ jobs:
       - run: pnpm run test:action
 
   accessibility:
+    if: github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops'
     name: ci / accessibility
     runs-on: ubuntu-24.04
     timeout-minutes: 25
@@ -207,6 +214,7 @@ jobs:
       - run: pnpm run test:a11y
 
   build:
+    if: github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops'
     name: ci / build
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -224,6 +232,7 @@ jobs:
       - run: pnpm run build
 
   verify-dist:
+    if: github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops'
     name: ci / verify-dist
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -242,6 +251,7 @@ jobs:
       - run: pnpm run verify:dist
 
   coverage-gate:
+    if: github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops'
     name: ci / coverage-gate
     runs-on: ubuntu-24.04
     timeout-minutes: 25
@@ -275,7 +285,7 @@ jobs:
     name: ci / mutation
     runs-on: ubuntu-24.04
     timeout-minutes: 90
-    if: github.event_name == 'push' || github.event.pull_request.draft == false
+    if: (github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops') && (github.event_name == 'push' || github.event.pull_request.draft == false)
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
@@ -300,6 +310,7 @@ jobs:
           if-no-files-found: warn
 
   security:
+    if: github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops'
     name: ci / security
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -321,7 +332,7 @@ jobs:
     name: ci / sbom
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    if: github.ref == 'refs/heads/main'
+    if: (github.repository_owner == 'oaslananka' || github.repository_owner == 'oaslananka-ops') && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
