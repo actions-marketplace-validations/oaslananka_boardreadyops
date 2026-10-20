@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { POST as postRun } from "../../../apps/web/app/api/v1/runs/route.js";
+import { ingestRunRequestSchema, POST as postRun } from "../../../apps/web/app/api/v1/runs/route.js";
 import * as apiAuth from "../../../apps/web/lib/api-auth.js";
 import * as cloudConfig from "../../../apps/web/lib/cloud-runtime-config.js";
 
@@ -50,6 +50,56 @@ describe("POST /api/v1/runs persists review-canvas snapshots", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+  });
+
+  it("rejects a forged approved archive in the CLI/Action upload contract", () => {
+    const base = { repositoryId: "oaslananka/hardware", commitSha: "c".repeat(40), ref: "refs/heads/main" };
+    const artifact = {
+      kind: "archive",
+      name: "gerbers.zip",
+      storagePath: "run/gerbers.zip",
+      role: "manufacturing",
+      sha256: "a".repeat(64),
+      bytes: 152,
+    };
+    expect(ingestRunRequestSchema.safeParse({ ...base, artifacts: [artifact] }).success).toBe(false);
+    expect(
+      ingestRunRequestSchema.safeParse({
+        ...base,
+        artifacts: [{ ...artifact, role: "draft-manufacturing" }],
+      }).success,
+    ).toBe(true);
+    expect(
+      ingestRunRequestSchema.safeParse({
+        ...base,
+        artifacts: [{ ...artifact, kind: "bom" }],
+      }).success,
+    ).toBe(true);
+  });
+
+  it("refuses a self-declared approved manufacturing archive before writing a run", async () => {
+    const request = new Request("https://boardreadyops.test/api/v1/runs", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        repositoryId: "oaslananka/hardware",
+        commitSha: "a".repeat(40),
+        ref: "refs/heads/main",
+        artifacts: [
+          {
+            kind: "archive",
+            name: "board.zip",
+            storagePath: "run/board.zip",
+            role: "manufacturing",
+            sha256: "b".repeat(64),
+            bytes: 512,
+          },
+        ],
+      }),
+    });
+    const response = await postRun(request);
+    expect(response.status).toBe(400);
+    expect(mockQuery).not.toHaveBeenCalled();
   });
 
   it("inserts a run_snapshots row for each published review-canvas snapshot", async () => {
