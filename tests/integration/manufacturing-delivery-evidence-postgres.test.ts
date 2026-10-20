@@ -2,6 +2,11 @@ import { createHash, randomInt, randomUUID } from "node:crypto";
 import { afterAll, describe, expect, it } from "vitest";
 import { verifyDeliveryToken } from "../../apps/web/lib/delivery-auth.js";
 import { lookupGuestManufacturingArtifact } from "../../apps/web/lib/guest-manufacturing-download.js";
+import {
+  authorizedManufacturingRevisionIds,
+  authorizeManufacturingShare,
+  revokeManufacturingShare,
+} from "../../packages/db/src/manufacturing-share-authorization-store.js";
 import { createPgQueryExecutor } from "../../packages/db/src/pg-executor.js";
 import { WorkspaceStore } from "../../packages/db/src/workspace-store.js";
 import { getPostgresTestConnectionString } from "../../scripts/postgres-test-contract.mjs";
@@ -49,6 +54,8 @@ describeDatabase("Manufacturing delivery evidence (PostgreSQL)", () => {
       name: "Isolated manufacturing evidence fixture",
       slug: `manufacturing-test-${randomUUID().slice(0, 8)}`,
       ownerUserId: "fixture-owner",
+      ownerGitHubUserId: 4711,
+      ownerGitHubLogin: "fixture-owner",
     });
     const project = await store.createProject({
       workspaceId,
@@ -110,7 +117,34 @@ describeDatabase("Manufacturing delivery evidence (PostgreSQL)", () => {
     expect(await store.listValidatedRevisionCandidatesByWorkspace(workspaceId)).toEqual([]);
     expect(await store.revisionHasValidatedManufacturingEvidence(revision?.id ?? "")).toBe(true);
 
-    // This checks database/token linkage only, not signed file bytes or a public production handoff.
+    // Technical readiness alone cannot grant guest access, even when SQL is called directly.
+    await expect(
+      store.createDeliveryLink({
+        revisionId: revision?.id ?? "",
+        expiresAt: new Date(Date.now() + 60_000),
+      }),
+    ).rejects.toThrow("Failed to insert delivery");
+    expect(
+      await authorizeManufacturingShare(executor, revision?.id ?? "", {
+        githubUserId: 99999,
+        login: "other-user",
+      }),
+    ).toBe(false);
+    expect(
+      await authorizeManufacturingShare(executor, revision?.id ?? "", {
+        githubUserId: 4711,
+        login: "fixture-owner",
+      }),
+    ).toBe(true);
+    expect(
+      await authorizeManufacturingShare(executor, revision?.id ?? "", {
+        githubUserId: 4711,
+        login: "fixture-owner",
+      }),
+    ).toBe(false);
+    expect(await authorizedManufacturingRevisionIds(executor, workspaceId)).toContain(revision?.id);
+
+    // This checks database/token linkage, not source attestation or a signed fabrication approval.
     const { delivery, rawToken } = await store.createDeliveryLink({
       revisionId: revision?.id ?? "",
       expiresAt: new Date(Date.now() + 60_000),
@@ -154,9 +188,50 @@ describeDatabase("Manufacturing delivery evidence (PostgreSQL)", () => {
       delivery.id,
       "https://example.invalid/isolated-fixture.zip",
     ]);
-    await executor.query("update deliveries set expires_at = now() - interval '1 second' where id = $1", [delivery.id]);
+    // Revocation is effective before expiry, and prevents all existing guest tokens.
+    expect((await store.getDeliveryByToken(rawToken))?.id).toBe(delivery.id);
+    expect(
+      await revokeManufacturingShare(executor, revision?.id ?? "", {
+        githubUserId: 4711,
+        login: "fixture-owner",
+      }),
+    ).toBe(true);
+    expect(
+      await authorizeManufacturingShare(executor, revision?.id ?? "", {
+        githubUserId: 4711,
+        login: "fixture-owner",
+      }),
+    ).toBe(false);
+    expect(await authorizedManufacturingRevisionIds(executor, workspaceId)).toEqual([]);
     expect(await store.getDeliveryByToken(rawToken)).toBeNull();
+    expect((await verifyDeliveryToken(rawToken, executor)).status).toBe(404);
+    expect(await lookupGuestManufacturingArtifact(rawToken, executor)).toBeNull();
+    await expect(
+      store.createDeliveryLink({
+        revisionId: revision?.id ?? "",
+        expiresAt: new Date(Date.now() + 60_000),
+      }),
+    ).rejects.toThrow("Failed to insert delivery");
+    await executor.query("update deliveries set expires_at = now() - interval '1 second' where id = $1", [delivery.id]);
     expect((await verifyDeliveryToken(rawToken, executor)).status).toBe(410);
+    const beforeDeletion = (await executor.query(
+      "select revoked_by_github_user_id, revoked_by_login, artifact_id from manufacturing_share_authorizations where revision_id = $1",
+      [revision?.id],
+    )) as { rows: Array<{ revoked_by_github_user_id: string; revoked_by_login: string; artifact_id: string }> };
+    expect(beforeDeletion.rows[0]).toMatchObject({
+      revoked_by_github_user_id: "4711",
+      revoked_by_login: "fixture-owner",
+      artifact_id: artifactId,
+    });
+    // Artifact retirement must not erase the owner authorization/revocation audit.
+    await executor.query("delete from artifacts where id = $1", [artifactId]);
+    const afterDeletion = (await executor.query(
+      "select artifact_id, revoked_at, revoked_by_login from manufacturing_share_authorizations where revision_id = $1",
+      [revision?.id],
+    )) as { rows: Array<{ artifact_id: string | null; revoked_at: Date | null; revoked_by_login: string }> };
+    expect(afterDeletion.rows[0]?.artifact_id).toBeNull();
+    expect(afterDeletion.rows[0]?.revoked_at).not.toBeNull();
+    expect(afterDeletion.rows[0]?.revoked_by_login).toBe("fixture-owner");
     expect(await lookupGuestManufacturingArtifact(rawToken, executor)).toBeNull();
   });
 });
