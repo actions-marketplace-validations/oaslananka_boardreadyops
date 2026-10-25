@@ -12,6 +12,7 @@ import { ViewerNav } from "../../components/viewer-nav.js";
 import { WorkspaceSwitcher } from "../../components/workspace-switcher.js";
 import { customerPlanLabel, customerStatusLabel } from "../../lib/customer-nomenclature.js";
 import { loadWorkspaceProjects, type WorkspaceProjectsImpact } from "../../lib/project-listing.js";
+import { canonicalRepositoryName } from "../../lib/review-list-filters.js";
 import { viewerAuthorization } from "../../lib/viewer-authorization.js";
 import {
   createProjectAction,
@@ -92,12 +93,26 @@ function projectColumns(role: string, impact: WorkspaceProjectsImpact): readonly
     {
       id: "repository",
       header: "Repository",
-      cell: (project) =>
-        project.githubRepoFullName ? (
-          <span className="font-mono break-all">{project.githubRepoFullName}</span>
-        ) : (
-          <span className="text-muted-foreground">Not linked</span>
-        ),
+      cell: (project) => {
+        const repository = project.githubRepoFullName;
+        const canonical = repository ? canonicalRepositoryName(repository) : undefined;
+        if (!repository) return <span className="text-muted-foreground">Not linked</span>;
+        return (
+          <div className="flex min-w-0 flex-col gap-1">
+            <span className="font-mono text-xs break-all">{repository}</span>
+            {canonical ? (
+              <Link
+                href={`/reviews?repository=${encodeURIComponent(canonical)}`}
+                className="w-fit text-sm font-medium text-primary underline underline-offset-2"
+              >
+                View repository reviews
+              </Link>
+            ) : (
+              <span className="text-xs text-muted-foreground">Use GitHub owner/name to link repository reviews.</span>
+            )}
+          </div>
+        );
+      },
     },
     {
       id: "created",
@@ -170,16 +185,18 @@ export default async function ProjectsPage({ searchParams }: Readonly<ProjectsPa
                   Selected workspace: <strong>{result.selected.name}</strong>
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Projects here belong to this CAD workspace. Dashboard shows repository reviews available through
-                  GitHub App installations; those repositories are not automatically part of this workspace.
+                  CAD projects live here. GitHub App installations expose repository runs and published reviews
+                  separately; a repository is not linked to this workspace automatically.
                 </p>
               </div>
-              <Link
-                className="shrink-0 text-sm font-medium text-primary underline underline-offset-2"
-                href="/dashboard"
-              >
-                View GitHub repositories
-              </Link>
+              <div className="flex flex-wrap items-center gap-3">
+                <Button asChild size="sm">
+                  <Link href="/reviews">Open hardware reviews</Link>
+                </Button>
+                <Link className="text-sm font-medium text-primary underline underline-offset-2" href="/dashboard">
+                  View GitHub repositories
+                </Link>
+              </div>
             </section>
 
             {result.total === 0 ? (
