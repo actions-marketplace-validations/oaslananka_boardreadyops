@@ -221,7 +221,13 @@ export function OverviewTab({
               </Button>
             ) : null}
           </div>
-          <ReviewCanvas compactMobile headSnapshots={review.headSnapshots ?? []} {...optionalBaseSnapshots} />
+          <ReviewCanvas
+            compactMobile
+            previewMobileControls
+            preferPcbLayer
+            headSnapshots={review.headSnapshots ?? []}
+            {...optionalBaseSnapshots}
+          />
         </section>
       ) : null}
       <section className={`rounded-md border p-4 ${readinessBandClass[readinessTone]}`}>

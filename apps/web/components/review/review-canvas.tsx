@@ -9,6 +9,10 @@ export interface ReviewCanvasProps {
   baseSnapshots?: SnapshotArtifact[];
   /** Use a shorter preview before the finding list on narrow run-inspection screens. */
   compactMobile?: boolean;
+  /** Hide optional inspection chrome only in the initial Overview preview on small screens. */
+  previewMobileControls?: boolean;
+  /** Start on the first actual PCB layer when used as a review overview teaser. */
+  preferPcbLayer?: boolean;
   findings?: DemoFinding[];
   comments?: DemoComment[];
   selectedFindingFingerprint?: string | undefined;
@@ -416,6 +420,8 @@ export function ReviewCanvas({
   headSnapshots,
   baseSnapshots = [],
   compactMobile = false,
+  previewMobileControls = false,
+  preferPcbLayer = false,
   findings = [],
   comments = [],
   selectedFindingFingerprint,
@@ -423,7 +429,12 @@ export function ReviewCanvas({
   onSelectComment,
   onAddCommentAtPoint,
 }: Readonly<ReviewCanvasProps>) {
-  const [selectedSheetOrLayer, setSelectedSheetOrLayer] = useState<string>(headSnapshots[0]?.sheetOrLayer ?? "Main");
+  const [selectedSheetOrLayer, setSelectedSheetOrLayer] = useState<string>(
+    () =>
+      (preferPcbLayer ? headSnapshots.find((snapshot) => snapshot.kind === "pcb_layer") : undefined)?.sheetOrLayer ??
+      headSnapshots[0]?.sheetOrLayer ??
+      "Main",
+  );
   const [viewMode, setViewMode] = useState<ViewMode>("head");
   const [opacity, setOpacity] = useState<number>(0.5);
   const [zoom, setZoom] = useState<number>(1);
@@ -583,7 +594,7 @@ export function ReviewCanvas({
           </select>
 
           <fieldset
-            className="flex w-full min-w-0 flex-nowrap gap-1 overflow-x-auto pb-1 sm:w-auto sm:flex-wrap sm:overflow-visible sm:pb-0"
+            className={`${previewMobileControls ? "hidden sm:flex" : "flex"} w-full min-w-0 flex-nowrap gap-1 overflow-x-auto pb-1 sm:w-auto sm:flex-wrap sm:overflow-visible sm:pb-0`}
             aria-label="Revision comparison modes"
           >
             <button
@@ -638,7 +649,9 @@ export function ReviewCanvas({
           </fieldset>
         </div>
 
-        <div className="flex min-w-0 flex-wrap items-center justify-between gap-2 sm:justify-start sm:gap-3">
+        <div
+          className={`${previewMobileControls ? "hidden sm:flex" : "flex"} min-w-0 flex-wrap items-center justify-between gap-2 sm:justify-start sm:gap-3`}
+        >
           {effectiveViewMode === "overlay" ? (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <span>Base</span>
